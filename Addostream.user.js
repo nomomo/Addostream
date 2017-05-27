@@ -31,8 +31,17 @@ var url = "http://www.goora.net/gm2.html";
 cross_domain(url);
 */
 
+var streamerArray = [
+    ['hanryang1125','풍월량'],
+    ['ddahyoni','따효니'],
+    ['kss7749','쉐리'],
+    ['looksam','룩삼'],
+    ['saddummy','서새봄냥'],
+    ['109ace','철면수심']
+    ];
 var ADD_title = 'Twitch ID Checker v170527_002';
 var href = 'initialize';
+var streamerID = '';
 
 $('.container').append('<div style="height=63px;padding:30px 0;font-size:11px;font-style:italic;color:#999;">'+ADD_title+'</div>');
 
@@ -54,11 +63,14 @@ function Addostram_run()
     $('li.twitch').each(function (i) {
     href = $(this).find('a').attr('href');
     href = href.replace('/#/stream/twitch/', '');
-    if (href=='hanryang1125')
+    for(var i=0; i < streamerArray.length; i++){
+    if (href==streamerArray[i][0])
         {
-            href='풍월량';
-            // 추후 시간 있으면 유명한 ID에 대하여 배열로 등록할 예정이다.
+            streamerID=streamerArray[i][1]+' ';
+            break;
         }
-    $(this).find('.info>.from').append(' ('+href+')');
+    }
+    $(this).find('.info>.from').html(streamerID+'('+href+')');
+    streamerID = ''; // reset
 });
 }
