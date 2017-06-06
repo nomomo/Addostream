@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.01
+// @version     1.02
 // @grant       none
 // ==/UserScript==
 
@@ -55,8 +55,13 @@ var multitwitchID = 'hanryang1125';
 $(document).on("click", "#multitwitch", multitwitch_run);
 $('.container').append('<div style="height=63px;padding:25px 0;font-size:11px;font-style:italic;color:#999;">'+ADD_title+'</div>');
 
-$(window).load(function(){
-    Addostram_run();
+$(document).ready(function(){
+    setTimeout(
+        function() {
+            // alert('CHECK.');
+            Addostram_run();
+        },
+        500);
 });
 
 $('.container>a').click(function(){
@@ -70,7 +75,8 @@ $('.container>a').click(function(){
 
 function Addostram_run()
 {
-    $('.search').append('<span id="multitwitch" style="cursor: pointer; display:inline-block; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #eee none repeat scroll 0 0; color: #222;">멀티트위치</span>');
+    if( $('#multitwitch').length === 0 )
+          $('.search').append('<span id="multitwitch" style="cursor: pointer; display:inline-block; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #eee none repeat scroll 0 0; color: #222;">멀티트위치</span>');
     $('li.twitch').each(function (i) {
     href = $(this).find('a').attr('href');
     href = href.replace('/#/stream/twitch/', '');
@@ -85,19 +91,19 @@ function Addostram_run()
     $(this).append('<div style="position:relative;"><div style="position:absolute; top:-40px; right:75px; text-align:center; font-size:12px; z-index:1000000; margin:0;"><input style="margin-right:5px;border:none !important;" type="checkbox" name="chk" value="'+href+'" onfocus="this.blur()" /><div style="background-color:#eee; padding:5px 8px; height:15; display:inline;"><a href="/#/stream/multitwitch/'+href+'">With chat</a></div></div></div>');
     streamerID = ''; // reset
 });
-};
+}
 
 function multitwitch_run()
 {
     multitwitchID = '';
     $("input[name=chk]:checked").each(function() {
-        if(multitwitchID=='')
+        if(multitwitchID==='')
            multitwitchID = $(this).val();
         else
            multitwitchID = multitwitchID+'&'+$(this).val();
     });
     //alert(multitwitchID);
-    if(multitwitchID=='')
+    if(multitwitchID==='')
         alert('Check the checkboxs to use multitwitch!');
     else
         $(location).attr('href','/#/stream/multitwitch/'+multitwitchID);
