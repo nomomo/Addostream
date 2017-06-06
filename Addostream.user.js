@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.02
+// @version     1.03
 // @grant       none
 // ==/UserScript==
 
@@ -47,7 +47,7 @@ var streamerArray = [
     ['togom','토곰'],
     ['ogn_lol','OGN 롤챔스']    
     ];
-var ADD_title = 'Twitch ID Checker v.17_0606';
+var ADD_title = '1.03';
 var href = 'initialize';
 var streamerID = '';
 var multitwitchID = 'hanryang1125';
