@@ -105,9 +105,9 @@ function cookie_setup_remove()
 
 $('head').append('\
     <style id="addostreamCSS" rel="stylesheet" type="text/css">\
-        .AD_title {position:absolute; top:0px; right:10px; height:63px; padding:25px 0; font-size:11px; font-style:italic; color:#999}\
+        .AD_title {position:absolute; top:10px; right:10px; height:30px; padding:0; font-size:11px; font-style:italic; color:#999}\
         #ADD_setup {cursor:pointer;}\
-        #popup_ADD_setup {display:none; font-size:12px; z-index:10000; position:absolute; top:70px; right:10px; width:500px;}\
+        #popup_ADD_setup {display:none; font-size:12px; z-index:10000; position:absolute; top:50px; right:10px; width:500px;}\
         .modal-content {\
             box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);\
             background-clip: padding-box;\
