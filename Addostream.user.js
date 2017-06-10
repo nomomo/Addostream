@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.05
+// @version     1.051
 // @grant       none
 // ==/UserScript==
 
@@ -35,7 +35,7 @@ cross_domain(url);
 // ref. 1 https://www.w3schools.com/jquery/ajax_getscript.asp
 // ref. 2 https://stackoverflow.com/questions/7980798/jquery-dynamic-loading-of-external-script-files-before-document-ready
 
-var version = '1.05';
+var version = '1.051';
 var streamerArray = [
     ['hanryang1125','풍월량'],
     ['ddahyoni','따효니'],
