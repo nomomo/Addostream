@@ -2,7 +2,7 @@
 <!--Add new feature for dostream.com-->
 * 17년 6월 6일 기준으로 Firefox, Chrome 을 지원
 * Greasemonkey, Tampermonkey 등의 브라우저 userscript 확장 기능 필요
-* 몇가지 기능을 더 추가할 예정
+* 설정 등은 브라우저 Cookie 에 저장되고 개인정보 등은 절대 수집하지 않음 (쿠키 삭제 시 초기화)
 * 버그 많음 버그리포트 바랍니다 (__) nomotg@gmail.com
 
 # Preview
