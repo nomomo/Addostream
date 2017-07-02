@@ -122,6 +122,7 @@ var streamerArray = [
 var href = 'initialize';
 var streamerID = '';
 var multitwitchID = 'hanryang1125';
+var ADD_API_SET_INTERVAL;
 ADD_config_ary = [];
 //var ADD_config_top_fix = false;
 //var ADD_config_top_off_fix = false;
@@ -373,6 +374,7 @@ function twitch_api()
                              
                               //console.log(twitch_api_cookie);
                               //console.log(JSON.stringify(twitch_api_cookie));
+                              api_expires.setMinutes( api_expires.getMinutes() + 10 );
                               $.cookie('twitch_api_cookie', JSON.stringify(twitch_api_cookie), { expires : api_expires, path : '/' });
 
                          },
@@ -392,8 +394,29 @@ function twitch_api()
         left_time = Math.floor(left_time/60/1000)+' min '+Math.floor((left_time/1000)%60)+' sec';
         console.log('Current time is '+now_time+'.\nCookie time for api update is '+api_pre_time+'.\nCookie is not updated.\nCookie will update after '+left_time);
         if (!!$.cookie('twitch_api_cookie'))
-          twitch_api_cookie = JSON.parse($.cookie('twitch_api_cookie'));
+        {
+           twitch_api_cookie = JSON.parse($.cookie('twitch_api_cookie'));
+        }
     }
+}
+
+function ADD_API_CALL_INTERVAL()
+{
+    intervalTime = Number(ADD_config_ary[$.inArray('ADD_config_alarm_gap',ADD_config_IDs)]);
+    if (intervalTime < 1)
+        intervalTime = 1;
+    intervalTime = intervalTime*1000*60;
+    
+    if (ADD_API_SET_INTERVAL)
+      clearInterval(ADD_API_SET_INTERVAL);
+    ADD_API_SET_INTERVAL = setInterval(function() {
+    console.log('ADD_API_CALL_INTERVAL()');
+    // Write config form from cookie
+    ADD_cookie_to_var();
+    // Call Twitch api
+    twitch_api();
+
+    }, intervalTime);
 }
 
 
@@ -413,6 +436,7 @@ setInterval(function() {
               console.log('unique window cookie is ',unique_window_cookie);
               unique_window_check = false;
               $('#unique_windows_text').show();
+              clearInterval(ADD_API_SET_INTERVAL);
             }
 }, 1000);
 
@@ -511,6 +535,7 @@ $('.container').append('\
 
 function Addostram_run()
 {
+    ADD_cookie_to_var();
     // Add multitwitch button
     if( $('#multitwitch').length === 0 )
           $('.search').append('<span id="multitwitch" style="cursor: pointer; display:inline-block; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #eee none repeat scroll 0 0; color: #222;">멀티트위치</span>');
@@ -523,6 +548,8 @@ function Addostram_run()
     
     // Add choosed streamer from api cookie
     var ADD_config_alarm = ADD_config_ary[$.inArray('ADD_config_alarm',ADD_config_IDs)];
+    console.log('ADD_config_alarm   ',ADD_config_alarm );
+    console.log('(twitch_api_cookie.length>0)', twitch_api_cookie.length);
     if ( ADD_config_alarm && (!!$.cookie('twitch_api_cookie')) && (twitch_api_cookie.length>0) )
     {
        for(var w=0; w<twitch_api_cookie.length; w++)
@@ -681,6 +708,7 @@ ADD_cookie_to_config_form();
 
 // Call Twitch api
 twitch_api();
+ADD_API_CALL_INTERVAL();
 
 // Multiwindows checker
 ADD_multiwindow_prevent();
@@ -706,6 +734,7 @@ $('.container>a').click(function(){
         },
         100);
 });
+
 
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
@@ -755,7 +784,7 @@ $('#ADD_config_save').on('click', function() {
     {
       local_api_refresh = false;
       api_push_forced = true;
-      twitch_api();
+      ADD_API_CALL_INTERVAL();
       setTimeout(function() {
       local_api_refresh = true;
       }, 5000);
