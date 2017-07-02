@@ -3,7 +3,7 @@
 * 17년 6월 6일 기준으로 Firefox, Chrome 을 지원
 * Greasemonkey, Tampermonkey 등의 브라우저 userscript 확장 기능 필요
 * 몇가지 기능을 더 추가할 예정
-* nomotg@gmail.com
+* 버그 많음 버그리포트 바랍니다 (__) nomotg@gmail.com
 
 # Preview
 <img src="https://github.com/nomomo/Addostream/blob/master/images/170702_preview.jpg" width="500px" />
