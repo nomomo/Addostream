@@ -7,8 +7,8 @@
 # Preview
 <img src="https://github.com/nomomo/Addostream/blob/master/images/170702_preview.jpg" width="500px" />
 
-* 원하는 스트리머 최상단 고정
-* 원래 메인에 없는 스트리머 추가 가능(Twitch API 사용)
+* 원하는 스트리머 최상단 고정 (핀 표시)
+* 원래 메인에 없는 스트리머 추가 가능 (★표시)
 * 메인 노출하고 싶지 않은 스트리머 숨기기
 * 체크박스 체크 후 멀티트위치 버튼 누르면 멀티트위치 실행됨
 
