@@ -3,111 +3,38 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.06
+// @version     1.07
 // @grant       none
 // ==/UserScript==
 
 
-// 크로스 도메인 관련 예제, 나중에 추가할 일 있으면 사용하려고 함.
-// 참고페이지 http://gooranet.tistory.com/68
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+//                                 PRE-DEFINED
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 /*
-function cross_domain(url)
-{
-    var req_obj = new Object();
-    req_obj.method = 'GET';
-    req_obj.url = url;
-    req_obj.onload = function(responseDetails) 
-    { 
-        var body = document.getElementsByTagName("body")[0];
-        var span = document.createElement("span");
-        var result = document.createTextNode(responseDetails.responseText);
-        span.appendChild(result);
-        body.appendChild(span);
-    } 
-    GM_xmlhttpRequest(req_obj); 
-}
-
-var url = "http://www.goora.net/gm2.html";
-cross_domain(url);
-*/
-
-// $.getScript("~.js");
-// ref. 1 https://www.w3schools.com/jquery/ajax_getscript.asp
-// ref. 2 https://stackoverflow.com/questions/7980798/jquery-dynamic-loading-of-external-script-files-before-document-ready
-
-var version = '1.06';
-var streamerArray = [
-    ['hanryang1125','풍월량'],
-    ['ddahyoni','따효니'],
-    ['kss7749','쉐리'],
-    ['looksam','룩삼'],
-    ['yapyap30','얍얍'],
-    ['saddummy','서새봄냥'],
-    ['109ace','철면수심'],
-    ['rhdgurwns','공혁준'],
-    ['gmdkdsla','흐앙님'],
-    ['jungtaejune','똘똘똘이'],
-    ['mascahs','마스카'],
-    ['steelohs','스틸로'],
-    ['kimdoe','김도'],
-    ['togom','토곰'],
-    ['ogn_lol','OGN 롤챔스'],
-    ['kanetv8','케인TV'],
-    ['yumyumyu77','소풍왔니'],
-    ['sung0','쥬팬더'],
-    ['game2eye','홍방장'],
-    ['cocopopp671','초승달'],
-    ['dingception','딩셉션'],
-    ['redteahs','홍차'],
-    ['zzamtiger0310','수아'],
-    ['rldnddl789','아빠킹'],
-    ['eulcs1','EU LCS'],
-    ['kkoma','SKT Kkoma'],
-    ['1983kej','단군'],
-    ['lol_peanut','SKT Peanut'],
-    ['faker','SKT Faker']
-    ];
-var href = 'initialize';
-var streamerID = '';
-var multitwitchID = 'hanryang1125';
-var ADD_setup_Ary = [];
-
-
-// function
-
-function cookie_initialize()
-{
-    ADD_setup_Ary = [false, false, 'hanryang1125', false, 5, 'hanryang1125', ''];
-}
-
-function cookie_applied_to_setup()
-{
-    if (typeof ADD_setup_Ary === 'undefined')
-        cookie_initialize();
-    $('#ADD_setup_top_fix').prop('checked', ADD_setup_top_fix);
-    $('#ADD_setup_top_off_fix').prop('checked', ADD_setup_top_off_fix);
-    $('#ADD_setup_top_fix_ID').val(ADD_setup_top_fix_ID);
-    $('#ADD_setup_alarm').prop('checked', ADD_setup_alarm);
-    $('#ADD_setup_alarm_gap').val(ADD_setup_alarm_gap);
-    $('#ADD_setup_top_alarm_ID').val(ADD_setup_top_alarm_ID);
-    $('#ADD_setup_Client_ID').val(ADD_setup_Client_ID);
-}
-
-function cookie_setup_remove()
-{
-    $.removeCookie("ADD_setup_Ary");
-}
-
+ * arrive.js
+ * v2.4.1
+ * https://github.com/uzairfarooq/arrive
+ * MIT licensed
+ *
+ * Copyright (c) 2014-2017 Uzair Farooq
+ */
+var Arrive=function(e,t,n){"use strict";function r(e,t,n){l.addMethod(t,n,e.unbindEvent),l.addMethod(t,n,e.unbindEventWithSelectorOrCallback),l.addMethod(t,n,e.unbindEventWithSelectorAndCallback)}function i(e){e.arrive=f.bindEvent,r(f,e,"unbindArrive"),e.leave=d.bindEvent,r(d,e,"unbindLeave")}if(e.MutationObserver&&"undefined"!=typeof HTMLElement){var o=0,l=function(){var t=HTMLElement.prototype.matches||HTMLElement.prototype.webkitMatchesSelector||HTMLElement.prototype.mozMatchesSelector||HTMLElement.prototype.msMatchesSelector;return{matchesSelector:function(e,n){return e instanceof HTMLElement&&t.call(e,n)},addMethod:function(e,t,r){var i=e[t];e[t]=function(){return r.length==arguments.length?r.apply(this,arguments):"function"==typeof i?i.apply(this,arguments):n}},callCallbacks:function(e,t){t&&t.options.onceOnly&&1==t.firedElems.length&&(e=[e[0]]);for(var n,r=0;n=e[r];r++)n&&n.callback&&n.callback.call(n.elem,n.elem);t&&t.options.onceOnly&&1==t.firedElems.length&&t.me.unbindEventWithSelectorAndCallback.call(t.target,t.selector,t.callback)},checkChildNodesRecursively:function(e,t,n,r){for(var i,o=0;i=e[o];o++)n(i,t,r)&&r.push({callback:t.callback,elem:i}),i.childNodes.length>0&&l.checkChildNodesRecursively(i.childNodes,t,n,r)},mergeArrays:function(e,t){var n,r={};for(n in e)e.hasOwnProperty(n)&&(r[n]=e[n]);for(n in t)t.hasOwnProperty(n)&&(r[n]=t[n]);return r},toElementsArray:function(t){return n===t||"number"==typeof t.length&&t!==e||(t=[t]),t}}}(),c=function(){var e=function(){this._eventsBucket=[],this._beforeAdding=null,this._beforeRemoving=null};return e.prototype.addEvent=function(e,t,n,r){var i={target:e,selector:t,options:n,callback:r,firedElems:[]};return this._beforeAdding&&this._beforeAdding(i),this._eventsBucket.push(i),i},e.prototype.removeEvent=function(e){for(var t,n=this._eventsBucket.length-1;t=this._eventsBucket[n];n--)if(e(t)){this._beforeRemoving&&this._beforeRemoving(t);var r=this._eventsBucket.splice(n,1);r&&r.length&&(r[0].callback=null)}},e.prototype.beforeAdding=function(e){this._beforeAdding=e},e.prototype.beforeRemoving=function(e){this._beforeRemoving=e},e}(),a=function(t,r){var i=new c,o=this,a={fireOnAttributesModification:!1};return i.beforeAdding(function(n){var i,l=n.target;(l===e.document||l===e)&&(l=document.getElementsByTagName("html")[0]),i=new MutationObserver(function(e){r.call(this,e,n)});var c=t(n.options);i.observe(l,c),n.observer=i,n.me=o}),i.beforeRemoving(function(e){e.observer.disconnect()}),this.bindEvent=function(e,t,n){t=l.mergeArrays(a,t);for(var r=l.toElementsArray(this),o=0;o<r.length;o++)i.addEvent(r[o],e,t,n)},this.unbindEvent=function(){var e=l.toElementsArray(this);i.removeEvent(function(t){for(var r=0;r<e.length;r++)if(this===n||t.target===e[r])return!0;return!1})},this.unbindEventWithSelectorOrCallback=function(e){var t,r=l.toElementsArray(this),o=e;t="function"==typeof e?function(e){for(var t=0;t<r.length;t++)if((this===n||e.target===r[t])&&e.callback===o)return!0;return!1}:function(t){for(var i=0;i<r.length;i++)if((this===n||t.target===r[i])&&t.selector===e)return!0;return!1},i.removeEvent(t)},this.unbindEventWithSelectorAndCallback=function(e,t){var r=l.toElementsArray(this);i.removeEvent(function(i){for(var o=0;o<r.length;o++)if((this===n||i.target===r[o])&&i.selector===e&&i.callback===t)return!0;return!1})},this},s=function(){function e(e){var t={attributes:!1,childList:!0,subtree:!0};return e.fireOnAttributesModification&&(t.attributes=!0),t}function t(e,t){e.forEach(function(e){var n=e.addedNodes,i=e.target,o=[];null!==n&&n.length>0?l.checkChildNodesRecursively(n,t,r,o):"attributes"===e.type&&r(i,t,o)&&o.push({callback:t.callback,elem:i}),l.callCallbacks(o,t)})}function r(e,t){return l.matchesSelector(e,t.selector)&&(e._id===n&&(e._id=o++),-1==t.firedElems.indexOf(e._id))?(t.firedElems.push(e._id),!0):!1}var i={fireOnAttributesModification:!1,onceOnly:!1,existing:!1};f=new a(e,t);var c=f.bindEvent;return f.bindEvent=function(e,t,r){n===r?(r=t,t=i):t=l.mergeArrays(i,t);var o=l.toElementsArray(this);if(t.existing){for(var a=[],s=0;s<o.length;s++)for(var u=o[s].querySelectorAll(e),f=0;f<u.length;f++)a.push({callback:r,elem:u[f]});if(t.onceOnly&&a.length)return r.call(a[0].elem,a[0].elem);setTimeout(l.callCallbacks,1,a)}c.call(this,e,t,r)},f},u=function(){function e(){var e={childList:!0,subtree:!0};return e}function t(e,t){e.forEach(function(e){var n=e.removedNodes,i=[];null!==n&&n.length>0&&l.checkChildNodesRecursively(n,t,r,i),l.callCallbacks(i,t)})}function r(e,t){return l.matchesSelector(e,t.selector)}var i={};d=new a(e,t);var o=d.bindEvent;return d.bindEvent=function(e,t,r){n===r?(r=t,t=i):t=l.mergeArrays(i,t),o.call(this,e,t,r)},d},f=new s,d=new u;t&&i(t.fn),i(HTMLElement.prototype),i(NodeList.prototype),i(HTMLCollection.prototype),i(HTMLDocument.prototype),i(Window.prototype);var h={};return r(f,h,"unbindAllArrive"),r(d,h,"unbindAllLeave"),h}}(window,"undefined"==typeof jQuery?null:jQuery,void 0);
 
 
 //////////////////////////////////////////////////////////////////////////////////
-// CSS
+//////////////////////////////////////////////////////////////////////////////////
+//                                      CSS
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
 $('head').append('\
     <style id="addostreamCSS" rel="stylesheet" type="text/css">\
         .AD_title {position:absolute; top:10px; right:10px; height:30px; padding:0; font-size:11px; font-style:italic; color:#999}\
-        #ADD_setup {cursor:pointer;}\
-        #popup_ADD_setup {display:none; font-size:12px; z-index:10000; position:absolute; top:50px; right:10px; width:500px;}\
+        #ADD_config {cursor:pointer;}\
+        #popup_ADD_config {display:none; font-size:12px; z-index:10000; position:absolute; top:50px; right:10px; width:500px;}\
         .modal-content {\
             box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);\
             background-clip: padding-box;\
@@ -147,58 +74,194 @@ $('head').append('\
             }\
         }\
         .fixed_streamer{background-color:#f5f5f5;}\
+        .td_strong{font-weight:bold;}\
+        #unique_windows_text{font-size:11px;color:#666;position:absolute; top:18px; right:70px;width:300px;height:20px;text-align:right;}\
     </style>\
 ');
 
 //////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+//                                  VARIABLES
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
+var version = '1.07';
+var streamerArray = [
+    ['hanryang1125','풍월량'],
+    ['ddahyoni','따효니'],
+    ['kss7749','쉐리'],
+    ['looksam','룩삼'],
+    ['yapyap30','얍얍'],
+    ['saddummy','서새봄냥'],
+    ['109ace','철면수심'],
+    ['rhdgurwns','공혁준'],
+    ['gmdkdsla','흐앙님'],
+    ['jungtaejune','똘똘똘이'],
+    ['mascahs','마스카'],
+    ['steelohs','스틸로'],
+    ['kimdoe','김도'],
+    ['togom','토곰'],
+    ['ogn_lol','OGN 롤챔스'],
+    ['kanetv8','케인TV'],
+    ['yumyumyu77','소풍왔니'],
+    ['sung0','쥬팬더'],
+    ['game2eye','홍방장'],
+    ['cocopopp671','초승달'],
+    ['dingception','딩셉션'],
+    ['redteahs','홍차'],
+    ['zzamtiger0310','수아'],
+    ['rldnddl789','아빠킹'],
+    ['eulcs1','EU LCS'],
+    ['kkoma','SKT Kkoma'],
+    ['1983kej','단군'],
+    ['lol_peanut','SKT Peanut'],
+    ['faker','SKT Faker'],
+    ['nrmtzv','으음'],
+    ['nicegametv','나겜']
+    ];
+var href = 'initialize';
+var streamerID = '';
+var multitwitchID = 'hanryang1125';
+ADD_config_ary = [];
+//var ADD_config_top_fix = false;
+//var ADD_config_top_off_fix = false;
+//var ADD_config_top_fix_ID = [];
+//var ADD_config_alarm = false;
+//var ADD_config_alarm_gap = 3;
+//var ADD_config_top_alarm_ID = [];
+//var ADD_config_Client_ID = '';
+var ADD_config_IDs = ['ADD_config_top_fix',
+                      'ADD_config_top_off_fix',
+                      'ADD_config_top_fix_ID',
+                      'ADD_config_alarm',
+                      'ADD_config_alarm_gap',
+                      'ADD_config_top_alarm_ID',
+                      'ADD_config_thumbnail_mouse',
+                      'ADD_config_thumbnail_size',
+                      'ADD_config_streamer_hide',
+                      'ADD_config_streamer_hide_ID'];
 
+fixed_streamer = [];
+alarm_streamer = [];
+var twitch_api_cookie = [];
+
+api_push_forced = false;
+local_api_refresh = true;
+unique_window_check = true;
 
 //////////////////////////////////////////////////////////////////////////////////
-// Setup cookie
+//////////////////////////////////////////////////////////////////////////////////
+//                        FUNCTION - COOKIE AND config
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
-function cookie_to_variable()
+
+// 쿠키 변수 초기화
+function ADD_cookie_var_initialize()
 {
-    if (!!$.cookie('ADD_setup_Ary'))
-        ADD_setup_Ary = JSON.parse($.cookie('ADD_setup_Ary'));
-    ADD_setup_top_fix = ADD_setup_Ary[0];
-    ADD_setup_top_off_fix = ADD_setup_Ary[1];
-    ADD_setup_top_fix_ID = ADD_setup_Ary[2];
-    ADD_setup_alarm = ADD_setup_Ary[3];
-    ADD_setup_alarm_gap = Number(ADD_setup_Ary[4]);
-    ADD_setup_top_alarm_ID = ADD_setup_Ary[5];
-    ADD_setup_Client_ID = ADD_setup_Ary[6];
-    
-    fixed_streamer = ADD_setup_top_fix_ID.replace(' ', '').split(',');
-    alarm_streamer = ADD_setup_top_alarm_ID.replace(' ', '').split(',');
+    ADD_config_ary = [false, false, 'hanryang1125', false, 5, 'hanryang1125', false, 1, false, 'nalcs1, nalcs2'];
 }
 
-function setup_cookie()
+// 설정창 값에 쿠키 값을 덮어씌움
+function ADD_cookie_to_config_form()
 {
-    if (!!$.cookie('ADD_setup_Ary')){
-        // read cookie ary
-        ADD_setup_Ary = JSON.parse($.cookie('ADD_setup_Ary'));
-        //alert('setup cookie exist');
+    if (typeof ADD_config_ary === 'undefined')
+        ADD_cookie_var_initialize();
+    
+    ADD_cookie_to_var();
+    
+    for(i=0;i<ADD_config_IDs.length;i++)
+    {
+        if (ADD_config_IDs[i] == 'ADD_config_thumbnail_size')
+           var ADD_config_ID = $('#'+ADD_config_IDs[i]+'_'+ADD_config_ary[i]);
+        else
+           var ADD_config_ID = $('#'+ADD_config_IDs[i]);
+        
+        if (ADD_config_ID.attr('type') == 'text')
+           ADD_config_ID.val(ADD_config_ary[i]);
+        else if (ADD_config_ID.attr('type') == 'checkbox')
+           ADD_config_ID.prop('checked', ADD_config_ary[i]);
+        else if (ADD_config_ID.attr('type') == 'radio')
+            ADD_config_ID.prop('checked', true);
+    };
+    
+    // form contents initialize
+    ADDconfigEnable('#ADD_config_top_fix','.form_1');
+    ADDconfigEnable('#ADD_config_alarm','.form_2');
+    ADDconfigEnable('#ADD_config_thumbnail_mouse','.form_3');
+    ADDconfigEnable('#ADD_config_streamer_hide','.form_4');
+}
+
+// 쿠키 삭제
+function ADD_config_cookie_remove()
+{
+    $.removeCookie("ADD_config_ary");
+}
+
+// 쿠키 값을 변수에 저장
+function ADD_cookie_to_var()
+{
+    if (!!$.cookie('ADD_config_ary'))
+        ADD_config_ary = JSON.parse($.cookie('ADD_config_ary'));
+
+    // Remove blank
+    //fixed_streamer = ADD_config_top_fix_ID.replace(' ', '').split(',');
+    //alarm_streamer = ADD_config_top_alarm_ID.replace(' ', '').split(',');
+    fixed_streamer = ADD_config_ary[$.inArray('ADD_config_top_fix_ID',ADD_config_IDs)].replace(' ', '').split(',');
+    alarm_streamer = ADD_config_ary[$.inArray('ADD_config_top_alarm_ID',ADD_config_IDs)].replace(' ', '').split(',');
+    hide_streamer = ADD_config_ary[$.inArray('ADD_config_streamer_hide_ID',ADD_config_IDs)].replace(' ', '').split(',');
+}
+
+function ADD_save_config_to_cookie()
+{
+    // ADD_config_ary doesn't exist, initialize ADD_config_ary
+    if (typeof ADD_config_ary === 'undefined')
+        ADD_cookie_var_initialize();
+        
+    for(i=0;i<ADD_config_IDs.length;i++)
+    {
+        if (ADD_config_IDs[i] == 'ADD_config_thumbnail_size')
+           var ADD_config_ID = $('input[name='+ADD_config_IDs[i]+']:checked');
+        else
+           var ADD_config_ID = $('#'+ADD_config_IDs[i]);
+        
+        var ADD_config_type = ADD_config_ID.attr('type');
+        
+        if (ADD_config_type == 'text')
+           ADD_config_ary[i] = ADD_config_ID.val();
+        else if (ADD_config_type == 'checkbox')
+           ADD_config_ary[i] = ADD_config_ID.prop('checked');
+        else if (ADD_config_type == 'radio')
+           ADD_config_ary[i] = ADD_config_ID.val();
+    };
+    
+    // Write cookie ary
+    $.cookie('ADD_config_ary', JSON.stringify(ADD_config_ary), { expires : 365*2, path : '/' });
+}
+
+// 쿠키 있는지 확인하여, 있으면 쿠키값을 변수에 저장. 없으면 생성
+function ADD_main_config_cookie()
+{
+    // If there is cookie, write cookie var.
+    if (!!$.cookie('ADD_config_ary'))
+    {
+        ADD_config_ary = JSON.parse($.cookie('ADD_config_ary'));
     }
     else
-    // if there is no cookie
+    // If there is no cookie, initialize cookie variable and write cookie
     {
-        cookie_initialize();
-        // write cookie ary
-        $.cookie('ADD_setup_Ary', JSON.stringify(ADD_setup_Ary), { expires : 365*2, path : '/' });
-        //alert('new setup cookie');
+        ADD_cookie_var_initialize();
+        $.cookie('ADD_config_ary', JSON.stringify(ADD_config_ary), { expires : 365*2, path : '/' });
     }
-    cookie_to_variable();
-
+    ADD_cookie_to_var();
 }
-setup_cookie();
-
-//////////////////////////////////////////////////////////////////////////////////
-
 
 
 //////////////////////////////////////////////////////////////////////////////////
-// cookie for api
+//////////////////////////////////////////////////////////////////////////////////
+//                              FUNCTION - API
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
 
 // 배열 병합 함수
@@ -213,10 +276,13 @@ var concatArraysUniqueWithSort = function (thisArray, otherArray) {
 };
 
 
-// twitch api check
+// Twitch API Check
 function twitch_api()
 {
-    api_check_time = ADD_setup_alarm_gap;
+    api_check_time = Number(ADD_config_ary[$.inArray('ADD_config_alarm_gap',ADD_config_IDs)]);
+    if (api_check_time < 1)
+      api_check_time = 1;
+
     now_time = new Date();
     api_update = true;
     if (!!$.cookie('api_check_pre_time'))
@@ -226,8 +292,9 @@ function twitch_api()
         api_update = left_time < 0;
     }
 
-    if (api_update)
+    if (unique_window_check && (api_push_forced || api_update))
     {
+        api_push_forced = false;
         // api update 
 
         // cookie update
@@ -236,47 +303,77 @@ function twitch_api()
         $.cookie('api_check_pre_time', api_expires, { expires : api_expires, path : '/' });
         console.log('Current time is '+now_time+'.\nCookie time for api update is '+api_expires+'.\nCookie is updated.');
         
-        // cookie check
-        if(ADD_setup_Client_ID.length >= 30)
-           console.log('There is twitch client id', ADD_setup_Client_ID.length);
-        else
-           console.log('There is no twitch client id', ADD_setup_Client_ID.length);
-        
-        if ((!!$.cookie('api_check_pre_time')) && (!!$.cookie('ADD_setup_Ary')) && (ADD_setup_Client_ID.length >= 30) ) 
+        // cookie check        
+        if ((!!$.cookie('api_check_pre_time')) && (!!$.cookie('ADD_config_ary')) ) 
         {   
             console.log('All cookie checked for api');
             // make channel id ary for api
-            var possibleChannels = [];    
-            if(ADD_setup_top_off_fix && ADD_setup_alarm)
+            var possibleChannels = [];
+            var ADD_Client_ID = 'phcxzq5994awjrevkt45p6711bt77s';
+            
+            var ADD_config_top_off_fix = ADD_config_ary[$.inArray('ADD_config_top_off_fix',ADD_config_IDs)];
+            var ADD_config_alarm = ADD_config_ary[$.inArray('ADD_config_alarm',ADD_config_IDs)];
+            
+            if(ADD_config_top_off_fix && ADD_config_alarm)
                 possibleChannels = concatArraysUniqueWithSort(fixed_streamer, alarm_streamer);
-            else if(ADD_setup_top_off_fix)
+            else if(ADD_config_top_off_fix)
                 possibleChannels = fixed_streamer;
             else if(alarm_streamer)
                 possibleChannels = alarm_streamer;
+            
+            var possibleChannelsString = '';
+            var possibleChannelsNo = possibleChannels.length;
+            
+            /*
+            for (i = 0; i < possibleChannelsNo; i++) {
+            if (i==0)
+                possibleChannelsString = possibleChannels[i];
+            else
+                possibleChannelsString = possibleChannelsString+","+possibleChannels[i];
+            };
+            possibleChannelsString = possibleChannelsString.replace(' ', '');
+            
+            console.log(possibleChannelsString);
+            */
+            possibleChannelsString = possibleChannels.join(',').replace(' ', '');
 
-            console.log('Api call channels no. :'+possibleChannels.length);
-            if(possibleChannels.length > 0)
+            if(possibleChannelsNo > 0)
             {
-                console.log('Api call channels name : '+possibleChannels);     
-                
-                possibleChannels.forEach(function(api_name){
+                console.log('Api call channels no. :'+possibleChannels.length + ', name : ' + possibleChannelsString.replace(' ', ''));
                     $.ajax({ 
-                         url:'https://api.twitch.tv/kraken/streams/'+api_name,
+                         url:'https://api.twitch.tv/kraken/streams?offset=0&limit=100&channel='+possibleChannelsString.replace(' ', ''),
                          type: 'GET',
                          contentType: 'application/json',
                          dataType:'json',
                          headers: {
-                           'Client-ID': ADD_setup_Client_ID
+                           'Client-ID': ADD_Client_ID
                          },
                          success:function(channel) {
                               //request succeeded
                               console.log('api request succeeded', channel);
-                              if (channel["stream"] == null) {
-                                  console.log(api_name+' is offline');
-                              } 
-                              else {
-                                  console.log(api_name+' is online');
-                              }
+                              var streams = channel.streams;
+                         
+                              for (var i = 0; i < streams.length; i++) {
+                                  var stream = streams[i];
+                                  if (stream == null) {
+                                      console.log(possibleChannels[i] + ' is offline');
+                                  }
+                                  else
+                                  {
+                                      twitch_api_cookie[i] = {
+                                          'name' : stream.channel.name,
+                                          'display_name' : stream.channel.display_name,
+                                          'status' : stream.channel.status,
+                                          'viewers' : stream.viewers,
+                                          'game' : stream.channel.game
+                                      };
+                                      console.log(twitch_api_cookie[i]);
+                                  };
+                              };
+                             
+                              //console.log(twitch_api_cookie);
+                              //console.log(JSON.stringify(twitch_api_cookie));
+                              $.cookie('twitch_api_cookie', JSON.stringify(twitch_api_cookie), { expires : api_expires, path : '/' });
 
                          },
                          error:function() {
@@ -284,254 +381,133 @@ function twitch_api()
                               console.log('api request failed');
                          }
                     });
-                });
-                /*
-                possibleChannels.forEach(function(api_name){
-                $.getJSON('https://api.twitch.tv/kraken/streams/' + api_name + '?callback=?', 
-                    function(channel){
-                        //console.log(channel);
-                        if (channel["stream"] == null) {
-                            console.log(api_name+' is offline');
-                            // $('#all').append('<p>' + channel._links.self + '</p>');
-                        } 
-                        else {
-                            console.log(api_name+' is online');
-                            //$('#all').append('<p>Fail</p>');   
-                        }
-                    });
-                });*/
+
             }
-            
+
         }
-        
     }
     else
     {
         // not update
         left_time = Math.floor(left_time/60/1000)+' min '+Math.floor((left_time/1000)%60)+' sec';
         console.log('Current time is '+now_time+'.\nCookie time for api update is '+api_pre_time+'.\nCookie is not updated.\nCookie will update after '+left_time);
+        if (!!$.cookie('twitch_api_cookie'))
+          twitch_api_cookie = JSON.parse($.cookie('twitch_api_cookie'));
     }
-    
 }
 
-twitch_api();
+
+////////////////////////////////// UNIQUE WINDOW /////////////////////////////////
+
+function ADD_multiwindow_prevent()
+{
+unique_window = new Date();
+unique_window = Number(unique_window.getTime());
+$.cookie('unique_window', unique_window, { expires : 30, path : '/' });
+
+setInterval(function() {
+      unique_window_cookie = Number($.cookie('unique_window'));
+          if((unique_window_check==true)&&(unique_window != unique_window_cookie))
+            {
+              console.log('unique window = ',unique_window);
+              console.log('unique window cookie is ',unique_window_cookie);
+              unique_window_check = false;
+              $('#unique_windows_text').show();
+            }
+}, 1000);
+
+}
+
 
 //////////////////////////////////////////////////////////////////////////////////
-
-
-
 //////////////////////////////////////////////////////////////////////////////////
-// setup popup DOE
+//                                FUNCTION - DOE
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
+function ADD_config_DOE()
+{
 $('.container').append('\
     <div style="position:relative;">\
+    <div id="unique_windows_text" style="display:none;">새 창에서 접속이 감지되어 API 갱신이 중지됩니다.</div>\
         <div class="AD_title">\
-           <span id="ADD_setup" class="btn btn-default btn_closed">\
+           <span id="ADD_config" class="btn btn-default btn_closed">\
               <span class="glyphicon glyphicon-cog">\
               </span>\
            </span>\
         </div>\
         \
-        <div id="popup_ADD_setup" class="modal-dialog">\
+        <div id="popup_ADD_config" class="modal-dialog">\
            <div class="modal-content">\
               <div class="modal-body">\
-                 <table class="table table-striped table-hover">\
+                 <table class="table table-condensed table-hover" style="margin-bottom:0px;">\
                      <thead><tr><th>ADDostram version: '+version+'</th><th></th></tr></thead>\
                      <tbody>\
-                        <tr>\
-                           <td>특정 스트리머 상단 고정</td>\
-                           <td><input type="checkbox" id="ADD_setup_top_fix" onfocus="this.blur()"  /></td>\
+                        <tr class="active">\
+                           <td class="td_strong">특정 스트리머 상단 고정</td>\
+                           <td><input type="checkbox" id="ADD_config_top_fix" onfocus="this.blur()"  /></td>\
                         </tr>\
-                        <tr style="display:none;">\
-                           <td>└ 오프라인 시에도 고정 <strong style="color:red;">(Client ID 요구됨)</strong></td>\
-                           <td><input type="checkbox" id="ADD_setup_top_off_fix" onfocus="this.blur()" class="form_enabled" /></td>\
+                        <tr>\
+                           <td>└ 오프라인 시에도 고정</td>\
+                           <td><input type="checkbox" id="ADD_config_top_off_fix" onfocus="this.blur()" class="form_1 form_enabled" /></td>\
                         </tr>\
                         <tr>\
                            <td>└ 상단 고정 스트리머 아이디(콤마로 구분)</td>\
-                           <td><input type="text" id="ADD_setup_top_fix_ID" class="form_enabled" /></td>\
+                           <td><input type="text" id="ADD_config_top_fix_ID" style="width:100%;" class="form_1 form_enabled" /></td>\
                         </tr>\
-                        <tr style="display:none;">\
-                           <td>스트리머 Online 알림 <strong style="color:red;">(Client ID 요구됨)</strong></td>\
-                           <td><input type="checkbox" id="ADD_setup_alarm" onfocus="this.blur()"  /></td>\
+                        <tr class="active">\
+                           <td class="td_strong">메인에 없는 스트리머 추가</td>\
+                           <td><input type="checkbox" id="ADD_config_alarm" onfocus="this.blur()" /></td>\
                         </tr>\
-                        <tr style="display:none;">\
-                           <td>└ 스트리머 알림 시간 간격(최소 1분)</td>\
-                           <td><input type="text" id="ADD_setup_alarm_gap" class="form_enabled" /></td>\
+                        <tr>\
+                           <td>└ 스트리머 조회 간격(최소 1분)</td>\
+                           <td><input type="text" id="ADD_config_alarm_gap" style="width:100%;" class="form_2 form_enabled" /></td>\
                         </tr>\
-                        <tr style="display:none;">\
-                           <td>└ 스트리머 알림 대상 아이디(콤마로 구분)</td>\
-                           <td><input type="text" id="ADD_setup_top_alarm_ID" class="form_enabled" /></td>\
+                        <tr>\
+                           <td>└ 스트리머 아이디(콤마로 구분)</td>\
+                           <td><input type="text" id="ADD_config_top_alarm_ID" style="width:100%;" class="form_2 form_enabled" /></td>\
                         </tr>\
-                        <tr style="display:none;">\
-                           <td><strong style="color:red;">Twitch Client ID</strong> <a href="https://www.twitch.tv/kraken/oauth2/clients/new" target="_blank">[발급 링크]</a></td>\
-                           <td><input type="text" id="ADD_setup_Client_ID" class="form_enabled" /></td>\
+                        <tr class="active">\
+                           <td class="td_strong">섬네일 마우스 오버시 확대 (현재 미지원)</td>\
+                           <td><input type="checkbox" id="ADD_config_thumbnail_mouse" onfocus="this.blur()"  /></td>\
+                        </tr>\
+                        <tr>\
+                           <td>└ 섬네일 사이즈</td>\
+                           <td>\
+                              <label class="radio-inline">\
+                                <input type="radio" name="ADD_config_thumbnail_size" id="ADD_config_thumbnail_size_1" value="1" class="form_3 form_enabled" onfocus="this.blur()"> Small\
+                              </label>\
+                              <label class="radio-inline">\
+                                <input type="radio" name="ADD_config_thumbnail_size" id="ADD_config_thumbnail_size_2" value="2" class="form_3 form_enabled" onfocus="this.blur()"> Medium\
+                              </label>\
+                              <label class="radio-inline">\
+                                <input type="radio" name="ADD_config_thumbnail_size" id="ADD_config_thumbnail_size_3" value="3" class="form_3 form_enabled" onfocus="this.blur()"> Large\
+                              </label>\
+                          </td>\
+                        </tr>\
+                        <tr class="active">\
+                           <td class="td_strong">특정 스트리머 메인에서 숨기기</td>\
+                           <td><input type="checkbox" id="ADD_config_streamer_hide" onfocus="this.blur()" class="form_enabled" /></td>\
+                        </tr>\
+                        <tr>\
+                           <td>└ 숨길 스트리머 아이디(콤마로 구분)</td>\
+                           <td><input type="text" id="ADD_config_streamer_hide_ID" style="width:100%;" class="form_4 form_enabled" /></td>\
                         </tr>\
                     </tbody>\
                  </table>\
               </div>\
               <div class="modal-footer">\
                 <!--<div class="glyphicon glyphicon-ok bg-success" style="display:block;float:left;height:30px; width:100%;padding:7px 0px;">Saved successfully!</div>-->\
-                <div id="ADD_setup_Success" class="btn btn-success confirm_selection" style="display:none;">Done!<br /> 변경사항은 새로고침 후 적용됩니다.</div>\
-                  <button type="button" id="Cookie_reset" class="btn">Cookie reset</button>\
-                  <button type="button" id="ADD_setup_save" class="btn btn-primary">Save changes</button>\
+                <div id="ADD_config_Success" class="btn btn-success confirm_selection" style="display:none;">Done!<br /> 변경사항은 새로고침 후 적용됩니다.</div>\
+                  <button type="button" id="Cookie_reset" class="btn">Config reset</button>\
+                  <button type="button" id="ADD_config_save" class="btn btn-primary">Save changes</button>\
               </div>\
            </div>\
         </div>\
         \
     </div>\
 ');
-
-// write setup form from cookie
-cookie_applied_to_setup();
-
-// form contents initialize
-if(!ADD_setup_top_fix)
-{
-    $('#ADD_setup_top_off_fix, #ADD_setup_top_fix_ID').prop('disabled', true).addClass('form_disabled').removeClass('form_enabled');
-    //$('#ADD_setup_top_fix_ID').prop('disabled', true).addClass('form_disabled').removeClass('form_enabled');
 }
-
-if(!ADD_setup_alarm)
-{
-    $('#ADD_setup_alarm_gap, #ADD_setup_top_alarm_ID').prop('disabled', true).addClass('form_disabled').removeClass('form_enabled');
-    //$('#ADD_setup_top_alarm_ID').prop('disabled', true).addClass('form_disabled').removeClass('form_enabled');
-}
-
-//////////////////////////////////////////////////////////////////////////////////
-
-
-
-//////////////////////////////////////////////////////////////////////////////////
-// form click event
-$('#ADD_setup_top_fix').on('click', function() {
-    if($('#ADD_setup_top_fix').is(':checked'))
-    {
-        $('#ADD_setup_top_off_fix, #ADD_setup_top_fix_ID').prop('disabled', false).addClass('form_enabled').removeClass('form_disabled');
-        //$('#ADD_setup_top_fix_ID').prop('disabled', false).addClass('form_enabled').removeClass('form_disabled');
-    }
-    else
-    {
-        $('#ADD_setup_top_off_fix, #ADD_setup_top_fix_ID').prop('disabled', true).addClass('form_disabled').removeClass('form_enabled');
-        //$('#ADD_setup_top_fix_ID').prop('disabled', true).addClass('form_disabled').removeClass('form_enabled');
-    }
-});
-
-$('#ADD_setup_alarm').on('click', function() {
-    if($('#ADD_setup_alarm').is(':checked'))
-    {
-        $('#ADD_setup_alarm_gap, #ADD_setup_top_alarm_ID').prop('disabled', false).addClass('form_enabled').removeClass('form_disabled');
-        //$('#ADD_setup_top_alarm_ID').prop('disabled', false).addClass('form_enabled').removeClass('form_disabled');
-    }
-    else
-    {
-        $('#ADD_setup_alarm_gap, #ADD_setup_top_alarm_ID').prop('disabled', true).addClass('form_disabled').removeClass('form_enabled');
-        //$('#ADD_setup_top_alarm_ID').prop('disabled', true).addClass('form_disabled').removeClass('form_enabled');
-    }
-});
-
-//////////////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////////////
-// setup popup On-Off script
-
-$('#ADD_setup').on('click', function() {
-    if ($('#ADD_setup').hasClass('btn_closed'))
-    {
-        $('#popup_ADD_setup').stop(true,true).fadeIn(300);
-        $('#ADD_setup').removeClass('btn_closed').addClass('btn_opend');
-        // alert('OPEN');
-    }
-    else
-    {
-        $('#popup_ADD_setup').stop(true,true).fadeOut(300);
-        $('#ADD_setup').removeClass('btn_opend').addClass('btn_closed');
-        // alert('CLOSE');
-    }    
-//    return false;
-});
-
-$('a.nav-brand, #stream').on('click', function() {
-    if ($('#ADD_setup').hasClass('btn_opend'))
-    {
-        $('#popup_ADD_setup').stop(true,true).fadeOut(300);
-        $('#ADD_setup').removeClass('btn_opend').addClass('btn_closed');
-        // alert('CLOSE');
-    }
-});
-
-
-//////////////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////////////
-// Save setup to cookie (Click event)
-
-function save_setup_to_cookie()
-{
-    if (typeof ADD_setup_Ary === 'undefined')
-    {
-        // ADD_setup_Ary doesn't exist, initialize ADD_setup_Ary
-        cookie_initialize();
-    }
-        
-    ADD_setup_Ary[0] = $('#ADD_setup_top_fix').prop('checked');
-    ADD_setup_Ary[1] = $('#ADD_setup_top_off_fix').prop('checked');
-    ADD_setup_Ary[2] = $('#ADD_setup_top_fix_ID').val();
-    ADD_setup_Ary[3] = $('#ADD_setup_alarm').prop('checked');
-    ADD_setup_Ary[4] = $('#ADD_setup_alarm_gap').val();
-    ADD_setup_Ary[5] = $('#ADD_setup_top_alarm_ID').val();
-    ADD_setup_Ary[6] = $('#ADD_setup_Client_ID').val();
-    
-    $.cookie('ADD_setup_Ary', JSON.stringify(ADD_setup_Ary), { expires : 365*2, path : '/' }); // write cookie ary
-}
-
-$('#ADD_setup_save').on('click', function() {
-    save_setup_to_cookie();
-    cookie_to_variable();
-    $('#ADD_setup_Success').fadeIn('1000').delay('3000').fadeOut('1000');
-    
-});
-
-//////////////////////////////////////////////////////////////////////////////////
-
-
-
-//////////////////////////////////////////////////////////////////////////////////
-// reset cookie
-
-$('#Cookie_reset').on('click', function() {
-    cookie_initialize();
-    cookie_setup_remove();
-    setup_cookie();
-    cookie_applied_to_setup();
-    cookie_to_variable();
-    $('#ADD_setup_Success').fadeIn('1000').delay('3000').fadeOut('1000');
-    console.log('cookie reset!')
-});
-
-
-//////////////////////////////////////////////////////////////////////////////////
-
-
-$(document).on("click", "#multitwitch", multitwitch_run);
-
-$(document).ready(function(){
-    setTimeout(
-        function() {
-            // alert('CHECK.');
-            Addostram_run();
-        },
-        500);
-});
-
-$('.container>a').click(function(){
-    setTimeout(
-        function() {
-            // alert('CHECK.');
-            Addostram_run();
-        },
-        200);
-});
 
 function Addostram_run()
 {
@@ -539,23 +515,99 @@ function Addostram_run()
     if( $('#multitwitch').length === 0 )
           $('.search').append('<span id="multitwitch" style="cursor: pointer; display:inline-block; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #eee none repeat scroll 0 0; color: #222;">멀티트위치</span>');
 
+    
+    $('li.twitch').each(function (j) {
+        href = $(this).find('a').attr('href').replace('/#/stream/twitch/', '');
+        $(this).attr('id', 'twitch_'+ href);
+    });
+    
+    // Add choosed streamer from api cookie
+    var ADD_config_alarm = ADD_config_ary[$.inArray('ADD_config_alarm',ADD_config_IDs)];
+    if ( ADD_config_alarm && (!!$.cookie('twitch_api_cookie')) && (twitch_api_cookie.length>0) )
+    {
+       for(var w=0; w<twitch_api_cookie.length; w++)
+       {
+           if( $('#twitch_'+twitch_api_cookie[w].name).length === 0 )
+           {
+           streamerArray.push([twitch_api_cookie[w].name, twitch_api_cookie[w].display_name]);
+           var ADD_star_string = '<div style="position:relative;color:#333;"><div class="glyphicon glyphicon-star" style="position:absolute;top:10px; right:25px; z-index:10;"></div></div>';
+           var ADD_li_string = '\
+              <li id="twitch_'+twitch_api_cookie[w].name+'" class="twitch">\
+                 '+ADD_star_string+'\
+                 <a href="/#/stream/twitch/'+twitch_api_cookie[w].name+'">\
+                     <img src="http://static-cdn.jtvnw.net/previews-ttv/live_user_'+twitch_api_cookie[w].name+'-240x180.jpg" hieght="60" width="90">\
+                     <div class="stream-wrap">\
+                         <div class="title">'+twitch_api_cookie[w].status+'</div>\
+                         <div class="info">\
+                             <div class="from twitch">'+twitch_api_cookie[w].name+'</div>\
+                             <div class="viewers">\
+                                 <span class="glyphicon glyphicon-user"></span>\
+                                   '+twitch_api_cookie[w].viewers+'\
+                             </div>\
+                         </div>\
+                     </div>\
+                 </a>\
+              </li>\
+            ';
+
+            $('.main-streams>ul').prepend(ADD_li_string);
+           }
+        }
+    };
+    
+    
     // Fix choosed streamer on top
-    console.log('Streamer fixed: ', ADD_setup_top_fix);
-    if ((!!$.cookie('ADD_setup_Ary')) && ADD_setup_top_fix && fixed_streamer.length >= 1){
-        $('li.twitch').each(function (j) {
-            href = $(this).find('a').attr('href').replace('/#/stream/twitch/', '');
-            $(this).attr('id', 'twitch_'+ href);
-        });
+    var ADD_config_top_fix = ADD_config_ary[$.inArray('ADD_config_top_fix',ADD_config_IDs)];
+    var ADD_config_top_off_fix = ADD_config_ary[$.inArray('ADD_config_top_off_fix',ADD_config_IDs)];
+    
+    console.log('Streamer fixed: ', ADD_config_top_fix);
+    if ((!!$.cookie('ADD_config_ary')) && ADD_config_top_fix && fixed_streamer.length >= 1){
         
         for(k = 0; k < fixed_streamer.length; k++){
-            temp_streamer_id = '#'+'twitch_'+fixed_streamer[fixed_streamer.length - k - 1];
+            var temp_streamer_href = fixed_streamer[fixed_streamer.length - k - 1].replace(' ', '');
+            var temp_streamer_id = '#'+'twitch_'+temp_streamer_href;
+            
+            var ADD_pushpin_string = '<div style="position:relative;"><div class="glyphicon glyphicon-pushpin" style="position:absolute;top:10px; right:10px; z-index:50;"></div></div>';
+            
             if(!($(temp_streamer_id).length === 0))
             {
                 $(temp_streamer_id).addClass('fixed_streamer').prependTo('.main-streams>ul');
-                $(temp_streamer_id).prepend('<div style="position:relative;"><div class="glyphicon glyphicon-pushpin" style="position:absolute;top:10px; right:10px;"><div><div>');
+                $(temp_streamer_id).prepend(ADD_pushpin_string);
+            }
+            else if(ADD_config_top_off_fix)
+            {
+               var ADD_offline_string = '\
+                  <li id="twitch_'+temp_streamer_href+'" class="twitch fixed_streamer">\
+                     <a href="/#/stream/twitch/'+temp_streamer_href+'">\
+                         <img src="http://static-cdn.jtvnw.net/previews-ttv/live_user_'+temp_streamer_href+'-240x180.jpg" hieght="60" width="90">\
+                         <div class="stream-wrap">\
+                             <div class="title">스트림이 오프라인 상태이거나 메인에 없는 스트리머 추가 목록에 없습니다.</div>\
+                             <div class="info">\
+                                 <div class="from twitch">'+temp_streamer_href+'</div>\
+                                 <div class="viewers">\
+                                     <span class="glyphicon glyphicon-user"></span>\
+                                       0\
+                                 </div>\
+                             </div>\
+                         </div>\
+                     </a>\
+                  </li>\
+                ';
+                $('.main-streams>ul').prepend(ADD_offline_string).prepend(ADD_pushpin_string);
             }
         }
     }
+    
+    // Remove choosed streamer
+    var ADD_config_streamer_hide = ADD_config_ary[$.inArray('ADD_config_streamer_hide',ADD_config_IDs)];
+    //var ADD_config_streamer_hide_ID = ADD_config_ary[$.inArray('ADD_config_streamer_hide_ID',ADD_config_IDs)];
+    console.log('Streamer hided: ', ADD_config_streamer_hide);
+    
+    for(var z=0;z<hide_streamer.length;z++)
+    {
+       $('#twitch_'+hide_streamer[z].replace(' ', '')).hide();
+    }
+    
     
     // Search twitch li
     $('li.twitch').each(function (i) {
@@ -592,3 +644,161 @@ function multitwitch_run()
     else
         $(location).attr('href','/#/stream/multitwitch/'+multitwitchID);
 }
+
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+//                               FUNCTION - CHAT
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+
+/*
+$('.chat').arrive('.user_conversation', function(newElem) {
+     var $newElem = $(newElem);
+    
+    // nickname
+    console.log($newElem.find('.conversation_nick').html());
+    
+    // chat content
+    console.log($newElem.find('.cs_contents').html());
+    
+});
+*/
+
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+//                                    MAIN
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+
+// Check cookie
+ADD_main_config_cookie();
+
+// Make config DOE
+ADD_config_DOE();
+
+// Write config form from cookie
+ADD_cookie_to_config_form();
+
+// Call Twitch api
+twitch_api();
+
+// Multiwindows checker
+ADD_multiwindow_prevent();
+
+// Run 
+
+$(document).ready(function(){
+    
+    setTimeout(
+        function() {
+            Addostram_run();
+        },
+        500);
+});
+
+
+$('.container>a').click(function(){
+    ADD_cookie_to_var();
+    twitch_api();
+    setTimeout(
+        function() {
+            Addostram_run();
+        },
+        100);
+});
+
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+//                                    EVENT
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+
+// run Multitwitch
+$(document).on("click", "#multitwitch", multitwitch_run);
+
+// config popup On-Off script
+
+$('#ADD_config').on('click', function() {
+    if ($('#ADD_config').hasClass('btn_closed'))
+    {
+        ADD_cookie_to_config_form();
+        $('#popup_ADD_config').stop(true,true).fadeIn(300);
+        $('#ADD_config').removeClass('btn_closed').addClass('btn_opend');
+        console.log('config popup open');
+    }
+    else
+    {
+        //ADD_cookie_to_config_form();
+        $('#popup_ADD_config').stop(true,true).fadeOut(300);
+        $('#ADD_config').removeClass('btn_opend').addClass('btn_closed');
+        console.log('config popup close');
+    }    
+});
+
+$('a.nav-brand, #stream').on('click', function() {
+    if ($('#ADD_config').hasClass('btn_opend'))
+    {
+        //ADD_cookie_to_config_form();
+        $('#popup_ADD_config').stop(true,true).fadeOut(300);
+        $('#ADD_config').removeClass('btn_opend').addClass('btn_closed');
+    }
+});
+
+
+// save cookie event
+
+$('#ADD_config_save').on('click', function() {
+    ADD_save_config_to_cookie();
+    ADD_cookie_to_var();
+    $('#ADD_config_Success').fadeIn('1000').delay('3000').fadeOut('1000');
+    if (local_api_refresh == true)
+    {
+      local_api_refresh = false;
+      api_push_forced = true;
+      twitch_api();
+      setTimeout(function() {
+      local_api_refresh = true;
+      }, 5000);
+    }
+});
+
+// reset cookie event
+
+$('#Cookie_reset').on('click', function() {
+    ADD_cookie_var_initialize();
+    ADD_config_cookie_remove();
+    ADD_main_config_cookie();
+    ADD_cookie_to_config_form();
+    ADD_cookie_to_var();
+    $('#ADD_config_Success').fadeIn('1000').delay('3000').fadeOut('1000');
+    console.log('cookie reset!');
+});
+
+
+// config form click event
+
+function ADDconfigEnable(a, b)
+{
+    //console.log('ADDconfigEnable');
+    if($(a).is(':checked'))
+        $(b).prop('disabled', false).addClass('form_enabled').removeClass('form_disabled');
+    else
+        $(b).prop('disabled', true).addClass('form_disabled').removeClass('form_enabled');
+}
+
+$('#ADD_config_top_fix').on('click', function() {
+    ADDconfigEnable('#ADD_config_top_fix','.form_1');
+});
+
+$('#ADD_config_alarm').on('click', function() {
+    ADDconfigEnable('#ADD_config_alarm','.form_2');
+});
+
+$('#ADD_config_thumbnail_mouse').on('click', function() {
+    ADDconfigEnable('#ADD_config_thumbnail_mouse','.form_3');
+});
+
+$('#ADD_config_streamer_hide').on('click', function() {
+    ADDconfigEnable('#ADD_config_streamer_hide','.form_4');
+});
+
