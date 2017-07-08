@@ -3,10 +3,11 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.08
+// @version     1.09
 // @grant       none
 // ==/UserScript==
 
+var version = '1.09';
 
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +95,6 @@ $('head').append('\
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
 
-var version = '1.08';
 var streamerArray = [
     ['hanryang1125','풍월량'],
     ['ddahyoni','따효니'],
@@ -158,6 +158,7 @@ var twitch_api_cookie = [];
 api_push_forced = false;
 local_api_refresh = true;
 unique_window_check = true;
+backbutton_checker = false;
 max_iteration = 100;
 iteration = 0;
 
@@ -293,6 +294,10 @@ var concatArraysUniqueWithSort = function (thisArray, otherArray) {
 // Twitch API Check
 function twitch_api()
 {
+    ADD_config_alarm = ADD_config_ary[$.inArray('ADD_config_alarm',ADD_config_IDs)];
+    if(!ADD_config_alarm)
+        return false;
+    
     api_check_time = Number(ADD_config_ary[$.inArray('ADD_config_alarm_gap',ADD_config_IDs)]);
     if (api_check_time < 1)
       api_check_time = 1;
@@ -306,7 +311,7 @@ function twitch_api()
         api_update = left_time < 0;
     }
 
-    if (unique_window_check && (api_push_forced || api_update))
+    if (unique_window_check && ADD_config_alarm && (api_push_forced || api_update))
     {
         api_push_forced = false;
         // api update 
@@ -546,13 +551,33 @@ $('.container').append('\
 ');
 }
 
+function urlchecker()
+{
+    var document_url = location.href;
+    document_url = document_url.toLowerCase();
+    var t_url = document_url.indexOf('twitch');
+    var d_url = document_url.indexOf('kakao');
+    var c_url = document_url.indexOf('youtube');
+    //console.log(document_url);
+
+    if( (t_url == -1) && (d_url == -1) && (c_url == -1) )
+        {
+        //console.log('urlchecker true');
+        return true;
+        }
+    else
+        {
+        //console.log('urlchecker false');
+        return false;
+        }
+}
+
 function Addostram_run()
 {
     // Add multitwitch button
     if( $('#multitwitch').length === 0 )
           $('.search').append('<span id="multitwitch" style="cursor: pointer; display:inline-block; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #eee none repeat scroll 0 0; color: #222;">멀티트위치</span>');
 
-    
     if( ($('.ADD_ON').length === 0) && ($('li.twitch').length > 0) )
     {
     console.log('Iteration no. is ',iteration);
@@ -565,8 +590,8 @@ function Addostram_run()
     
     // Add choosed streamer from api cookie
     var ADD_config_alarm = ADD_config_ary[$.inArray('ADD_config_alarm',ADD_config_IDs)];
-    console.log('ADD_config_alarm   ',ADD_config_alarm );
-    console.log('(twitch_api_cookie.length>0)', twitch_api_cookie.length);
+    console.log('ADD_config_alarm: ',ADD_config_alarm );
+    //console.log('(twitch_api_cookie.length>0)', twitch_api_cookie.length);
     if ( ADD_config_alarm && (!!$.cookie('twitch_api_cookie')) && (twitch_api_cookie.length>0) )
     {
        for(var w=0; w<twitch_api_cookie.length; w++)
@@ -668,7 +693,7 @@ function Addostram_run()
         }
         
         $(this).find('.info>.from').html(streamerID+'('+href+')');
-        $(this).append('<div style="position:relative;"><div style="position:absolute; top:-40px; right:75px; text-align:center; font-size:12px; z-index:100; margin:0;"><div class="ADD_checkbox" style="display:inline"><input style="margin-right:5px;border:none !important;" type="checkbox" name="chk" value="'+href+'" onfocus="this.blur()" /></div><div style="background-color:#eee; padding:5px 8px; height:15; display:inline;"><a href="/#/stream/multitwitch/'+href+'">With chat</a></div></div></div>');
+        $(this).append('<div style="position:relative;"><div style="position:absolute; top:-40px; right:75px; text-align:center; font-size:12px; z-index:100; margin:0;"><div class="ADD_checkbox" style="display:inline"><input style="margin-right:5px;border:none !important;" type="checkbox" name="chk" value="'+href+'" onfocus="this.blur()" /></div><div class="multitwitch_button" style="background-color:#eee; padding:5px 8px; height:15; display:inline;"><a href="/#/stream/multitwitch/'+href+'">With chat</a></div></div></div>');
         streamerID = ''; // reset
         });
     }
@@ -763,13 +788,23 @@ $(document).ready(function(){
         },
         500);
     */
-    Addostram_run();    
+// 재생화면에서 실행 방지
+    if (urlchecker())
+       Addostram_run();
+    else
+       {
+       backbutton_checker = true;
+       console.log('In playing!');
+       }
+       
 });
 
 
 $('.container>a').click(function(){
+    backbutton_checker = false;
     ADD_cookie_to_var();
     twitch_api();
+    
     /*
     setTimeout(
         function() {
@@ -777,9 +812,28 @@ $('.container>a').click(function(){
         },
         100);
     */
+    
     Addostram_run();
 });
 
+// hash change event
+// 2017.07.09
+// Backbutton 으로 인한 오류 방지
+// li 클릭하여 재생 중 화면으로 올 경우 backbutton_checker 는 true 가 된다.
+// 혹은 주소로 바로 갈 경우에도 동일하다.
+// 페이지 변경을 탐지한 뒤, 백버튼 체킹되고 메인페이지인 경우 Addostram_run 함수 작동시킨다.
+window.onpopstate = function(event) {
+     console.log('url checker = ', urlchecker());
+     //console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
+     if( backbutton_checker && urlchecker() ) //(!$('#stream').hasClass('onstream')) )
+     {
+        console.log("Back button dectected. " + "location: " + document.location)
+        ADD_cookie_to_var();
+        twitch_api();
+        Addostram_run();
+        backbutton_checker = false;
+     };
+};
 
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
@@ -789,6 +843,11 @@ $('.container>a').click(function(){
 
 // run Multitwitch
 $(document).on("click", "#multitwitch", multitwitch_run);
+
+// li click event
+$(document).on("click", "li.twitch, .multitwitch_button", function() {
+    backbutton_checker = true;
+});
 
 // config popup On-Off script
 
