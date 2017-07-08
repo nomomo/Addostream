@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.07
+// @version     1.08
 // @grant       none
 // ==/UserScript==
 
@@ -73,6 +73,15 @@ $('head').append('\
                 box-shadow: 0 0 10px #5cb85c;\
             }\
         }\
+       .multitwitch_ready {\
+            animation: glow2 0.5s 4 alternate;\
+        }\
+        @keyframes glow2 {\
+            to {\
+                text-shadow: 0 0 10px white;\
+                box-shadow: 0 0 10px #6441A4;\
+            }\
+        }\
         .fixed_streamer{background-color:#f5f5f5;}\
         .td_strong{font-weight:bold;}\
         #unique_windows_text{font-size:11px;color:#666;position:absolute; top:18px; right:70px;width:300px;height:20px;text-align:right;}\
@@ -85,7 +94,7 @@ $('head').append('\
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
 
-var version = '1.07';
+var version = '1.08';
 var streamerArray = [
     ['hanryang1125','풍월량'],
     ['ddahyoni','따효니'],
@@ -149,6 +158,10 @@ var twitch_api_cookie = [];
 api_push_forced = false;
 local_api_refresh = true;
 unique_window_check = true;
+max_iteration = 100;
+iteration = 0;
+
+checked_box_no = 0;
 
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
@@ -465,7 +478,7 @@ $('.container').append('\
            <div class="modal-content">\
               <div class="modal-body">\
                  <table class="table table-condensed table-hover" style="margin-bottom:0px;">\
-                     <thead><tr><th>ADDostram version: '+version+'</th><th></th></tr></thead>\
+                     <thead><tr><th><a href="https://github.com/nomomo/Addostream" target="_blank">ADDostram version: '+version+'</a></th><th></th></tr></thead>\
                      <tbody>\
                         <tr class="active">\
                            <td class="td_strong">특정 스트리머 상단 고정</td>\
@@ -535,15 +548,19 @@ $('.container').append('\
 
 function Addostram_run()
 {
-    ADD_cookie_to_var();
     // Add multitwitch button
     if( $('#multitwitch').length === 0 )
           $('.search').append('<span id="multitwitch" style="cursor: pointer; display:inline-block; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #eee none repeat scroll 0 0; color: #222;">멀티트위치</span>');
 
     
-    $('li.twitch').each(function (j) {
+    if( ($('.ADD_ON').length === 0) && ($('li.twitch').length > 0) )
+    {
+    console.log('Iteration no. is ',iteration);
+    iteration = 0;
+    ADD_cookie_to_var();
+        $('li.twitch').each(function (j) {
         href = $(this).find('a').attr('href').replace('/#/stream/twitch/', '');
-        $(this).attr('id', 'twitch_'+ href);
+        $(this).attr('id', 'twitch_'+ href).addClass('ADD_ON');
     });
     
     // Add choosed streamer from api cookie
@@ -651,9 +668,32 @@ function Addostram_run()
         }
         
         $(this).find('.info>.from').html(streamerID+'('+href+')');
-        $(this).append('<div style="position:relative;"><div style="position:absolute; top:-40px; right:75px; text-align:center; font-size:12px; z-index:100; margin:0;"><input style="margin-right:5px;border:none !important;" type="checkbox" name="chk" value="'+href+'" onfocus="this.blur()" /><div style="background-color:#eee; padding:5px 8px; height:15; display:inline;"><a href="/#/stream/multitwitch/'+href+'">With chat</a></div></div></div>');
+        $(this).append('<div style="position:relative;"><div style="position:absolute; top:-40px; right:75px; text-align:center; font-size:12px; z-index:100; margin:0;"><div class="ADD_checkbox" style="display:inline"><input style="margin-right:5px;border:none !important;" type="checkbox" name="chk" value="'+href+'" onfocus="this.blur()" /></div><div style="background-color:#eee; padding:5px 8px; height:15; display:inline;"><a href="/#/stream/multitwitch/'+href+'">With chat</a></div></div></div>');
         streamerID = ''; // reset
-});
+        });
+    }
+    else
+    {
+        // 2017.07.08
+        // 두스트림 자체 DOE 요소 생성되기 전에 함수 작동 시도한 경우 작동 안 하는 상황 방지
+        // DOE 요소 탐색 실패 시 재귀호출로 본 함수를 10ms 간격으로 다시 호출한다.
+        // 자바스크립트가 뻗는 것을 방지하기 위해 호출 횟수는 max_iteration(100) 미만으로 제한한다
+        if (iteration < max_iteration)
+        {
+            setTimeout(
+               function() {
+                  iteration = iteration + 1;
+                  Addostram_run();
+               },10);
+        }
+        else
+        {
+            iteration = 0;
+            console.log('Could not find the li element');
+        }
+
+    }
+    
 }
 
 function multitwitch_run()
@@ -716,23 +756,28 @@ ADD_multiwindow_prevent();
 // Run 
 
 $(document).ready(function(){
-    
+    /*
     setTimeout(
         function() {
             Addostram_run();
         },
         500);
+    */
+    Addostram_run();    
 });
 
 
 $('.container>a').click(function(){
     ADD_cookie_to_var();
     twitch_api();
+    /*
     setTimeout(
         function() {
             Addostram_run();
         },
         100);
+    */
+    Addostram_run();
 });
 
 
@@ -802,6 +847,26 @@ $('#Cookie_reset').on('click', function() {
     $('#ADD_config_Success').fadeIn('1000').delay('3000').fadeOut('1000');
     console.log('cookie reset!');
 });
+
+
+
+// checkbox click event
+// 체크박스가 체크되면 멀티트위치 버튼을 강조표시한다.
+    $(document).on('change','input[name=chk]',function(){
+        if( $('#multitwitch').hasClass('multitwitch_ready') )
+            $('#multitwitch').removeClass('multitwitch_ready');
+        
+        if($('input[name=chk]:checked').length >= 1)
+        {
+            setTimeout(
+                function() {
+                    $('#multitwitch').addClass('multitwitch_ready');
+                },
+                100);
+        }
+    });
+
+
 
 
 // config form click event
