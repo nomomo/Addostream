@@ -3,11 +3,11 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.09
+// @version     1.10
 // @grant       none
 // ==/UserScript==
 
-var version = '1.09';
+var version = '1.10';
 
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
@@ -371,7 +371,27 @@ function twitch_api()
                               //request succeeded
                               console.log('api request succeeded', channel);
                               var streams = channel.streams;
-                         
+                              
+                              api_expires.setMinutes( api_expires.getMinutes() + 10 );
+                             console.log('streams.length = ', streams.length);
+                              if(streams.length === 0)
+                              {
+                                  /*
+                                  twitch_api_cookie[0] = {
+                                          'name' : '',
+                                          'display_name' : '',
+                                          'status' : '',
+                                          'viewers' : 0,
+                                          'game' : ''
+                                  };
+                                  console.log(twitch_api_cookie);
+                                  $.cookie('twitch_api_cookie', JSON.stringify(twitch_api_cookie), { expires : api_expires, path : '/' });
+                                  */
+                                  console.log('API cookie is removed');
+                                  $.removeCookie('twitch_api_cookie');
+                              }
+                              else
+                              {
                               for (var i = 0; i < streams.length; i++) {
                                   var stream = streams[i];
                                   if (stream == null) {
@@ -392,9 +412,9 @@ function twitch_api()
                              
                               //console.log(twitch_api_cookie);
                               //console.log(JSON.stringify(twitch_api_cookie));
-                              api_expires.setMinutes( api_expires.getMinutes() + 10 );
+                              //api_expires.setMinutes( api_expires.getMinutes() + 10 );
                               $.cookie('twitch_api_cookie', JSON.stringify(twitch_api_cookie), { expires : api_expires, path : '/' });
-
+                              }
                          },
                          error:function() {
                               // request failed
@@ -888,6 +908,8 @@ $('#ADD_config_save').on('click', function() {
     {
       local_api_refresh = false;
       api_push_forced = true;
+        
+      twitch_api();
       ADD_API_CALL_INTERVAL();
       setTimeout(function() {
       local_api_refresh = true;
