@@ -3,11 +3,11 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.10
+// @version     1.11
 // @grant       none
 // ==/UserScript==
 
-var version = '1.10';
+var version = '1.11';
 
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
@@ -716,6 +716,16 @@ function Addostram_run()
         $(this).append('<div style="position:relative;"><div style="position:absolute; top:-40px; right:75px; text-align:center; font-size:12px; z-index:100; margin:0;"><div class="ADD_checkbox" style="display:inline"><input style="margin-right:5px;border:none !important;" type="checkbox" name="chk" value="'+href+'" onfocus="this.blur()" /></div><div class="multitwitch_button" style="background-color:#eee; padding:5px 8px; height:15; display:inline;"><a href="/#/stream/multitwitch/'+href+'">With chat</a></div></div></div>');
         streamerID = ''; // reset
         });
+        
+        // 2017.07.12
+        // 오작동 방지를 위하여 100ms 후 재확인
+        setTimeout(
+            function() {
+               if( ($('.ADD_ON').length === 0) && ($('li.twitch').length > 0) )
+                   Addostram_run();
+            },100);
+        
+        
     }
     else
     {
