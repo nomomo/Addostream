@@ -3,11 +3,11 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.20
+// @version     1.21
 // @grant       none
 // ==/UserScript==
 
-var version = '1.20';
+var version = '1.21';
 
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
@@ -188,7 +188,8 @@ function ADD_cookie_var_initialize()
                          'ADD_config_streamer_hide' : false,
                          'ADD_config_streamer_hide_ID' : 'nalcs1, nalcs2',
                          'ADD_config_remember_kakao' : false,
-                         'ADD_config_remember_youtube' : false
+                         'ADD_config_remember_youtube' : false,
+                         'ADD_config_last_version' : version
                       };
     
     // Object 키 길이 구하는 방법
@@ -247,6 +248,11 @@ function ADD_cookie_to_config_form()
     
     for(key in ADD_config_ary)
     {
+        if (key == 'ADD_config_last_version')
+            {
+                continue;
+            }
+        
         var ADD_ct = ADD_config_ary[key];
         
         // 설정 key와 동일한 ID를 가진 요소를 찾아서 변수에 저장한다. 
@@ -293,7 +299,13 @@ function ADD_save_config_to_cookie()
         ADD_cookie_var_initialize();
      
     for(key in ADD_config_ary)
-    {      
+    {
+        if (key == 'ADD_config_last_version')
+            {
+                ADD_config_ary[key] = version;
+                continue;
+            }
+        
         // 설정 key와 동일한 ID를 가진 요소를 찾아서 변수에 저장한다.
         if (key == 'ADD_config_thumbnail_size')
            {
@@ -311,7 +323,7 @@ function ADD_save_config_to_cookie()
         if (ADD_config_type == 'text')
            {
                // 1. 설정창 타입이 text 인 경우
-               ADD_config_ary[key] = ADD_config_ID.val()
+               ADD_config_ary[key] = ADD_config_ID.val();
            }
         else if (ADD_config_type == 'checkbox')
            {
@@ -330,6 +342,38 @@ function ADD_save_config_to_cookie()
 }
 
 
+function ADD_last_version_checker()
+{
+       var temp_config = JSON.parse($.cookie('ADD_config_ary'));
+       if (typeof temp_config.ADD_config_last_version === 'undefined')
+           {
+               // 버전 명이 아예 없으면 1.11 버전이다.
+                   ADD_config_ary = {
+                         'ADD_config_top_fix' : temp_config[0],
+                         'ADD_config_top_off_fix' : temp_config[1],
+                         'ADD_config_top_fix_ID' : temp_config[2],
+                         'ADD_config_alarm' : temp_config[3],
+                         'ADD_config_alarm_gap' : temp_config[4],
+                         'ADD_config_top_alarm_ID' : temp_config[5],
+                         'ADD_config_thumbnail_mouse' : temp_config[6],
+                         'ADD_config_thumbnail_size' : temp_config[7],
+                         'ADD_config_streamer_hide' : temp_config[8],
+                         'ADD_config_streamer_hide_ID' : temp_config[9],
+                         'ADD_config_remember_kakao' : false,
+                         'ADD_config_remember_youtube' : false,
+                         'ADD_config_last_version' : version
+                      };
+           ADD_config_cookie_create();
+           }
+       else if(Number(temp_config.ADD_config_last_version) !== version)
+           {
+               ADD_config_ary = temp_config;
+               ADD_config_ary.ADD_config_last_version = version;
+               ADD_config_cookie_create();
+           }
+}
+
+
 //////////////////////////////////////////////////////////////////////////////////
 // 쿠키 있는지 확인하여, 있으면 쿠키값을 변수에 저장. 없으면 생성
 function ADD_main_config_cookie()
@@ -342,6 +386,7 @@ function ADD_main_config_cookie()
     }
     
     // 쿠키를 다시 변수에 쓴다.
+    ADD_last_version_checker();
     ADD_cookie_to_var();
 }
 
