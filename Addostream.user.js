@@ -3,11 +3,11 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.11
+// @version     1.20
 // @grant       none
 // ==/UserScript==
 
-var version = '1.11';
+var version = '1.20';
 
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
@@ -95,8 +95,10 @@ $('head').append('\
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
 
-var streamerArray = [
-    ['hanryang1125','풍월량'],
+// API로 접근해서 스트리머 이름을 가져올 수도 있으나,
+// API CALL 을 줄이기 위해 원래부터 두스 MAIN에 있던 스트리머 이름을 적어두기로 한다.
+var streamerArray =
+    [['hanryang1125','풍월량'],
     ['ddahyoni','따효니'],
     ['kss7749','쉐리'],
     ['looksam','룩삼'],
@@ -126,20 +128,21 @@ var streamerArray = [
     ['lol_peanut','SKT Peanut'],
     ['faker','SKT Faker'],
     ['nrmtzv','으음'],
-    ['nicegametv','나겜']
+    ['nicegametv','나겜'],
+    ['teaminven','인벤'],
+    ['capta1n_pony','포니']
     ];
+
 var href = 'initialize';
-var streamerID = '';
 var multitwitchID = 'hanryang1125';
+var streamerID = '';
 var ADD_API_SET_INTERVAL;
+
 ADD_config_ary = [];
-//var ADD_config_top_fix = false;
-//var ADD_config_top_off_fix = false;
-//var ADD_config_top_fix_ID = [];
-//var ADD_config_alarm = false;
-//var ADD_config_alarm_gap = 3;
-//var ADD_config_top_alarm_ID = [];
-//var ADD_config_Client_ID = '';
+fixed_streamer = [];
+alarm_streamer = [];
+var twitch_api_cookie = [];
+
 var ADD_config_IDs = ['ADD_config_top_fix',
                       'ADD_config_top_off_fix',
                       'ADD_config_top_fix_ID',
@@ -151,9 +154,6 @@ var ADD_config_IDs = ['ADD_config_top_fix',
                       'ADD_config_streamer_hide',
                       'ADD_config_streamer_hide_ID'];
 
-fixed_streamer = [];
-alarm_streamer = [];
-var twitch_api_cookie = [];
 
 api_push_forced = false;
 local_api_refresh = true;
@@ -161,7 +161,6 @@ unique_window_check = true;
 backbutton_checker = false;
 max_iteration = 100;
 iteration = 0;
-
 checked_box_no = 0;
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -171,33 +170,110 @@ checked_box_no = 0;
 //////////////////////////////////////////////////////////////////////////////////
 
 
-// 쿠키 변수 초기화
+//////////////////////////////////////////////////////////////////////////////////
+// 설정 관련 쿠키 변수 초기화
 function ADD_cookie_var_initialize()
 {
-    ADD_config_ary = [false, false, 'hanryang1125', false, 5, 'hanryang1125', false, 1, false, 'nalcs1, nalcs2'];
+    // 2017-07-15 수정
+    // ADD_config_ary = [false, false, 'hanryang1125', false, 5, 'hanryang1125', false, 1, false, 'nalcs1, nalcs2'];
+    ADD_config_ary = {
+                         'ADD_config_top_fix' : false,
+                         'ADD_config_top_off_fix' : false,
+                         'ADD_config_top_fix_ID' : 'hanryang1125',
+                         'ADD_config_alarm' : false,
+                         'ADD_config_alarm_gap' : 5,
+                         'ADD_config_top_alarm_ID' : 'hanryang1125',
+                         'ADD_config_thumbnail_mouse' : false,
+                         'ADD_config_thumbnail_size' : 1,
+                         'ADD_config_streamer_hide' : false,
+                         'ADD_config_streamer_hide_ID' : 'nalcs1, nalcs2',
+                         'ADD_config_remember_kakao' : false,
+                         'ADD_config_remember_youtube' : false
+                      };
+    
+    // Object 키 길이 구하는 방법
+    // ADD_config_ary_length = Object.keys(ADD_config_ary).length;
 }
 
-// 설정창 값에 쿠키 값을 덮어씌움
+
+//////////////////////////////////////////////////////////////////////////////////
+// 설정 쿠키 삭제
+function ADD_config_cookie_remove()
+{
+    // 설정 쿠키값이 존재하는 경우 쿠키값을 지운다.
+    if (!!$.cookie('ADD_config_ary'))
+       $.removeCookie("ADD_config_ary");
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// 설정 변수로부터 설정 쿠키 생성
+function ADD_config_cookie_create()
+{
+    // 설정 변수가 존재하는 경우 해당 설정 변수로 쿠키를 생성한다.
+    if (!(typeof ADD_config_ary === 'undefined'))
+       $.cookie('ADD_config_ary', JSON.stringify(ADD_config_ary), { expires : 365*2, path : '/' });
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// 설정 쿠키 값을 변수에 저장
+function ADD_cookie_to_var()
+{
+    // 설정 쿠키값이 존재하는 경우, 
+    if (!!$.cookie('ADD_config_ary'))
+       {
+           // 쿠키값을 읽어와서 설정 변수로 만든다.
+           ADD_config_ary = JSON.parse($.cookie('ADD_config_ary'));
+
+           // text ary 관련 설정의 경우 공백을 지운 다음 콤마(,)로 나누어 변수에 저장한다.
+           fixed_streamer = ADD_config_ary.ADD_config_top_fix_ID.replace(' ', '').split(',');
+           alarm_streamer = ADD_config_ary.ADD_config_top_alarm_ID.replace(' ', '').split(',');
+           hide_streamer = ADD_config_ary.ADD_config_streamer_hide_ID.replace(' ', '').split(',');
+       }
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// 설정 창에 설정 쿠키 값을 덮어씌우기 위한 함수
 function ADD_cookie_to_config_form()
 {
+    // 설정 변수가 정의되어 있지 않은 경우 먼저 기본값으로 초기화 한다.
     if (typeof ADD_config_ary === 'undefined')
         ADD_cookie_var_initialize();
     
+    // 설정 쿠키 값을 변수에 저장한다. 해당 변수 명은 ADD_config_ary 임
     ADD_cookie_to_var();
     
-    for(i=0;i<ADD_config_IDs.length;i++)
+    for(key in ADD_config_ary)
     {
-        if (ADD_config_IDs[i] == 'ADD_config_thumbnail_size')
-           var ADD_config_ID = $('#'+ADD_config_IDs[i]+'_'+ADD_config_ary[i]);
-        else
-           var ADD_config_ID = $('#'+ADD_config_IDs[i]);
+        var ADD_ct = ADD_config_ary[key];
         
-        if (ADD_config_ID.attr('type') == 'text')
-           ADD_config_ID.val(ADD_config_ary[i]);
-        else if (ADD_config_ID.attr('type') == 'checkbox')
-           ADD_config_ID.prop('checked', ADD_config_ary[i]);
-        else if (ADD_config_ID.attr('type') == 'radio')
-            ADD_config_ID.prop('checked', true);
+        // 설정 key와 동일한 ID를 가진 요소를 찾아서 변수에 저장한다. 
+        if (key == 'ADD_config_thumbnail_size')
+           var ADD_config_ID = $('#'+key+'_'+ADD_ct);
+        else
+           var ADD_config_ID = $('#'+key);
+        
+        // 해당 ID 요소의 type 을 변수에 저장한다.
+        var ADD_config_type = ADD_config_ID.attr('type');
+        
+        // 위에서 찾은 각 설정창 타입에 맞게 변수를 입력해준다.
+        if (ADD_config_type == 'text')
+           {
+               // 1. 설정창 타입이 text 인 경우
+               ADD_config_ID.val(ADD_ct);
+           }
+        else if (ADD_config_type == 'checkbox')
+           {
+               // 2. 설정창 타입이 checkbox 인 경우
+               ADD_config_ID.prop('checked', ADD_ct);
+           }
+        else if (ADD_config_type == 'radio')
+           {
+               // 3. 설정창 타입이 radio 인 경우
+               ADD_config_ID.prop('checked', true);
+           }
     };
     
     // form contents initialize
@@ -207,67 +283,65 @@ function ADD_cookie_to_config_form()
     ADDconfigEnable('#ADD_config_streamer_hide','.form_4');
 }
 
-// 쿠키 삭제
-function ADD_config_cookie_remove()
-{
-    $.removeCookie("ADD_config_ary");
-}
 
-// 쿠키 값을 변수에 저장
-function ADD_cookie_to_var()
-{
-    if (!!$.cookie('ADD_config_ary'))
-        ADD_config_ary = JSON.parse($.cookie('ADD_config_ary'));
-
-    // Remove blank
-    //fixed_streamer = ADD_config_top_fix_ID.replace(' ', '').split(',');
-    //alarm_streamer = ADD_config_top_alarm_ID.replace(' ', '').split(',');
-    fixed_streamer = ADD_config_ary[$.inArray('ADD_config_top_fix_ID',ADD_config_IDs)].replace(' ', '').split(',');
-    alarm_streamer = ADD_config_ary[$.inArray('ADD_config_top_alarm_ID',ADD_config_IDs)].replace(' ', '').split(',');
-    hide_streamer = ADD_config_ary[$.inArray('ADD_config_streamer_hide_ID',ADD_config_IDs)].replace(' ', '').split(',');
-}
-
+//////////////////////////////////////////////////////////////////////////////////
+// 설정창 값을 쿠키에 저장
 function ADD_save_config_to_cookie()
 {
-    // ADD_config_ary doesn't exist, initialize ADD_config_ary
+    // 설정 변수가 없는 경우, 기본값으로 초기화한다.
     if (typeof ADD_config_ary === 'undefined')
         ADD_cookie_var_initialize();
-        
-    for(i=0;i<ADD_config_IDs.length;i++)
-    {
-        if (ADD_config_IDs[i] == 'ADD_config_thumbnail_size')
-           var ADD_config_ID = $('input[name='+ADD_config_IDs[i]+']:checked');
+     
+    for(key in ADD_config_ary)
+    {      
+        // 설정 key와 동일한 ID를 가진 요소를 찾아서 변수에 저장한다.
+        if (key == 'ADD_config_thumbnail_size')
+           {
+               var ADD_config_ID = $('input[name='+key+']:checked');
+           }
         else
-           var ADD_config_ID = $('#'+ADD_config_IDs[i]);
+           {
+               var ADD_config_ID = $('#'+key);
+           }
         
+        // 해당 ID 요소의 type 을 변수에 저장한다.
         var ADD_config_type = ADD_config_ID.attr('type');
         
+        // 위에서 찾은 각 설정창 타입에 맞게 쿠키에 입력한다.
         if (ADD_config_type == 'text')
-           ADD_config_ary[i] = ADD_config_ID.val();
+           {
+               // 1. 설정창 타입이 text 인 경우
+               ADD_config_ary[key] = ADD_config_ID.val()
+           }
         else if (ADD_config_type == 'checkbox')
-           ADD_config_ary[i] = ADD_config_ID.prop('checked');
+           {
+               // 2. 설정창 타입이 checkbox 인 경우
+               ADD_config_ary[key] = ADD_config_ID.prop('checked');
+           }
         else if (ADD_config_type == 'radio')
-           ADD_config_ary[i] = ADD_config_ID.val();
+           {
+               // 3. 설정창 타입이 radio 인 경우
+               ADD_config_ary[key] = ADD_config_ID.val();
+           }
     };
     
-    // Write cookie ary
-    $.cookie('ADD_config_ary', JSON.stringify(ADD_config_ary), { expires : 365*2, path : '/' });
+    // 설정 쿠키를 만든다.
+    ADD_config_cookie_create();
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
 // 쿠키 있는지 확인하여, 있으면 쿠키값을 변수에 저장. 없으면 생성
 function ADD_main_config_cookie()
 {
-    // If there is cookie, write cookie var.
-    if (!!$.cookie('ADD_config_ary'))
+    if (!$.cookie('ADD_config_ary'))
     {
-        ADD_config_ary = JSON.parse($.cookie('ADD_config_ary'));
-    }
-    else
-    // If there is no cookie, initialize cookie variable and write cookie
-    {
+        // 쿠키가 없으면, 설정 변수를 초기화 한 뒤 해당 설정 변수로부터 쿠키를 만든다.
         ADD_cookie_var_initialize();
-        $.cookie('ADD_config_ary', JSON.stringify(ADD_config_ary), { expires : 365*2, path : '/' });
+        ADD_config_cookie_create();
     }
+    
+    // 쿠키를 다시 변수에 쓴다.
     ADD_cookie_to_var();
 }
 
@@ -294,13 +368,13 @@ var concatArraysUniqueWithSort = function (thisArray, otherArray) {
 // Twitch API Check
 function twitch_api()
 {
-    ADD_config_alarm = ADD_config_ary[$.inArray('ADD_config_alarm',ADD_config_IDs)];
+    ADD_config_alarm = ADD_config_ary.ADD_config_alarm;
     if(!ADD_config_alarm)
         return false;
     
-    api_check_time = Number(ADD_config_ary[$.inArray('ADD_config_alarm_gap',ADD_config_IDs)]);
-    if (api_check_time < 1)
-      api_check_time = 1;
+    api_check_time = Number(ADD_config_ary.ADD_config_alarm_gap);
+    if (api_check_time < 1.0)
+      api_check_time = 1.0;
 
     now_time = new Date();
     api_update = true;
@@ -330,8 +404,8 @@ function twitch_api()
             var possibleChannels = [];
             var ADD_Client_ID = 'phcxzq5994awjrevkt45p6711bt77s';
             
-            var ADD_config_top_off_fix = ADD_config_ary[$.inArray('ADD_config_top_off_fix',ADD_config_IDs)];
-            var ADD_config_alarm = ADD_config_ary[$.inArray('ADD_config_alarm',ADD_config_IDs)];
+            var ADD_config_top_off_fix = ADD_config_ary.ADD_config_top_off_fix;
+            var ADD_config_alarm = ADD_config_ary.ADD_config_alarm;
             
             if(ADD_config_top_off_fix && ADD_config_alarm)
                 possibleChannels = concatArraysUniqueWithSort(fixed_streamer, alarm_streamer);
@@ -343,17 +417,6 @@ function twitch_api()
             var possibleChannelsString = '';
             var possibleChannelsNo = possibleChannels.length;
             
-            /*
-            for (i = 0; i < possibleChannelsNo; i++) {
-            if (i==0)
-                possibleChannelsString = possibleChannels[i];
-            else
-                possibleChannelsString = possibleChannelsString+","+possibleChannels[i];
-            };
-            possibleChannelsString = possibleChannelsString.replace(' ', '');
-            
-            console.log(possibleChannelsString);
-            */
             possibleChannelsString = possibleChannels.join(',').replace(' ', '');
 
             if(possibleChannelsNo > 0)
@@ -376,17 +439,6 @@ function twitch_api()
                              console.log('streams.length = ', streams.length);
                               if(streams.length === 0)
                               {
-                                  /*
-                                  twitch_api_cookie[0] = {
-                                          'name' : '',
-                                          'display_name' : '',
-                                          'status' : '',
-                                          'viewers' : 0,
-                                          'game' : ''
-                                  };
-                                  console.log(twitch_api_cookie);
-                                  $.cookie('twitch_api_cookie', JSON.stringify(twitch_api_cookie), { expires : api_expires, path : '/' });
-                                  */
                                   console.log('API cookie is removed');
                                   $.removeCookie('twitch_api_cookie');
                               }
@@ -440,7 +492,7 @@ function twitch_api()
 
 function ADD_API_CALL_INTERVAL()
 {
-    intervalTime = Number(ADD_config_ary[$.inArray('ADD_config_alarm_gap',ADD_config_IDs)]);
+    intervalTime = Number(ADD_config_ary.ADD_config_alarm_gap);
     if (intervalTime < 1)
         intervalTime = 1;
     intervalTime = intervalTime*1000*60;
@@ -555,6 +607,17 @@ $('.container').append('\
                            <td>└ 숨길 스트리머 아이디(콤마로 구분)</td>\
                            <td><input type="text" id="ADD_config_streamer_hide_ID" style="width:100%;" class="form_4 form_enabled" /></td>\
                         </tr>\
+                        <tr class="active" style="display:none;">\
+                           <td class="td_strong">활성화/비활성화 여부 기억</td>\
+                           <td>\
+                               <label class="radio-inline">\
+                                <input type="checkbox" id="ADD_config_remember_kakao" onfocus="this.blur()"  /> 카카오\
+                               </label>\
+                               <label class="radio-inline">\
+                                <input type="checkbox" id="ADD_config_remember_youtube" onfocus="this.blur()"  /> 유투브\
+                               </label>\
+                           </td>\
+                        </tr>\
                     </tbody>\
                  </table>\
               </div>\
@@ -609,9 +672,9 @@ function Addostram_run()
     });
     
     // Add choosed streamer from api cookie
-    var ADD_config_alarm = ADD_config_ary[$.inArray('ADD_config_alarm',ADD_config_IDs)];
+    var ADD_config_alarm = ADD_config_ary.ADD_config_alarm;
     console.log('ADD_config_alarm: ',ADD_config_alarm );
-    //console.log('(twitch_api_cookie.length>0)', twitch_api_cookie.length);
+        
     if ( ADD_config_alarm && (!!$.cookie('twitch_api_cookie')) && (twitch_api_cookie.length>0) )
     {
        for(var w=0; w<twitch_api_cookie.length; w++)
@@ -646,8 +709,8 @@ function Addostram_run()
     
     
     // Fix choosed streamer on top
-    var ADD_config_top_fix = ADD_config_ary[$.inArray('ADD_config_top_fix',ADD_config_IDs)];
-    var ADD_config_top_off_fix = ADD_config_ary[$.inArray('ADD_config_top_off_fix',ADD_config_IDs)];
+    var ADD_config_top_fix = ADD_config_ary.ADD_config_top_fix;
+    var ADD_config_top_off_fix = ADD_config_ary.ADD_config_top_off_fix;
     
     console.log('Streamer fixed: ', ADD_config_top_fix);
     if ((!!$.cookie('ADD_config_ary')) && ADD_config_top_fix && fixed_streamer.length >= 1){
@@ -688,8 +751,7 @@ function Addostram_run()
     }
     
     // Remove choosed streamer
-    var ADD_config_streamer_hide = ADD_config_ary[$.inArray('ADD_config_streamer_hide',ADD_config_IDs)];
-    //var ADD_config_streamer_hide_ID = ADD_config_ary[$.inArray('ADD_config_streamer_hide_ID',ADD_config_IDs)];
+    var ADD_config_streamer_hide = ADD_config_ary.ADD_config_streamer_hide;
     console.log('Streamer hided: ', ADD_config_streamer_hide);
     
     for(var z=0;z<hide_streamer.length;z++)
@@ -716,16 +778,6 @@ function Addostram_run()
         $(this).append('<div style="position:relative;"><div style="position:absolute; top:-40px; right:75px; text-align:center; font-size:12px; z-index:100; margin:0;"><div class="ADD_checkbox" style="display:inline"><input style="margin-right:5px;border:none !important;" type="checkbox" name="chk" value="'+href+'" onfocus="this.blur()" /></div><div class="multitwitch_button" style="background-color:#eee; padding:5px 8px; height:15; display:inline;"><a href="/#/stream/multitwitch/'+href+'">With chat</a></div></div></div>');
         streamerID = ''; // reset
         });
-        
-        // 2017.07.12
-        // 오작동 방지를 위하여 100ms 후 재확인
-        setTimeout(
-            function() {
-               if( ($('.ADD_ON').length === 0) && ($('li.twitch').length > 0) )
-                   Addostram_run();
-            },100);
-        
-        
     }
     else
     {
@@ -811,13 +863,6 @@ ADD_multiwindow_prevent();
 // Run 
 
 $(document).ready(function(){
-    /*
-    setTimeout(
-        function() {
-            Addostram_run();
-        },
-        500);
-    */
 // 재생화면에서 실행 방지
     if (urlchecker())
        Addostram_run();
@@ -857,7 +902,7 @@ window.onpopstate = function(event) {
      //console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
      if( backbutton_checker && urlchecker() ) //(!$('#stream').hasClass('onstream')) )
      {
-        console.log("Back button dectected. " + "location: " + document.location)
+        console.log("Back button dectected. " + "location: " + document.location);
         ADD_cookie_to_var();
         twitch_api();
         Addostram_run();
