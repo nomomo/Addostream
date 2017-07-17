@@ -93,6 +93,21 @@ $('head').append('\
         .fixed_streamer{background-color:#f5f5f5;}\
         .td_strong{font-weight:bold;}\
         #unique_windows_text{font-size:11px;color:#666;position:absolute; top:18px; right:70px;width:300px;height:20px;text-align:right;}\
+        #at {\
+            cursor:pointer;display:inline-block;margin:4px 2px 0 2px;height:24px;\
+            animation-name: at_spin;\
+            animation-duration: 15s;\
+            animation-iteration-count: infinite;\
+            animation-timing-function: linear;\
+        }\
+        @keyframes at_spin {\
+            0% {\
+                transform: rotate(0deg);\
+            }\
+            100% {\
+                transform: rotate(359deg);\
+            }\
+        }\
     </style>\
 ');
 
@@ -695,7 +710,7 @@ $('.container').append('\
         \
     </div>\
 ');
-    var at_fix = $('.footer').html().replace('@','<span id="at" style="cursor:pointer">@</span>')
+    var at_fix = $('.footer').html().replace('@','<div id="at">@</div>')
     $('.footer').html(at_fix);
 }
 
