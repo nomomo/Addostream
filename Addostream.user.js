@@ -3,11 +3,11 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.22
+// @version     1.23
 // @grant       none
 // ==/UserScript==
 
-var version = '1.22';
+var version = '1.23';
 
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
@@ -96,17 +96,15 @@ $('head').append('\
         #at {\
             cursor:pointer;display:inline-block;margin:4px 2px 0 2px;height:24px;\
             animation-name: at_spin;\
-            animation-duration: 15s;\
+            animation-duration: 18s;\
             animation-iteration-count: infinite;\
             animation-timing-function: linear;\
         }\
         @keyframes at_spin {\
-            0% {\
-                transform: rotate(0deg);\
-            }\
-            100% {\
-                transform: rotate(359deg);\
-            }\
+            0% {transform: rotate(0deg);}\
+            25% {transform: rotate(90deg);text-shadow: 0 0 3px #F0F8FF;}\
+            50% {transform: rotate(180deg);text-shadow: 0 0 8px #B0E0E6;}\
+            100% {transform: rotate(359deg);}\
         }\
     </style>\
 ');
@@ -159,7 +157,9 @@ var streamerArray =
     ['huni','SKT Huni'],
     ['sktt1_wolf','SKT Wolf'],
     ['bang','SKT Bang'],
-    ['wpghd321','류제홍']
+    ['wpghd321','류제홍'],
+    ['jmjdoc','칸데르니아'],
+    ['yungi131','윤기']
     ];
 
 var href = 'initialize';
