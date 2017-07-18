@@ -1022,17 +1022,7 @@ $('.container>a').click(function(){
     backbutton_checker = false;
     ADD_cookie_to_var();
     twitch_api();
-    
-    /*
-    setTimeout(
-        function() {
-            Addostram_run();
-        },
-        100);
-    */
-    
     Addostram_run();
-    //SIGONGJOA();
 });
 
 // hash change event
@@ -1180,8 +1170,6 @@ $('#ADD_config_streamer_hide').on('click', function() {
 $('#at').on('click', function() {
     SIGONGJOA();
 });
-
-http://kr.battle.net/heroes/ko/
 
 function SIGONGJOA()
 {
