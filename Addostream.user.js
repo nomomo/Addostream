@@ -3,11 +3,11 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.23
+// @version     1.24
 // @grant       none
 // ==/UserScript==
 
-var version = '1.23';
+var version = '1.24';
 
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
@@ -1360,8 +1360,8 @@ $('head').append('\
 	0% { transform: scale(0.5); }\
 	0.5% { transform: scale(0.5); }\
 	1% { transform: scale(2.5); }\
-	2% { transform: scale(2.5); }\
-	2.3% { transform: scale(0.5) translate(200px,-200px); }\
+	1.7% { transform: scale(2.5); }\
+	2.0% { transform: scale(0.5) translate(200px,-200px); }\
 	100% {	}\
 }\
 @keyframes remove-border {\
@@ -1553,12 +1553,17 @@ $('head').append('\
 }\
 @keyframes fall-ccl {\
 	0% {}\
-	0.5% {\
-		transform: translate(-44vw,-42px) scale(0.5);\
+    0.3% {\
+		transform: rotate(35deg) translate(-10vw,30%) scale(0.8);\
 		transform-origin: left;\
 		opacity: 1;\
 	}\
-	0.55% {\
+	0.5% {\
+		transform: rotate(55deg) translate(-20vw,60%) scale(0.3);\
+		transform-origin: left;\
+		opacity: 0.8;\
+	}\
+	0.52% {\
 		opacity: 0;\
 	}\
 	100% {\
@@ -1586,20 +1591,7 @@ $('head').append('\
 @keyframes fall-minidaum {\
 	0% {	}\
 	0.5% {\
-		transform: rotate(-48deg) translate(-45vw) scale(0.5);\
-		opacity: 1;\
-	}\
-	0.55% {\
-		opacity: 0;\
-	}\
-	100% {\
-		opacity: 0;\
-	}\
-}\
-@keyframes fall-nickzzal {\
-	0% {	}\
-	0.5% {\
-		transform: translate(387px,22px) rotate(200deg) rotateX(60deg) rotateY(60deg) scale(0.1);\
+		transform: rotate(-48deg) translate(-25vw) scale(0.5);\
 		opacity: 1;\
 	}\
 	0.55% {\
@@ -1674,7 +1666,7 @@ li a img {\
 	animation: 1000s fall-writer linear 8s;\
 	z-index: 2000;\
 }\
-.from {\
+.from, .multitwitch_button {\
 	animation: 1000s fall-url linear 7s;\
 	z-index: 2000;\
 }\
@@ -1684,6 +1676,10 @@ li a img {\
 }\
 .chat-container, .info, .search ul li div{\
 	animation: 1000s fall-ccl linear 11s;\
+	z-index: 2000;\
+}\
+.info, .search ul li div{\
+	animation: 1000s fall-ccl linear 7s;\
 	z-index: 2000;\
 }\
 .input {\
@@ -1722,7 +1718,7 @@ li a img {\
 audio {visibility: hidden;}\
 @media screen and (min-width: 480px) {		/* vw>480px */\
 	.sigong {position: absolute;top:300px;right: 50%;margin-top: -100px;animation: scale-up 1000s linear infinite;z-index: 1000;margin-right: -105px;}\
-	.hos {opacity: 0;animation: 1000s appear-hos linear 23s;top:300px;width: 708px;height: 700px;position: absolute;right: 50%;margin-top: -338px;margin-right: -360px;}\
+	.hos {opacity: 0;animation: 1000s appear-hos linear 20s;top:300px;width: 708px;height: 700px;position: absolute;right: 50%;margin-top: -338px;margin-right: -360px;}\
 }\
 @media screen and (max-width: 480px) { /* vw<480px */  @keyframes scale-up {   0% { transform: scale(0.5); }   0.5% { transform: scale(0.5); }   1% { transform: scale(1.2); }   2% { transform: scale(1.2); }   2.5% { transform: scale(0.21) translate(33%,-47%) }   100% { }  }  @keyframes mobile_comment1 {   0% {}   0.5% {     transform: translate(0,-100px) scale(0.4) rotate(-225deg);    opacity: 1;   }   0.55% { opacity: 0;    }   100% {}  }  @keyframes mobile_comment2 {   0% {}   0.5% {     transform: translate(0,-200px) scale(0.4) rotate(-45deg);    opacity: 1;   }   0.55% { opacity: 0;    }   100% {}  }  @keyframes mobile_comment3 {   0% {}   0.5% {     transform: translate(0,-300%) scale(0.4) rotate(70deg);    opacity: 1;   }   0.55% { opacity: 0;    }   100% {}  }  @keyframes mobile_comment4 {   0% {}   0.5% {     transform: translate(0,-400%) scale(0.4) rotate(-80deg);    opacity: 1;   }   0.55% { opacity: 0;    }   100% {}  }  @keyframes mobile_comment5 {   0% {}   0.5% {     transform: translate(0,-500%) scale(0.4) rotate(200deg);    opacity: 1;   }   0.55% { opacity: 0;    }   100% {}  }  @keyframes mobile_subject {   0% {}   1% {     transform: translate(0,250px) scale(0.2) rotateX(60deg) rotateY(60deg) rotateZ(360deg);    opacity: 1;   }   1.05% { opacity: 0;    }   100% {}  }  @keyframes mobile_navi {   0% {}   0.6% {     transform: translate(0,350px) scale(0.5) rotate(-145deg);    opacity: 1;   }   0.65% { opacity: 0;    }   100% {}  }  @keyframes mobile_tabcafe {   0% {}   0.6% {     transform: translate(0,-100px) scale(0.2) rotate(-145deg);    opacity: 1;   }   0.65% { opacity: 0;    }   100% {}  }  @keyframes mobile_optionbtn1 {   0% {}   0.6% {     transform: translate(-65px,-10px) scale(0.5);    opacity: 1;   }   0.65% { opacity: 0;    }   100% {}  }  @keyframes mobile_optionbtn2 {   0% {}   0.6% {     transform: translate(-100px,-10px) scale(0.5);    opacity: 1;   }   0.65% { opacity: 0;    }   100% {}  }  @keyframes fall-nickzzal {   0% { }   0.5% {    transform: translate(120px,150px) rotate(200deg) rotateX(60deg) rotateY(60deg) scale(0.2);    opacity: 1;   }   0.55% {    opacity: 0;   }   100% {    opacity: 0;   }  }    html, body { overflow: hidden; }  .sigong div {   width: 100%;  }  .sigong {   animation: scale-up 1000s linear infinite;   width: 100%;   z-index: 1000;   display: table-cell;  }  .hos {   position: absolute;   width: 100%;   left: 0;   opacity: 0;   z-index: -1;   animation: 1000s appear-hos linear 23s;  }  .mobilebox {   position: absolute;   display: table;   top: 0;   left: 0;   width: 100%;   height: 375px;   vertical-align: middle;  }  .list_cmt > li:nth-child(1) {   position: relative;   animation: 1000s mobile_comment1 linear 6s;   z-index: 2000;  }  .list_cmt > li:nth-child(2) {   position: relative;   animation: 1000s mobile_comment2 linear 6.4s;   z-index: 2000;  }  .list_cmt > li:nth-child(3) {   position: relative;   animation: 1000s mobile_comment3 linear 6.8s;   z-index: 2000;  }  .list_cmt > li:nth-child(4) {   position: relative;   animation: 1000s mobile_comment4 linear 7.2s;   z-index: 2000;  }  .list_cmt > li:nth-child(5) {\
 		position: relative;	animation: 1000s mobile_comment5 linear 7.6s;z-index: 2000;}\
