@@ -3,11 +3,11 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.24
+// @version     1.25
 // @grant       none
 // ==/UserScript==
 
-var version = '1.24';
+var version = '1.25';
 
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
@@ -93,6 +93,7 @@ $('head').append('\
         .fixed_streamer{background-color:#f5f5f5;}\
         .td_strong{font-weight:bold;}\
         #unique_windows_text{font-size:11px;color:#666;position:absolute; top:18px; right:70px;width:300px;height:20px;text-align:right;}\
+        #notice_text{font-size:11px;color:#666;position:absolute; top:18px; right:70px;width:300px;height:20px;text-align:right;}\
         #at {\
             cursor:pointer;display:inline-block;margin:4px 2px 0 2px;height:24px;\
             animation-name: at_spin;\
@@ -159,8 +160,44 @@ var streamerArray =
     ['bang','SKT Bang'],
     ['wpghd321','류제홍'],
     ['jmjdoc','칸데르니아'],
-    ['yungi131','윤기']
-    ];
+    ['yungi131','윤기'],
+    ['mediamuse','미디어뮤즈'],
+    ['veritaskk','CJE Veritas'],
+    ['themarinekr','김정민'],
+    ['tvindra','인드라'],
+    ['tranth','자동'],
+    ['seine1026','세인님'],
+    ['sonycast_','소니쇼'],
+    ['dou3796','뱅붕'],
+    ['rudbeckia7','연두는말안드뤄'],
+    ['trisha','트리샤'],
+    ['naseongkim','김나성'],
+    ['mari0712','마리'],
+    ['dlxowns45','태준이'],
+    ['handongsuk','한동숙'],
+    ['alenenwooptv','웁_게임방송'],
+    ['mr_coat','노래하는코트'],
+    ['ajehr','머독'],
+    ['lol_crown','SSG Crown'],
+    ['rooftopcat99','옥냥이'],
+    ['myzet1990','개구멍'],
+    ['yoonroot','윤루트'],
+    ['sn400ja','액시스마이콜'],
+    ['tape22222','테이프2'],
+    ['miracle0o0','미라클티비'],
+    ['bighead033','빅헤드'],
+    ['wkgml','견자희'],
+    ['queenhuz','후즈'],
+    ['kiyulking','김기열'],
+    ['asdn6388','나락호프'],
+    ['lol_cuvee','SSG Cuvee'],
+    ['VSL','VSL'],
+    ['drlee_kor','이민우33세'],
+    ['CoreJJ','SSG CoreJJ'],
+    ['lol_ambition','SSG Ambition'],
+    ['Axenix','아제닉스'],
+    ['maknoonlol','막눈']
+    ];// ['',''],
 
 var href = 'initialize';
 var multitwitchID = 'hanryang1125';
@@ -394,11 +431,35 @@ function ADD_last_version_checker()
                       };
            ADD_config_cookie_create();
            }
-       else if(Number(temp_config.ADD_config_last_version) !== version)
+       // 쿠키에 저장된 변수와 현재 버전이 다른 경우
+       else if(Number(temp_config.ADD_config_last_version) !== Number(version))
            {
+               // 로컬 변수 선언
+               var old_ver = Number(temp_config.ADD_config_last_version);
+               var new_ver = Number(version);
+               
+               // 쿠키 업데이트
                ADD_config_ary = temp_config;
                ADD_config_ary.ADD_config_last_version = version;
                ADD_config_cookie_create();
+               
+               // 텍스트 출력부
+               var notice_text_string = 'Userscript가 최근에 변경 됨!';
+               if(old_ver < new_ver)
+                   notice_text_string = notice_text_string+' 버전 업!';
+               else
+                   notice_text_string = notice_text_string+' 버전 다운!';
+               notice_text_string = notice_text_string+' '+old_ver+' → '+new_ver;
+               
+               // DOE 딜레이 처리
+               console.log('ADDostream version changed! ',notice_text_string);
+               if($('#notice_text').length === 0)
+               {
+                   setTimeout(function() {
+                       $('#notice_text').html(notice_text_string);
+                       $('#notice_text').fadeIn('1000');
+                   }, 1000);
+               }
            }
 }
 
@@ -599,7 +660,8 @@ setInterval(function() {
               console.log('unique window = ',unique_window);
               console.log('unique window cookie is ',unique_window_cookie);
               unique_window_check = false;
-              $('#unique_windows_text').show();
+              $('#notice_text').html('새 창에서 접속이 감지되어 API 갱신이 중지됩니다.');
+              $('#notice_text').show();
               clearInterval(ADD_API_SET_INTERVAL);
             }
 }, 1000);
@@ -618,6 +680,7 @@ function ADD_config_DOE()
 $('.container').append('\
     <div style="position:relative;">\
     <div id="unique_windows_text" style="display:none;">새 창에서 접속이 감지되어 API 갱신이 중지됩니다.</div>\
+    <div id="notice_text" style="display:none;">새 창에서 접속이 감지되어 API 갱신이 중지됩니다.</div>\
         <div class="AD_title">\
            <span id="ADD_test_button" class="btn btn-default btn_closed">\
               <span class="glyphicon glyphicon-th-list">\
