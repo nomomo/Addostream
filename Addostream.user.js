@@ -196,7 +196,10 @@ var streamerArray =
     ['CoreJJ','SSG CoreJJ'],
     ['lol_ambition','SSG Ambition'],
     ['Axenix','아제닉스'],
-    ['maknoonlol','막눈']
+    ['maknoonlol','막눈'],
+    ['zilioner','침착맨'],
+    ['timeofcreate','홍랑'],
+    ['twitchshow','트위치쇼']
     ];// ['',''],
 
 var href = 'initialize';
