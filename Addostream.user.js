@@ -647,6 +647,42 @@ function ADD_API_CALL_INTERVAL()
     }, intervalTime);
 }
 
+/*
+////////////////////////////////// Imgur API /////////////////////////////////
+function getImgurData(Imgur_ID, Imgur_type) {
+  // Imgur_type == 0 : image, == 1 : album
+    var imgur_api_call_url = 'https://api.imgur.com/3/';
+    var imgur_client_id = 'a57c643ca3a51ee';
+    
+    if (Imgur_type==0)
+        {
+            imgur_api_call_url = imgur_api_call_url+'images/'+Imgur_ID;
+        }
+    else if (Imgur_type==1)
+        {
+            imgur_api_call_url = imgur_api_call_url+'album/'+Imgur_ID+'/images';
+        }  
+  $.ajax({
+      url: imgur_api_call_url,
+      type: 'GET',
+      //contentType: 'application/json',
+      dataType:'json',
+      headers: {
+          'Authorization': 'Client-ID '+imgur_client_id
+      },
+    success:function(response) {
+      console.log('Imgur api request succeed');
+      console.log(response);
+    },
+    error:function() {
+        // request failed
+        console.log('Imgur api request failed');
+    }
+  });
+}
+getImgurData('Vvb64B4', 0);
+getImgurData('Dvnw5', 1);
+*/
 
 ////////////////////////////////// UNIQUE WINDOW /////////////////////////////////
 
