@@ -1,5 +1,6 @@
 # Addostream
 <!--Add new feature for dostream.com-->
+* 두스트림에 새로운 기능을 추가하는 브라우저 확장 Userscript
 * Firefox · Chrome 지원 (2017-07-31 기준)
 * Userscript 확장 기능 필요
   * Firefox - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/)
@@ -14,16 +15,19 @@
 </p>
 
 * 원하는 스트리머 최상단 고정 (핀 표시)
-* 원래 메인에 없는 스트리머 추가 가능 (★표시)
+* 원래 메인에 없는 Twitch 스트리머 추가 가능 (★표시)
 * 메인 노출하고 싶지 않은 스트리머 숨기기
 * 체크박스 체크 후 멀티트위치 버튼 누르면 멀티트위치 실행됨
-
+<br />
 
 <p align="center">
 <img src="https://github.com/nomomo/Addostream/blob/master/images/170806_Quick_list.png" width="500px" />
 </p>
 
 * 재생 중 화면에서 메인 목록 보기 가능 (버튼을 클릭할 때마다 메인과 동일한 내용으로 갱신 됨)
+<br />
+
+* 그 외 다양한 기능들(섬네일 확대, 채팅에 올라온 이미지 링크 바로보기 등)
 
 ## Config
 <p align="center">
@@ -33,7 +37,8 @@
 * 메인에 없는 스트리머 갱신 간격은 최소 1분 간격
 
 ## Install
-* 아래의 링크로 이동<br />
+* Firefox - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/), Chrome - [Tampermonkey](http://tampermonkey.net/) 확장 기능 설치
+* 확장 기능 설치 이후 아래의 링크로 이동<br />
 https://github.com/nomomo/Addostream/blob/master/Addostream.user.js
 * 이후 다음의 이미지를 참고하여 설치<br /><br /><img src="https://github.com/nomomo/Addostream/blob/master/images/Install.jpg" width="500px" />
 * 주의: 본 스크립트를 설치 및 사용하며 브라우저 과부하로 인한 응답 없음/뻗음 등 으로 인한 데이터 손실 등 문제 발생 시 개발자는 책임지지 않음(보고된 문제는 없음)
