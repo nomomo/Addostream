@@ -1609,10 +1609,11 @@ function ADD_config_DOE()
 // test event
 J$(document).on('click', '#ADD_test_id_1', function() {
     var test_text = '\
-        <div class="user_conversation" title="테스트맨 - 2017-07-11 11:11:11"><span class="conversation_nick" nick="%uCF58%uC0D0%uC9F1%uC9F1%uB9E8">테스트맨</span><span style="vertical-align: middle;">&nbsp; </span><span class="cs_contents" style="">테스트 http://imgur.com/a/cKXVX</span></div>';
+        <div class="user_conversation" title="테스트맨 - 2017-07-11 11:11:11"><span class="conversation_nick" nick="%uCF58%uC0D0%uC9F1%uC9F1%uB9E8">테스트맨</span><span style="vertical-align: middle;">&nbsp; </span><span class="cs_contents" style="">\
+         테스트 http://i.imgur.com/7bzMRmqh.gif</span></div>';
     J$('.conversation_contents').append(test_text);
     test_text = null;
-});
+}); // http://imgur.com/a/cKXVX
 
 J$(document).on('click', '#ADD_test_id_2', function() {
     var test_text = '\
@@ -1970,7 +1971,7 @@ function getImgurData(Imgur_ID, Imgur_type) {
     success:function(response) {
       ADD_DEBUG_MODE && console.log('Imgur api request succeed');
       var response_data = response.data;
-      //ADD_DEBUG_MODE && console.log(response);
+      ADD_DEBUG_MODE && console.log(response);
       //ADD_DEBUG_MODE && console.log(response_data);
       if(response_data[0] !== undefined)
       {
@@ -2057,10 +2058,10 @@ function ADD_chatting_arrive(){
                 var ADD_imgur_link;
                 var ADD_imgur_DOE_text;
                 var ADD_imgur_safe_screen_opacity;
-                var ADD_imgur_reg = /https?:\/\/(\w+\.)?imgur.com\/(a\/)?(\w*)+(\.[a-zA-Z]{3})?/;
+                var ADD_imgur_reg = /https?:\/\/(\w+\.)?imgur.com\/(a\/|gallery\/)?(\w*)+(\.[a-zA-Z]{3})?/;
                 var conversation_contents_elem;
                 
-                // ADD_DEBUG_MODE && console.log('nickname: '+ADD_chatting_nickname+' , content: '+ADD_chatting_content);
+                //ADD_DEBUG_MODE && console.log('nickname: '+ADD_chatting_nickname+' , content: '+ADD_chatting_content);
                 
                 // 정규표현식을 통해 imgur 링크 포함 여부 확인, global check 하지 않고 먼저 나온 하나만 확인함
                 // 대소문자 체크가 꼭 필요?
@@ -2094,6 +2095,7 @@ function ADD_chatting_arrive(){
                     }
         
                     // imgur api 호출
+                    ADD_DEBUG_MODE && console.log('ADD_imgur_id = '+ADD_imgur_id+'  ADD_imgur_type = '+ADD_imgur_type);
                     ADD_imgur_link = getImgurData(ADD_imgur_id, ADD_imgur_type);
         
                     // imgur DOE 생성
