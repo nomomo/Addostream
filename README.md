@@ -27,7 +27,14 @@
 * 재생 중 화면에서 메인 목록 보기 가능 (버튼을 클릭할 때마다 메인과 동일한 내용으로 갱신 됨)
 <br />
 
-* 그 외 다양한 기능들(섬네일 확대, 채팅에 올라온 이미지 링크 바로보기 등)
+
+<p align="center">
+<img src="https://github.com/nomomo/Addostream/blob/master/images/170731_chat_image_preview.png" />
+</p>
+
+* 채팅에 올라온 Imgur 이미지 링크를 감지하여 바로보기 가능
+<br />
+
 
 ## Config
 <p align="center">
