@@ -29,10 +29,10 @@
 
 
 <p align="center">
-<img src="https://github.com/nomomo/Addostream/blob/master/images/170731_chat_image_preview.png" />
+<img src="https://github.com/nomomo/Addostream/blob/master/images/170731_chat_image_preview.jpg" />
 </p>
 
-* 채팅에 올라온 Imgur 이미지 링크를 감지하여 바로보기 가능
+* 채팅에 올라온 Imgur 이미지 링크를 감지하여 바로보여줌
 <br />
 
 
