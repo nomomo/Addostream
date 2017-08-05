@@ -18,11 +18,12 @@
 * 메인 노출하고 싶지 않은 스트리머 숨기기
 * 체크박스 체크 후 멀티트위치 버튼 누르면 멀티트위치 실행됨
 
+
 <p align="center">
 <img src="https://github.com/nomomo/Addostream/blob/master/images/170806_Quick_list.png" width="500px" />
 </p>
 
-* 재생 중 화면에서 메인 목록 보기 가능 (버튼 클릭 시 마다 메인과 동일하게 갱신 됨)
+* 재생 중 화면에서 메인 목록 보기 가능 (버튼을 클릭할 때마다 메인과 동일한 내용으로 갱신 됨)
 
 ## Config
 <p align="center">
