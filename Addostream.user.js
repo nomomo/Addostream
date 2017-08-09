@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.27
+// @version     1.28
 // @updateURL   https://github.com/nomomo/Addostream/raw/master/Addostream.user.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @grant       GM_xmlhttpRequest
@@ -346,8 +346,8 @@ J$('head').append('\
         .nav-brand:hover, .nav-brand:visited, .nav-brand:active, .nav-brand_mod:hover, .nav-brand_mod:visited, .nav-brand_mod:active {text-decoration:none;color:#fff;}\
         .onstream .AD_title{height:45px;padding:7px 0}\
         .AD_title {position:absolute; top:0; right:10px; height:63px; padding:16px 0; font-size:11px; font-style:italic; color:#999}\
-        .icon_star{position:absolute;top:10px; right:25px; z-index:10;}\
-        .icon_pushpin{position:absolute;top:10px; right:10px; z-index:50;}\
+        .icon_star{position:absolute !important;top:10px; right:25px; z-index:10;}\
+        .icon_pushpin{position:absolute !important;top:10px; right:10px; z-index:50;}\
         #ADD_config {cursor:pointer; padding-right:10px;}\
         #ADD_test_button {cursor:pointer;}\
         #popup_ADD_config, #popup_ADD_quick, #popup_ADD_test {display:none; font-size:12px; z-index:10000; position:absolute; width:500px;}\
