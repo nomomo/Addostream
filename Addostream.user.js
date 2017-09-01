@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.28
+// @version     1.29
 // @updateURL   https://github.com/nomomo/Addostream/raw/master/Addostream.user.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @grant       GM_xmlhttpRequest
@@ -2042,7 +2042,7 @@ function ADD_chatting_arrive(){
             
             if(ADD_config_ary.ADD_config_chat_adb)
             {
-                if(ADD_chatting_content.indexOf('광고문의 클릭') !== -1)
+                if(ADD_chatting_content.indexOf('광고문의 클릭') !== -1 || ADD_chatting_content.indexOf('유챗2 스킨기능 오픈') !== -1)
                 {
                     ADD_DEBUG_MODE && console.log('광고 메시지 감지됨!',ADD_chatting_content);
                     newElem.remove();
