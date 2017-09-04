@@ -77,7 +77,9 @@ https://github.com/nomomo/Addostream/blob/master/Addostream.user.js
   * 재생 중 화면에서 메인 목록 보기(Quick list) 추가
 * 2017-09-01 (v 1.29)
   * 유챗 스킨 관련 광고메시지 제거 기능 추가
-
+* 2017-09-05 (v 1.30)
+  * Firefox 에서 CSS 로드 안 되는 버그 수정
+  
 ## Future works (언제걸릴지 모름)
 * 기본 섬네일 사이즈 변경
 * 트위치, 카카오, 유투브 ON/OFF 여부 기억하기
