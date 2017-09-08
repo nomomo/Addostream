@@ -81,7 +81,7 @@ https://github.com/nomomo/Addostream/blob/master/Addostream.user.js
   * Firefox 에서 CSS 로드 안 되는 버그 수정
   
 ## Future works (언제걸릴지 모름)
-* 기본 섬네일 사이즈 변경
+* 보기 싫은 스트리머 일일히 타이핑하는 대신 체크 후 버튼 클릭으로 숨기기 가능하게 변경
 * 트위치, 카카오, 유투브 ON/OFF 여부 기억하기
 * 채팅 닉네임에 메모하기
 * 채팅 내용 키워드 필터링하여 해당 키워드 포함된 채팅 안 보이게 하기
