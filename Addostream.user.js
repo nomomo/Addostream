@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.30
+// @version     1.31
 // @updateURL   https://github.com/nomomo/Addostream/raw/master/Addostream.user.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @grant       GM_xmlhttpRequest
@@ -246,6 +246,8 @@ J$('head').append('\
           0%    { transform: rotate(0deg); }\
           100%  { transform: rotate(360deg); }\
         }\
+        #view_additional_message_container {position:absolute;bottom:46px;left:0px;z-index:15;width:100%; height:30px;cursor:pointer;}\
+        #view_additional_message {position:relative;padding:5px 0;background-color:rgba(0,0,0,0.6);text-align:center;color:#fff;font-size:12px;}\
     </style>\
 ');
 
@@ -689,7 +691,8 @@ var ADD_config_ary_init = {
                          'ADD_config_imgur_preview_opacity' : 0.93,
                          'ADD_config_sys_meg' : false,
                          'ADD_config_alarm_noti' : false,
-                         'ADD_config_url_self' : false
+                         'ADD_config_url_self' : false,
+                         'ADD_config_chat_scroll' : true
                       };
 
 // 설정 클릭 시 enable 요소가 있는 설정을 아래 배열에 등록
@@ -711,6 +714,7 @@ var chat_send_location = true;      // 현재 사용 안 함, ADD_send_location(
 var chatting_arrive_check = null;   // 채팅창 arrive 체크용
 var thumbnail_check = null;         // 섬네일 마우스 오버 설정 변경 체크용
 var thumbnail_size_check = null;    // 현재 사용 안 함, 섬네일 마우스 오버시 사이즈 설정 변경 체크용
+var chatting_scroll_pause = null;   // 채팅 스크롤 일시정지 여부
 
 var max_iteration = 100;            // DOE 생성 체크 최대 횟수
 var iteration = 0;                  // DOE 생성 체크 현재 횟수
@@ -759,7 +763,7 @@ function ADD_config_cookie_create()
 // 설정 쿠키 값을 변수에 저장
 function ADD_cookie_to_var()
 {
-    // 설정 쿠키값이 존재하는 경우, 
+    // 설정 쿠키값이 존재하는 경우,
     if (!!J$.Jcookie('ADD_config_ary'))
     {
         // 쿠키값을 읽어와서 설정 변수로 만든다.
@@ -827,6 +831,14 @@ function ADD_event_binding()
         ADD_DEBUG_MODE && console.log('Notification.permission = ', Notification.permission);
         if (Notification.permission !== "granted")
             Notification.requestPermission();
+    }
+    
+    
+    // 채팅창 스크롤 관련됨
+    if(ADD_config_ary.ADD_config_chat_scroll !== undefined)
+    {
+        ADD_DEBUG_MODE && console.log('ADD_chat_scroll_pause() 함수 실행 됨!');
+        ADD_chat_scroll_pause();
     }
 
 }
@@ -1477,6 +1489,14 @@ function ADD_config_DOE()
                                  </td>\
                               </tr>\
                               <tr>\
+                                 <td class="td_strong">휠로 채팅 자동스크롤 정지 \
+                                     <span class="tooltip_container" aria-label="트위치 채팅창에서 마우스 휠을 위로 돌리면 채팅창 자동스크롤이 정지하는 것을 단순하게 구현함." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
+                                         <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
+                                     </span>\
+                                 </td>\
+                                 <td><input type="checkbox" id="ADD_config_chat_scroll" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /></td>\
+                              </tr>\
+                              <tr>\
                                  <td class="td_strong">채팅 내 두스 좌표는 현재 창에서 오픈 \
                                      <span class="tooltip_container" aria-label="좌표 클릭 시 매번 새 창으로 뜨는 것이 귀찮아서 추가함. ctrl 또는 shift 키를 누른 채로 클릭하여 기존처럼 새 탭 또는 새 창으로 여는 것도 가능. 이 설정을 켠 이후 등록된 채팅에만 적용." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
                                          <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
@@ -1597,6 +1617,12 @@ function ADD_config_DOE()
                                     클릭\
                                     </span></td>\
                               </tr>\
+                              <tr class="active">\
+                                 <td>TEST5 - scroll trigger</td>\
+                                 <td><span id="ADD_test_id_5" style="cursor:pointer;font-weight:bold;">\
+                                    클릭\
+                                    </span></td>\
+                              </tr>\
                           </tbody>\
                        </table>\
                     </div>\
@@ -1666,7 +1692,9 @@ J$(document).on('click', '#ADD_test_id_4', function() {
     test_text = null;
 });
 
+J$(document).on('click', '#ADD_test_id_5', function() {
 
+});
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -2018,28 +2046,38 @@ function getImgurData(Imgur_ID, Imgur_type) {
 //////////////////////////////////////////////////////////////////////////////////
 // 채팅창에서 문자열 탐지, 이벤트 bind, API 함수 호출 동작 실행
 function ADD_chatting_arrive(){
-    // 초기조건 확인
-    if(chatting_arrive_check === null && !ADD_config_ary.ADD_config_chat_ctr)
+   // 기존에 꺼져있는 경우
+    if(!chatting_arrive_check || chatting_arrive_check === null)
     {
-        // 초기조건이 모두 false 이면 바로 리턴한다.
-        ADD_DEBUG_MODE && console.log('ADD_chatting_arrive()에서 로깅. 초기조건에 의하여 리턴');
-        return;
+        // True 이면 켠다.
+        if (ADD_config_ary.ADD_config_chat_ctr){
+            chatting_arrive_check = true;
+            // 오로지 이 경우만 return 하지 않는다.
+        }
+        // 그 외의 경우 그냥 나간다.
+        else
+        {
+            return;
+        }
     }
-    else if(chatting_arrive_check === null)
+    // 기존에 켜져있는 경우
+    else
     {
-        // 초기조건이 하나라도 true 이면 arrive 진입을 위해 chatting_arrive_check 를 false로 바꾼다.
-        chatting_arrive_check = false;
+        // False 이면 끈다.
+        if(!ADD_config_ary.ADD_config_chat_ctr){
+            J$(document).unbindArrive('.user_conversation');
+            chatting_arrive_check = false;
+            return;
+        }
+        // 그 외의 경우 그냥 나간다.
+        else
+        {
+            return;
+        }
     }
     
     // arrive bind 및 unbind
-    if(chatting_arrive_check && !ADD_config_ary.ADD_config_chat_ctr)
-    {
-        // 모든 설정 false 이고 arrive 된 상태이면 unbind 한다.
-        J$(document).unbindArrive('.user_conversation');
-        chatting_arrive_check = false;
-    }
-    else if( !chatting_arrive_check && ADD_config_ary.ADD_config_chat_ctr )
-    {
+    if(chatting_arrive_check && ADD_config_ary.ADD_config_chat_ctr){
         // 설정이 변경되고 true 이면 false 에서 true로 바뀐 것이므로 bind 한다.
         J$(document).arrive('.user_conversation', function(newElem) {
             var newElem = J$(newElem);
@@ -2215,7 +2253,8 @@ function ADD_chatting_arrive(){
 //////////////////////////////////////////////////////////////////////////////////
 // 채팅창 시스템 메시지
 function ADD_send_sys_msg(msg, delay){
-    if( ADD_config_ary.ADD_config_sys_meg && J$('.conversation_contents').length !== 0 )
+    // ADD_config_ary.ADD_config_sys_meg &&
+    if( J$('.conversation_contents').length !== 0 )
     {
         var conversation_contents_elem = J$('.conversation_contents');
         var msg_text = '<div class="system" title="Dosteam+ msg">'+msg+'</div>';
@@ -2240,6 +2279,106 @@ function ADD_send_sys_msg(msg, delay){
 
 
 //////////////////////////////////////////////////////////////////////////////////
+// 채팅창 휠감지
+function ADD_chat_scroll_pause() {
+    // 기존에 꺼져있는 경우
+    if(!chatting_scroll_pause || chatting_scroll_pause === null)
+    {
+        // 둘 다 True 이면 켠다.
+        if (ADD_config_ary.ADD_config_chat_scroll && ADD_config_ary.ADD_config_chat_ctr){
+            chatting_scroll_pause = true;
+            // 오로지 이 경우만 return 하지 않는다.
+        }
+        // 그 외의 경우 그냥 나간다.
+        else
+        {
+            return;
+        }
+    }
+    // 기존에 켜져있는 경우
+    else
+    {
+        // 하나라도 False 이면 끈다.
+        if(!ADD_config_ary.ADD_config_chat_scroll || !ADD_config_ary.ADD_config_chat_ctr){
+            ADD_DEBUG_MODE && console.log('scroll 이벤트 off');
+            J$(document).off('wheel.chatScrollFunc mousewheel.chatScrollFunc', '.conversation_contents');
+            if( J$('#view_additional_message_container').length !== 0 ){
+                J$('#view_additional_message_container').remove();
+                J$('.uchat_scroll').trigger('click');
+            }
+            chatting_scroll_pause = false;
+            return;
+        }
+        // 그 외의 경우 그냥 나간다.
+        else
+        {
+            return;
+        }
+    }
+
+    if(chatting_scroll_pause && ADD_config_ary.ADD_config_chat_scroll && ADD_config_ary.ADD_config_chat_ctr){
+        ADD_DEBUG_MODE && console.log('scroll 이벤트 on');
+        J$(document).on('wheel.chatScrollFunc mousewheel.chatScrollFunc', '.conversation_contents', function(event) {
+            // 현재 스크롤 정지 상태 아닌 경우
+            if( !(J$('.uchat_scroll').hasClass('uchat_scroll_clicked')) ){
+
+                //마우스휠 위로 돌릴때 이벤트
+                var scroll_val = -1;
+                if (event.type == 'mousewheel') {
+                    scroll_val = event.originalEvent.wheelDelta;
+                }
+                else if (event.type == 'wheel')
+                {
+                    scroll_val = event.originalEvent.deltaY * (-1);
+                }
+                if (scroll_val >= 0) {
+
+                    // 세로 스크롤바가 있을 경우 처리
+                    if( J$(".conversation_contents").get(0).scrollHeight > J$(".conversation_contents").innerHeight() ){
+
+                        // 스크롤 정지
+                        J$('.uchat_scroll').trigger('click');
+
+                        // DOE 생성
+                        J$('.conversation_contents').before('<div id="view_additional_message_container"><div id="view_additional_message">아래에서 추가 메시지를 확인하세요.</div></div>');
+                    }
+                    else
+                    {
+                        // 스크롤바가 없는 경우
+                    }
+
+                }
+
+                else {
+                    //마우스휠 아래로 돌릴때 이벤트
+                }
+
+            }
+
+        });
+    }
+}
+
+J$(document).on('click', '.uchat_scroll', function() {
+  if( ADD_config_ary.ADD_config_chat_scroll ){
+      if( (J$('.uchat_scroll').hasClass('uchat_scroll_clicked')) && J$('#view_additional_message_container').length !== 0 ){
+          J$('#view_additional_message_container').remove();
+      }
+  }
+});
+
+J$(document).on('click', '#view_additional_message_container', function() {
+  if( ADD_config_ary.ADD_config_chat_scroll ){
+      if( (J$('.uchat_scroll').hasClass('uchat_scroll_clicked')) && J$('#view_additional_message_container').length !== 0 ){
+          //J$('#view_additional_message_container').remove();
+          J$('.uchat_scroll').trigger('click');
+      }
+  }
+});
+
+
+
+//////////////////////////////////////////////////////////////////////////////////
 // Open Lightbox
 J$(document).on('click', '.open-lightbox', function(e) {
   e.preventDefault();
@@ -2258,7 +2397,7 @@ J$(document).on('click', '.open-lightbox', function(e) {
 ////////////////////////////////////////////////////////////////////////////////
 // thumbnail image hover event
 function ADD_thumbnail_mouseover(){
-    // 
+    //
     if(thumbnail_check === ADD_config_ary.ADD_config_thumbnail_mouse)
     {
         // 이전 설정과 변경된 설정이 같으면 리턴한다.
