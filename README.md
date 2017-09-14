@@ -1,7 +1,7 @@
 # Addostream
 <!--Add new feature for dostream.com-->
 * 두스트림에 새로운 기능을 추가하는 브라우저 확장 Userscript
-* Firefox · Chrome 지원 (2017-07-31 기준)
+* Firefox · Chrome 지원 (2017-09-14 v1.31 기준)
 * Userscript 확장 기능 필요
   * Firefox - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/)
   * Chrome - [Tampermonkey](http://tampermonkey.net/)
@@ -20,11 +20,20 @@
 * 체크박스 체크 후 멀티트위치 버튼 누르면 멀티트위치 실행됨
 <br />
 
+
+<p align="center">
+<img src="https://github.com/nomomo/Addostream/blob/master/images/170914_chat_scroll_auto_stop.jpg" />
+</p>
+
+* ▲ [1.31 update!] 채팅창에서 마우스 휠을 위로 할 시 자동 스크롤 멈춤 기능 추가 (트위치 채팅창의 기능과 유사)
+<br />
+
+
 <p align="center">
 <img src="https://github.com/nomomo/Addostream/blob/master/images/170806_Quick_list.png" width="500px" />
 </p>
 
-* 재생 중 화면에서 메인 목록 보기 가능 (버튼을 클릭할 때마다 메인과 동일한 내용으로 갱신 됨)
+* ▲ [1.27 update!] 재생 중 화면에서 메인 목록 보기 가능 (버튼을 클릭할 때마다 메인과 동일한 내용으로 갱신 됨)
 <br />
 
 
@@ -32,7 +41,7 @@
 <img src="https://github.com/nomomo/Addostream/blob/master/images/170731_chat_image_preview.jpg" />
 </p>
 
-* 채팅에 올라온 Imgur 이미지 링크를 감지하여 바로보여줌 (Album, Gallery, Image 타입 및 Imgur 이미지 주소 대상)
+* ▲ [1.26 update!]채팅에 올라온 Imgur 이미지 링크를 감지하여 바로보여줌 (Album, Gallery, Image 타입 및 Imgur 이미지 주소 대상)
 <br />
 
 
@@ -79,8 +88,11 @@ https://github.com/nomomo/Addostream/blob/master/Addostream.user.js
   * 유챗 스킨 관련 광고메시지 제거 기능 추가
 * 2017-09-05 (v 1.30)
   * Firefox 에서 CSS 로드 안 되는 버그 수정
+* 2017-09-14 (v 1.31)
+  * 채팅창에서 마우스 휠을 위로 할 시 자동 스크롤 멈춤 기능 추가(트위치 채팅창 기능과 유사)
   
 ## Future works (언제걸릴지 모름)
+* 섬네일에 마우스 오버 시 일정 간격으로 업데이트 (아프리카 기능과 유사)
 * 보기 싫은 스트리머 일일히 타이핑하는 대신 체크 후 버튼 클릭으로 숨기기 가능하게 변경
 * 트위치, 카카오, 유투브 ON/OFF 여부 기억하기
 * 채팅 닉네임에 메모하기
