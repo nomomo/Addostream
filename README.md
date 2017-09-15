@@ -20,30 +20,48 @@
 * 체크박스 체크 후 멀티트위치 버튼 누르면 멀티트위치 실행됨
 <br />
 
+* ▼ [1.32 update!] 채팅창에서 닉네임에 메모 가능
+  * 혐오 이미지 링크 올리는 사람을 거르기 위해서 만든 기능. 채팅 컨트롤 활성화 시 적용 가능.
+  * 주의1: 메모한 내용을 채팅창에서 떠벌리지 말것
+  * 주의2: 오로지 '닉네임'만 체크하여 저장하며, 닉네임은 언제든 바뀔 수 있으므로 오해하지 말것
+<p align="center">
+<img src="https://github.com/nomomo/Addostream/blob/master/images/170916_memo_1.jpg" /><br />
+▲ 닉네임을 클릭하면 기존에는 없던 메모하기 버튼이 보임
+</p>
 
+
+<p align="center">
+<img src="https://github.com/nomomo/Addostream/blob/master/images/170916_memo_2.jpg" /><br />
+▲ 메모하기 버튼을 클릭하면 화면 중앙에 메모할 수 있는 창이 나타남
+</p>
+
+<p align="center">
+<img src="https://github.com/nomomo/Addostream/blob/master/images/170916_memo_3.jpg" /><br />
+▲ 메모 된 사람이 채팅하면 메모 내용이 같이 나타남
+</p>
+
+<br />
+
+* ▼ [1.31 update!] 채팅창에서 마우스 휠을 위로 할 시 자동 스크롤 멈춤 기능 추가 (트위치 채팅창의 기능과 유사)
 <p align="center">
 <img src="https://github.com/nomomo/Addostream/blob/master/images/170914_chat_scroll_auto_stop.jpg" />
 </p>
 
-* ▲ [1.31 update!] 채팅창에서 마우스 휠을 위로 할 시 자동 스크롤 멈춤 기능 추가 (트위치 채팅창의 기능과 유사)
 <br />
 
-
+* ▼ [1.27 update!] 재생 중 화면에서 메인 목록 보기 가능 (버튼을 클릭할 때마다 메인과 동일한 내용으로 갱신 됨)
 <p align="center">
 <img src="https://github.com/nomomo/Addostream/blob/master/images/170806_Quick_list.png" width="500px" />
 </p>
 
-* ▲ [1.27 update!] 재생 중 화면에서 메인 목록 보기 가능 (버튼을 클릭할 때마다 메인과 동일한 내용으로 갱신 됨)
 <br />
 
-
+* ▼ [1.26 update!]채팅에 올라온 Imgur 이미지 링크를 감지하여 바로보여줌 (Album, Gallery, Image 타입 및 Imgur 이미지 주소 대상)
 <p align="center">
 <img src="https://github.com/nomomo/Addostream/blob/master/images/170731_chat_image_preview.jpg" />
 </p>
 
-* ▲ [1.26 update!]채팅에 올라온 Imgur 이미지 링크를 감지하여 바로보여줌 (Album, Gallery, Image 타입 및 Imgur 이미지 주소 대상)
 <br />
-
 
 ## Config
 <p align="center">
