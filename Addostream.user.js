@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.31
+// @version     1.32
 // @updateURL   https://github.com/nomomo/Addostream/raw/master/Addostream.user.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @grant       GM_xmlhttpRequest
@@ -1479,6 +1479,9 @@ function ADD_config_DOE()
                               </tr>\
                               <tr>\
                                  <td class="td_strong">채팅 컨트롤 \
+                                     <span class="tooltip_container" aria-label="채팅 관련 기능을 활성화 한다. 채팅창에서 닉네임을 클릭하면 메모를 추가할 수 있는 기능을 기본으로 제공한다." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
+                                         <span class="glyphicon glyphicon-question-sign" style="color:#333;"></span>\
+                                     </span>\
                                  </td>\
                                  <td>\
                                      <input type="checkbox" id="ADD_config_chat_ctr" onfocus="this.blur()" class="form_enabled" style="margin-right:50px;" />\
@@ -2094,6 +2097,17 @@ function ADD_chatting_arrive(){
                 }
             }
             
+            // 메모하기
+            // 메모용 쿠키 있는지 체크
+            if (!!J$.Jcookie('ADD_chat_memo')){
+                // 메모용 쿠키 있으면 읽어옴
+                var ADD_chat_memo = JSON.parse(J$.Jcookie('ADD_chat_memo'));
+                if(ADD_chatting_nickname in ADD_chat_memo)
+                {
+                    newElem.find('.conversation_nick').after('<span class="conversation_memo" style="color:red;font-weight:bold;"> ['+ADD_chat_memo[ADD_chatting_nickname]+']</span>');
+                }
+            }
+            
             // Imgur image preview 시
             if(ADD_config_ary.ADD_config_imgur_preview)
             {
@@ -2506,6 +2520,168 @@ function ADD_thumbnail_mouseover(){
 
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
+//                             FUNCTION - CHAT MEMO
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+// 메모 메뉴 DOE 생성 함수
+function ADD_memo_menu_doe(){
+    if(!ADD_config_ary.ADD_config_chat_ctr)
+        return;
+
+    //var newElem = J$(newElem);
+    if( J$('#do_memo_container').length !== 0 ){
+        J$('#do_memo_container').remove();
+    }
+
+    J$('.user_menu').after('<div id="do_memo_container" style=""><div id="do_memo" style="position:relative;top:125px;left:0;width:112px;height:30px;padding:6px 5px;background-color:red;color:#fff;font-weight:bold;cursor:pointer;">메모하기</div></div>');
+    var save_style = J$('.user_menu').attr('style');
+    save_style = save_style+'position:absolute;z-index:1101;';
+    J$('#do_memo_container').attr('style', save_style);
+    J$('#do_memo').css('top', J$('.user_menu').height() );
+
+    save_style = null;
+}
+
+// 메모 입력 DOE 생성 함수
+function ADD_memo_doe(){
+    if(!ADD_config_ary.ADD_config_chat_ctr)
+        return;
+
+    var memo_nick = J$('.user_nick > div').html();
+    var memo_find = false;
+    var memo_contents = '';
+    var ADD_chat_memo;
+    var memo_doe_text = '';
+
+    // 메모용 쿠키 있는지 체크
+    if (!J$.Jcookie('ADD_chat_memo')){
+        // 메모용 쿠키 없으면 메모용 쿠키 새로 생성
+        ADD_chat_memo = {'key' : 'value'};
+        J$.Jcookie('ADD_chat_memo', JSON.stringify(ADD_chat_memo), { expires : 365*2, path : '/' });
+        ADD_DEBUG_MODE && console.log('메모 쿠키가 없어서 새로 생성');
+    }
+    else
+    {
+        // 메모용 쿠키 있으면 읽어옴
+        ADD_chat_memo = JSON.parse(J$.Jcookie('ADD_chat_memo'));
+        ADD_DEBUG_MODE && console.log('메모 쿠키 있어서 읽어옴');
+    }
+    // 메모용 쿠키에 아이디와 동일한 키값 있는지 검색함
+    for(key in ADD_chat_memo)
+    {
+        if(key == memo_nick){
+            memo_find = true;
+            break;
+        }
+    }
+    // 있으면 값을 불러와서 내용에 해당하는 변수에 저장함
+    if(memo_find){
+        memo_contents = ADD_chat_memo[memo_nick];
+    }
+    // 없으면 걍 기본값인 공백씀
+
+    // 메모하기 위한 DOE 창 생성함
+    // 필요요소: form, save button, close button(Right up x)
+    J$('html').addClass('no-scroll');
+    memo_doe_text = '\
+        <div class="lightbox-opened">\
+        <div class="memo_doe" style="position: absolute; top: 50%;left:50%; width: 400px; height:100px; margin-left:-200px; margin-top:-50px;">\
+        <div style="width:400px;height:100px;cursor:default;" class="modal-content">\
+        <div style="padding:5px 0;"><span style="font-weight:bold;color:red;font-size:14px;">'+memo_nick+'</span> 에 대하여 메모를 입력합니다.</div>\
+        <input type="text" id="memo_textbox" style="width:80%;height:25px;font-size:13px;padding:1px 0 1px 3px;" class="" value="'+memo_contents+'"/>\
+        <div style="padding:5px 0;"><span id="memo_ok" class="btn btn-default">SAVE</span></div>\
+        </div>\
+        <div id="memo_text_container" style="position:relative;top:10px;left:0px; width:400px;height:30px;font-size:12px;cursor:pointer;"><span id="memo_text" style="color:#fff">메모를 삭제하려면 모든 내용을 지우고 저장하세요.<br />저장하지 않고 나가려면 배경화면을 누르세요.</span></div>\
+        </div>\
+        </div>\
+        ';
+    J$('body').append(memo_doe_text);
+
+    // 확인 버튼 누르면 DOE 창 내용을 쿠키에 씀
+
+    memo_nick = null;
+    memo_find = null;
+    memo_contents = null;
+    ADD_chat_memo = null;
+    memo_doe_text = null;
+}
+
+function ADD_memo_save_event(){
+    var memo_nick = J$('.user_nick > div').html();
+    var memo_find = false;
+    var memo_contents = '';
+    var ADD_chat_memo;
+    var memo_blank = false;
+    
+    // 메모용 쿠키 있는지 체크
+    if (!J$.Jcookie('ADD_chat_memo')){
+        // 메모용 쿠키 없으면 메모용 쿠키 새로 생성
+        ADD_chat_memo = {'key' : 'value'};
+        J$.Jcookie('ADD_chat_memo', JSON.stringify(ADD_chat_memo), { expires : 365*2, path : '/' });
+    }
+    else
+    {
+        // 메모용 쿠키 있으면 읽어옴
+        ADD_chat_memo = JSON.parse(J$.Jcookie('ADD_chat_memo'));
+    }
+    
+    memo_contents = J$('#memo_textbox').val();
+    if(memo_contents == '' || memo_contents == null){
+        memo_blank = true;
+    }
+
+    // 메모 변수 수정
+    ADD_chat_memo[memo_nick] = memo_contents;
+
+    if(memo_blank){
+        delete ADD_chat_memo[memo_nick];
+    }
+
+    // 메모 쿠키 저장
+    J$.Jcookie('ADD_chat_memo', JSON.stringify(ADD_chat_memo), { expires : 365*2, path : '/' });
+
+    J$('#memo_text').fadeOut(200);
+    setTimeout(function() {
+        var memo_text_contents;
+        console.log('memo_blank',memo_blank,'memo_contents',memo_contents);
+        if(memo_blank){
+            memo_text_contents = '메모 내용이 존재하지 않으므로 메모가 삭제되었습니다. <br />나가려면 배경화면을 누르세요.';
+        }
+        else
+        {
+            memo_text_contents = '메모가 저장되었으며 새로 올라오는 채팅부터 반영됩니다. <br />나가려면 배경화면을 누르세요.';
+        }
+        J$('#memo_text').html(memo_text_contents).fadeIn(200);
+
+        memo_text_contents = null;
+        memo_blank = null;
+        memo_nick = null;
+        memo_find = null;
+        memo_contents = null;
+        ADD_chat_memo = null;
+
+    }, 200);
+
+}
+
+// 메모 DOE 생성 이벤트
+J$(document).on('click', '#do_memo', function() {
+    ADD_memo_doe();
+});
+
+// Memo 창 클릭해도 안 꺼지도록 이벤트
+J$(document).on('click', '.memo_doe > .modal-content', function(e) {
+    e.stopPropagation();
+});
+
+// 메모 저장 이벤트
+J$(document).on('click', '#memo_ok', function() {
+    ADD_memo_save_event();
+});
+
+
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 //                                    MAIN
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
@@ -2609,12 +2785,39 @@ J$(document).ready(function()
 //////////////////////////////////////////////////////////////////////////////////
     // Arrive event 관련
     // 채팅창 생길 때 send 위한 DOE 생성, 무조건 실행됨
-    J$('.chat').arrive('.uchat_middle', function() { //{onceOnly:true}, 
+    J$('.chat').arrive('.uchat_middle', function() { //{onceOnly:true},
         ADD_send_location_DOE();
+        J$('.user_menu').attr('id','user_menu_id');
+
+        
+//////////////////////////////////////////////////////////////////////////////////
+    // Memo event 관련
+    // 추후 부하를 줄이기 위하여 ADD_config_ary.ADD_config_chat_ctr 에 따라 bind/unbind 한다.
+        // display:none 감지
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutationRecord) {
+                if( !J$(mutations[0].target).is(':visible') )
+                    if( J$('#do_memo_container').length !== 0 ){
+                        J$('#do_memo_container').remove();
+                        console.log('test');
+                    }
+            });
+        });
+        // display:none 감지 할당
+        var target = document.getElementById('user_menu_id');
+        observer.observe(target, { attributes : true, attributeFilter : ['style'] });
+        // display:none 감지 끝
+
     });
-    
+
+    J$(document).arrive('.user_nick', function() {
+        ADD_memo_menu_doe();
+    });
+
 
 });
+
+
 
 //////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// J$(document).load /////////////////////////////
@@ -2674,6 +2877,8 @@ window.onpopstate = function(event) {
     }
 };
 */
+
+
 
 //////////////////////////////////////////////////////////////////////////////////
 // quick list popup On-Off event
