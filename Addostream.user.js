@@ -279,6 +279,7 @@ J$('head').append('\
 function parse_data_from_list(flag)
 {
     J$.getJSON("/dev/stream_list.php", function(data) {
+        
     
         // 숨길 대상 스트리머 지우기
         var h_index_ary = [];
@@ -305,9 +306,7 @@ function parse_data_from_list(flag)
         // 17-09-19 : 아프리카를 메인에서 숨긴다.
         for( var i=data.length - 1; i>0 ; i-- )
         {
-            //console.log(data);
-            console.log(data[i].from);
-            if( data[i].from = 'afreeca' )
+            if( data[i].from == 'afreeca' )
             {
                 data.splice(i,1);
             }
