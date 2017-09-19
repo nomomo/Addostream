@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.32
+// @version     1.33
 // @updateURL   https://github.com/nomomo/Addostream/raw/master/Addostream.user.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @grant       GM_xmlhttpRequest
@@ -300,7 +300,17 @@ function parse_data_from_list(flag)
             // 저장된 index가 내림차순이므로 마지막에서부터 지운다.
             data.splice(h_index_ary[i],1);
         }
-
+        
+        // 17-09-19 : 아프리카를 메인에서 숨긴다.
+        for( var i=data.length - 1; i>0 ; i-- )
+        {
+            //console.log(data);
+            console.log(data[i].from);
+            if( data[i].from = 'afreeca' )
+            {
+                data.splice(i,1);
+            }
+        }
 
         // 새로 추가한 항목 초기화
         for( var i=0; i<data.length ; i++ )
@@ -1402,11 +1412,22 @@ function ADD_multitwitch_DOE()
         J$('.search').append('<span id="multitwitch" style="cursor: pointer; display:inline-block; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #eee none repeat scroll 0 0; color: #222;">멀티트위치</span>');
 }
 
+// 17-09-19 : 임시로 필요 없는 것을 숨긴다.
+function ADD_temp(){
+    if( J$('ul.nav').length !== 0 )
+        J$('ul.nav').remove();
+    if( J$('#streamSearchForm').length !== 0 )
+        J$('#streamSearchForm').remove();
+}
+
 
 //////////////////////////////////////////////////////////////////////////////////
 // 설정 관련 버튼, 팝업 DOE 생성
 function ADD_config_DOE()
 {
+      // 임시 복구용
+      ADD_temp();
+
       // 설정 버튼 및 팝업 생성
       J$('header .container').append('\
           <div style="position:relative;">\
