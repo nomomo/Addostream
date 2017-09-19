@@ -21,28 +21,6 @@
 <br />
 
 ## Key features
-* ▼ [1.32 update!] 채팅창에서 닉네임에 메모 가능
-  * 혐오 이미지 링크 올리는 사람을 거르기 위해서 만든 기능. 채팅 컨트롤 활성화 시 적용 가능.
-  * 주의1: 메모한 내용을 채팅창에서 떠벌리지 않도록 .
-  * 주의2: 오로지 '닉네임'만 체크하여 메모 여부를 판단함. 닉네임은 언제든 바뀔 수 있으므로 오해하지 않도록 주의.
-<p align="center">
-<img src="https://github.com/nomomo/Addostream/blob/master/images/170916_memo_1.jpg" /><br />
-▲ 닉네임을 클릭하면 기존에는 없던 메모하기 버튼이 보임
-</p>
-
-
-<p align="center">
-<img src="https://github.com/nomomo/Addostream/blob/master/images/170916_memo_2.jpg" /><br />
-▲ 메모하기 버튼을 클릭하면 화면 중앙에 메모할 수 있는 창이 나타남
-</p>
-
-<p align="center">
-<img src="https://github.com/nomomo/Addostream/blob/master/images/170916_memo_3.jpg" /><br />
-▲ 메모 된 사람이 채팅하면 메모 내용이 같이 나타남
-</p>
-
-<br />
-
 * ▼ [1.31 update!] 채팅창에서 마우스 휠을 위로 할 시 자동 스크롤 멈춤 기능 추가 (트위치 채팅창의 기능과 유사)
 <p align="center">
 <img src="https://github.com/nomomo/Addostream/blob/master/images/170914_chat_scroll_auto_stop.jpg" />
@@ -111,6 +89,8 @@ https://github.com/nomomo/Addostream/blob/master/Addostream.user.js
   * 채팅창에서 마우스 휠을 위로 할 시 자동 스크롤 멈춤 기능 추가(트위치 채팅창 기능과 유사)
 * 2017-09-16 (v 1.32)
   * 채팅 닉네임에 메모하기
+* 2017-09-19 (v 1.33)
+  * 거슬리는 아프리카, 검색창 등을 숨긴다.
   
 ## Future works (언제걸릴지 모름)
 * 섬네일에 마우스 오버 시 일정 간격으로 업데이트 (아프리카 기능과 유사)
