@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.35
+// @version     1.36
 // @updateURL   https://github.com/nomomo/Addostream/raw/master/Addostream.user.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @grant       GM_xmlhttpRequest
@@ -61,8 +61,12 @@ J$('head').append('\
         #ADD_test_button {cursor:pointer;}\
         #popup_ADD_config, #popup_ADD_quick, #popup_ADD_test {display:none; font-size:12px; z-index:10000; position:absolute; width:500px;}\
         #popup_ADD_config{ top:50px; right:10px; }\
-        #ADD_quick_list { opacity:0; transition: visibility 0s, opacity 0.5s linear;}\
-        .onstream #ADD_quick_list { opacity:1; display:inline-block;}\
+        #ADD_change_multi { display:none; }\
+        //#ADD_change_multi { opacity:0; transition: visibility 0s, opacity 0.5s linear;}\
+        .onstream #ADD_change_multi { opacity:1; display:inline-block !important;}\
+        #ADD_quick_list { display:none; }\
+        //#ADD_quick_list { opacity:0; transition: visibility 0s, opacity 0.5s linear;}\
+        .onstream #ADD_quick_list { opacity:1; display:inline-block !important;}\
         #popup_ADD_quick .modal-body{ padding:15px; }\
         #popup_ADD_quick { top:50px; right:10px; }\
         #popup_ADD_quick .quick_list_title { padding:0 5px 2px 5px; margin-bottom:0px; border-bottom:2px solid rgb(221, 221, 221); font-weight:bold;}\
@@ -1434,11 +1438,15 @@ function ADD_config_DOE()
           <div style="position:relative;">\
           <div id="notice_text_elem"><span id="notice_text">문어문어문어문어<br />블러드트레일 블러드트레일</span></div>\
               <div class="AD_title">\
-                 <span id="ADD_quick_list" class="btn btn-default btn_closed">\
+                 <span id="ADD_change_multi" class="btn btn-default btn_closed" aria-label="멀티트위치↔트위치 전환" data-microtip-position="left" role="tooltip">\
+                    <span class="glyphicon glyphicon-resize-horizontal">\
+                    </span>\
+                 </span>\
+                 <span id="ADD_quick_list" class="btn btn-default btn_closed" aria-label="퀵리스트" data-microtip-position="bottom" role="tooltip">\
                     <span class="glyphicon glyphicon-list">\
                     </span>\
                  </span>\
-                 <span id="ADD_config" class="btn btn-default btn_closed">\
+                 <span id="ADD_config" class="btn btn-default btn_closed" aria-label="설정" data-microtip-position="right" role="tooltip">\
                     <span class="glyphicon glyphicon-cog">\
                     </span>\
                  </span>\
@@ -2901,6 +2909,64 @@ window.onpopstate = function(event) {
 };
 */
 
+//////////////////////////////////////////////////////////////////////////////////
+// change page check event
+window.onpopstate = function() {
+    var document_url = location.href;
+    document_url = document_url.toLowerCase();
+    var stream_url = document_url.indexOf('/stream/');
+    var twitch_url = document_url.indexOf('/twitch/');
+    var multitwitch_url = document_url.indexOf('/multitwitch/');
+    if( (twitch_url  != -1) || (multitwitch_url  != -1) )
+    {
+        J$('#ADD_change_multi').fadeIn(300);
+    }
+    else
+    {
+        J$('#ADD_change_multi').fadeOut(300);
+    }
+    if( stream_url != -1)
+    {
+        J$('#ADD_quick_list').fadeIn(300);
+    }
+    else
+    {
+        J$('#ADD_quick_list').fadeOut(300);
+    }
+
+    document_url = null;
+    stream_url = null;
+    twitch_url = null;
+    multitwitch_url = null;
+};
+
+//////////////////////////////////////////////////////////////////////////////////
+// change multitwitch event
+J$(document).on('click', '#ADD_change_multi', function() {
+    var document_url = location.href;
+    var lowercase_document_url = document_url.toLowerCase();
+    var stream_url = lowercase_document_url.indexOf('/stream/');
+    var twitch_url = lowercase_document_url.indexOf('/twitch/');
+    var multitwitch_url = lowercase_document_url.indexOf('/multitwitch/');
+    var move_url = '';
+    if(stream_url != -1){
+        if(twitch_url != -1){
+            move_url = document_url.replace('/twitch/','/multitwitch/');
+            window.location.href = move_url;
+        }
+        else if(multitwitch_url != -1){
+            move_url = document_url.replace('/multitwitch/','/twitch/');
+            window.location.href = move_url;
+        }
+    }
+
+    document_url = null;
+    lowercase_document_url = null;
+    stream_url = null;
+    twitch_url = null;
+    multitwitch_url = null;
+    move_url = null;
+});
 
 
 //////////////////////////////////////////////////////////////////////////////////
