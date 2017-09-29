@@ -21,6 +21,14 @@
 <br />
 
 ## Key features
+* ▼ [1.36 update!] 멀티트위치↔트위치 전환 버튼 추가
+<p align="center">
+<img src="https://github.com/nomomo/Addostream/blob/master/images/170929_change_twitch.jpg" />
+</p>
+
+<br />
+
+
 * ▼ [1.31 update!] 채팅창에서 마우스 휠을 위로 할 시 자동 스크롤 멈춤 기능 추가 (트위치 채팅창의 기능과 유사)
 <p align="center">
 <img src="https://github.com/nomomo/Addostream/blob/master/images/170914_chat_scroll_auto_stop.jpg" />
@@ -91,6 +99,8 @@ https://github.com/nomomo/Addostream/blob/master/Addostream.user.js
   * 채팅 닉네임에 메모하기
 * 2017-09-19 (v 1.33)
   * 거슬리는 아프리카, 검색창 등을 숨긴다.
+* 2017-09-29 (v 1.36)
+  * 멀티트위치↔트위치 전환 버튼 추가
   
 ## Future works (언제걸릴지 모름)
 * 섬네일에 마우스 오버 시 일정 간격으로 업데이트 (아프리카 기능과 유사)
