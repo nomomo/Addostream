@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.36
+// @version     1.37
 // @updateURL   https://github.com/nomomo/Addostream/raw/master/Addostream.user.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @grant       GM_xmlhttpRequest
@@ -281,11 +281,41 @@ J$('head').append('\
 
 
 //////////////////////////////////////////////////////////////////////////////////
+// 현재 시간 리턴용
+function leadingZeros(n, digits) {
+  var zero = '';
+  n = n.toString();
+
+  if (n.length < digits) {
+    for (i = 0; i < digits - n.length; i++)
+      zero += '0';
+  }
+  return zero + n;
+}
+
+function getTimeStamp() {
+  var d = new Date();
+
+  var s = '' +
+    leadingZeros(d.getFullYear(), 4) +
+    leadingZeros(d.getMonth() + 1, 2) +
+    leadingZeros(d.getDate(), 2) +
+
+    leadingZeros(d.getHours(), 2) +
+    leadingZeros(d.getMinutes(), 2);
+    //leadingZeros(d.getSeconds(), 2);
+
+  return s;
+}
+//////////////////////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////////////////
 // 파싱 후 데이터 정리
 function parse_data_from_list(flag)
 {
     J$.getJSON("/dev/stream_list.php", function(data) {
-        
+        var getTimeResult = '?' + getTimeStamp();
     
         // 숨길 대상 스트리머 지우기
         var h_index_ary = [];
@@ -418,9 +448,10 @@ function parse_data_from_list(flag)
         }
 
 
-        // display_name 채우기
+        // display_name 채우기, 섬네일 수정하기
         for( var i=0; i<data.length ; i++ )
         {
+            data[i].image += getTimeResult;
             if(data[i].main_favorite === true)
                 continue;
     
@@ -2471,6 +2502,7 @@ function ADD_thumbnail_mouseover(){
     {
         J$(document).on({
             mouseenter: function() {
+                var getTimeResult = '?' + getTimeStamp();
                 var thumb_this = J$(this);
                 var thumb_this_parent = thumb_this.parent('a');
                 var thumb_size_class;
@@ -2493,11 +2525,11 @@ function ADD_thumbnail_mouseover(){
                         // default
                         break;
                 }
-                
-                if( thumb_this_parent.find('.ADD_thumb_elem_container').length === 0 )
+
+                var ADD_thumb_href = '';
+                ADD_thumb_href = thumb_this.attr('src') + getTimeResult;
+                if( thumb_this_parent.find('.ADD_thumb_elem_container').length === 0 ) // 기존에 섬네일 영역 존재 안 하는 경우
                 {
-                    var ADD_thumb_href = thumb_this.attr('src');
-                    
                     // check image size
                     switch(ADD_config_ary.ADD_config_thumbnail_size){
                         case '1':
@@ -2528,8 +2560,9 @@ function ADD_thumbnail_mouseover(){
                     thumb_this.after(ADD_thumb_elem_string);
                     thumb_this_parent.find('.ADD_thumb_elem_container').fadeIn('fast');
                 }
-                else
+                else // 기존에 이미 존재하는 경우
                 {
+                    thumb_this_parent.find('.ADD_thumb_img').attr('src',ADD_thumb_href); // 주소 업데이트
                     thumb_this_parent.find('.ADD_thumb_elem_container').fadeIn('fast');
                 }
                 
