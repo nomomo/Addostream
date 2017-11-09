@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.37
+// @version     1.38
 // @updateURL   https://github.com/nomomo/Addostream/raw/master/Addostream.user.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @grant       GM_xmlhttpRequest
@@ -156,7 +156,8 @@ J$('head').append('\
         }\
         .fixed_streamer{background-color:#f5f5f5;}\
         .td_strong{font-weight:bold;}\
-        #notice_text_elem{display:none;font-size:10px;color:#666;position:absolute;top:9px;right:100px;width:300px;height:30px;text-align:right; vertical-align:middle;}\
+        #notice_text_elem{display:none;font-size:10px;color:#666;position:absolute;top:0px;left:150px;max-width:600px;height:63px;text-align:left; margin-right:150px; vertical-align:middle;overflow: hidden;text-overflow: ellipsis;}\
+        .onstream #notice_text_elem {height:45px;}\
         #notice_text_elem:before{content: "";display:inline-block;vertical-align: middle;height: 100%;}\
         #notice_text{display:inline-block;vertical-align:middle;line-height:150%;}\
         #at {\
@@ -255,6 +256,7 @@ J$('head').append('\
         }\
         #view_additional_message_container {position:absolute;bottom:46px;left:0px;z-index:15;width:100%; height:30px;cursor:pointer;}\
         #view_additional_message {position:relative;padding:5px 0;background-color:rgba(0,0,0,0.6);text-align:center;color:#fff;font-size:12px;}\
+        .ADD_chat_again, .ADD_twitch_api_again{cursor:pointer;}\
     </style>\
 ');
 
@@ -316,13 +318,13 @@ function parse_data_from_list(flag)
 {
     J$.getJSON("/dev/stream_list.php", function(data) {
         var getTimeResult = '?' + getTimeStamp();
-    
+
         // 숨길 대상 스트리머 지우기
         var h_index_ary = [];
         for(var i=0; i<hide_streamer.length; i++)
         {
             var h_index = data.map(function(o) { return o.streamer; }).indexOf(hide_streamer[i]);
-            
+
             if(h_index !== -1)
             {
                 h_index_ary.push(h_index);
@@ -331,14 +333,14 @@ function parse_data_from_list(flag)
         h_index_ary.sort(function(a, b) { // 내림차순
             return b - a;
         });
-        
-        
+
+
         for(var i=0; i<h_index_ary.length; i++)
         {
             // 저장된 index가 내림차순이므로 마지막에서부터 지운다.
             data.splice(h_index_ary[i],1);
         }
-        
+
         // 17-09-19 : 아프리카를 메인에서 숨긴다.
         for( var i=data.length - 1; i>0 ; i-- )
         {
@@ -355,8 +357,8 @@ function parse_data_from_list(flag)
             data[i].main_favorite = false;
             data[i].display_name = '';
         }
-        
-        
+
+
         // Twitch api 쿠키로부터 스트리머 가져오기
         ADD_DEBUG_MODE && console.log('ADD_config_ary.ADD_config_alarm :',ADD_config_ary.ADD_config_alarm);
         if ( ADD_config_ary.ADD_config_alarm && (!!J$.Jcookie('twitch_api_cookie')) )
@@ -402,13 +404,13 @@ function parse_data_from_list(flag)
                         }
                 }
             }
-            
+
             // GC
             temp_api_cookie = null;
             ADD_DEBUG_MODE && console.log('...twitch_api_cookie 쿠키 정리 완료...');
         }
-        
-        
+
+
         // 고정 시킬 스트리머 순서 맨 위로 올리기
         ADD_DEBUG_MODE && console.log('ADD_config_ary.ADD_config_top_fix :',ADD_config_ary.ADD_config_top_fix);
         if(ADD_config_ary.ADD_config_top_fix)
@@ -454,7 +456,7 @@ function parse_data_from_list(flag)
             data[i].image += getTimeResult;
             if(data[i].main_favorite === true)
                 continue;
-    
+
             for(var j=0; j<streamerArray.length; j++)
             {
                 if(data[i].from !== 'twitch')
@@ -462,13 +464,13 @@ function parse_data_from_list(flag)
                     data[i].display_name = '';
                     break;
                 }
-                
+
                 if(streamerArray[j][0] === data[i].streamer)
                 {
                     data[i].display_name = streamerArray[j][1];
                     break;
                 }
-                
+
                 if(j === streamerArray.length-1)
                 {
                     data[i].display_name = data[i].streamer;
@@ -478,7 +480,7 @@ function parse_data_from_list(flag)
         }
 
         ADD_run(data,flag);
-    
+
     });
 }
 
@@ -496,7 +498,7 @@ function ADD_run(json,flag) {
   	  var favorite_class = '';
   	  var favorite_append = '';
   	  var display_name = '';
-  	  
+
       if(data.from === 'twitch')
       {
           twitch_append='\
@@ -513,7 +515,7 @@ function ADD_run(json,flag) {
                   </div>\
               </div>\
           ';
-  
+
           display_name = data.display_name+' ('+data.streamer+')';
       }
       else
@@ -532,7 +534,7 @@ function ADD_run(json,flag) {
           		  	display_name = from;
         	}
       }
-      
+
       if(data.main_fixed)
       {
           fixed_class = ' fixed_streamer'
@@ -642,7 +644,7 @@ var streamerArray = [
     ['cocopopp671','초승달'],
     ['dingception','딩셉션'],
     ['redteahs','홍차'],
-    ['zzamtiger0310','수아'],
+    ['zzamtiger0310','짬타수아'],
     ['rldnddl789','아빠킹'],
     ['eulcs1','EU LCS'],
     ['kkoma','SKT T1 Kkoma'],
@@ -703,13 +705,31 @@ var streamerArray = [
     ['zizionmy','젼마이'],
     ['lol_blank','SKT T1 Blank'],
     ['ogn_ow','OGN 오버워치'],
+    ['juankorea','juankorea'],
+    ['woowakgood','우왁굳'],
+    ['www0606','푸딩'],
+    ['runner0608','러너'],
+    ['flowervin','꽃빈'],
+    ['h920103','이초홍'],
+    ['hj0514','백설양'],
+    ['pbstream77','피비스트림'],
+    ['llilka','릴카'],
+    ['beyou0728','피유'],
+    ['serayang','세라양'],
+    ['mister903','갱생레바'],
+    ['what9honggildong','왓구홍길동'],
+    ['chicken_angel','통닭천사'],
+    ['godbokihs','갓보기'],
+    ['yuriseo','서유리'],
+    ['kimminyoung','아옳이'],
+    ['gabrielcro','가브리엘'],
     ['starcraft_kr','스타크래프트 KR']
     ];// ['',''],
 
 var href = 'initialize';            //
 var multitwitchID = 'hanryang1125'; // 멀티트위치 ID 저장용
-var streamerID = '';                // 
-var ADD_API_SET_INTERVAL;           // 
+var streamerID = '';                //
+var ADD_API_SET_INTERVAL;           //
 
 var ADD_config_ary = [];            // 설정 변수
 var fixed_streamer = [];            // 상단 고정 스트리머 이름 배열
@@ -751,6 +771,12 @@ var ADD_config_enable_init = ['ADD_config_top_fix'
                               ,'ADD_config_imgur_preview'
                               ,'ADD_config_imgur_preview_safe'
                               ];
+var ADD_status = [];
+var ADD_status_init = {'ad_remove' : 0
+                 ,'auto_image' : 0
+                 ,'api_call' : 0
+                 ,'update' : 0
+                 };
 
 var first_api_call = true;          // 첫번째 api 호출인지 체크함
 var api_push_forced = false;        // true 이면 twitch api를 강제로 push 함, Setting save 시 사용
@@ -767,6 +793,7 @@ var max_iteration = 100;            // DOE 생성 체크 최대 횟수
 var iteration = 0;                  // DOE 생성 체크 현재 횟수
 var checked_box_no = 0;
 
+
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
 //                          FUNCTION - COOKIE AND config
@@ -780,7 +807,7 @@ function ADD_cookie_var_initialize()
 {
     // 글로벌 변수를 가져와서 초기화 함
     ADD_config_ary = ADD_config_ary_init;
-    
+
     // Object 키 길이 구하는 방법
     // ADD_config_ary_length = Object.keys(ADD_config_ary).length;
 }
@@ -834,19 +861,19 @@ function ADD_cookie_to_var()
             hide_streamer = ADD_config_streamer_hide_ID.replace(/\s/g,'').toLowerCase().split(',');
         else
             hide_streamer = [];
-        
+
         // GC
         ADD_config_top_fix_ID = null;
         ADD_config_top_alarm_ID = null;
         ADD_config_streamer_hide_ID = null;
-        
+
     }
     else
     {
         // 설정 쿠키값이 존재하지 않는 경우
         ADD_cookie_var_initialize();
     }
-    
+
     // event binding
     ADD_event_binding();
 }
@@ -862,15 +889,15 @@ function ADD_event_binding()
         ADD_DEBUG_MODE && console.log('ADD_chatting_arrive() 함수 실행 됨!');
         ADD_chatting_arrive();
     }
-    
-    
+
+
     // 섬네일 마우스 오버 설정 관련됨
     if(ADD_config_ary.ADD_config_thumbnail_mouse !== undefined)
     {
         ADD_DEBUG_MODE && console.log('ADD_thumbnail_mouseover() 함수 실행 됨!');
         ADD_thumbnail_mouseover();
     }
-    
+
 
     // 데스크탑 알림 권한 관련됨
     if(ADD_config_ary.ADD_config_alarm_noti !== undefined && ADD_config_ary.ADD_config_alarm_noti)
@@ -879,8 +906,8 @@ function ADD_event_binding()
         if (Notification.permission !== "granted")
             Notification.requestPermission();
     }
-    
-    
+
+
     // 채팅창 스크롤 관련됨
     if(ADD_config_ary.ADD_config_chat_scroll !== undefined)
     {
@@ -907,22 +934,22 @@ function ADD_var_to_config_form()
         var ADD_ct = ADD_config_ary[key];
         var ADD_config_ID_text;
         var ADD_config_type;
-        
-        // 설정 key와 동일한 ID를 가진 요소를 찾아서 변수에 저장한다. 
+
+        // 설정 key와 동일한 ID를 가진 요소를 찾아서 변수에 저장한다.
         if (key == 'ADD_config_thumbnail_size')
             ADD_config_ID_text = '#'+key+'_'+ADD_ct;
         else
             ADD_config_ID_text = '#'+key;
 
         var ADD_config_ID = J$(ADD_config_ID_text);
-        
+
         // 해당 ID 값 가진 엘리먼트가 존재하지 않을 시 다음 for문으로 넘어간다.
         if(ADD_config_ID.length === 0)
             continue;
 
         // 해당 ID 요소의 type 을 변수에 저장한다.
         ADD_config_type = ADD_config_ID.attr('type');
-        
+
         // 위에서 찾은 각 설정창 타입에 맞게 변수를 입력해준다.
         if (ADD_config_type == 'text')
         {
@@ -939,16 +966,16 @@ function ADD_var_to_config_form()
             // 3. 설정창 타입이 radio 인 경우
             ADD_config_ID.prop('checked', true);
         }
-        
+
         // GC
         ADD_ct = null;
         ADD_config_ID_text = null;
         ADD_config_type = null;
     };
-    
+
     // 설정 팝업 내 체크에 따른 enable 여부 초기화
     ADD_config_enable(ADD_config_enable_init);
-    
+
     // 설정 팝업 내 개발 중 옵션을 보여주는지 여부를 확인하여 초기화
     if(ADD_config_ary.ADD_config_dev_on !== undefined && ADD_config_ary.ADD_config_dev_on)
     {
@@ -964,14 +991,14 @@ function ADD_save_config_to_cookie()
     // 설정 변수가 없는 경우, 기본값으로 초기화한다.
     if (typeof ADD_config_ary === 'undefined')
         ADD_cookie_var_initialize();
-     
+
     for(key in ADD_config_ary)
     {
         // 로컬 변수 선언
         var ADD_config_ID_text;
         var ADD_config_ID;
         var ADD_config_type;
-        
+
         // 설정 key와 동일한 ID를 가진 요소를 찾아서 변수에 저장한다.
         if (key == 'ADD_config_thumbnail_size')
         {
@@ -983,7 +1010,7 @@ function ADD_save_config_to_cookie()
         }
 
         ADD_config_ID = J$(ADD_config_ID_text);
-        
+
         // 해당 ID 값 가진 엘리먼트가 존재하지 않을 시 다음 for문으로 넘어간다.
         if(ADD_config_ID.length === 0)
         {
@@ -994,10 +1021,10 @@ function ADD_save_config_to_cookie()
 
             continue;
         }
-        
+
         // 해당 ID 요소의 type 을 변수에 저장한다.
         ADD_config_type = ADD_config_ID.attr('type');
-        
+
         // 위에서 찾은 각 설정창 타입에 맞게 쿠키에 입력한다.
         if (ADD_config_type == 'text')
         {
@@ -1014,13 +1041,13 @@ function ADD_save_config_to_cookie()
             // 3. 설정창 타입이 radio 인 경우
             ADD_config_ary[key] = ADD_config_ID.val();
         }
-        
+
         // GC
         ADD_config_ID_text = null;
         ADD_config_ID = null;
         ADD_config_type = null;
     }; // for(key in ADD_config_ary) 끝
-    
+
     // 설정 쿠키를 만든다.
     ADD_config_cookie_create();
 }
@@ -1038,7 +1065,7 @@ function ADD_last_version_checker()
         // 버전 명이 아예 없으면 1.11 버전이다.
         // 쿠키 변수를 초기화 한다.
         ADD_cookie_var_initialize();
-        
+
         // 1.11 버전 변수를 현재 버전에 포팅한다.
         ADD_config_ary.ADD_config_top_fix = temp_config[0];
         ADD_config_ary.ADD_config_top_off_fix = temp_config[1];
@@ -1050,7 +1077,7 @@ function ADD_last_version_checker()
         ADD_config_ary.ADD_config_thumbnail_size = temp_config[7];
         ADD_config_ary.ADD_config_streamer_hide = temp_config[8];
         ADD_config_ary.ADD_config_streamer_hide_ID = temp_config[9];
-        
+
         // 쿠키를 재생성 한다.
         ADD_config_cookie_create();
     }
@@ -1061,11 +1088,11 @@ function ADD_last_version_checker()
         var old_ver = Number(temp_config.ADD_config_last_version);
         var new_ver = Number(version);
         var notice_text_string;
-        
+
         // 쿠키 업데이트
         ADD_config_ary = temp_config;
         ADD_config_ary.ADD_config_last_version = version;
-        
+
         // key 확인하여 새로운 key 값이 존재하는 경우 해당 key 값을 추가함
         for(var key in ADD_config_ary_init)
         {
@@ -1075,10 +1102,10 @@ function ADD_last_version_checker()
                ADD_config_ary[key] = ADD_config_ary_init[key];
            }
         }
-        
+
         // 설정 변수로부터 쿠키 재생성
         ADD_config_cookie_create();
-        
+
         // 알림 영역 텍스트 출력부
         notice_text_string = 'Userscript가 최근에 변경 됨!';
         if(old_ver < new_ver)
@@ -1086,7 +1113,7 @@ function ADD_last_version_checker()
         else
            notice_text_string = notice_text_string+' 버전 다운!';
         notice_text_string = notice_text_string+' '+old_ver+' → '+new_ver;
-        
+
         // DOE 딜레이 처리
         ADD_DEBUG_MODE && console.log('ADDostream version changed! ',notice_text_string);
         if(J$('#notice_text_elem').length !== 0)
@@ -1104,14 +1131,14 @@ function ADD_last_version_checker()
             }, 1000);
         }
         // 알림 영역 끝
-        
-        
+
+
         // GC
         old_ver = null;
         new_ver = null;
-        
+
     }
-    
+
     // GC
     temp_config = null;
 }
@@ -1127,12 +1154,102 @@ function ADD_main_config_cookie()
         ADD_cookie_var_initialize();
         ADD_config_cookie_create();
     }
-    
+
     // 쿠키를 다시 변수에 쓴다.
     ADD_last_version_checker();
     ADD_DEBUG_MODE && console.log('ADD_main_config_cookie() 에서 ADD_cookie_to_var() 실행됨');
     ADD_cookie_to_var();
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+//                          FUNCTION -  STATUS CHECK
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////
+// 설정 변수 초기화
+function ADD_status_var_initialize()
+{
+    // 글로벌 변수를 가져와서 초기화 함
+    ADD_status = ADD_status_init;
+}
+
+// 쿠키 쓰기
+function ADD_status_cookie_write()
+{
+    // status 쿠키가 존재하지 않고, 전역 변수도 없는 경우
+    if ((!J$.Jcookie('ADD_status')) && (!(typeof ADD_status === 'undefined')) ){
+        // 글로벌 변수를 가져와서 초기화 함
+        ADD_status_var_initialize();
+    }
+    // status 쿠키가 존재하는 경우
+    J$.Jcookie('ADD_status', JSON.stringify(ADD_status), { expires : 365*2, path : '/' });
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+// 쿠키 지우기
+function ADD_status_cookie_remove()
+{
+    // 설정 쿠키값이 존재하는 경우 쿠키값을 지운다.
+    if (!!J$.Jcookie('ADD_status'))
+       J$.removeCookie("ADD_status");
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+// 쿠키 읽기
+function ADD_status_cookie_read()
+{
+    // 쿠키값 존재 시 읽어서 변수에 저장함
+    if (!!J$.Jcookie('ADD_status'))
+       ADD_status = JSON.parse(J$.Jcookie('ADD_status'));
+    else
+       ADD_status_var_initialize();
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+// 값 추가 하기
+function ADD_status_cookie_add_data(_key)
+{
+    // 읽음
+    ADD_status_cookie_read();
+
+    // 설정 변수 존재하고, 키도 존재하는 경우
+    if ( (!(typeof ADD_status === 'undefined')) && (_key in ADD_status) ) {
+       // 해당 키에 +1 함
+       ADD_status[_key] = Number(ADD_status[_key]) + 1;
+    }
+
+    // 쿠키 쓰기
+    ADD_status_cookie_write();
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+// 채팅창에 쓰기
+function ADD_status_noti()
+{
+    ADD_send_sys_msg('두스트림 애드온이 동작 중 입니다 (v'+version+')',0);
+    ADD_status_cookie_read();
+    ADD_text = '';
+    //console.log(ADD_status);
+    //console.log('ADD_status.ad_remove', ADD_status.ad_remove);
+    //console.log('ADD_status.auto_image', ADD_status.auto_image);
+    if(Number(ADD_status.ad_remove) > 0 && ADD_config_ary.ADD_config_chat_adb){
+        ADD_text += '광고 차단: '+ADD_status.ad_remove+ '회, ';
+    }
+    if(Number(ADD_status.auto_image) > 0 && ADD_config_ary.ADD_config_imgur_preview){
+        ADD_text += 'Imgur 로드: '+ADD_status.auto_image+ '회, ';
+    }
+    if(Number(ADD_status.api_call) > 0 && ADD_config_ary.ADD_config_alarm){
+        ADD_text += '\(+\) API 호출: '+ADD_status.api_call+ '회, ';
+    }
+    if(ADD_text !== ''){
+        ADD_send_sys_msg(ADD_text,0);
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -1173,7 +1290,7 @@ function twitch_api()
     var ADD_config_alarm_gap;
     var api_update = true;
     var now_time = new Date();
-    
+
     // 쿠키에 저장된 api 갱신 간격 시간을 ADD_config_alarm_gap에 저장,
     // 해당 값이 1.0 보다 작을 경우 1.0 으로 고정함
     ADD_config_alarm_gap = Number(ADD_config_ary.ADD_config_alarm_gap);
@@ -1190,17 +1307,17 @@ function twitch_api()
     if (unique_window_check && ADD_config_alarm && (api_push_forced || api_update))
     {
         api_push_forced = false;
-        // api update 
+        // Dostream+ api update
 
         // cookie update
         var api_expires = new Date();
         api_expires.setMinutes( api_expires.getMinutes() + ADD_config_alarm_gap );
         J$.Jcookie('api_check_pre_time', api_expires, { expires : api_expires, path : '/' });
         ADD_DEBUG_MODE && console.log('Current time is '+now_time+'.\nCookie time for api update is '+api_expires+'.\nCookie is updated.');
-        
+
         // cookie check
-        if ((!!J$.Jcookie('api_check_pre_time')) && (!!J$.Jcookie('ADD_config_ary')) ) 
-        {   
+        if ((!!J$.Jcookie('api_check_pre_time')) && (!!J$.Jcookie('ADD_config_ary')) )
+        {
             ADD_DEBUG_MODE && console.log('All cookie checked for api');
 
             // 로컬 변수 선언
@@ -1212,17 +1329,9 @@ function twitch_api()
 
             var ADD_config_top_off_fix = ADD_config_ary.ADD_config_top_off_fix;
             var ADD_config_alarm = ADD_config_ary.ADD_config_alarm;
-            
-            /*
-            if(ADD_config_top_off_fix && ADD_config_alarm)
-                possibleChannels = concatArraysUniqueWithSort(fixed_streamer, alarm_streamer);
-            else if(ADD_config_top_off_fix)
-                possibleChannels = fixed_streamer;
-            else if(alarm_streamer)
-                possibleChannels = alarm_streamer;
-            */
+
             possibleChannels = alarm_streamer;
-            
+
             possibleChannelsString = possibleChannels.join(',').replace(' ', '');
             possibleChannelsNo = possibleChannels.length;
 
@@ -1239,6 +1348,7 @@ function twitch_api()
                      // API CALL SUCCESS
                      success:function(channel)
                      {
+                          ADD_status_cookie_add_data('api_call');
                           var temp_twitch_api_cookie = [];
                           // temp 에 이전 api 쿠키를 복사한다.
                           // 현재는 desktop alarm 이 켜진 경우만 복사한다.
@@ -1250,7 +1360,7 @@ function twitch_api()
                           var noti_check = ((ADD_config_ary.ADD_config_alarm_noti !== undefined) && ADD_config_ary.ADD_config_alarm_noti);
                           api_expires.setMinutes( api_expires.getMinutes() + 10 );
 
-                          ADD_DEBUG_MODE && console.log('noti_check :',noti_check);                          
+                          ADD_DEBUG_MODE && console.log('noti_check :',noti_check);
                           ADD_DEBUG_MODE && console.log('Twitch API request succeeded', channel);
                           ADD_DEBUG_MODE && console.log('streams.length = ', streams.length);
 
@@ -1263,7 +1373,7 @@ function twitch_api()
                                       // API 변수 초기화
                                       twitch_api_cookie = [];
                                   }
-                                  
+
                                   var stream = streams[i];
                                   if (stream !== null)
                                   {
@@ -1275,7 +1385,7 @@ function twitch_api()
                                           'game' : stream.channel.game
                                       };
                                   }
-                                  
+
                                   // 데스크톱 알림 허용인 경우
                                   if( noti_check )
                                   {
@@ -1308,11 +1418,10 @@ function twitch_api()
                                       else if( (!!J$.Jcookie('twitch_api_cookie')) )
                                       {
                                           // 이전 api call 한 내역에 이번에 api call 한 이름이 있는지 체크
-                                          console.log(temp_twitch_api_cookie);
                                           var first_call_check = temp_twitch_api_cookie.filter(function (obj) {
                                                   return obj.name === stream.channel.name;
                                           })[0];
-                                          
+
                                           // 이전에 call 하지 않은 스트리머인 경우 개별 데스크톱 알림
                                           if(first_call_check === undefined || first_call_check === null)
                                           {
@@ -1324,9 +1433,9 @@ function twitch_api()
                                                       lang: 'ko-KR'
                                                     }
                                               };
-                                              
+
                                               J$("#easyNotify").easyNotify(noti_options);
-                                              
+
                                               // GC
                                               first_call_check = null;
                                               noti_options = null;
@@ -1337,11 +1446,11 @@ function twitch_api()
                                           }
                                       }
                                   }
-                                  
+
                                   // GC
                                   stream = null;
                               }; // streams 에 대한 for문 끝
-                             
+
                              // 쿠키 쓰기
                               J$.Jcookie('twitch_api_cookie', JSON.stringify(twitch_api_cookie), { expires : api_expires, path : '/' });
                           }
@@ -1351,11 +1460,11 @@ function twitch_api()
                               ADD_DEBUG_MODE && console.log('There is no online streamer, Twitch API cookie is removed');
                               J$.removeCookie('twitch_api_cookie');
                           }
-                          
+
                           // 처음 api 호출 끝나면 false 로 바꾼다.
                           if(first_api_call)
                               first_api_call = false;
-                          
+
                           // GC
                           temp_twitch_api_cookie = null;
                           streams = null;
@@ -1426,12 +1535,24 @@ setInterval(function() {
               ADD_DEBUG_MODE && console.log('unique window = ',unique_window);
               ADD_DEBUG_MODE && console.log('unique window cookie is ',unique_window_cookie);
               unique_window_check = false;
-              J$('#notice_text').html('새 창에서 접속이 감지되어 API 갱신이 중지됩니다.');
+              J$('#notice_text').addClass('ADD_twitch_api_again').html('\(+\) 새 창에서 접속 감지 됨. Dostram+의 API 갱신 중지. 현재 창에서 다시 시작하려면 클릭.');
               J$('#notice_text_elem').show();
               clearInterval(ADD_API_SET_INTERVAL);
             }
 }, 1000);
 
+}
+
+function ADD_twitch_api_again(){
+    if( J$('.ADD_twitch_api_again').length !== 0 ){
+        J$('.ADD_twitch_api_again').removeClass('ADD_twitch_api_again');
+        J$('#notice_text').html('\(+\) Dostram+의 API 갱신 재시작^^7');
+        unique_window = new Date();
+        unique_window = Number(unique_window.getTime());
+        J$.Jcookie('unique_window', unique_window, { expires : 30, path : '/' });
+        unique_window_check = true;
+        ADD_API_CALL_INTERVAL();
+    }
 }
 
 
@@ -1467,7 +1588,7 @@ function ADD_config_DOE()
       // 설정 버튼 및 팝업 생성
       J$('header .container').append('\
           <div style="position:relative;">\
-          <div id="notice_text_elem"><span id="notice_text">문어문어문어문어<br />블러드트레일 블러드트레일</span></div>\
+          <div id="notice_text_elem" title="Dosteam+ System Message")><span id="notice_text">문어문어문어문어<br />블러드트레일 블러드트레일</span></div>\
               <div class="AD_title">\
                  <span id="ADD_change_multi" class="btn btn-default btn_closed" aria-label="멀티트위치↔트위치 전환" data-microtip-position="left" role="tooltip">\
                     <span class="glyphicon glyphicon-resize-horizontal">\
@@ -1694,9 +1815,9 @@ function ADD_config_DOE()
               </div>\
           ');
       }
-      
+
       // @
-      var at_fix = J$('.footer').html().replace('@','<div id="at">@</div>')
+      var at_fix = J$('.footer').html().replace('@','<div id="at" title="????">@</div>')
       J$('.footer').html(at_fix);
       at_fix = null;
 }
@@ -1731,7 +1852,7 @@ J$(document).on('click', '#ADD_test_id_3', function() {
             lang: 'ko-KR'
           }
     };
-    
+
     J$("#easyNotify").easyNotify(noti_options);
     noti_options = null;
 });
@@ -1789,7 +1910,7 @@ function ADD_send_location_DOE()
     var ADD_chat_window_id = J$('.conversation_contents'); //div.uchat_middle>div.input
     var ADD_send_location_button_id = J$('#ADD_send_location_button');
     var ADD_send_location_button_elem;
-    
+
     ADD_DEBUG_MODE && console.log('ADD_chat_window_id.length = '+ADD_chat_window_id.length+' , ADD_send_location_button_id.length = '+ADD_send_location_button_id.length);
     // 채팅창 존재 여부 확인, 좌표 보내기 버튼 이미 존재하는지 확인
     if( (ADD_chat_window_id.length !== 0) && (ADD_send_location_button_id.length === 0) )
@@ -1804,7 +1925,7 @@ function ADD_send_location_DOE()
             </div>';
         ADD_chat_window_id.after(ADD_send_location_button_elem);
     }
-    
+
     ADD_chat_window_id = null;
     ADD_send_location_button_id = null;
     ADD_send_location_button_elem = null;
@@ -1859,11 +1980,11 @@ function Addostram_run()
             var href = J$(this).find('a').attr('href').replace('/#/stream/twitch/', '');
             J$(this).attr('id', 'twitch_'+ href).addClass('ADD_ON');
             });
-    
+
             // Add choosed streamer from api cookie
             var ADD_config_alarm = ADD_config_ary.ADD_config_alarm;
             ADD_DEBUG_MODE && console.log('ADD_config_alarm: ',ADD_config_alarm );
-    
+
             if ( ADD_config_alarm && (!!J$.Jcookie('twitch_api_cookie')) && (twitch_api_cookie.length>0) )
             {
                for(var w=0; w<twitch_api_cookie.length; w++)
@@ -1890,26 +2011,26 @@ function Addostram_run()
                          </a>\
                       </li>\
                     ';
-        
+
                     J$('.main-streams>ul').prepend(ADD_li_string);
                    }
                 }
             }
-            
-            
+
+
             // Fix choosed streamer on top
             var ADD_config_top_fix = ADD_config_ary.ADD_config_top_fix;
             var ADD_config_top_off_fix = ADD_config_ary.ADD_config_top_off_fix;
-            
+
             ADD_DEBUG_MODE && console.log('Streamer fixed: ', ADD_config_top_fix);
             if ((!!J$.Jcookie('ADD_config_ary')) && ADD_config_top_fix && fixed_streamer.length >= 1){
-                
+
                 for(k = 0; k < fixed_streamer.length; k++){
                     var temp_streamer_href = fixed_streamer[fixed_streamer.length - k - 1].replace(' ', '');
                     var temp_streamer_id = '#'+'twitch_'+temp_streamer_href;
-                    
+
                     var ADD_pushpin_string = '<div style="position:relative;"><div class="glyphicon glyphicon-pushpin icon_pushpin"></div></div>';
-                    
+
                     if(!(J$(temp_streamer_id).length === 0))
                     {
                         J$(temp_streamer_id).addClass('fixed_streamer').prependTo('.main-streams>ul');
@@ -1938,22 +2059,22 @@ function Addostram_run()
                     }
                 }
             }
-            
+
             // Remove choosed streamer
             var ADD_config_streamer_hide = ADD_config_ary.ADD_config_streamer_hide;
             ADD_DEBUG_MODE && console.log('Streamer hided: ', ADD_config_streamer_hide);
-            
+
             for(var z=0;z<hide_streamer.length;z++)
             {
                J$('#twitch_'+hide_streamer[z].replace(' ', '')).hide();
             }
-            
-            
+
+
             // Search twitch li
             J$('li.twitch').each(function (i) {
                 // get twitch id
                 href = J$(this).find('a').attr('href').replace('/#/stream/twitch/', '');
-                
+
                 // twitch nickname
                 for(i=0; i < streamerArray.length; i++){
                 if (href==streamerArray[i][0])
@@ -1962,7 +2083,7 @@ function Addostram_run()
                         break;
                     }
                 }
-                
+
                 J$(this).find('.info>.from').html(streamerID+'('+href+')');
                 J$(this).append('\
                     <div class="ADD_li_box_container">\
@@ -2041,7 +2162,7 @@ function getImgurData(Imgur_ID, Imgur_type) {
     var imgur_api_call_url = 'https://api.imgur.com/3/';
     var imgur_client_id = 'a57c643ca3a51ee';
     var imgur_return_link = '';
-    
+
     if (Imgur_type==0)
         {
             imgur_api_call_url = imgur_api_call_url+'image/'+Imgur_ID;
@@ -2090,7 +2211,7 @@ function getImgurData(Imgur_ID, Imgur_type) {
         ADD_DEBUG_MODE && console.log('Imgur api request failed');
     }
   });
-  
+
   if(Imgur_type==2)
   {
       // gallery 타입의 경우 album 주소를 가져오므로 해당 album 에 대하여 재호출한다.
@@ -2098,7 +2219,7 @@ function getImgurData(Imgur_ID, Imgur_type) {
       if(imgur_return_link !== undefined && imgur_return_link !== null)
           imgur_return_link = getImgurData(imgur_return_link, 1);
   }
-  
+
   return imgur_return_link;
 }
 
@@ -2130,6 +2251,7 @@ function ADD_chatting_arrive(){
         // False 이면 끈다.
         if(!ADD_config_ary.ADD_config_chat_ctr){
             J$(document).unbindArrive('.user_conversation');
+            J$(document).unbindArrive('.system');
             chatting_arrive_check = false;
             return;
         }
@@ -2139,16 +2261,24 @@ function ADD_chatting_arrive(){
             return;
         }
     }
-    
+
     // arrive bind 및 unbind
     if(chatting_arrive_check && ADD_config_ary.ADD_config_chat_ctr){
         // 설정이 변경되고 true 이면 false 에서 true로 바뀐 것이므로 bind 한다.
+        J$(document).arrive('.system', function(systemElem) {
+            var systemElem = J$(systemElem);
+            if( systemElem.html().indexOf('새로운 창에서') != -1 ){
+                systemElem.addClass('ADD_chat_again').prop('title', 'Dosteam+ System Message').html('\(+\) 새 창 감지 됨. 채팅을 다시 시작하려면 클릭');
+            }
+            systemElem == null;
+        });
+
         J$(document).arrive('.user_conversation', function(newElem) {
             var newElem = J$(newElem);
             var ADD_chatting_nickname = newElem.find('.conversation_nick').html();
             var ADD_chatting_cs_content_elem = newElem.find('.cs_contents');
             var ADD_chatting_content = ADD_chatting_cs_content_elem.html();
-            
+
             if(ADD_config_ary.ADD_config_chat_adb)
             {
                 // if(ADD_chatting_content.indexOf('광고문의 클릭') !== -1 || ADD_chatting_content.indexOf('유챗2 스킨기능 오픈') !== -1)
@@ -2156,9 +2286,10 @@ function ADD_chatting_arrive(){
                 {
                     ADD_DEBUG_MODE && console.log('광고 메시지 감지됨!',ADD_chatting_content);
                     newElem.remove();
+                    ADD_status_cookie_add_data('ad_remove');
                 }
             }
-            
+
             // 메모하기
             // 메모용 쿠키 있는지 체크
             if (!!J$.Jcookie('ADD_chat_memo')){
@@ -2169,7 +2300,7 @@ function ADD_chatting_arrive(){
                     newElem.find('.conversation_nick').after('<span class="conversation_memo" style="color:red;font-weight:bold;"> ['+ADD_chat_memo[ADD_chatting_nickname]+']</span>');
                 }
             }
-            
+
             // Imgur image preview 시
             if(ADD_config_ary.ADD_config_imgur_preview)
             {
@@ -2181,19 +2312,17 @@ function ADD_chatting_arrive(){
                 var ADD_imgur_safe_screen_opacity;
                 var ADD_imgur_reg = /https?:\/\/(\w+\.)?imgur.com\/(a\/|gallery\/)?(\w*)+(\.[a-zA-Z]{3})?/;
                 var conversation_contents_elem;
-                
-                //ADD_DEBUG_MODE && console.log('nickname: '+ADD_chatting_nickname+' , content: '+ADD_chatting_content);
-                
+
                 // 정규표현식을 통해 imgur 링크 포함 여부 확인, global check 하지 않고 먼저 나온 하나만 확인함
                 // 대소문자 체크가 꼭 필요?
                 // r, gallery type에 대한 체크가 필요?
                 ADD_imgur_match = ADD_chatting_content.match(ADD_imgur_reg);
-                
+
                 if(ADD_imgur_match !== null)
                 {
                     // 로컬 변수 선언
                     ADD_imgur_id = ADD_imgur_match[3];
-        
+
                     // 이미지 type 체크
                     if(ADD_imgur_match[2] === undefined)
                     {
@@ -2214,11 +2343,11 @@ function ADD_chatting_arrive(){
                     {
                         ADD_imgur_type = 10;
                     }
-        
+
                     // imgur api 호출
                     ADD_DEBUG_MODE && console.log('ADD_imgur_id = '+ADD_imgur_id+'  ADD_imgur_type = '+ADD_imgur_type);
                     ADD_imgur_link = getImgurData(ADD_imgur_id, ADD_imgur_type);
-        
+
                     // imgur DOE 생성
                     if(ADD_config_ary.ADD_config_imgur_preview_safe)
                     {
@@ -2228,7 +2357,7 @@ function ADD_chatting_arrive(){
                             ADD_imgur_safe_screen_opacity = 0.93;
                         else if(ADD_imgur_safe_screen_opacity < 0 || ADD_imgur_safe_screen_opacity > 1)
                             ADD_imgur_safe_screen_opacity = 0.93;
-                        
+
                         ADD_imgur_DOE_text = '\
                         <div class="imgur_container">\
                             <div class="imgur_safe_screen" style="opacity:' + ADD_imgur_safe_screen_opacity +';">\
@@ -2265,16 +2394,17 @@ function ADD_chatting_arrive(){
                                 </a>\
                         </div>';
                     }
-                    
+
                     ADD_chatting_cs_content_elem.append(ADD_imgur_DOE_text);
-                    
+
                     if( !(J$('.uchat_scroll').hasClass('uchat_scroll_clicked')) )
                     {
                         conversation_contents_elem = J$('.conversation_contents');
                         conversation_contents_elem.animate({ scrollTop: conversation_contents_elem.prop('scrollHeight')}, 'fast');
                     }
+                    ADD_status_cookie_add_data('auto_image');
                 }
-    
+
                 // GC
                 ADD_imgur_id = null;
                 ADD_imgur_type = null;
@@ -2292,7 +2422,7 @@ function ADD_chatting_arrive(){
             {
                 var ADD_chatting_cs_content_a_elem;
                 var ADD_chatting_cs_content_a_elem_length;
-                
+
                 ADD_chatting_cs_content_a_elem = ADD_chatting_cs_content_elem.find('a');
                 ADD_chatting_cs_content_a_elem_length = ADD_chatting_cs_content_a_elem.length;
 
@@ -2304,18 +2434,18 @@ function ADD_chatting_arrive(){
                         var ADD_chatting_cs_content_a_href = ADD_chatting_cs_content_a_elem[i].href;
                         if(ADD_chatting_cs_content_a_href.indexOf('#/stream/') !== -1)
                             ADD_chatting_cs_content_a_elem[i].removeAttribute('target');
-                        
+
                         ADD_chatting_cs_content_a_href = null;
                     }
                 }
-                
+
                 // GC
                 ADD_chatting_cs_content_a_elem = null;
                 ADD_chatting_cs_content_a_elem_length = null;
             }
-            
+
             chatting_arrive_check = true;
-            
+
             // GC
             newElem = null;
             ADD_chatting_nickname = null;
@@ -2333,23 +2463,27 @@ function ADD_send_sys_msg(msg, delay){
     if( J$('.conversation_contents').length !== 0 )
     {
         var conversation_contents_elem = J$('.conversation_contents');
-        var msg_text = '<div class="system" title="Dosteam+ msg">'+msg+'</div>';
+        var msg_text = '<div class="system" title="Dosteam+ System Message">'+msg+'</div>';
         if(delay === 0)
         {
             conversation_contents_elem.append(msg_text);
+            // GC
+            conversation_contents_elem = null;
+            msg_text = null;
         }
         else
         {
             setTimeout(function() {
                 conversation_contents_elem.append(msg_text);
+                // GC
+                conversation_contents_elem = null;
+                msg_text = null;
             }, delay);
         }
-        if( !(J$('.uchat_scroll').hasClass('uchat_scroll_clicked')) )
-            conversation_contents_elem.animate({ scrollTop: conversation_contents_elem.prop('scrollHeight')}, '0');
+        //if( !(J$('.uchat_scroll').hasClass('uchat_scroll_clicked')) )
+        //    conversation_contents_elem.animate({ scrollTop: conversation_contents_elem.prop('scrollHeight')}, '0');
 
-        // GC
-        conversation_contents_elem = null;
-        msg_text = null;
+
     }
 }
 
@@ -2549,7 +2683,7 @@ function ADD_thumbnail_mouseover(){
                             // 아무 작업도 하지 않음
                             break;
                     }
-                    
+
                     var ADD_thumb_elem_string = '\
                       <div class="ADD_thumb_elem_container">\
                           <div class="ADD_thumb_elem '+thumb_size_class+'">\
@@ -2565,7 +2699,7 @@ function ADD_thumbnail_mouseover(){
                     thumb_this_parent.find('.ADD_thumb_img').attr('src',ADD_thumb_href); // 주소 업데이트
                     thumb_this_parent.find('.ADD_thumb_elem_container').fadeIn('fast');
                 }
-                
+
                 if( !(thumb_this_parent.find('.ADD_thumb_elem').hasClass(thumb_size_class)) ){
                     thumb_this_parent.find('.ADD_thumb_elem').removeClass('ADD_thumb_size_1 ADD_thumb_size_2 ADD_thumb_size_3 ADD_thumb_size_0').addClass(thumb_size_class);
                 }
@@ -2676,7 +2810,7 @@ function ADD_memo_save_event(){
     var memo_contents = '';
     var ADD_chat_memo;
     var memo_blank = false;
-    
+
     // 메모용 쿠키 있는지 체크
     if (!J$.Jcookie('ADD_chat_memo')){
         // 메모용 쿠키 없으면 메모용 쿠키 새로 생성
@@ -2688,7 +2822,7 @@ function ADD_memo_save_event(){
         // 메모용 쿠키 있으면 읽어옴
         ADD_chat_memo = JSON.parse(J$.Jcookie('ADD_chat_memo'));
     }
-    
+
     memo_contents = J$('#memo_textbox').val();
     if(memo_contents == '' || memo_contents == null){
         memo_blank = true;
@@ -2707,7 +2841,6 @@ function ADD_memo_save_event(){
     J$('#memo_text').fadeOut(200);
     setTimeout(function() {
         var memo_text_contents;
-        console.log('memo_blank',memo_blank,'memo_contents',memo_contents);
         if(memo_blank){
             memo_text_contents = '메모 내용이 존재하지 않으므로 메모가 삭제되었습니다. <br />나가려면 배경화면을 누르세요.';
         }
@@ -2790,7 +2923,7 @@ J$(document).ready(function()
           ADD_multitwitch_DOE();
         };
         unsafeWindow.dsStream = exportFunction (newdsStream, unsafeWindow);
-        
+
         function newdostream(q) {
             q = q.split('/');
             switch(q[1]) {
@@ -2813,7 +2946,7 @@ J$(document).ready(function()
             }
         }
         unsafeWindow.dostream = exportFunction (newdostream, unsafeWindow);
-        
+
         J$(document).on('click', 'header .nav-brand, header .nav-brand_mod', function(e) {
             if( urlchecker() ) {
                 page = new newdsStream();
@@ -2835,7 +2968,7 @@ J$(document).ready(function()
           	J$('.loader_container').fadeOut(200);
             ADD_multitwitch_DOE();
         };
-        
+
         J$(document).on('click', 'header .nav-brand, header .nav-brand_mod', function(e) {
             if( urlchecker() ) {
                 page = new dsStream();
@@ -2850,10 +2983,11 @@ J$(document).ready(function()
     // Arrive event 관련
     // 채팅창 생길 때 send 위한 DOE 생성, 무조건 실행됨
     J$('.chat').arrive('.uchat_middle', function() { //{onceOnly:true},
+        ADD_status_noti();
         ADD_send_location_DOE();
         J$('.user_menu').attr('id','user_menu_id');
 
-        
+
 //////////////////////////////////////////////////////////////////////////////////
     // Memo event 관련
     // 추후 부하를 줄이기 위하여 ADD_config_ary.ADD_config_chat_ctr 에 따라 bind/unbind 한다.
@@ -2863,7 +2997,6 @@ J$(document).ready(function()
                 if( !J$(mutations[0].target).is(':visible') )
                     if( J$('#do_memo_container').length !== 0 ){
                         J$('#do_memo_container').remove();
-                        console.log('test');
                     }
             });
         });
@@ -2892,16 +3025,16 @@ window.addEventListener ("load", function()
 
     // Write config form from cookie
     ADD_var_to_config_form();
-    
+
     // Change Logo class name
     J$('.nav-brand').removeClass('nav-brand').addClass('nav-brand_mod');
-  
+
     // Create Multitwitch button DOE
     ADD_multitwitch_DOE();
 
     // Create Loading DOE
     J$('.nav-brand_mod').empty().append('<div class="loader_container" style="display:none;"><div class="loader"></div></div>');
-    
+
 });
 
 
@@ -3010,6 +3143,10 @@ J$(document).on('click', '#ADD_quick_list', function() {
         parse_data_from_list(1);
         J$('#popup_ADD_quick').stop(true,true).fadeIn(300);
         J$('#ADD_quick_list').removeClass('btn_closed').addClass('btn_opend');
+
+        // 17-11-08 추가됨
+        J$('#popup_ADD_config').stop(true,true).fadeOut(300);
+        J$('#ADD_config').removeClass('btn_opend').addClass('btn_closed');
     }
     else
     {
@@ -3036,6 +3173,10 @@ J$(document).on('click', '#ADD_config', function() {
         J$('#popup_ADD_config').stop(true,true).fadeIn(300);
         J$('#ADD_config').removeClass('btn_closed').addClass('btn_opend');
         //ADD_DEBUG_MODE && console.log('config popup open');
+
+        // 17-11-08 추가됨
+        J$('#popup_ADD_quick').stop(true,true).fadeOut(300);
+        J$('#ADD_quick_list').removeClass('btn_opend').addClass('btn_closed');
     }
     else
     {
@@ -3100,8 +3241,8 @@ J$(document).on('click', '#ADD_config_save', function() {
         local_api_refresh = true;
         }, 5000);
     }
-    
-    
+
+
     // 설정 팝업 알림 영역 표시
     J$('#ADD_config_Success').fadeIn('1000').delay('3000').fadeOut('1000');
 });
@@ -3116,8 +3257,7 @@ J$(document).on('click', '#Cookie_reset', function() {
     ADD_DEBUG_MODE && console.log('reset cookie event 에서 ADD_cookie_to_var() 실행됨');
     ADD_cookie_to_var();
     ADD_var_to_config_form();
-    
-
+    ADD_status_cookie_remove();
 
     // 설정 팝업 알림 영역 표시
     J$('#ADD_config_Success').fadeIn('1000').delay('3000').fadeOut('1000');
@@ -3131,7 +3271,7 @@ J$(document).on('click', '#Cookie_reset', function() {
     J$(document).on('change','input[name=chk]',function(){
         if( J$('#multitwitch').hasClass('multitwitch_ready') )
             J$('#multitwitch').removeClass('multitwitch_ready');
-        
+
         if(J$('input[name=chk]:checked').length >= 1)
         {
             setTimeout(
@@ -3147,36 +3287,18 @@ J$(document).on('click', '#Cookie_reset', function() {
 // config form click event
 function ADD_config_enable(id)
 {
-/*
-    for(var i=0;i<id.length;i++)
-    {
-        var id_elem = J$('#'+id[i]);
-        if(id_elem.length === 0)
-            continue;
-        
-        var form_class = '.'+id_elem.attr('id')+'_form';
-        var class_elem = J$(form_class);
-        if(class_elem.length === 0)
-            continue;
-        
-        if(id_elem.is(':checked'))
-            class_elem.prop('disabled', false).addClass('form_enabled').removeClass('form_disabled');
-        else
-            class_elem.prop('disabled', true).addClass('form_disabled').removeClass('form_enabled');
-    }
-*/
-    
+
     var id_elem = [];
     var form_class = [];
     var class_elem = [];
-    
+
     // 먼저 전부 켠다.
     for(var i=0;i<ADD_config_enable_init.length;i++)
     {
         id_elem[i] = J$('#'+ADD_config_enable_init[i]);
         if(id_elem[i].length === 0)
             continue;
-        
+
         form_class[i] = '.'+id_elem[i].attr('id')+'_form';
         class_elem[i] = J$(form_class[i]);
         if(class_elem[i].length === 0)
@@ -3184,7 +3306,7 @@ function ADD_config_enable(id)
         else
             class_elem[i].prop('disabled', false).addClass('form_enabled').removeClass('form_disabled');
     }
-    
+
     // 체크 안 된 것을 끈다.
     for(var i=0;i<ADD_config_enable_init.length;i++)
     {
@@ -3211,11 +3333,11 @@ J$(document).on('click', '.imgur_safe_button', function() {
     J$(this).parent('.imgur_safe_screen').fadeOut(500);
 });
 J$(document).on('click', '.imgur_control_hide', function() {
-    console.log('- clicked');
+    ADD_DEBUG_MODE && console.log('- clicked');
     J$(this).closest('.imgur_container').find('.imgur_safe_screen').fadeTo(500, 0.93);
 });
 J$(document).on('click', '.imgur_control_remove', function() {
-    console.log('x clicked');
+    ADD_DEBUG_MODE && console.log('x clicked');
     J$(this).closest('.imgur_container').hide();
 });
 
@@ -3252,6 +3374,20 @@ J$(document).on('click', '#ADD_config_dev_on', function() {
 
 J$(document).on('click', '#at', function() {
     SIGONGJOA();
+});
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// chat again event
+J$(document).on('click', '.ADD_chat_again', function() {
+    reloadUchat();
+});
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// api again event
+J$(document).on('click', '.ADD_twitch_api_again', function() {
+    ADD_twitch_api_again();
 });
 
 
@@ -3866,7 +4002,7 @@ J$('head').append('\
         J$('.chat').remove();
         },
         20000);
-    
+
     setTimeout(
         function() {
         J$('body').append('\
@@ -3882,7 +4018,7 @@ J$('head').append('\
         ');
         J$('.hos').fadeOut(1000);
         J$('.sigong').fadeOut(1000);
-            
+
         setTimeout(
             function() {
               J$('#hos_movie').fadeIn(3000);
@@ -3890,5 +4026,5 @@ J$('head').append('\
             1000);
         },
         30000);
-    
+
 }
