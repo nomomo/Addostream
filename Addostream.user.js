@@ -23,24 +23,60 @@
 var ADD_DEBUG_MODE = false;
 var version = GM_info.script.version;
 
-
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
-//                               Jquery Library
+//                                 PRE-DEFINED
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
-
-
-// noConflict option
-this.J$ = this.jQuery = jQuery.noConflict(true);
-
-/*! jquery.cookie v1.4.1 | MIT */
-//!function(a){"function"==typeof define&&define.amd?define(["jquery"],a):"object"==typeof exports?a(require("jquery")):a(jQuery)}(function(a){function b(a){return h.raw?a:encodeURIComponent(a)}function c(a){return h.raw?a:decodeURIComponent(a)}function d(a){return b(h.json?JSON.stringify(a):String(a))}function e(a){0===a.indexOf('"')&&(a=a.slice(1,-1).replace(/\\"/g,'"').replace(/\\\\/g,"\\"));try{return a=decodeURIComponent(a.replace(g," ")),h.json?JSON.parse(a):a}catch(b){}}function f(b,c){var d=h.raw?b:e(b);return a.isFunction(c)?c(d):d}var g=/\+/g,h=a.cookie=function(e,g,i){if(void 0!==g&&!a.isFunction(g)){if(i=a.extend({},h.defaults,i),"number"==typeof i.expires){var j=i.expires,k=i.expires=new Date;k.setTime(+k+864e5*j)}return document.cookie=[b(e),"=",d(g),i.expires?"; expires="+i.expires.toUTCString():"",i.path?"; path="+i.path:"",i.domain?"; domain="+i.domain:"",i.secure?"; secure":""].join("")}for(var l=e?void 0:{},m=document.cookie?document.cookie.split("; "):[],n=0,o=m.length;o>n;n++){var p=m[n].split("="),q=c(p.shift()),r=p.join("=");if(e&&e===q){l=f(r,g);break}e||void 0===(r=f(r))||(l[q]=r)}return l};h.defaults={},a.removeCookie=function(b,c){return void 0===a.cookie(b)?!1:(a.cookie(b,"",a.extend({},c,{expires:-1})),!a.cookie(b))}});
 
 /*! jquery browser | http://jquery.thewikies.com/browser/  MIT */
-(function(J$){J$.browserTest=function(a,z){var u='unknown',x='X',m=function(r,h){for(var i=0;i<h.length;i=i+1){r=r.replace(h[i][0],h[i][1]);}return r;},c=function(i,a,b,c){var r={name:m((a.exec(i)||[u,u])[1],b)};r[r.name]=true;r.version=(c.exec(i)||[x,x,x,x])[3];if(r.name.match(/safari/)&&r.version>400){r.version='2.0';}if(r.name==='presto'){r.version=(J$.browser.version>9.27)?'futhark':'linear_b';}r.versionNumber=parseFloat(r.version,10)||0;r.versionX=(r.version!==x)?(r.version+'').substr(0,1):x;r.className=r.name+r.versionX;return r;};a=(a.match(/Opera|Navigator|Minefield|KHTML|Chrome/)?m(a,[[/(Firefox|MSIE|KHTML,\slike\sGecko|Konqueror)/,''],['Chrome Safari','Chrome'],['KHTML','Konqueror'],['Minefield','Firefox'],['Navigator','Netscape']]):a).toLowerCase();J$.browser=J$.extend((!z)?J$.browser:{},c(a,/(camino|chrome|firefox|netscape|konqueror|lynx|msie|opera|safari)/,[],/(camino|chrome|firefox|netscape|netscape6|opera|version|konqueror|lynx|msie|safari)(\/|\s)([a-z0-9\.\+]*?)(\;|dev|rel|\s|J$)/));J$.layout=c(a,/(gecko|konqueror|msie|opera|webkit)/,[['konqueror','khtml'],['msie','trident'],['opera','presto']],/(applewebkit|rv|konqueror|msie)(\:|\/|\s)([a-z0-9\.]*?)(\;|\)|\s)/);J$.os={name:(/(win|mac|linux|sunos|solaris|iphone)/.exec(navigator.platform.toLowerCase())||[u])[0].replace('sunos','solaris')};if(!z){J$('html').addClass([J$.os.name,J$.browser.name,J$.browser.className,J$.layout.name,J$.layout.className].join(' '));}};J$.browserTest(navigator.userAgent);})(jQuery);
+(function($){$.browserTest=function(a,z){var u='unknown',x='X',m=function(r,h){for(var i=0;i<h.length;i=i+1){r=r.replace(h[i][0],h[i][1]);}return r;},c=function(i,a,b,c){var r={name:m((a.exec(i)||[u,u])[1],b)};r[r.name]=true;r.version=(c.exec(i)||[x,x,x,x])[3];if(r.name.match(/safari/)&&r.version>400){r.version='2.0';}if(r.name==='presto'){r.version=($.browser.version>9.27)?'futhark':'linear_b';}r.versionNumber=parseFloat(r.version,10)||0;r.versionX=(r.version!==x)?(r.version+'').substr(0,1):x;r.className=r.name+r.versionX;return r;};a=(a.match(/Opera|Navigator|Minefield|KHTML|Chrome/)?m(a,[[/(Firefox|MSIE|KHTML,\slike\sGecko|Konqueror)/,''],['Chrome Safari','Chrome'],['KHTML','Konqueror'],['Minefield','Firefox'],['Navigator','Netscape']]):a).toLowerCase();$.browser=$.extend((!z)?$.browser:{},c(a,/(camino|chrome|firefox|netscape|konqueror|lynx|msie|opera|safari)/,[],/(camino|chrome|firefox|netscape|netscape6|opera|version|konqueror|lynx|msie|safari)(\/|\s)([a-z0-9\.\+]*?)(\;|dev|rel|\s|$)/));$.layout=c(a,/(gecko|konqueror|msie|opera|webkit)/,[['konqueror','khtml'],['msie','trident'],['opera','presto']],/(applewebkit|rv|konqueror|msie)(\:|\/|\s)([a-z0-9\.]*?)(\;|\)|\s)/);$.os={name:(/(win|mac|linux|sunos|solaris|iphone)/.exec(navigator.platform.toLowerCase())||[u])[0].replace('sunos','solaris')};if(!z){$('html').addClass([$.os.name,$.browser.name,$.browser.className,$.layout.name,$.layout.className].join(' '));}};$.browserTest(navigator.userAgent);})(jQuery);
+var web_browser = $.browser.name;
 
-var web_browser = J$.browser.name;
+/* arrive.js
+ * v2.4.1
+ * https://github.com/uzairfarooq/arrive
+ * MIT licensed
+ * Copyright (c) 2014-2017 Uzair Farooq
+ */
+var Arrive=function(e,t,n){"use strict";function r(e,t,n){l.addMethod(t,n,e.unbindEvent),l.addMethod(t,n,e.unbindEventWithSelectorOrCallback),l.addMethod(t,n,e.unbindEventWithSelectorAndCallback)}function i(e){e.arrive=f.bindEvent,r(f,e,"unbindArrive"),e.leave=d.bindEvent,r(d,e,"unbindLeave")}if(e.MutationObserver&&"undefined"!=typeof HTMLElement){var o=0,l=function(){var t=HTMLElement.prototype.matches||HTMLElement.prototype.webkitMatchesSelector||HTMLElement.prototype.mozMatchesSelector||HTMLElement.prototype.msMatchesSelector;return{matchesSelector:function(e,n){return e instanceof HTMLElement&&t.call(e,n)},addMethod:function(e,t,r){var i=e[t];e[t]=function(){return r.length==arguments.length?r.apply(this,arguments):"function"==typeof i?i.apply(this,arguments):n}},callCallbacks:function(e,t){t&&t.options.onceOnly&&1==t.firedElems.length&&(e=[e[0]]);for(var n,r=0;n=e[r];r++)n&&n.callback&&n.callback.call(n.elem,n.elem);t&&t.options.onceOnly&&1==t.firedElems.length&&t.me.unbindEventWithSelectorAndCallback.call(t.target,t.selector,t.callback)},checkChildNodesRecursively:function(e,t,n,r){for(var i,o=0;i=e[o];o++)n(i,t,r)&&r.push({callback:t.callback,elem:i}),i.childNodes.length>0&&l.checkChildNodesRecursively(i.childNodes,t,n,r)},mergeArrays:function(e,t){var n,r={};for(n in e)e.hasOwnProperty(n)&&(r[n]=e[n]);for(n in t)t.hasOwnProperty(n)&&(r[n]=t[n]);return r},toElementsArray:function(t){return n===t||"number"==typeof t.length&&t!==e||(t=[t]),t}}}(),c=function(){var e=function(){this._eventsBucket=[],this._beforeAdding=null,this._beforeRemoving=null};return e.prototype.addEvent=function(e,t,n,r){var i={target:e,selector:t,options:n,callback:r,firedElems:[]};return this._beforeAdding&&this._beforeAdding(i),this._eventsBucket.push(i),i},e.prototype.removeEvent=function(e){for(var t,n=this._eventsBucket.length-1;t=this._eventsBucket[n];n--)if(e(t)){this._beforeRemoving&&this._beforeRemoving(t);var r=this._eventsBucket.splice(n,1);r&&r.length&&(r[0].callback=null)}},e.prototype.beforeAdding=function(e){this._beforeAdding=e},e.prototype.beforeRemoving=function(e){this._beforeRemoving=e},e}(),a=function(t,r){var i=new c,o=this,a={fireOnAttributesModification:!1};return i.beforeAdding(function(n){var i,l=n.target;(l===e.document||l===e)&&(l=document.getElementsByTagName("html")[0]),i=new MutationObserver(function(e){r.call(this,e,n)});var c=t(n.options);i.observe(l,c),n.observer=i,n.me=o}),i.beforeRemoving(function(e){e.observer.disconnect()}),this.bindEvent=function(e,t,n){t=l.mergeArrays(a,t);for(var r=l.toElementsArray(this),o=0;o<r.length;o++)i.addEvent(r[o],e,t,n)},this.unbindEvent=function(){var e=l.toElementsArray(this);i.removeEvent(function(t){for(var r=0;r<e.length;r++)if(this===n||t.target===e[r])return!0;return!1})},this.unbindEventWithSelectorOrCallback=function(e){var t,r=l.toElementsArray(this),o=e;t="function"==typeof e?function(e){for(var t=0;t<r.length;t++)if((this===n||e.target===r[t])&&e.callback===o)return!0;return!1}:function(t){for(var i=0;i<r.length;i++)if((this===n||t.target===r[i])&&t.selector===e)return!0;return!1},i.removeEvent(t)},this.unbindEventWithSelectorAndCallback=function(e,t){var r=l.toElementsArray(this);i.removeEvent(function(i){for(var o=0;o<r.length;o++)if((this===n||i.target===r[o])&&i.selector===e&&i.callback===t)return!0;return!1})},this},s=function(){function e(e){var t={attributes:!1,childList:!0,subtree:!0};return e.fireOnAttributesModification&&(t.attributes=!0),t}function t(e,t){e.forEach(function(e){var n=e.addedNodes,i=e.target,o=[];null!==n&&n.length>0?l.checkChildNodesRecursively(n,t,r,o):"attributes"===e.type&&r(i,t,o)&&o.push({callback:t.callback,elem:i}),l.callCallbacks(o,t)})}function r(e,t){return l.matchesSelector(e,t.selector)&&(e._id===n&&(e._id=o++),-1==t.firedElems.indexOf(e._id))?(t.firedElems.push(e._id),!0):!1}var i={fireOnAttributesModification:!1,onceOnly:!1,existing:!1};f=new a(e,t);var c=f.bindEvent;return f.bindEvent=function(e,t,r){n===r?(r=t,t=i):t=l.mergeArrays(i,t);var o=l.toElementsArray(this);if(t.existing){for(var a=[],s=0;s<o.length;s++)for(var u=o[s].querySelectorAll(e),f=0;f<u.length;f++)a.push({callback:r,elem:u[f]});if(t.onceOnly&&a.length)return r.call(a[0].elem,a[0].elem);setTimeout(l.callCallbacks,1,a)}c.call(this,e,t,r)},f},u=function(){function e(){var e={childList:!0,subtree:!0};return e}function t(e,t){e.forEach(function(e){var n=e.removedNodes,i=[];null!==n&&n.length>0&&l.checkChildNodesRecursively(n,t,r,i),l.callCallbacks(i,t)})}function r(e,t){return l.matchesSelector(e,t.selector)}var i={};d=new a(e,t);var o=d.bindEvent;return d.bindEvent=function(e,t,r){n===r?(r=t,t=i):t=l.mergeArrays(i,t),o.call(this,e,t,r)},d},f=new s,d=new u;t&&i(t.fn),i(HTMLElement.prototype),i(NodeList.prototype),i(HTMLCollection.prototype),i(HTMLDocument.prototype),i(Window.prototype);var h={};return r(f,h,"unbindAllArrive"),r(d,h,"unbindAllLeave"),h}}(window,"undefined"==typeof jQuery?null:jQuery,void 0);
+
+/* easyNotify.js
+ * https://github.com/Gabrielr47/easyNotify
+ * Author : Gabriel Rodrigues
+ */
+!function(o){o.fn.easyNotify=function(i){var n=o.extend({title:"Notification",options:{body:"",icon:"",lang:"ko-KR",onClose:"",onClick:"",onError:""}},i);return this.init=function(){var o=this;if("Notification"in window)if("granted"===Notification.permission){var i=new Notification(n.title,n.options);i.onclose=function(){"function"==typeof n.options.onClose&&n.options.onClose()},i.onclick=function(){"function"==typeof n.options.onClick&&n.options.onClick()},i.onerror=function(){"function"==typeof n.options.onError&&n.options.onError()}}else"denied"!==Notification.permission&&Notification.requestPermission(function(i){"granted"===i&&o.init()});else alert("This browser does not support desktop notification")},this.init(),this}}($);
+
+/*
+* jQuery UI Tag-it!
+* @version v2.0 (06/2011)
+*
+* Copyright 2011, Levy Carneiro Jr.
+* Released under the MIT license.
+* http://aehlke.github.com/tag-it/LICENSE
+*
+* Homepage: http://aehlke.github.com/tag-it/
+* Authors: Levy Carneiro Jr. Martin Rehfeld Tobias Schmidt Skylar Challand Alex Ehlke
+* Maintainer: Alex Ehlke - Twitter: @aehlke
+* Dependencies: jQuery v1.4+ jQuery UI v1.8+
+*/
+(function(b){b.widget("ui.tagit",{options:{allowDuplicates:!1,caseSensitive:!0,fieldName:"tags",placeholderText:null,readOnly:!1,removeConfirmation:!1,tagLimit:null,availableTags:[],autocomplete:{},showAutocompleteOnFocus:!1,allowSpaces:!1,singleField:!1,singleFieldDelimiter:",",singleFieldNode:null,animate:!0,tabIndex:null,beforeTagAdded:null,afterTagAdded:null,beforeTagRemoved:null,afterTagRemoved:null,onTagClicked:null,onTagLimitExceeded:null,onTagAdded:null,onTagRemoved:null,tagSource:null},_create:function(){var a=
+this;this.element.is("input")?(this.tagList=b("<ul></ul>").insertAfter(this.element),this.options.singleField=!0,this.options.singleFieldNode=this.element,this.element.addClass("tagit-hidden-field")):this.tagList=this.element.find("ul, ol").andSelf().last();this.tagInput=b('<input type="text" />').addClass("ui-widget-content");this.options.readOnly&&this.tagInput.attr("disabled","disabled");this.options.tabIndex&&this.tagInput.attr("tabindex",this.options.tabIndex);this.options.placeholderText&&this.tagInput.attr("placeholder",
+this.options.placeholderText);this.options.autocomplete.source||(this.options.autocomplete.source=function(a,e){var d=a.term.toLowerCase(),c=b.grep(this.options.availableTags,function(a){return 0===a.toLowerCase().indexOf(d)});this.options.allowDuplicates||(c=this._subtractArray(c,this.assignedTags()));e(c)});this.options.showAutocompleteOnFocus&&(this.tagInput.focus(function(b,d){a._showAutocomplete()}),"undefined"===typeof this.options.autocomplete.minLength&&(this.options.autocomplete.minLength=
+0));b.isFunction(this.options.autocomplete.source)&&(this.options.autocomplete.source=b.proxy(this.options.autocomplete.source,this));b.isFunction(this.options.tagSource)&&(this.options.tagSource=b.proxy(this.options.tagSource,this));this.tagList.addClass("tagit").addClass("ui-widget ui-widget-content ui-corner-all").append(b('<li class="tagit-new"></li>').append(this.tagInput)).click(function(d){var c=b(d.target);c.hasClass("tagit-label")?(c=c.closest(".tagit-choice"),c.hasClass("removed")||a._trigger("onTagClicked",
+d,{tag:c,tagLabel:a.tagLabel(c)})):a.tagInput.focus()});var c=!1;if(this.options.singleField)if(this.options.singleFieldNode){var d=b(this.options.singleFieldNode),f=d.val().split(this.options.singleFieldDelimiter);d.val("");b.each(f,function(b,d){a.createTag(d,null,!0);c=!0})}else this.options.singleFieldNode=b('<input type="hidden" style="display:none;" value="" name="'+this.options.fieldName+'" />'),this.tagList.after(this.options.singleFieldNode);c||this.tagList.children("li").each(function(){b(this).hasClass("tagit-new")||
+(a.createTag(b(this).text(),b(this).attr("class"),!0),b(this).remove())});this.tagInput.keydown(function(c){if(c.which==b.ui.keyCode.BACKSPACE&&""===a.tagInput.val()){var d=a._lastTag();!a.options.removeConfirmation||d.hasClass("remove")?a.removeTag(d):a.options.removeConfirmation&&d.addClass("remove ui-state-highlight")}else a.options.removeConfirmation&&a._lastTag().removeClass("remove ui-state-highlight");if(c.which===b.ui.keyCode.COMMA&&!1===c.shiftKey||c.which===b.ui.keyCode.ENTER||c.which==
+b.ui.keyCode.TAB&&""!==a.tagInput.val()||c.which==b.ui.keyCode.SPACE&&!0!==a.options.allowSpaces&&('"'!=b.trim(a.tagInput.val()).replace(/^s*/,"").charAt(0)||'"'==b.trim(a.tagInput.val()).charAt(0)&&'"'==b.trim(a.tagInput.val()).charAt(b.trim(a.tagInput.val()).length-1)&&0!==b.trim(a.tagInput.val()).length-1))c.which===b.ui.keyCode.ENTER&&""===a.tagInput.val()||c.preventDefault(),a.options.autocomplete.autoFocus&&a.tagInput.data("autocomplete-open")||(a.tagInput.autocomplete("close"),a.createTag(a._cleanedInput()))}).blur(function(b){a.tagInput.data("autocomplete-open")||
+a.createTag(a._cleanedInput())});if(this.options.availableTags||this.options.tagSource||this.options.autocomplete.source)d={select:function(b,c){a.createTag(c.item.value);return!1}},b.extend(d,this.options.autocomplete),d.source=this.options.tagSource||d.source,this.tagInput.autocomplete(d).bind("autocompleteopen.tagit",function(b,c){a.tagInput.data("autocomplete-open",!0)}).bind("autocompleteclose.tagit",function(b,c){a.tagInput.data("autocomplete-open",!1)}),this.tagInput.autocomplete("widget").addClass("tagit-autocomplete")},
+destroy:function(){b.Widget.prototype.destroy.call(this);this.element.unbind(".tagit");this.tagList.unbind(".tagit");this.tagInput.removeData("autocomplete-open");this.tagList.removeClass("tagit ui-widget ui-widget-content ui-corner-all tagit-hidden-field");this.element.is("input")?(this.element.removeClass("tagit-hidden-field"),this.tagList.remove()):(this.element.children("li").each(function(){b(this).hasClass("tagit-new")?b(this).remove():(b(this).removeClass("tagit-choice ui-widget-content ui-state-default ui-state-highlight ui-corner-all remove tagit-choice-editable tagit-choice-read-only"),
+b(this).text(b(this).children(".tagit-label").text()))}),this.singleFieldNode&&this.singleFieldNode.remove());return this},_cleanedInput:function(){return b.trim(this.tagInput.val().replace(/^"(.*)"$/,"$1"))},_lastTag:function(){return this.tagList.find(".tagit-choice:last:not(.removed)")},_tags:function(){return this.tagList.find(".tagit-choice:not(.removed)")},assignedTags:function(){var a=this,c=[];this.options.singleField?(c=b(this.options.singleFieldNode).val().split(this.options.singleFieldDelimiter),
+""===c[0]&&(c=[])):this._tags().each(function(){c.push(a.tagLabel(this))});return c},_updateSingleTagsField:function(a){b(this.options.singleFieldNode).val(a.join(this.options.singleFieldDelimiter)).trigger("change")},_subtractArray:function(a,c){for(var d=[],f=0;f<a.length;f++)-1==b.inArray(a[f],c)&&d.push(a[f]);return d},tagLabel:function(a){return this.options.singleField?b(a).find(".tagit-label:first").text():b(a).find("input:first").val()},_showAutocomplete:function(){this.tagInput.autocomplete("search",
+"")},_findTagByLabel:function(a){var c=this,d=null;this._tags().each(function(f){if(c._formatStr(a)==c._formatStr(c.tagLabel(this)))return d=b(this),!1});return d},_isNew:function(a){return!this._findTagByLabel(a)},_formatStr:function(a){return this.options.caseSensitive?a:b.trim(a.toLowerCase())},_effectExists:function(a){return Boolean(b.effects&&(b.effects[a]||b.effects.effect&&b.effects.effect[a]))},createTag:function(a,c,d){var f=this;a=b.trim(a);this.options.preprocessTag&&(a=this.options.preprocessTag(a));
+if(""===a)return!1;if(!this.options.allowDuplicates&&!this._isNew(a))return a=this._findTagByLabel(a),!1!==this._trigger("onTagExists",null,{existingTag:a,duringInitialization:d})&&this._effectExists("highlight")&&a.effect("highlight"),!1;if(this.options.tagLimit&&this._tags().length>=this.options.tagLimit)return this._trigger("onTagLimitExceeded",null,{duringInitialization:d}),!1;var g=b(this.options.onTagClicked?'<a class="tagit-label"></a>':'<span class="tagit-label"></span>').text(a),e=b("<li></li>").addClass("tagit-choice ui-widget-content ui-state-default ui-corner-all").addClass(c).append(g);
+this.options.readOnly?e.addClass("tagit-choice-read-only"):(e.addClass("tagit-choice-editable"),c=b("<span></span>").addClass("ui-icon ui-icon-close"),c=b('<a><span class="text-icon">\u00d7</span></a>').addClass("tagit-close").append(c).click(function(a){f.removeTag(e)}),e.append(c));this.options.singleField||(g=g.html(),e.append('<input type="hidden" value="'+g+'" name="'+this.options.fieldName+'" class="tagit-hidden-field" />'));!1!==this._trigger("beforeTagAdded",null,{tag:e,tagLabel:this.tagLabel(e),
+duringInitialization:d})&&(this.options.singleField&&(g=this.assignedTags(),g.push(a),this._updateSingleTagsField(g)),this._trigger("onTagAdded",null,e),this.tagInput.val(""),this.tagInput.parent().before(e),this._trigger("afterTagAdded",null,{tag:e,tagLabel:this.tagLabel(e),duringInitialization:d}),this.options.showAutocompleteOnFocus&&!d&&setTimeout(function(){f._showAutocomplete()},0))},removeTag:function(a,c){c="undefined"===typeof c?this.options.animate:c;a=b(a);this._trigger("onTagRemoved",
+null,a);if(!1!==this._trigger("beforeTagRemoved",null,{tag:a,tagLabel:this.tagLabel(a)})){if(this.options.singleField){var d=this.assignedTags(),f=this.tagLabel(a),d=b.grep(d,function(a){return a!=f});this._updateSingleTagsField(d)}if(c){a.addClass("removed");var d=this._effectExists("blind")?["blind",{direction:"horizontal"},"fast"]:["fast"],g=this;d.push(function(){a.remove();g._trigger("afterTagRemoved",null,{tag:a,tagLabel:g.tagLabel(a)})});a.fadeOut("fast").hide.apply(a,d).dequeue()}else a.remove(),
+this._trigger("afterTagRemoved",null,{tag:a,tagLabel:this.tagLabel(a)})}},removeTagByLabel:function(a,b){var d=this._findTagByLabel(a);if(!d)throw"No such tag exists with the name '"+a+"'";this.removeTag(d,b)},removeAll:function(){var a=this;this._tags().each(function(b,d){a.removeTag(d,!1)})}})})(jQuery);
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -50,8 +86,178 @@ var web_browser = J$.browser.name;
 //////////////////////////////////////////////////////////////////////////////////
 
 function Addostream_CSS(){
-    // Script-specific CSS
     GM_addStyle(`
+        /* microtip.css
+        * @author Ghosh
+        * https://github.com/ghosh/microtip
+        * MIT licensed
+        */
+        [aria-label][role~="tooltip"]{position:relative}[aria-label][role~="tooltip"]:before,[aria-label][role~="tooltip"]:after{transform:translate3d(0,0,0);-webkit-backface-visibility:hidden;backface-visibility:hidden;will-change:transform;opacity:0;pointer-events:none;transition:all var(--microtip-transition-duration,.18s) var(--microtip-transition-easing,ease-in-out) var(--microtip-transition-delay,0s);position:absolute;box-sizing:border-box;z-index:10;transform-origin:top}[aria-label][role~="tooltip"]:before{background-size:100% auto!important;content:""}[aria-label][role~="tooltip"]:after{background:rgba(17,17,17,.9);border-radius:4px;color:#fff;content:attr(aria-label);font-size:var(--microtip-font-size,11px);font-weight:var(--microtip-font-weight,normal);text-transform:var(--microtip-text-transform,none);padding:.5em 1em;white-space:nowrap;box-sizing:content-box}[aria-label][role~="tooltip"]:hover:before,[aria-label][role~="tooltip"]:hover:after,[aria-label][role~="tooltip"]:focus:before,[aria-label][role~="tooltip"]:focus:after{opacity:1;pointer-events:auto}[role~="tooltip"][data-microtip-position|="top"]:before{background:url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%280%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E) no-repeat;height:6px;width:18px;margin-bottom:5px}[role~="tooltip"][data-microtip-position|="top"]:after{margin-bottom:11px}[role~="tooltip"][data-microtip-position|="top"]:before{transform:translate3d(-50%,0,0);bottom:100%;left:50%}[role~="tooltip"][data-microtip-position|="top"]:hover:before{transform:translate3d(-50%,-5px,0)}[role~="tooltip"][data-microtip-position|="top"]:after{transform:translate3d(-50%,0,0);bottom:100%;left:50%}[role~="tooltip"][data-microtip-position="top"]:hover:after{transform:translate3d(-50%,-5px,0)}[role~="tooltip"][data-microtip-position="top-left"]:after{transform:translate3d(calc(-100% + 16px),0,0);bottom:100%}[role~="tooltip"][data-microtip-position="top-left"]:hover:after{transform:translate3d(calc(-100% + 16px),-5px,0)}[role~="tooltip"][data-microtip-position="top-right"]:after{transform:translate3d(calc(0% + -16px),0,0);bottom:100%}[role~="tooltip"][data-microtip-position="top-right"]:hover:after{transform:translate3d(calc(0% + -16px),-5px,0)}[role~="tooltip"][data-microtip-position|="bottom"]:before{background:url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%28180%2018%206%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E) no-repeat;height:6px;width:18px;margin-top:5px;margin-bottom:0}[role~="tooltip"][data-microtip-position|="bottom"]:after{margin-top:11px}[role~="tooltip"][data-microtip-position|="bottom"]:before{transform:translate3d(-50%,-10px,0);bottom:auto;left:50%;top:100%}[role~="tooltip"][data-microtip-position|="bottom"]:hover:before{transform:translate3d(-50%,0,0)}[role~="tooltip"][data-microtip-position|="bottom"]:after{transform:translate3d(-50%,-10px,0);top:100%;left:50%}[role~="tooltip"][data-microtip-position="bottom"]:hover:after{transform:translate3d(-50%,0,0)}[role~="tooltip"][data-microtip-position="bottom-left"]:after{transform:translate3d(calc(-100% + 16px),-10px,0);top:100%}[role~="tooltip"][data-microtip-position="bottom-left"]:hover:after{transform:translate3d(calc(-100% + 16px),0,0)}[role~="tooltip"][data-microtip-position="bottom-right"]:after{transform:translate3d(calc(0% + -16px),-10px,0);top:100%}[role~="tooltip"][data-microtip-position="bottom-right"]:hover:after{transform:translate3d(calc(0% + -16px),0,0)}[role~="tooltip"][data-microtip-position="left"]:before,[role~="tooltip"][data-microtip-position="left"]:after{bottom:auto;left:auto;right:100%;top:50%;transform:translate3d(10px,-50%,0)}[role~="tooltip"][data-microtip-position="left"]:before{background:url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%28-90%2018%2018%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E) no-repeat;height:18px;width:6px;margin-right:5px;margin-bottom:0}[role~="tooltip"][data-microtip-position="left"]:after{margin-right:11px}[role~="tooltip"][data-microtip-position="left"]:hover:before,[role~="tooltip"][data-microtip-position="left"]:hover:after{transform:translate3d(0,-50%,0)}[role~="tooltip"][data-microtip-position="right"]:before,[role~="tooltip"][data-microtip-position="right"]:after{bottom:auto;left:100%;top:50%;transform:translate3d(-10px,-50%,0)}[role~="tooltip"][data-microtip-position="right"]:before{background:url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%2890%206%206%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E) no-repeat;height:18px;width:6px;margin-bottom:0;margin-left:5px}[role~="tooltip"][data-microtip-position="right"]:after{margin-left:11px}[role~="tooltip"][data-microtip-position="right"]:hover:before,[role~="tooltip"][data-microtip-position="right"]:hover:after{transform:translate3d(0,-50%,0)}[role~="tooltip"][data-microtip-size="small"]:after{white-space:pre-line;width:80px}[role~="tooltip"][data-microtip-size="medium"]:after{white-space:pre-line;width:150px}[role~="tooltip"][data-microtip-size="large"]:after{white-space:pre-line;width:260px}[role~="tooltip"][data-microtip-size="custom"]:after{white-space:pre-line;width:220px;text-align:center}\
+
+        /* https://raw.githubusercontent.com/aehlke/tag-it/master/css/jquery.tagit.css */
+        ul.tagit {
+            margin: 0px;
+            padding: 1px 5px;
+            overflow: auto;
+            margin-left: inherit;
+            margin-right: inherit;
+            -webkit-padding-start: 3px !important;
+        }
+        ul.tagit li {
+            display: block;
+            float: left;
+            margin: 2px 5px 2px 0;
+        }
+        ul.tagit li.tagit-choice {
+            position: relative;
+            line-height: inherit;
+        }
+        input.tagit-hidden-field {
+            display: none;
+        }
+        ul.tagit li.tagit-choice-read-only {
+            padding: .2em .5em .2em .5em;
+        }
+
+        ul.tagit li.tagit-choice-editable {
+            padding: .2em 18px .2em .5em;
+        }
+
+        ul.tagit li.tagit-new {
+            padding: .25em 4px .25em 0;
+        }
+
+        ul.tagit li.tagit-choice a.tagit-label {
+            cursor: pointer;
+            text-decoration: none;
+        }
+        ul.tagit li.tagit-choice .tagit-close {
+            cursor: pointer;
+            position: absolute;
+            right: .1em;
+            top: 50%;
+            margin-top: -8px;
+            line-height: 17px;
+        }
+
+        ul.tagit li.tagit-choice .tagit-close .text-icon {
+            display: none;
+        }
+
+        ul.tagit li.tagit-choice input {
+            display: block;
+            float: left;
+            margin: 2px 5px 2px 0;
+        }
+        ul.tagit input[type="text"] {
+            -moz-box-sizing:    border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing:         border-box;
+            -moz-box-shadow: none;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            border: none;
+            margin: 0;
+            padding: 0;
+            width: inherit;
+            background-color: inherit;
+            outline: none;
+        }
+
+        /* Optional scoped theme for tag-it which mimics the zendesk widget. */
+        ul.tagit {
+            border-style: solid;
+            border-width: 1px;
+            border-color: #C6C6C6;
+            background: inherit;
+        }
+        ul.tagit li.tagit-choice {
+            -moz-border-radius: 6px;
+            border-radius: 6px;
+            -webkit-border-radius: 6px;
+            border: 1px solid #CAD8F3;
+            background: none;
+            background-color: #DEE7F8;
+
+            font-weight: normal;
+        }
+        ul.tagit li.tagit-choice .tagit-label:not(a) {
+            color: #555;
+        }
+        ul.tagit li.tagit-choice a.tagit-close {
+            text-decoration: none;
+        }
+        ul.tagit li.tagit-choice .tagit-close {
+            right: .4em;
+        }
+        ul.tagit li.tagit-choice .ui-icon {
+            display: none;
+        }
+        ul.tagit li.tagit-choice .tagit-close .text-icon {
+            display: inline;
+            font-family: arial, sans-serif;
+            font-size: 16px;
+            line-height: 16px;
+            color: #777;
+        }
+        ul.tagit li.tagit-choice:hover, ul.tagit li.tagit-choice.remove {
+            background-color: #bbcef1;
+            border-color: #6d95e0;
+        }
+        ul.tagit li.tagit-choice a.tagLabel:hover,
+        ul.tagit li.tagit-choice a.tagit-close .text-icon:hover {
+            color: #222;
+        }
+        ul.tagit input[type="text"] {
+            color: #333333;
+            background: none;
+        }
+        .ui-widget {
+            font-size: 1.0em;
+        }
+
+        /* Forked from a jQuery UI theme, so that we don't require the jQuery UI CSS as a dependency. */
+        .tagit-autocomplete.ui-autocomplete { position: absolute; cursor: default; }
+        * html .tagit-autocomplete.ui-autocomplete { width:1px; } /* without this, the menu expands to 100% in IE6 */
+        .tagit-autocomplete.ui-menu {
+            list-style:none;
+            padding: 2px;
+            margin: 0;
+            display:block;
+            float: left;
+        }
+        .tagit-autocomplete.ui-menu .ui-menu {
+            margin-top: -3px;
+        }
+        .tagit-autocomplete.ui-menu .ui-menu-item {
+            margin:0;
+            padding: 0;
+            zoom: 1;
+            float: left;
+            clear: left;
+            width: 100%;
+        }
+        .tagit-autocomplete.ui-menu .ui-menu-item a {
+            text-decoration:none;
+            display:block;
+            padding:.2em .4em;
+            line-height:1.5;
+            zoom:1;
+        }
+        .tagit-autocomplete .ui-menu .ui-menu-item a.ui-state-hover,
+        .tagit-autocomplete .ui-menu .ui-menu-item a.ui-state-active {
+            font-weight: normal;
+            margin: -1px;
+        }
+        .tagit-autocomplete.ui-widget-content { border: 1px solid #aaaaaa; background: #ffffff 50% 50% repeat-x; color: #222222; }
+        .tagit-autocomplete.ui-corner-all, .tagit-autocomplete .ui-corner-all { -moz-border-radius: 4px; -webkit-border-radius: 4px; -khtml-border-radius: 4px; border-radius: 4px; }
+        .tagit-autocomplete .ui-state-hover, .tagit-autocomplete .ui-state-focus { border: 1px solid #999999; background: #dadada; font-weight: normal; color: #212121; }
+        .tagit-autocomplete .ui-state-active  { border: 1px solid #aaaaaa; }
+        .tagit-autocomplete .ui-widget-content { border: 1px solid #aaaaaa; }
+        .tagit .ui-helper-hidden-accessible { position: absolute !important; clip: rect(1px,1px,1px,1px); }
+
+
+        // Dostream+ CSS
         .search a.afreeca{display:none !important;}
          ul.nav{display:none !important;}
          #streamSearchForm{display:none !important;}
@@ -65,13 +271,15 @@ function Addostream_CSS(){
         .icon_pushpin{position:absolute !important;top:10px; right:10px; z-index:50;}
         #ADD_config {cursor:pointer; padding-right:10px;}
         #ADD_test_button {cursor:pointer;}
-        #popup_ADD_config, #popup_ADD_quick, #popup_ADD_test {display:none; font-size:12px; z-index:10000; position:absolute; width:500px;}
+        #popup_ADD_config, #popup_ADD_quick, #popup_ADD_test {display:none; font-size:12px; z-index:10000; position:absolute; width:502px;}
+        #popup_ADD_config table td:nth-child(1) {width:190px;}
+        #popup_ADD_config table td:nth-child(2) {width:280px;}
         #popup_ADD_config{ top:50px; right:10px; }
         #ADD_change_multi { display:none; }
         .onstream #ADD_change_multi { opacity:1; display:inline-block !important;}
         #ADD_quick_list { display:none; }
         .onstream #ADD_quick_list { opacity:1; display:inline-block !important;}
-        #popup_ADD_quick .modal-body{ padding:15px; }
+        #popup_ADD_quick .modal-body{ padding:10px; }
         #popup_ADD_quick { top:50px; right:10px; }
         #popup_ADD_quick .quick_list_title { padding:0 5px 2px 5px; margin-bottom:0px; border-bottom:2px solid rgb(221, 221, 221); font-weight:bold;}
         #popup_ADD_quick ul { list-style:none; margin:0;padding:0;display:block;font-size:11px;}
@@ -93,7 +301,7 @@ function Addostream_CSS(){
         #popup_ADD_test{ top:50px; right:10px; }
         .modal-content {box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);background-clip: padding-box;background-color: #fff;border: 1px solid rgba(0, 0, 0, 0.2);border-radius: 6px;outline: 0 none;}
         .modal-content {opacity:0.93}
-        .modal-body {padding: 15px 15px 5px 15px;}
+        .modal-body {padding: 10px 10px 5px 10px;}
         .modal-footer {border-top: 1px solid #e5e5e5;padding: 10px 15px;text-align: right;}
         #ADD_config_Success {font-size:11px;}
         .btn {font-size: 12px;}
@@ -106,13 +314,11 @@ function Addostream_CSS(){
         .multitwitch_button{vertical-align:middle;display:inline-block;} //background-color:#eee; padding:5px 8px; height:26px;
         .form_disabled {color:#888;}
         .form_enabled {color:#222;}
-        #popup_ADD_config table td {height:25px; font-size:11px; padding:2px 5px 2px 10px; vertical-align:middle;}
+        #popup_ADD_config table td {height:26px; line-height: 1.5; font-size:11px; padding:2px 5px 2px 10px; vertical-align:middle; border-top-color:#e5e5e5;}
         #popup_ADD_config table td label{vertical-align:middle; margin-bottom:0px;}
         #popup_ADD_config table td input[type="text"]{font-size:11px;}
         #popup_ADD_config table td input[type="checkbox"]{vertical-align:middle; margin-bottom:0; margin-top:0;}
         #popup_ADD_config table td input[type="radio"]{vertical-align:middle; margin-bottom:0; margin-top:0;}
-        #popup_ADD_config table td:nth-child(1) {width:300px;}
-        #popup_ADD_config table td:nth-child(2) {width:200px;}
         #popup_ADD_config table td .tooltip_container{float:right;}
         .btn-success {margin-right: 10px;}
         .btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active, .open .dropdown-toggle.btn-success {background-color: #5cb85c;border-color: #4cae4c;color: #fff;cursor: Default;margin-right: 10px;}
@@ -166,18 +372,17 @@ function Addostream_CSS(){
         .ADD_chat_again, .ADD_twitch_api_again{cursor:pointer;}
     `);
 
-/*
-가변너비
-@media (min-width: 1550px)
-.container {
-    width: 1170px;
-}
-@media (min-width: 1200px)
-.container {
-    width: 800px;
-}
-*/
-    // console.log('css');
+    /*
+    가변너비
+    @media (min-width: 1550px)
+    .container {
+        width: 1170px;
+    }
+    @media (min-width: 1200px)
+    .container {
+        width: 800px;
+    }
+    */
 }
 
 
@@ -222,7 +427,7 @@ function getTimeStamp() {
 // 파싱 후 데이터 정리
 function parse_data_from_list(flag)
 {
-    J$.getJSON("/dev/stream_list.php", function(data) {
+    $.getJSON("/dev/stream_list.php", function(data) {
         var getTimeResult = '?' + getTimeStamp();
 
         // 숨길 대상 스트리머 지우기
@@ -267,11 +472,11 @@ function parse_data_from_list(flag)
 
         // Twitch api 쿠키로부터 스트리머 가져오기
         ADD_DEBUG_MODE && console.log('ADD_config_ary.ADD_config_alarm :',ADD_config_ary.ADD_config_alarm);
-        if ( ADD_config_ary.ADD_config_alarm && (!!J$.cookie('twitch_api_cookie')) )
+        if ( ADD_config_ary.ADD_config_alarm && (!!$.cookie('twitch_api_cookie')) )
         {
             ADD_DEBUG_MODE && console.log('...twitch_api_cookie 쿠키 정리 중...');
             // 로컬 변수 선언
-            var temp_api_cookie = JSON.parse(J$.cookie('twitch_api_cookie'));
+            var temp_api_cookie = JSON.parse($.cookie('twitch_api_cookie'));
 
             if(temp_api_cookie === undefined || temp_api_cookie === null || temp_api_cookie.length === 0)
             {
@@ -333,7 +538,7 @@ function parse_data_from_list(flag)
                 {
                     var temp_one = {};
 
-                    if( ADD_config_ary.ADD_config_alarm && (!!J$.cookie('twitch_api_cookie')) && (J$.inArray(fixed_streamer[i],alarm_streamer) !== -1) )
+                    if( ADD_config_ary.ADD_config_alarm && (!!$.cookie('twitch_api_cookie')) && ($.inArray(fixed_streamer[i],alarm_streamer) !== -1) )
                         temp_one.title = '스트림이 오프라인 상태입니다.';
                     else
                         temp_one.title = '스트림이 오프라인 상태이거나 메인에 없는 스트리머 추가 목록에 없습니다.';
@@ -397,7 +602,7 @@ function ADD_run(json,flag) {
 	var append = '';
 	ADD_DEBUG_MODE && console.log('ADD_run 실행됨!');
 	//console.log('json :',json);
-	J$(json).each(function(k, data) {
+	$(json).each(function(k, data) {
   	  var twitch_append = '';
   	  var fixed_class = '';
   	  var fixed_append = '';
@@ -479,44 +684,13 @@ function ADD_run(json,flag) {
 	});
 
     if(flag === 0)
-        J$("#stream .main-streams ul").empty().hide().append(append).fadeIn(300);
+        $("#stream .main-streams ul").empty().hide().append(append).fadeIn(300);
     else
-        J$("#popup_ADD_quick ul").empty().hide().append(append).fadeIn(300);
+        $("#popup_ADD_quick ul").empty().hide().append(append).fadeIn(300);
 
 	// GC
 	append = null;
 }
-
-
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//                                 PRE-DEFINED
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-
-/* arrive.js
- * v2.4.1
- * https://github.com/uzairfarooq/arrive
- * MIT licensed
- * Copyright (c) 2014-2017 Uzair Farooq
- */
-var Arrive=function(e,t,n){"use strict";function r(e,t,n){l.addMethod(t,n,e.unbindEvent),l.addMethod(t,n,e.unbindEventWithSelectorOrCallback),l.addMethod(t,n,e.unbindEventWithSelectorAndCallback)}function i(e){e.arrive=f.bindEvent,r(f,e,"unbindArrive"),e.leave=d.bindEvent,r(d,e,"unbindLeave")}if(e.MutationObserver&&"undefined"!=typeof HTMLElement){var o=0,l=function(){var t=HTMLElement.prototype.matches||HTMLElement.prototype.webkitMatchesSelector||HTMLElement.prototype.mozMatchesSelector||HTMLElement.prototype.msMatchesSelector;return{matchesSelector:function(e,n){return e instanceof HTMLElement&&t.call(e,n)},addMethod:function(e,t,r){var i=e[t];e[t]=function(){return r.length==arguments.length?r.apply(this,arguments):"function"==typeof i?i.apply(this,arguments):n}},callCallbacks:function(e,t){t&&t.options.onceOnly&&1==t.firedElems.length&&(e=[e[0]]);for(var n,r=0;n=e[r];r++)n&&n.callback&&n.callback.call(n.elem,n.elem);t&&t.options.onceOnly&&1==t.firedElems.length&&t.me.unbindEventWithSelectorAndCallback.call(t.target,t.selector,t.callback)},checkChildNodesRecursively:function(e,t,n,r){for(var i,o=0;i=e[o];o++)n(i,t,r)&&r.push({callback:t.callback,elem:i}),i.childNodes.length>0&&l.checkChildNodesRecursively(i.childNodes,t,n,r)},mergeArrays:function(e,t){var n,r={};for(n in e)e.hasOwnProperty(n)&&(r[n]=e[n]);for(n in t)t.hasOwnProperty(n)&&(r[n]=t[n]);return r},toElementsArray:function(t){return n===t||"number"==typeof t.length&&t!==e||(t=[t]),t}}}(),c=function(){var e=function(){this._eventsBucket=[],this._beforeAdding=null,this._beforeRemoving=null};return e.prototype.addEvent=function(e,t,n,r){var i={target:e,selector:t,options:n,callback:r,firedElems:[]};return this._beforeAdding&&this._beforeAdding(i),this._eventsBucket.push(i),i},e.prototype.removeEvent=function(e){for(var t,n=this._eventsBucket.length-1;t=this._eventsBucket[n];n--)if(e(t)){this._beforeRemoving&&this._beforeRemoving(t);var r=this._eventsBucket.splice(n,1);r&&r.length&&(r[0].callback=null)}},e.prototype.beforeAdding=function(e){this._beforeAdding=e},e.prototype.beforeRemoving=function(e){this._beforeRemoving=e},e}(),a=function(t,r){var i=new c,o=this,a={fireOnAttributesModification:!1};return i.beforeAdding(function(n){var i,l=n.target;(l===e.document||l===e)&&(l=document.getElementsByTagName("html")[0]),i=new MutationObserver(function(e){r.call(this,e,n)});var c=t(n.options);i.observe(l,c),n.observer=i,n.me=o}),i.beforeRemoving(function(e){e.observer.disconnect()}),this.bindEvent=function(e,t,n){t=l.mergeArrays(a,t);for(var r=l.toElementsArray(this),o=0;o<r.length;o++)i.addEvent(r[o],e,t,n)},this.unbindEvent=function(){var e=l.toElementsArray(this);i.removeEvent(function(t){for(var r=0;r<e.length;r++)if(this===n||t.target===e[r])return!0;return!1})},this.unbindEventWithSelectorOrCallback=function(e){var t,r=l.toElementsArray(this),o=e;t="function"==typeof e?function(e){for(var t=0;t<r.length;t++)if((this===n||e.target===r[t])&&e.callback===o)return!0;return!1}:function(t){for(var i=0;i<r.length;i++)if((this===n||t.target===r[i])&&t.selector===e)return!0;return!1},i.removeEvent(t)},this.unbindEventWithSelectorAndCallback=function(e,t){var r=l.toElementsArray(this);i.removeEvent(function(i){for(var o=0;o<r.length;o++)if((this===n||i.target===r[o])&&i.selector===e&&i.callback===t)return!0;return!1})},this},s=function(){function e(e){var t={attributes:!1,childList:!0,subtree:!0};return e.fireOnAttributesModification&&(t.attributes=!0),t}function t(e,t){e.forEach(function(e){var n=e.addedNodes,i=e.target,o=[];null!==n&&n.length>0?l.checkChildNodesRecursively(n,t,r,o):"attributes"===e.type&&r(i,t,o)&&o.push({callback:t.callback,elem:i}),l.callCallbacks(o,t)})}function r(e,t){return l.matchesSelector(e,t.selector)&&(e._id===n&&(e._id=o++),-1==t.firedElems.indexOf(e._id))?(t.firedElems.push(e._id),!0):!1}var i={fireOnAttributesModification:!1,onceOnly:!1,existing:!1};f=new a(e,t);var c=f.bindEvent;return f.bindEvent=function(e,t,r){n===r?(r=t,t=i):t=l.mergeArrays(i,t);var o=l.toElementsArray(this);if(t.existing){for(var a=[],s=0;s<o.length;s++)for(var u=o[s].querySelectorAll(e),f=0;f<u.length;f++)a.push({callback:r,elem:u[f]});if(t.onceOnly&&a.length)return r.call(a[0].elem,a[0].elem);setTimeout(l.callCallbacks,1,a)}c.call(this,e,t,r)},f},u=function(){function e(){var e={childList:!0,subtree:!0};return e}function t(e,t){e.forEach(function(e){var n=e.removedNodes,i=[];null!==n&&n.length>0&&l.checkChildNodesRecursively(n,t,r,i),l.callCallbacks(i,t)})}function r(e,t){return l.matchesSelector(e,t.selector)}var i={};d=new a(e,t);var o=d.bindEvent;return d.bindEvent=function(e,t,r){n===r?(r=t,t=i):t=l.mergeArrays(i,t),o.call(this,e,t,r)},d},f=new s,d=new u;t&&i(t.fn),i(HTMLElement.prototype),i(NodeList.prototype),i(HTMLCollection.prototype),i(HTMLDocument.prototype),i(Window.prototype);var h={};return r(f,h,"unbindAllArrive"),r(d,h,"unbindAllLeave"),h}}(window,"undefined"==typeof jQuery?null:jQuery,void 0);
-
-/* easyNotify.js
- * https://github.com/Gabrielr47/easyNotify
- * Author : Gabriel Rodrigues
- */
-!function(o){o.fn.easyNotify=function(i){var n=o.extend({title:"Notification",options:{body:"",icon:"",lang:"ko-KR",onClose:"",onClick:"",onError:""}},i);return this.init=function(){var o=this;if("Notification"in window)if("granted"===Notification.permission){var i=new Notification(n.title,n.options);i.onclose=function(){"function"==typeof n.options.onClose&&n.options.onClose()},i.onclick=function(){"function"==typeof n.options.onClick&&n.options.onClick()},i.onerror=function(){"function"==typeof n.options.onError&&n.options.onError()}}else"denied"!==Notification.permission&&Notification.requestPermission(function(i){"granted"===i&&o.init()});else alert("This browser does not support desktop notification")},this.init(),this}}(J$);
-
-/* microtip.css
- * @author Ghosh
- * https://github.com/ghosh/microtip
- * MIT licensed
- */
-J$('head').append('<style id="ADD_balloon" rel="stylesheet" type="text/css">\
-[aria-label][role~="tooltip"]{position:relative}[aria-label][role~="tooltip"]:before,[aria-label][role~="tooltip"]:after{transform:translate3d(0,0,0);-webkit-backface-visibility:hidden;backface-visibility:hidden;will-change:transform;opacity:0;pointer-events:none;transition:all var(--microtip-transition-duration,.18s) var(--microtip-transition-easing,ease-in-out) var(--microtip-transition-delay,0s);position:absolute;box-sizing:border-box;z-index:10;transform-origin:top}[aria-label][role~="tooltip"]:before{background-size:100% auto!important;content:""}[aria-label][role~="tooltip"]:after{background:rgba(17,17,17,.9);border-radius:4px;color:#fff;content:attr(aria-label);font-size:var(--microtip-font-size,11px);font-weight:var(--microtip-font-weight,normal);text-transform:var(--microtip-text-transform,none);padding:.5em 1em;white-space:nowrap;box-sizing:content-box}[aria-label][role~="tooltip"]:hover:before,[aria-label][role~="tooltip"]:hover:after,[aria-label][role~="tooltip"]:focus:before,[aria-label][role~="tooltip"]:focus:after{opacity:1;pointer-events:auto}[role~="tooltip"][data-microtip-position|="top"]:before{background:url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%280%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E) no-repeat;height:6px;width:18px;margin-bottom:5px}[role~="tooltip"][data-microtip-position|="top"]:after{margin-bottom:11px}[role~="tooltip"][data-microtip-position|="top"]:before{transform:translate3d(-50%,0,0);bottom:100%;left:50%}[role~="tooltip"][data-microtip-position|="top"]:hover:before{transform:translate3d(-50%,-5px,0)}[role~="tooltip"][data-microtip-position|="top"]:after{transform:translate3d(-50%,0,0);bottom:100%;left:50%}[role~="tooltip"][data-microtip-position="top"]:hover:after{transform:translate3d(-50%,-5px,0)}[role~="tooltip"][data-microtip-position="top-left"]:after{transform:translate3d(calc(-100% + 16px),0,0);bottom:100%}[role~="tooltip"][data-microtip-position="top-left"]:hover:after{transform:translate3d(calc(-100% + 16px),-5px,0)}[role~="tooltip"][data-microtip-position="top-right"]:after{transform:translate3d(calc(0% + -16px),0,0);bottom:100%}[role~="tooltip"][data-microtip-position="top-right"]:hover:after{transform:translate3d(calc(0% + -16px),-5px,0)}[role~="tooltip"][data-microtip-position|="bottom"]:before{background:url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%28180%2018%206%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E) no-repeat;height:6px;width:18px;margin-top:5px;margin-bottom:0}[role~="tooltip"][data-microtip-position|="bottom"]:after{margin-top:11px}[role~="tooltip"][data-microtip-position|="bottom"]:before{transform:translate3d(-50%,-10px,0);bottom:auto;left:50%;top:100%}[role~="tooltip"][data-microtip-position|="bottom"]:hover:before{transform:translate3d(-50%,0,0)}[role~="tooltip"][data-microtip-position|="bottom"]:after{transform:translate3d(-50%,-10px,0);top:100%;left:50%}[role~="tooltip"][data-microtip-position="bottom"]:hover:after{transform:translate3d(-50%,0,0)}[role~="tooltip"][data-microtip-position="bottom-left"]:after{transform:translate3d(calc(-100% + 16px),-10px,0);top:100%}[role~="tooltip"][data-microtip-position="bottom-left"]:hover:after{transform:translate3d(calc(-100% + 16px),0,0)}[role~="tooltip"][data-microtip-position="bottom-right"]:after{transform:translate3d(calc(0% + -16px),-10px,0);top:100%}[role~="tooltip"][data-microtip-position="bottom-right"]:hover:after{transform:translate3d(calc(0% + -16px),0,0)}[role~="tooltip"][data-microtip-position="left"]:before,[role~="tooltip"][data-microtip-position="left"]:after{bottom:auto;left:auto;right:100%;top:50%;transform:translate3d(10px,-50%,0)}[role~="tooltip"][data-microtip-position="left"]:before{background:url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%28-90%2018%2018%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E) no-repeat;height:18px;width:6px;margin-right:5px;margin-bottom:0}[role~="tooltip"][data-microtip-position="left"]:after{margin-right:11px}[role~="tooltip"][data-microtip-position="left"]:hover:before,[role~="tooltip"][data-microtip-position="left"]:hover:after{transform:translate3d(0,-50%,0)}[role~="tooltip"][data-microtip-position="right"]:before,[role~="tooltip"][data-microtip-position="right"]:after{bottom:auto;left:100%;top:50%;transform:translate3d(-10px,-50%,0)}[role~="tooltip"][data-microtip-position="right"]:before{background:url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%2890%206%206%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E) no-repeat;height:18px;width:6px;margin-bottom:0;margin-left:5px}[role~="tooltip"][data-microtip-position="right"]:after{margin-left:11px}[role~="tooltip"][data-microtip-position="right"]:hover:before,[role~="tooltip"][data-microtip-position="right"]:hover:after{transform:translate3d(0,-50%,0)}[role~="tooltip"][data-microtip-size="small"]:after{white-space:pre-line;width:80px}[role~="tooltip"][data-microtip-size="medium"]:after{white-space:pre-line;width:150px}[role~="tooltip"][data-microtip-size="large"]:after{white-space:pre-line;width:260px}[role~="tooltip"][data-microtip-size="custom"]:after{white-space:pre-line;width:220px;text-align:center}\
-</style>');
-
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -725,8 +899,8 @@ function ADD_cookie_var_initialize()
 function ADD_config_cookie_remove()
 {
     // 설정 쿠키값이 존재하는 경우 쿠키값을 지운다.
-    if (!!J$.cookie('ADD_config_ary'))
-       J$.removeCookie("ADD_config_ary");
+    if (!!$.cookie('ADD_config_ary'))
+       $.removeCookie("ADD_config_ary");
 }
 
 
@@ -736,7 +910,7 @@ function ADD_config_cookie_create()
 {
     // 설정 변수가 존재하는 경우 해당 설정 변수로 쿠키를 생성한다.
     if (!(typeof ADD_config_ary === 'undefined'))
-       J$.cookie('ADD_config_ary', JSON.stringify(ADD_config_ary), { expires : 365*2, path : '/' });
+       $.cookie('ADD_config_ary', JSON.stringify(ADD_config_ary), { expires : 365*2, path : '/' });
 }
 
 
@@ -745,10 +919,10 @@ function ADD_config_cookie_create()
 function ADD_cookie_to_var()
 {
     // 설정 쿠키값이 존재하는 경우,
-    if (!!J$.cookie('ADD_config_ary'))
+    if (!!$.cookie('ADD_config_ary'))
     {
         // 쿠키값을 읽어와서 설정 변수로 만든다.
-        ADD_config_ary = JSON.parse(J$.cookie('ADD_config_ary'));
+        ADD_config_ary = JSON.parse($.cookie('ADD_config_ary'));
         var ADD_config_top_fix_ID = ADD_config_ary.ADD_config_top_fix_ID;
         var ADD_config_top_alarm_ID = ADD_config_ary.ADD_config_top_alarm_ID;
         var ADD_config_streamer_hide_ID = ADD_config_ary.ADD_config_streamer_hide_ID;
@@ -848,7 +1022,7 @@ function ADD_var_to_config_form()
         else
             ADD_config_ID_text = '#'+key;
 
-        var ADD_config_ID = J$(ADD_config_ID_text);
+        var ADD_config_ID = $(ADD_config_ID_text);
 
         // 해당 ID 값 가진 엘리먼트가 존재하지 않을 시 다음 for문으로 넘어간다.
         if(ADD_config_ID.length === 0)
@@ -886,7 +1060,7 @@ function ADD_var_to_config_form()
     // 설정 팝업 내 개발 중 옵션을 보여주는지 여부를 확인하여 초기화
     if(ADD_config_ary.ADD_config_dev_on !== undefined && ADD_config_ary.ADD_config_dev_on)
     {
-        J$('.ADD_under_dev').show();
+        $('.ADD_under_dev').show();
     }
 }
 
@@ -916,7 +1090,7 @@ function ADD_save_config_to_cookie()
             ADD_config_ID_text = '#'+key;
         }
 
-        ADD_config_ID = J$(ADD_config_ID_text);
+        ADD_config_ID = $(ADD_config_ID_text);
 
         // 해당 ID 값 가진 엘리먼트가 존재하지 않을 시 다음 for문으로 넘어간다.
         if(ADD_config_ID.length === 0)
@@ -965,7 +1139,7 @@ function ADD_save_config_to_cookie()
 function ADD_last_version_checker()
 {
     // 로컬 변수 선언
-    var temp_config = JSON.parse(J$.cookie('ADD_config_ary'));
+    var temp_config = JSON.parse($.cookie('ADD_config_ary'));
 
     if (typeof temp_config.ADD_config_last_version === 'undefined')
     {
@@ -1023,17 +1197,17 @@ function ADD_last_version_checker()
 
         // DOE 딜레이 처리
         ADD_DEBUG_MODE && console.log('ADDostream version changed! ',notice_text_string);
-        if(J$('#notice_text_elem').length !== 0)
+        if($('#notice_text_elem').length !== 0)
         {
-            J$('#notice_text').html(notice_text_string);
-            J$('#notice_text_elem').fadeIn('1000');
+            $('#notice_text').html(notice_text_string);
+            $('#notice_text_elem').fadeIn('1000');
             notice_text_string = null;
         }
         else
         {
             setTimeout(function() {
-                J$('#notice_text').html(notice_text_string);
-                J$('#notice_text_elem').fadeIn('1000');
+                $('#notice_text').html(notice_text_string);
+                $('#notice_text_elem').fadeIn('1000');
                 notice_text_string = null;
             }, 1000);
         }
@@ -1055,7 +1229,7 @@ function ADD_last_version_checker()
 // 쿠키 있는지 확인하여, 있으면 쿠키값을 변수에 저장. 없으면 생성
 function ADD_main_config_cookie()
 {
-    if (!J$.cookie('ADD_config_ary'))
+    if (!$.cookie('ADD_config_ary'))
     {
         // 쿠키가 없으면, 설정 변수를 초기화 한 뒤 해당 설정 변수로부터 쿠키를 만든다.
         ADD_cookie_var_initialize();
@@ -1087,12 +1261,12 @@ function ADD_status_var_initialize()
 function ADD_status_cookie_write()
 {
     // status 쿠키가 존재하지 않고, 전역 변수도 없는 경우
-    if ((!J$.cookie('ADD_status')) && (!(typeof ADD_status === 'undefined')) ){
+    if ((!$.cookie('ADD_status')) && (!(typeof ADD_status === 'undefined')) ){
         // 글로벌 변수를 가져와서 초기화 함
         ADD_status_var_initialize();
     }
     // status 쿠키가 존재하는 경우
-    J$.cookie('ADD_status', JSON.stringify(ADD_status), { expires : 365*2, path : '/' });
+    $.cookie('ADD_status', JSON.stringify(ADD_status), { expires : 365*2, path : '/' });
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -1100,8 +1274,8 @@ function ADD_status_cookie_write()
 function ADD_status_cookie_remove()
 {
     // 설정 쿠키값이 존재하는 경우 쿠키값을 지운다.
-    if (!!J$.cookie('ADD_status'))
-       J$.removeCookie("ADD_status");
+    if (!!$.cookie('ADD_status'))
+       $.removeCookie("ADD_status");
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -1109,8 +1283,8 @@ function ADD_status_cookie_remove()
 function ADD_status_cookie_read()
 {
     // 쿠키값 존재 시 읽어서 변수에 저장함
-    if (!!J$.cookie('ADD_status'))
-       ADD_status = JSON.parse(J$.cookie('ADD_status'));
+    if (!!$.cookie('ADD_status'))
+       ADD_status = JSON.parse($.cookie('ADD_status'));
     else
        ADD_status_var_initialize();
 }
@@ -1204,9 +1378,9 @@ function twitch_api()
     if (ADD_config_alarm_gap < 1.0)
         ADD_config_alarm_gap = 1.0;
 
-    if (!!J$.cookie('api_check_pre_time'))
+    if (!!$.cookie('api_check_pre_time'))
     {
-        api_pre_time = new Date(J$.cookie('api_check_pre_time'));
+        api_pre_time = new Date($.cookie('api_check_pre_time'));
         left_time = (api_pre_time - now_time); // in ms, .getTime()
         api_update = left_time < 0;
     }
@@ -1219,11 +1393,11 @@ function twitch_api()
         // cookie update
         var api_expires = new Date();
         api_expires.setMinutes( api_expires.getMinutes() + ADD_config_alarm_gap );
-        J$.cookie('api_check_pre_time', api_expires, { expires : api_expires, path : '/' });
+        $.cookie('api_check_pre_time', api_expires, { expires : api_expires, path : '/' });
         ADD_DEBUG_MODE && console.log('Current time is '+now_time+'.\nCookie time for api update is '+api_expires+'.\nCookie is updated.');
 
         // cookie check
-        if ((!!J$.cookie('api_check_pre_time')) && (!!J$.cookie('ADD_config_ary')) )
+        if ((!!$.cookie('api_check_pre_time')) && (!!$.cookie('ADD_config_ary')) )
         {
             ADD_DEBUG_MODE && console.log('All cookie checked for api');
 
@@ -1245,7 +1419,7 @@ function twitch_api()
             if(possibleChannelsNo > 0)
             {
                 ADD_DEBUG_MODE && console.log('Api call channels no. :'+possibleChannels.length + ', name : ' + possibleChannelsString.replace(' ', ''));
-                J$.ajax({
+                $.ajax({
                      url:'https://api.twitch.tv/kraken/streams?offset=0&limit=100&channel='+possibleChannelsString.replace(' ', ''),
                      type: 'GET',
                      contentType: 'application/json',
@@ -1259,8 +1433,8 @@ function twitch_api()
                           var temp_twitch_api_cookie = [];
                           // temp 에 이전 api 쿠키를 복사한다.
                           // 현재는 desktop alarm 이 켜진 경우만 복사한다.
-                          if ( (!!J$.cookie('twitch_api_cookie')) && ADD_config_ary.ADD_config_alarm_noti)
-                              temp_twitch_api_cookie = JSON.parse(J$.cookie('twitch_api_cookie'));//twitch_api_cookie.slice(0);
+                          if ( (!!$.cookie('twitch_api_cookie')) && ADD_config_ary.ADD_config_alarm_noti)
+                              temp_twitch_api_cookie = JSON.parse($.cookie('twitch_api_cookie'));//twitch_api_cookie.slice(0);
 
                           var streams = channel.streams;
                           var temp_body = '';
@@ -1297,7 +1471,7 @@ function twitch_api()
                                   if( noti_check )
                                   {
                                       // 첫번째 call 이고 기존 쿠키 존재 안 하는 경우 (완전히 첫 접속인 경우)
-                                      if(first_api_call && (!J$.cookie('twitch_api_cookie')) )
+                                      if(first_api_call && (!$.cookie('twitch_api_cookie')) )
                                       {
                                           if(i !== 0)
                                               temp_body += ' ,';
@@ -1315,14 +1489,14 @@ function twitch_api()
                                                     }
                                               };
 
-                                              J$("#easyNotify").easyNotify(noti_options);
+                                              $("#easyNotify").easyNotify(noti_options);
 
                                               // GC
                                               noti_options = null;
                                           }
                                       }
                                       // 기존 쿠키 존재 하는 경우
-                                      else if( (!!J$.cookie('twitch_api_cookie')) )
+                                      else if( (!!$.cookie('twitch_api_cookie')) )
                                       {
                                           // 이전 api call 한 내역에 이번에 api call 한 이름이 있는지 체크
                                           var first_call_check = temp_twitch_api_cookie.filter(function (obj) {
@@ -1341,7 +1515,7 @@ function twitch_api()
                                                     }
                                               };
 
-                                              J$("#easyNotify").easyNotify(noti_options);
+                                              $("#easyNotify").easyNotify(noti_options);
 
                                               // GC
                                               first_call_check = null;
@@ -1359,13 +1533,13 @@ function twitch_api()
                               }; // streams 에 대한 for문 끝
 
                              // 쿠키 쓰기
-                              J$.cookie('twitch_api_cookie', JSON.stringify(twitch_api_cookie), { expires : api_expires, path : '/' });
+                              $.cookie('twitch_api_cookie', JSON.stringify(twitch_api_cookie), { expires : api_expires, path : '/' });
                           }
                           // 온라인 스트리머가 없는 경우
                           else
                           {
                               ADD_DEBUG_MODE && console.log('There is no online streamer, Twitch API cookie is removed');
-                              J$.removeCookie('twitch_api_cookie');
+                              $.removeCookie('twitch_api_cookie');
                           }
 
                           // 처음 api 호출 끝나면 false 로 바꾼다.
@@ -1394,10 +1568,10 @@ function twitch_api()
         // not update
         left_time = Math.floor(left_time/60/1000)+' min '+Math.floor((left_time/1000)%60)+' sec';
         ADD_DEBUG_MODE && console.log('Current time is '+now_time+'.\nCookie time for api update is '+api_pre_time+'.\nCookie is not updated.\nCookie will update after '+left_time);
-        if ( !!J$.cookie('twitch_api_cookie') )
+        if ( !!$.cookie('twitch_api_cookie') )
         {
             // 쿠키 존재 시 변수로 쓴다.
-            twitch_api_cookie = JSON.parse(J$.cookie('twitch_api_cookie'));
+            twitch_api_cookie = JSON.parse($.cookie('twitch_api_cookie'));
         }
     }
 }
@@ -1433,17 +1607,17 @@ function ADD_multiwindow_prevent()
 {
 unique_window = new Date();
 unique_window = Number(unique_window.getTime());
-J$.cookie('unique_window', unique_window, { expires : 30, path : '/' });
+$.cookie('unique_window', unique_window, { expires : 30, path : '/' });
 
 setInterval(function() {
-      unique_window_cookie = Number(J$.cookie('unique_window'));
+      unique_window_cookie = Number($.cookie('unique_window'));
           if((unique_window_check==true)&&(unique_window != unique_window_cookie))
             {
               ADD_DEBUG_MODE && console.log('unique window = ',unique_window);
               ADD_DEBUG_MODE && console.log('unique window cookie is ',unique_window_cookie);
               unique_window_check = false;
-              J$('#notice_text').addClass('ADD_twitch_api_again').html('\(+\) 새 창에서 접속 감지 됨. Dostram+의 API 갱신 중지. 현재 창에서 다시 시작하려면 클릭.');
-              J$('#notice_text_elem').show();
+              $('#notice_text').addClass('ADD_twitch_api_again').html('\(+\) 새 창에서 접속 감지 됨. Dostram+의 API 갱신 중지. 현재 창에서 다시 시작하려면 클릭.');
+              $('#notice_text_elem').show();
               clearInterval(ADD_API_SET_INTERVAL);
             }
 }, 1000);
@@ -1451,12 +1625,12 @@ setInterval(function() {
 }
 
 function ADD_twitch_api_again(){
-    if( J$('.ADD_twitch_api_again').length !== 0 ){
-        J$('.ADD_twitch_api_again').removeClass('ADD_twitch_api_again');
-        J$('#notice_text').html('\(+\) Dostram+의 API 갱신 재시작^^7');
+    if( $('.ADD_twitch_api_again').length !== 0 ){
+        $('.ADD_twitch_api_again').removeClass('ADD_twitch_api_again');
+        $('#notice_text').html('\(+\) Dostram+의 API 갱신 재시작^^7');
         unique_window = new Date();
         unique_window = Number(unique_window.getTime());
-        J$.cookie('unique_window', unique_window, { expires : 30, path : '/' });
+        $.cookie('unique_window', unique_window, { expires : 30, path : '/' });
         unique_window_check = true;
         ADD_API_CALL_INTERVAL();
     }
@@ -1473,16 +1647,16 @@ function ADD_twitch_api_again(){
 
 function ADD_multitwitch_DOE()
 {
-    if( J$('#multitwitch').length === 0 )
-        J$('.search').append('<span id="multitwitch" style="cursor: pointer; display:inline-block; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #eee none repeat scroll 0 0; color: #222;">멀티트위치</span>');
+    if( $('#multitwitch').length === 0 )
+        $('.search').append('<span id="multitwitch" style="cursor: pointer; display:inline-block; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #eee none repeat scroll 0 0; color: #222;">멀티트위치</span>');
 }
 
 // 17-09-19 : 임시로 필요 없는 것을 숨긴다.
 function ADD_temp(){
-    if( J$('ul.nav').length !== 0 )
-        J$('ul.nav').remove();
-    if( J$('#streamSearchForm').length !== 0 )
-        J$('#streamSearchForm').remove();
+    if( $('ul.nav').length !== 0 )
+        $('ul.nav').remove();
+    if( $('#streamSearchForm').length !== 0 )
+        $('#streamSearchForm').remove();
 }
       // 임시 복구용
       ADD_temp();
@@ -1493,7 +1667,7 @@ function ADD_temp(){
 function ADD_config_DOE()
 {
       // 설정 버튼 및 팝업 생성
-      J$('header .container').append('\
+      $('header .container').append('\
           <div style="position:relative;">\
           <div id="notice_text_elem" title="Dosteam+ System Message")><span id="notice_text">문어문어문어문어<br />블러드트레일 블러드트레일</span></div>\
               <div class="AD_title">\
@@ -1526,95 +1700,84 @@ function ADD_config_DOE()
                        <table class="table table-condensed table-hover" style="margin-bottom:0px;">\
                            <thead><tr><th><a href="https://github.com/nomomo/Addostream" target="_blank">ADDostram version: '+version+'</a></th><th></th></tr></thead>\
                            <tbody>\
-                              <tr class="active">\
-                                 <td class="td_strong">특정 스트리머 상단 고정</td>\
-                                 <td><input type="checkbox" id="ADD_config_top_fix" onfocus="this.blur()"  /></td>\
+                              <tr style="display:none;">\
+                                 <td class="td_strong">테스트다</td>\
+                                 <td>\
+                                    <form><input name="tags" id="my" value="Apple, Orange" disabled="true" style="display:none;">\
+                                    <ul id="myTags">\
+                                    </ul></form>\
+                                 </td>\
                               </tr>\
                               <tr>\
-                                 <td>└ 오프라인 시에도 고정</td>\
-                                 <td><input type="checkbox" id="ADD_config_top_off_fix" onfocus="this.blur()" class="ADD_config_top_fix_form form_enabled" /></td>\
-                              </tr>\
-                              <tr>\
-                                 <td>└ 상단 고정 스트리머 아이디(콤마로 구분)</td>\
+                                 <td class="td_strong"><input type="checkbox" id="ADD_config_top_fix" onfocus="this.blur()"  /> 특정 스트리머 상단 고정</td>\
                                  <td><input type="text" id="ADD_config_top_fix_ID" style="width:100%;" class="ADD_config_top_fix_form form_enabled" /></td>\
                               </tr>\
-                              <tr class="active">\
-                                 <td class="td_strong">메인에 없는 스트리머 추가</td>\
-                                 <td><input type="checkbox" id="ADD_config_alarm" onfocus="this.blur()" /></td>\
+                              <tr>\
+                                 <td></td>\
+                                 <td><input type="checkbox" id="ADD_config_top_off_fix" onfocus="this.blur()" class="ADD_config_top_fix_form form_enabled" /> 오프라인 시에도 고정</td>\
                               </tr>\
                               <tr>\
-                                 <td>└ 스트리머 조회 간격(최소 1분)</td>\
-                                 <td><input type="text" id="ADD_config_alarm_gap" style="width:100%;" class="ADD_config_alarm_form form_enabled" /></td>\
-                              </tr>\
-                              <tr>\
-                                 <td>└ 스트리머 아이디(콤마로 구분)</td>\
+                                 <td class="td_strong"><input type="checkbox" id="ADD_config_alarm" onfocus="this.blur()" /> 메인에 없는 스트리머 추가</td>\
                                  <td><input type="text" id="ADD_config_top_alarm_ID" style="width:100%;" class="ADD_config_alarm_form form_enabled" /></td>\
                               </tr>\
-                              <tr class="ADD_under_dev">\
-                                 <td>└ [!] 온라인 시 데스크톱 메시지로 알림 \
-                                     <span class="tooltip_container" aria-label="위 메인에 없는 스트리머 아이디 목록에 등록된 스트리머가 온라인이 되면 알린다." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
-                                         <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
-                                     </span>\
-                                 </td>\
-                                 <td><input type="checkbox" id="ADD_config_alarm_noti" onfocus="this.blur()" class="ADD_config_alarm_form form_enabled" /></td>\
-                              </tr>\
-                              <tr class="active">\
-                                 <td class="td_strong">특정 스트리머 메인에서 숨기기</td>\
-                                 <td><input type="checkbox" id="ADD_config_streamer_hide" onfocus="this.blur()" class="form_enabled" /></td>\
+                              <tr>\
+                                 <td></td>\
+                                 <td>스트리머 조회 간격(최소 1분) <input type="text" id="ADD_config_alarm_gap" style="width:18px;height:20px;" class="ADD_config_alarm_form form_enabled" /></td>\
                               </tr>\
                               <tr>\
-                                 <td>└ 숨길 스트리머 아이디(콤마로 구분)</td>\
+                                 <td>\
+                                 </td>\
+                                 <td><input type="checkbox" id="ADD_config_alarm_noti" onfocus="this.blur()" class="ADD_config_alarm_form form_enabled" /> 온라인 시 알림\
+                                     <span class="tooltip_container" aria-label="위 메인에 없는 스트리머 아이디 목록에 등록된 스트리머가 온라인이 되면 알린다." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
+                                         <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
+                                     </span></td>\
+                              </tr>\
+                              <tr>\
+                                 <td class="td_strong"><input type="checkbox" id="ADD_config_streamer_hide" onfocus="this.blur()" class="form_enabled" /> 특정 스트리머 메인에서 숨기기</td>\
                                  <td><input type="text" id="ADD_config_streamer_hide_ID" style="width:100%;" class="ADD_config_streamer_hide_form form_enabled" /></td>\
                               </tr>\
                               <tr>\
-                                 <td class="td_strong">채팅 컨트롤 \
+                                 <td class="td_strong"><input type="checkbox" id="ADD_config_chat_ctr" onfocus="this.blur()" class="form_enabled"/> 채팅 컨트롤\
                                      <span class="tooltip_container" aria-label="채팅 관련 기능을 활성화 한다. 채팅창에서 닉네임을 클릭하면 메모를 추가할 수 있는 기능을 기본으로 제공한다." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
                                          <span class="glyphicon glyphicon-question-sign" style="color:#333;"></span>\
                                      </span>\
                                  </td>\
                                  <td>\
-                                     <input type="checkbox" id="ADD_config_chat_ctr" onfocus="this.blur()" class="form_enabled" style="margin-right:50px;" />\
+                                     \
                                      <input type="checkbox" id="ADD_config_chat_adb" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 광고차단\
-                                     <span aria-label="U chat 광고 메시지를 없앤다." data-microtip-position="top-left" role="tooltip">\
+                                     <span class="tooltip_container" aria-label="U chat 광고 메시지를 없앤다." data-microtip-position="top-left" role="tooltip">\
                                          <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
                                      </span>\
                                  </td>\
                               </tr>\
                               <tr>\
-                                 <td class="td_strong">휠로 채팅 자동스크롤 정지 \
+                                 <td class="td_strong">\
+                                 </td>\
+                                 <td><input type="checkbox" id="ADD_config_chat_scroll" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 휠로 채팅 자동스크롤 정지 \
                                      <span class="tooltip_container" aria-label="트위치 채팅창에서 마우스 휠을 위로 돌리면 채팅창 자동스크롤이 정지하는 것을 단순하게 구현함." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
                                          <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
-                                     </span>\
-                                 </td>\
-                                 <td><input type="checkbox" id="ADD_config_chat_scroll" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /></td>\
+                                     </span></td>\
                               </tr>\
                               <tr>\
-                                 <td class="td_strong">채팅 내 두스 좌표는 현재 창에서 오픈 \
+                                 <td class="td_strong">\
+                                 </td>\
+                                 <td><input type="checkbox" id="ADD_config_url_self" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 채팅 내 두스 좌표 현재 창 열기 \
                                      <span class="tooltip_container" aria-label="좌표 클릭 시 매번 새 창으로 뜨는 것이 귀찮아서 추가함. ctrl 또는 shift 키를 누른 채로 클릭하여 기존처럼 새 탭 또는 새 창으로 여는 것도 가능. 이 설정을 켠 이후 등록된 채팅에만 적용." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
                                          <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
-                                     </span>\
-                                 </td>\
-                                 <td><input type="checkbox" id="ADD_config_url_self" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /></td>\
+                                     </span></td>\
                               </tr>\
                               <tr>\
-                                 <td class="td_strong">채팅 imgur 이미지 미리보기 \
+                                 <td class="td_strong"></td>\
+                                 <td><input type="checkbox" id="ADD_config_imgur_preview" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 채팅 imgur 이미지 미리보기\
                                      <span class="tooltip_container" aria-label="imgur 링크가 채팅창에 등록되면 바로 보여준다." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
                                          <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
                                      </span>\
-                                 </td>\
-                                 <td><input type="checkbox" id="ADD_config_imgur_preview" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /></td>\
-                              </tr>\
-                              <tr>\
-                                 <td>└ 버튼 클릭 후 이미지 활성(후방주의 기능) \
+                                     <br /><span style="margin-left:20px;"></span><input type="checkbox" id="ADD_config_imgur_preview_safe" onfocus="this.blur()" class="ADD_config_chat_ctr_form ADD_config_imgur_preview_form form_enabled" /> 버튼 클릭 후 이미지 활성(후방주의 기능) \
                                      <span class="tooltip_container" aria-label="이미지를 어둡게 가려진 상태로 보여준다." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
                                          <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
                                      </span>\
+                                     <br /><span style="margin-left:40px;">└ 박스 투명도(0:투명, 1:불투명)</span> <input type="text" id="ADD_config_imgur_preview_opacity" style="width:30px;height:20px" class="ADD_config_chat_ctr_form ADD_config_imgur_preview_form ADD_config_imgur_preview_safe_form form_enabled" />\
                                  </td>\
-                                 <td><input type="checkbox" id="ADD_config_imgur_preview_safe" onfocus="this.blur()" class="ADD_config_chat_ctr_form ADD_config_imgur_preview_form form_enabled" /></td>\
-                              </tr>\
-                              <tr>\
-                                 <td>　└ 박스 투명도(0:투명, 1:불투명, 기본값 0.93)</td>\
-                                 <td><input type="text" id="ADD_config_imgur_preview_opacity" style="width:100%;" class="ADD_config_chat_ctr_form ADD_config_imgur_preview_form ADD_config_imgur_preview_safe_form form_enabled" /></td>\
                               </tr>\
                               <tr style="display:none">\
                                  <td class="td_strong">스크립트 작동 상태를 알림 \
@@ -1625,9 +1788,8 @@ function ADD_config_DOE()
                                  <td><input type="checkbox" id="ADD_config_sys_meg" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /></td>\
                               </tr>\
                               <tr>\
-                                 <td class="td_strong">섬네일 마우스 오버시 확대</td>\
+                                 <td class="td_strong"><input type="checkbox" id="ADD_config_thumbnail_mouse" class="ADD_config_chat_ctr_form" onfocus="this.blur()"  /> 섬네일 마우스 오버시 확대</td>\
                                  <td>\
-                                     <input type="checkbox" id="ADD_config_thumbnail_mouse" class="ADD_config_chat_ctr_form" onfocus="this.blur()"  />\
                                      <label class="radio-inline">\
                                          <input type="radio" name="ADD_config_thumbnail_size" id="ADD_config_thumbnail_size_1" value="1" class="ADD_config_chat_ctr_form ADD_config_thumbnail_mouse_form form_enabled" onfocus="this.blur()"> 작음\
                                      </label>\
@@ -1639,7 +1801,7 @@ function ADD_config_DOE()
                                      </label>\
                                  </td>\
                               </tr>\
-                              <tr class="debug_active">\
+                              <tr class="debug_active" style="display:none;">\
                                  <td class="td_strong">개발 중 기능 표시 <span class="glyphicon glyphicon-wrench" style="color:#999;"></span> \
                                      <span class="tooltip_container" aria-label="개발 중인 기능을 보여준다. 해당 기능들은 완성되지 않았으며 불안정함." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
                                          <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
@@ -1676,13 +1838,13 @@ function ADD_config_DOE()
 
       // 디버그 모드의 경우 디버그용 버튼 및 팝업 생성
       if(ADD_DEBUG_MODE){
-          J$('#ADD_quick_list').before('\
+          $('#ADD_quick_list').before('\
                      <span id="ADD_test_button" class="btn btn-default btn_closed">\
                         <span class="glyphicon glyphicon-wrench" style="color:#999;">\
                         </span>\
                      </span>\
           ');
-          J$('#popup_ADD_config').before('\
+          $('#popup_ADD_config').before('\
               <div id="popup_ADD_test" class="modal-dialog">\
                  <div class="modal-content">\
                     <div class="modal-body">\
@@ -1724,33 +1886,38 @@ function ADD_config_DOE()
       }
 
       // @
-      var at_fix = J$('.footer').html().replace('@','<div id="at" title="????">@</div>')
-      J$('.footer').html(at_fix);
+      var at_fix = $('.footer').html().replace('@','<div id="at" title="????">@</div>')
+      $('.footer').html(at_fix);
       at_fix = null;
+
+      $("#myTags").tagit({
+          singleField: true,
+          singleFieldNode: $('#my')
+      });
 }
 
 
 //////////////////////////////////////////////////////////////////////////////////
 // test event
-J$(document).on('click', '#ADD_test_id_1', function() {
+$(document).on('click', '#ADD_test_id_1', function() {
     var test_text = '\
         <div class="user_conversation" title="테스트맨 - 2017-07-11 11:11:11"><span class="conversation_nick" nick="%uCF58%uC0D0%uC9F1%uC9F1%uB9E8">테스트맨</span><span style="vertical-align: middle;">&nbsp; </span><span class="cs_contents" style="">\
          테스트 http://i.imgur.com/7bzMRmqh.gif</span></div>';
-    J$('.conversation_contents').append(test_text);
+    $('.conversation_contents').append(test_text);
     test_text = null;
 }); // http://imgur.com/a/cKXVX
 
-J$(document).on('click', '#ADD_test_id_2', function() {
+$(document).on('click', '#ADD_test_id_2', function() {
     var test_text = '\
         <div class="user_conversation" title="테스트맨 - 2017-07-11 11:11:11">\
             <span style="color:blue">[광고] </span>\
             <span class="cs_contents" style=""><a href="http://uchat.co.kr/uchat/click.php?id=92"> 광고문의 클릭 </a></span>\
         </div>';
-    J$('.conversation_contents').append(test_text);
+    $('.conversation_contents').append(test_text);
     test_text = null;
 });
 
-J$(document).on('click', '#ADD_test_id_3', function() {
+$(document).on('click', '#ADD_test_id_3', function() {
     var noti_options = {
           title: 'title',
           options: {
@@ -1760,12 +1927,12 @@ J$(document).on('click', '#ADD_test_id_3', function() {
           }
     };
 
-    J$("#easyNotify").easyNotify(noti_options);
+    $("#easyNotify").easyNotify(noti_options);
     noti_options = null;
 });
 
 
-J$(document).on('click', '#ADD_test_id_4', function() {
+$(document).on('click', '#ADD_test_id_4', function() {
     var test_text = '\
         <div class="user_conversation" title="테스트맨 - 2017-07-11 11:11:11">\
             <span class="conversation_nick" nick="%uCF58%uC0D0%uC9F1%uC9F1%uB9E8">테스트맨1</span>\
@@ -1780,11 +1947,11 @@ J$(document).on('click', '#ADD_test_id_4', function() {
             <span style="vertical-align: middle;">&nbsp; </span><span class="cs_contents" style="">한좌표 두개 링크 있는경우 <a href="http://www.dostream.com/#/stream/twitch/hanryang1125" target="_blank">http://www.dostream.com/#/stream/twitch/hanryang1125</a> <a href="http://www.dostream.com/#/stream/twitch/kimdoe" target="_blank">http://www.dostream.com/#/stream/twitch/gmdkdsla</a></span>\
         </div>\
         ';
-    J$('.conversation_contents').append(test_text);
+    $('.conversation_contents').append(test_text);
     test_text = null;
 });
 
-J$(document).on('click', '#ADD_test_id_5', function() {
+$(document).on('click', '#ADD_test_id_5', function() {
 
 });
 
@@ -1814,8 +1981,8 @@ function urlchecker()
 // 좌표 보내기 버튼 DOE 생성하기 위한 함수
 function ADD_send_location_DOE()
 {
-    var ADD_chat_window_id = J$('.conversation_contents'); //div.uchat_middle>div.input
-    var ADD_send_location_button_id = J$('#ADD_send_location_button');
+    var ADD_chat_window_id = $('.conversation_contents'); //div.uchat_middle>div.input
+    var ADD_send_location_button_id = $('#ADD_send_location_button');
     var ADD_send_location_button_elem;
 
     ADD_DEBUG_MODE && console.log('ADD_chat_window_id.length = '+ADD_chat_window_id.length+' , ADD_send_location_button_id.length = '+ADD_send_location_button_id.length);
@@ -1861,9 +2028,9 @@ function ADD_send_location()
     else
     {
         ADD_send_location_notice_text = '좌표가 복사되었습니다.';
-        J$('input.conversation').val(location.href).focus(); //.trigger(jQuery.Event('keypress', {keyCode: 13}))
+        $('input.conversation').val(location.href).focus(); //.trigger(jQuery.Event('keypress', {keyCode: 13}))
     }
-    J$('#ADD_send_location_notice').hide().html(ADD_send_location_notice_text).fadeIn('fast').delay(2000).fadeOut('fast');
+    $('#ADD_send_location_notice').hide().html(ADD_send_location_notice_text).fadeIn('fast').delay(2000).fadeOut('fast');
 }
 
 
@@ -1873,30 +2040,30 @@ function Addostram_run()
 {
     return;
     // Add multitwitch button
-    if( J$('#multitwitch').length === 0 )
-          J$('.search').append('<span id="multitwitch" style="cursor: pointer; display:inline-block; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #eee none repeat scroll 0 0; color: #222;">멀티트위치</span>');
+    if( $('#multitwitch').length === 0 )
+          $('.search').append('<span id="multitwitch" style="cursor: pointer; display:inline-block; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #eee none repeat scroll 0 0; color: #222;">멀티트위치</span>');
 
-    if(J$('.ADD_ON').length === 0)
+    if($('.ADD_ON').length === 0)
     {
-        if( J$('li.twitch').length > 0 )
+        if( $('li.twitch').length > 0 )
         {
             ADD_DEBUG_MODE && console.log('Iteration no. is ',iteration);
             iteration = 0;
             // ADD_cookie_to_var();
-            J$('li.twitch').each(function (j) {
-            var href = J$(this).find('a').attr('href').replace('/#/stream/twitch/', '');
-            J$(this).attr('id', 'twitch_'+ href).addClass('ADD_ON');
+            $('li.twitch').each(function (j) {
+            var href = $(this).find('a').attr('href').replace('/#/stream/twitch/', '');
+            $(this).attr('id', 'twitch_'+ href).addClass('ADD_ON');
             });
 
             // Add choosed streamer from api cookie
             var ADD_config_alarm = ADD_config_ary.ADD_config_alarm;
             ADD_DEBUG_MODE && console.log('ADD_config_alarm: ',ADD_config_alarm );
 
-            if ( ADD_config_alarm && (!!J$.cookie('twitch_api_cookie')) && (twitch_api_cookie.length>0) )
+            if ( ADD_config_alarm && (!!$.cookie('twitch_api_cookie')) && (twitch_api_cookie.length>0) )
             {
                for(var w=0; w<twitch_api_cookie.length; w++)
                {
-                   if( J$('#twitch_'+twitch_api_cookie[w].name).length === 0 )
+                   if( $('#twitch_'+twitch_api_cookie[w].name).length === 0 )
                    {
                    streamerArray.push([twitch_api_cookie[w].name, twitch_api_cookie[w].display_name]);
                    var ADD_star_string = '<div style="position:relative;color:#333;"><div class="glyphicon glyphicon-star icon_star"></div></div>';
@@ -1919,7 +2086,7 @@ function Addostram_run()
                       </li>\
                     ';
 
-                    J$('.main-streams>ul').prepend(ADD_li_string);
+                    $('.main-streams>ul').prepend(ADD_li_string);
                    }
                 }
             }
@@ -1930,7 +2097,7 @@ function Addostram_run()
             var ADD_config_top_off_fix = ADD_config_ary.ADD_config_top_off_fix;
 
             ADD_DEBUG_MODE && console.log('Streamer fixed: ', ADD_config_top_fix);
-            if ((!!J$.cookie('ADD_config_ary')) && ADD_config_top_fix && fixed_streamer.length >= 1){
+            if ((!!$.cookie('ADD_config_ary')) && ADD_config_top_fix && fixed_streamer.length >= 1){
 
                 for(k = 0; k < fixed_streamer.length; k++){
                     var temp_streamer_href = fixed_streamer[fixed_streamer.length - k - 1].replace(' ', '');
@@ -1938,10 +2105,10 @@ function Addostram_run()
 
                     var ADD_pushpin_string = '<div style="position:relative;"><div class="glyphicon glyphicon-pushpin icon_pushpin"></div></div>';
 
-                    if(!(J$(temp_streamer_id).length === 0))
+                    if(!($(temp_streamer_id).length === 0))
                     {
-                        J$(temp_streamer_id).addClass('fixed_streamer').prependTo('.main-streams>ul');
-                        J$(temp_streamer_id).prepend(ADD_pushpin_string);
+                        $(temp_streamer_id).addClass('fixed_streamer').prependTo('.main-streams>ul');
+                        $(temp_streamer_id).prepend(ADD_pushpin_string);
                     }
                     else if(ADD_config_top_off_fix)
                     {
@@ -1962,7 +2129,7 @@ function Addostram_run()
                              </a>\
                           </li>\
                         ';
-                        J$('.main-streams>ul').prepend(ADD_offline_string).prepend(ADD_pushpin_string);
+                        $('.main-streams>ul').prepend(ADD_offline_string).prepend(ADD_pushpin_string);
                     }
                 }
             }
@@ -1973,14 +2140,14 @@ function Addostram_run()
 
             for(var z=0;z<hide_streamer.length;z++)
             {
-               J$('#twitch_'+hide_streamer[z].replace(' ', '')).hide();
+               $('#twitch_'+hide_streamer[z].replace(' ', '')).hide();
             }
 
 
             // Search twitch li
-            J$('li.twitch').each(function (i) {
+            $('li.twitch').each(function (i) {
                 // get twitch id
-                href = J$(this).find('a').attr('href').replace('/#/stream/twitch/', '');
+                href = $(this).find('a').attr('href').replace('/#/stream/twitch/', '');
 
                 // twitch nickname
                 for(i=0; i < streamerArray.length; i++){
@@ -1991,8 +2158,8 @@ function Addostram_run()
                     }
                 }
 
-                J$(this).find('.info>.from').html(streamerID+'('+href+')');
-                J$(this).append('\
+                $(this).find('.info>.from').html(streamerID+'('+href+')');
+                $(this).append('\
                     <div class="ADD_li_box_container">\
                         <div class="ADD_li_box">\
                             <div class="ADD_checkbox_container">\
@@ -2041,17 +2208,17 @@ function Addostram_run()
 function multitwitch_run()
 {
     multitwitchID = '';
-    J$("input[name=chk]:checked").each(function() {
+    $("input[name=chk]:checked").each(function() {
         if(multitwitchID==='')
-           multitwitchID = J$(this).val();
+           multitwitchID = $(this).val();
         else
-           multitwitchID = multitwitchID+'&'+J$(this).val();
+           multitwitchID = multitwitchID+'&'+$(this).val();
     });
     //alert(multitwitchID);
     if(multitwitchID==='')
         alert('Check the checkboxs to use multitwitch!');
     else
-        J$(location).attr('href','/#/stream/multitwitch/'+multitwitchID);
+        $(location).attr('href','/#/stream/multitwitch/'+multitwitchID);
 }
 
 
@@ -2086,7 +2253,7 @@ function getImgurData(Imgur_ID, Imgur_type) {
         {
             return false;
         }
-  J$.ajax({
+  $.ajax({
       url: imgur_api_call_url,
       async: false, // return 하기 위해 async 대신 sync를 false로 설정
       type: 'GET',
@@ -2157,8 +2324,8 @@ function ADD_chatting_arrive(){
     {
         // False 이면 끈다.
         if(!ADD_config_ary.ADD_config_chat_ctr){
-            J$(document).unbindArrive('.user_conversation');
-            J$(document).unbindArrive('.system');
+            $(document).unbindArrive('.user_conversation');
+            $(document).unbindArrive('.system');
             chatting_arrive_check = false;
             return;
         }
@@ -2172,16 +2339,16 @@ function ADD_chatting_arrive(){
     // arrive bind 및 unbind
     if(chatting_arrive_check && ADD_config_ary.ADD_config_chat_ctr){
         // 설정이 변경되고 true 이면 false 에서 true로 바뀐 것이므로 bind 한다.
-        J$(document).arrive('.system', function(systemElem) {
-            var systemElem = J$(systemElem);
+        $(document).arrive('.system', function(systemElem) {
+            var systemElem = $(systemElem);
             if( systemElem.html().indexOf('새로운 창에서') != -1 ){
                 systemElem.addClass('ADD_chat_again').prop('title', 'Dosteam+ System Message').html('\(+\) 새 창 감지 됨. 채팅을 다시 시작하려면 클릭');
             }
             systemElem == null;
         });
 
-        J$(document).arrive('.user_conversation', function(newElem) {
-            var newElem = J$(newElem);
+        $(document).arrive('.user_conversation', function(newElem) {
+            var newElem = $(newElem);
             var ADD_chatting_nickname = newElem.find('.conversation_nick').html();
             var ADD_chatting_cs_content_elem = newElem.find('.cs_contents');
             var ADD_chatting_content = ADD_chatting_cs_content_elem.html();
@@ -2189,7 +2356,7 @@ function ADD_chatting_arrive(){
             if(ADD_config_ary.ADD_config_chat_adb)
             {
                 // if(ADD_chatting_content.indexOf('광고문의 클릭') !== -1 || ADD_chatting_content.indexOf('유챗2 스킨기능 오픈') !== -1)
-                if( J$('span:first', newElem).html().replace(/\s/g,'') == '[광고]' )
+                if( $('span:first', newElem).html().replace(/\s/g,'') == '[광고]' )
                 {
                     ADD_DEBUG_MODE && console.log('광고 메시지 감지됨!',ADD_chatting_content);
                     newElem.remove();
@@ -2199,9 +2366,9 @@ function ADD_chatting_arrive(){
 
             // 메모하기
             // 메모용 쿠키 있는지 체크
-            if (!!J$.cookie('ADD_chat_memo')){
+            if (!!$.cookie('ADD_chat_memo')){
                 // 메모용 쿠키 있으면 읽어옴
-                var ADD_chat_memo = JSON.parse(J$.cookie('ADD_chat_memo'));
+                var ADD_chat_memo = JSON.parse($.cookie('ADD_chat_memo'));
                 if(ADD_chatting_nickname in ADD_chat_memo)
                 {
                     newElem.find('.conversation_nick').after('<span class="conversation_memo" style="color:red;font-weight:bold;"> ['+ADD_chat_memo[ADD_chatting_nickname]+']</span>');
@@ -2304,9 +2471,9 @@ function ADD_chatting_arrive(){
 
                     ADD_chatting_cs_content_elem.append(ADD_imgur_DOE_text);
 
-                    if( !(J$('.uchat_scroll').hasClass('uchat_scroll_clicked')) )
+                    if( !($('.uchat_scroll').hasClass('uchat_scroll_clicked')) )
                     {
-                        conversation_contents_elem = J$('.conversation_contents');
+                        conversation_contents_elem = $('.conversation_contents');
                         conversation_contents_elem.animate({ scrollTop: conversation_contents_elem.prop('scrollHeight')}, 'fast');
                     }
                     ADD_status_cookie_add_data('auto_image');
@@ -2367,9 +2534,9 @@ function ADD_chatting_arrive(){
 // 채팅창 시스템 메시지
 function ADD_send_sys_msg(msg, delay){
     // ADD_config_ary.ADD_config_sys_meg &&
-    if( J$('.conversation_contents').length !== 0 )
+    if( $('.conversation_contents').length !== 0 )
     {
-        var conversation_contents_elem = J$('.conversation_contents');
+        var conversation_contents_elem = $('.conversation_contents');
         var msg_text = '<div class="system" title="Dosteam+ System Message">'+msg+'</div>';
         if(delay == 0)
         {
@@ -2387,7 +2554,7 @@ function ADD_send_sys_msg(msg, delay){
                 msg_text = null;
             }, delay);
         }
-        //if( !(J$('.uchat_scroll').hasClass('uchat_scroll_clicked')) )
+        //if( !($('.uchat_scroll').hasClass('uchat_scroll_clicked')) )
         //    conversation_contents_elem.animate({ scrollTop: conversation_contents_elem.prop('scrollHeight')}, '0');
 
 
@@ -2418,10 +2585,10 @@ function ADD_chat_scroll_pause() {
         // 하나라도 False 이면 끈다.
         if(!ADD_config_ary.ADD_config_chat_scroll || !ADD_config_ary.ADD_config_chat_ctr){
             ADD_DEBUG_MODE && console.log('scroll 이벤트 off');
-            J$(document).off('wheel.chatScrollFunc mousewheel.chatScrollFunc', '.conversation_contents');
-            if( J$('#view_additional_message_container').length !== 0 ){
-                J$('#view_additional_message_container').remove();
-                J$('.uchat_scroll').trigger('click');
+            $(document).off('wheel.chatScrollFunc mousewheel.chatScrollFunc', '.conversation_contents');
+            if( $('#view_additional_message_container').length !== 0 ){
+                $('#view_additional_message_container').remove();
+                $('.uchat_scroll').trigger('click');
             }
             chatting_scroll_pause = false;
             return;
@@ -2435,9 +2602,9 @@ function ADD_chat_scroll_pause() {
 
     if(chatting_scroll_pause && ADD_config_ary.ADD_config_chat_scroll && ADD_config_ary.ADD_config_chat_ctr){
         ADD_DEBUG_MODE && console.log('scroll 이벤트 on');
-        J$(document).on('wheel.chatScrollFunc mousewheel.chatScrollFunc', '.conversation_contents', function(event) {
+        $(document).on('wheel.chatScrollFunc mousewheel.chatScrollFunc', '.conversation_contents', function(event) {
             // 현재 스크롤 정지 상태 아닌 경우
-            if( !(J$('.uchat_scroll').hasClass('uchat_scroll_clicked')) ){
+            if( !($('.uchat_scroll').hasClass('uchat_scroll_clicked')) ){
 
                 //마우스휠 위로 돌릴때 이벤트
                 var scroll_val = -1;
@@ -2451,13 +2618,13 @@ function ADD_chat_scroll_pause() {
                 if (scroll_val >= 0) {
 
                     // 세로 스크롤바가 있을 경우 처리
-                    if( J$(".conversation_contents").get(0).scrollHeight > J$(".conversation_contents").innerHeight() ){
+                    if( $(".conversation_contents").get(0).scrollHeight > $(".conversation_contents").innerHeight() ){
 
                         // 스크롤 정지
-                        J$('.uchat_scroll').trigger('click');
+                        $('.uchat_scroll').trigger('click');
 
                         // DOE 생성
-                        J$('.conversation_contents').before('<div id="view_additional_message_container"><div id="view_additional_message">아래에서 추가 메시지를 확인하세요.</div></div>');
+                        $('.conversation_contents').before('<div id="view_additional_message_container"><div id="view_additional_message">아래에서 추가 메시지를 확인하세요.</div></div>');
                     }
                     else
                     {
@@ -2476,19 +2643,19 @@ function ADD_chat_scroll_pause() {
     }
 }
 
-J$(document).on('click', '.uchat_scroll', function() {
+$(document).on('click', '.uchat_scroll', function() {
   if( ADD_config_ary.ADD_config_chat_scroll ){
-      if( (J$('.uchat_scroll').hasClass('uchat_scroll_clicked')) && J$('#view_additional_message_container').length !== 0 ){
-          J$('#view_additional_message_container').remove();
+      if( ($('.uchat_scroll').hasClass('uchat_scroll_clicked')) && $('#view_additional_message_container').length !== 0 ){
+          $('#view_additional_message_container').remove();
       }
   }
 });
 
-J$(document).on('click', '#view_additional_message_container', function() {
+$(document).on('click', '#view_additional_message_container', function() {
   if( ADD_config_ary.ADD_config_chat_scroll ){
-      if( (J$('.uchat_scroll').hasClass('uchat_scroll_clicked')) && J$('#view_additional_message_container').length !== 0 ){
-          //J$('#view_additional_message_container').remove();
-          J$('.uchat_scroll').trigger('click');
+      if( ($('.uchat_scroll').hasClass('uchat_scroll_clicked')) && $('#view_additional_message_container').length !== 0 ){
+          //$('#view_additional_message_container').remove();
+          $('.uchat_scroll').trigger('click');
       }
   }
 });
@@ -2497,17 +2664,17 @@ J$(document).on('click', '#view_additional_message_container', function() {
 
 //////////////////////////////////////////////////////////////////////////////////
 // Open Lightbox
-J$(document).on('click', '.open-lightbox', function(e) {
+$(document).on('click', '.open-lightbox', function(e) {
   e.preventDefault();
-  var image = J$(this).attr('href');
-  J$('html').addClass('no-scroll');
-  J$('body').append('<div class="lightbox-opened"><img src="' + image + '"></div>');
+  var image = $(this).attr('href');
+  $('html').addClass('no-scroll');
+  $('body').append('<div class="lightbox-opened"><img src="' + image + '"></div>');
 });
 
 // Close Lightbox
-  J$(document).on('click', '.lightbox-opened', function() {
-  J$('html').removeClass('no-scroll');
-  J$('.lightbox-opened').remove();
+  $(document).on('click', '.lightbox-opened', function() {
+  $('html').removeClass('no-scroll');
+  $('.lightbox-opened').remove();
 });
 
 
@@ -2536,15 +2703,15 @@ function ADD_thumbnail_mouseover(){
     if(!thumbnail_check)
     {
         // 설정이 변경되고 false 이면 true 에서 false 로 바뀐 것이므로 off 한다.
-        J$(document).off('mouseenter mouseleave', 'li.twitch>a>img, li.kakao>a>img, li.youtube>a>img');
-        //J$(div.ADD_thumb_elem_container).remove();
+        $(document).off('mouseenter mouseleave', 'li.twitch>a>img, li.kakao>a>img, li.youtube>a>img');
+        //$(div.ADD_thumb_elem_container).remove();
     }
     else
     {
-        J$(document).on({
+        $(document).on({
             mouseenter: function() {
                 var getTimeResult = '?' + getTimeStamp();
-                var thumb_this = J$(this);
+                var thumb_this = $(this);
                 var thumb_this_parent = thumb_this.parent('a');
                 var thumb_size_class;
 
@@ -2612,7 +2779,7 @@ function ADD_thumbnail_mouseover(){
                 }
             },
             mouseleave:function() {
-                var thumb_this = J$(this);
+                var thumb_this = $(this);
                 var thumb_this_parent = thumb_this.parent('a');
                 if( thumb_this_parent.find('.ADD_thumb_elem_container').length !== 0 )
                 {
@@ -2633,16 +2800,16 @@ function ADD_memo_menu_doe(){
     if(!ADD_config_ary.ADD_config_chat_ctr)
         return;
 
-    //var newElem = J$(newElem);
-    if( J$('#do_memo_container').length !== 0 ){
-        J$('#do_memo_container').remove();
+    //var newElem = $(newElem);
+    if( $('#do_memo_container').length !== 0 ){
+        $('#do_memo_container').remove();
     }
 
-    J$('.user_menu').after('<div id="do_memo_container" style=""><div id="do_memo" style="position:relative;top:125px;left:0;width:112px;height:30px;padding:6px 5px;background-color:red;color:#fff;font-weight:bold;cursor:pointer;">메모하기</div></div>');
-    var save_style = J$('.user_menu').attr('style');
+    $('.user_menu').after('<div id="do_memo_container" style=""><div id="do_memo" style="position:relative;top:125px;left:0;width:112px;height:30px;padding:6px 5px;background-color:red;color:#fff;font-weight:bold;cursor:pointer;">메모하기</div></div>');
+    var save_style = $('.user_menu').attr('style');
     save_style = save_style+'position:absolute;z-index:1101;';
-    J$('#do_memo_container').attr('style', save_style);
-    J$('#do_memo').css('top', J$('.user_menu').height() );
+    $('#do_memo_container').attr('style', save_style);
+    $('#do_memo').css('top', $('.user_menu').height() );
 
     save_style = null;
 }
@@ -2652,23 +2819,23 @@ function ADD_memo_doe(){
     if(!ADD_config_ary.ADD_config_chat_ctr)
         return;
 
-    var memo_nick = J$('.user_nick > div').html();
+    var memo_nick = $('.user_nick > div').html();
     var memo_find = false;
     var memo_contents = '';
     var ADD_chat_memo;
     var memo_doe_text = '';
 
     // 메모용 쿠키 있는지 체크
-    if (!J$.cookie('ADD_chat_memo')){
+    if (!$.cookie('ADD_chat_memo')){
         // 메모용 쿠키 없으면 메모용 쿠키 새로 생성
         ADD_chat_memo = {'key' : 'value'};
-        J$.cookie('ADD_chat_memo', JSON.stringify(ADD_chat_memo), { expires : 365*2, path : '/' });
+        $.cookie('ADD_chat_memo', JSON.stringify(ADD_chat_memo), { expires : 365*2, path : '/' });
         ADD_DEBUG_MODE && console.log('메모 쿠키가 없어서 새로 생성');
     }
     else
     {
         // 메모용 쿠키 있으면 읽어옴
-        ADD_chat_memo = JSON.parse(J$.cookie('ADD_chat_memo'));
+        ADD_chat_memo = JSON.parse($.cookie('ADD_chat_memo'));
         ADD_DEBUG_MODE && console.log('메모 쿠키 있어서 읽어옴');
     }
     // 메모용 쿠키에 아이디와 동일한 키값 있는지 검색함
@@ -2687,7 +2854,7 @@ function ADD_memo_doe(){
 
     // 메모하기 위한 DOE 창 생성함
     // 필요요소: form, save button, close button(Right up x)
-    J$('html').addClass('no-scroll');
+    $('html').addClass('no-scroll');
     memo_doe_text = '\
         <div class="lightbox-opened">\
         <div class="memo_doe" style="position: absolute; top: 50%;left:50%; width: 400px; height:100px; margin-left:-200px; margin-top:-50px;">\
@@ -2700,7 +2867,7 @@ function ADD_memo_doe(){
         </div>\
         </div>\
         ';
-    J$('body').append(memo_doe_text);
+    $('body').append(memo_doe_text);
 
     // 확인 버튼 누르면 DOE 창 내용을 쿠키에 씀
 
@@ -2712,25 +2879,25 @@ function ADD_memo_doe(){
 }
 
 function ADD_memo_save_event(){
-    var memo_nick = J$('.user_nick > div').html();
+    var memo_nick = $('.user_nick > div').html();
     var memo_find = false;
     var memo_contents = '';
     var ADD_chat_memo;
     var memo_blank = false;
 
     // 메모용 쿠키 있는지 체크
-    if (!J$.cookie('ADD_chat_memo')){
+    if (!$.cookie('ADD_chat_memo')){
         // 메모용 쿠키 없으면 메모용 쿠키 새로 생성
         ADD_chat_memo = {'key' : 'value'};
-        J$.cookie('ADD_chat_memo', JSON.stringify(ADD_chat_memo), { expires : 365*2, path : '/' });
+        $.cookie('ADD_chat_memo', JSON.stringify(ADD_chat_memo), { expires : 365*2, path : '/' });
     }
     else
     {
         // 메모용 쿠키 있으면 읽어옴
-        ADD_chat_memo = JSON.parse(J$.cookie('ADD_chat_memo'));
+        ADD_chat_memo = JSON.parse($.cookie('ADD_chat_memo'));
     }
 
-    memo_contents = J$('#memo_textbox').val();
+    memo_contents = $('#memo_textbox').val();
     if(memo_contents == '' || memo_contents == null){
         memo_blank = true;
     }
@@ -2743,9 +2910,9 @@ function ADD_memo_save_event(){
     }
 
     // 메모 쿠키 저장
-    J$.cookie('ADD_chat_memo', JSON.stringify(ADD_chat_memo), { expires : 365*2, path : '/' });
+    $.cookie('ADD_chat_memo', JSON.stringify(ADD_chat_memo), { expires : 365*2, path : '/' });
 
-    J$('#memo_text').fadeOut(200);
+    $('#memo_text').fadeOut(200);
     setTimeout(function() {
         var memo_text_contents;
         if(memo_blank){
@@ -2755,7 +2922,7 @@ function ADD_memo_save_event(){
         {
             memo_text_contents = '메모가 저장되었으며 새로 올라오는 채팅부터 반영됩니다. <br />나가려면 배경화면을 누르세요.';
         }
-        J$('#memo_text').html(memo_text_contents).fadeIn(200);
+        $('#memo_text').html(memo_text_contents).fadeIn(200);
 
         memo_text_contents = null;
         memo_blank = null;
@@ -2769,17 +2936,17 @@ function ADD_memo_save_event(){
 }
 
 // 메모 DOE 생성 이벤트
-J$(document).on('click', '#do_memo', function() {
+$(document).on('click', '#do_memo', function() {
     ADD_memo_doe();
 });
 
 // Memo 창 클릭해도 안 꺼지도록 이벤트
-J$(document).on('click', '.memo_doe > .modal-content', function(e) {
+$(document).on('click', '.memo_doe > .modal-content', function(e) {
     e.stopPropagation();
 });
 
 // 메모 저장 이벤트
-J$(document).on('click', '#memo_ok', function() {
+$(document).on('click', '#memo_ok', function() {
     ADD_memo_save_event();
 });
 
@@ -2808,8 +2975,8 @@ ADD_multiwindow_prevent();
 
 
 ///////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////// J$(document).ready /////////////////////////////
-J$(document).ready(function()
+////////////////////////////////// $(document).ready /////////////////////////////
+$(document).ready(function()
 {
     // CSS LOAD
     Addostream_CSS();
@@ -2820,13 +2987,13 @@ J$(document).ready(function()
     if(web_browser === 'firefox')
     {
         newdsStream = function() {
-          J$('.loader_container').fadeIn(200);
+          $('.loader_container').fadeIn(200);
         	var d = this;
           ADD_DEBUG_MODE && console.log('dsStream hijacked');
         	this.reload = function() {
         		  parse_data_from_list(0);
         	};
-        	J$('.loader_container').fadeOut(200);
+        	$('.loader_container').fadeOut(200);
           ADD_multitwitch_DOE();
         };
         unsafeWindow.dsStream = exportFunction (newdsStream, unsafeWindow);
@@ -2835,17 +3002,17 @@ J$(document).ready(function()
             q = q.split('/');
             switch(q[1]) {
                 case "stream":
-                    J$('header').addClass("onstream");
-                    J$('#stream').addClass("onstream");
-                    J$('.footer').hide();
+                    $('header').addClass("onstream");
+                    $('#stream').addClass("onstream");
+                    $('.footer').hide();
                     page = "stream";
-                    J$('#stream').load('/stream.php', {'from':q[2], 'chan':q[3]});
+                    $('#stream').load('/stream.php', {'from':q[2], 'chan':q[3]});
                 break;
                 default:
-                    J$('header').removeClass("onstream");
-                    J$('#stream').removeClass("onstream");
-                    J$('.footer').show();
-                    J$('#stream').load('/main2.php',function() {
+                    $('header').removeClass("onstream");
+                    $('#stream').removeClass("onstream");
+                    $('.footer').show();
+                    $('#stream').load('/main2.php',function() {
                         page = new newdsStream();
                         page.reload();
                     });
@@ -2854,7 +3021,7 @@ J$(document).ready(function()
         }
         unsafeWindow.dostream = exportFunction (newdostream, unsafeWindow);
 
-        J$(document).on('click', 'header .nav-brand, header .nav-brand_mod', function(e) {
+        $(document).on('click', 'header .nav-brand, header .nav-brand_mod', function(e) {
             if( urlchecker() ) {
                 page = new newdsStream();
                 page.reload();
@@ -2866,17 +3033,17 @@ J$(document).ready(function()
     else// if(web_browser === 'chrome')
     {
         unsafeWindow.dsStream = function() {
-            J$('.loader_container').fadeIn(200);
+            $('.loader_container').fadeIn(200);
           	var d = this;
             ADD_DEBUG_MODE && console.log('dsStream hijacked');
           	this.reload = function() {
           		  parse_data_from_list(0);
           	};
-          	J$('.loader_container').fadeOut(200);
+          	$('.loader_container').fadeOut(200);
             ADD_multitwitch_DOE();
         };
 
-        J$(document).on('click', 'header .nav-brand, header .nav-brand_mod', function(e) {
+        $(document).on('click', 'header .nav-brand, header .nav-brand_mod', function(e) {
             if( urlchecker() ) {
                 page = new dsStream();
                 page.reload();
@@ -2889,10 +3056,10 @@ J$(document).ready(function()
 //////////////////////////////////////////////////////////////////////////////////
     // Arrive event 관련
     // 채팅창 생길 때 send 위한 DOE 생성, 무조건 실행됨
-    J$('.chat').arrive('.uchat_middle', function() { //{onceOnly:true},
+    $('.chat').arrive('.uchat_middle', function() { //{onceOnly:true},
         ADD_status_noti();
         ADD_send_location_DOE();
-        J$('.user_menu').attr('id','user_menu_id');
+        $('.user_menu').attr('id','user_menu_id');
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -2901,9 +3068,9 @@ J$(document).ready(function()
         // display:none 감지
         var observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutationRecord) {
-                if( !J$(mutations[0].target).is(':visible') )
-                    if( J$('#do_memo_container').length !== 0 ){
-                        J$('#do_memo_container').remove();
+                if( !$(mutations[0].target).is(':visible') )
+                    if( $('#do_memo_container').length !== 0 ){
+                        $('#do_memo_container').remove();
                     }
             });
         });
@@ -2914,7 +3081,7 @@ J$(document).ready(function()
 
     });
 
-    J$(document).arrive('.user_nick', function() {
+    $(document).arrive('.user_nick', function() {
         ADD_memo_menu_doe();
     });
 
@@ -2924,7 +3091,7 @@ J$(document).ready(function()
 
 
 //////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////// J$(document).load /////////////////////////////
+////////////////////////////////// $(document).load /////////////////////////////
 window.addEventListener ("load", function()
 {
     // Create Config DOE
@@ -2934,13 +3101,13 @@ window.addEventListener ("load", function()
     ADD_var_to_config_form();
 
     // Change Logo class name
-    J$('.nav-brand').removeClass('nav-brand').addClass('nav-brand_mod');
+    $('.nav-brand').removeClass('nav-brand').addClass('nav-brand_mod');
 
     // Create Multitwitch button DOE
     ADD_multitwitch_DOE();
 
     // Create Loading DOE
-    J$('.nav-brand_mod').empty().append('<div class="loader_container" style="display:none;"><div class="loader"></div></div>');
+    $('.nav-brand_mod').empty().append('<div class="loader_container" style="display:none;"><div class="loader"></div></div>');
 
 });
 
@@ -2954,7 +3121,7 @@ window.addEventListener ("load", function()
 
 //////////////////////////////////////////////////////////////////////////////////
 // run Multitwitch
-J$(document).on('click', '#multitwitch', function(){
+$(document).on('click', '#multitwitch', function(){
   multitwitch_run();
 });
 
@@ -2970,7 +3137,7 @@ J$(document).on('click', '#multitwitch', function(){
 window.onpopstate = function(event) {
     ADD_DEBUG_MODE && console.log('url checker = ', urlchecker());
     //ADD_DEBUG_MODE && console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
-    if( backbutton_checker && urlchecker() ) //(!J$('#stream').hasClass('onstream')) )
+    if( backbutton_checker && urlchecker() ) //(!$('#stream').hasClass('onstream')) )
     {
         ADD_DEBUG_MODE && console.log("Back button dectected. " + "location: " + document.location);
         ADD_DEBUG_MODE && console.log('window.onpopstate event 에서 ADD_cookie_to_var() 실행됨');
@@ -2992,19 +3159,19 @@ window.onpopstate = function() {
     var multitwitch_url = document_url.indexOf('/multitwitch/');
     if( (twitch_url  != -1) || (multitwitch_url  != -1) )
     {
-        J$('#ADD_change_multi').fadeIn(300);
+        $('#ADD_change_multi').fadeIn(300);
     }
     else
     {
-        J$('#ADD_change_multi').fadeOut(300);
+        $('#ADD_change_multi').fadeOut(300);
     }
     if( stream_url != -1)
     {
-        J$('#ADD_quick_list').fadeIn(300);
+        $('#ADD_quick_list').fadeIn(300);
     }
     else
     {
-        J$('#ADD_quick_list').fadeOut(300);
+        $('#ADD_quick_list').fadeOut(300);
     }
 
     document_url = null;
@@ -3015,7 +3182,7 @@ window.onpopstate = function() {
 
 //////////////////////////////////////////////////////////////////////////////////
 // change multitwitch event
-J$(document).on('click', '#ADD_change_multi', function() {
+$(document).on('click', '#ADD_change_multi', function() {
     var document_url = location.href;
     var lowercase_document_url = document_url.toLowerCase();
     var stream_url = lowercase_document_url.indexOf('/stream/');
@@ -3044,86 +3211,86 @@ J$(document).on('click', '#ADD_change_multi', function() {
 
 //////////////////////////////////////////////////////////////////////////////////
 // quick list popup On-Off event
-J$(document).on('click', '#ADD_quick_list', function() {
-    if (J$('#ADD_quick_list').hasClass('btn_closed'))
+$(document).on('click', '#ADD_quick_list', function() {
+    if ($('#ADD_quick_list').hasClass('btn_closed'))
     {
         parse_data_from_list(1);
-        J$('#popup_ADD_quick').stop(true,true).fadeIn(300);
-        J$('#ADD_quick_list').removeClass('btn_closed').addClass('btn_opend');
+        $('#popup_ADD_quick').stop(true,true).fadeIn(300);
+        $('#ADD_quick_list').removeClass('btn_closed').addClass('btn_opend');
 
         // 17-11-08 추가됨
-        J$('#popup_ADD_config').stop(true,true).fadeOut(300);
-        J$('#ADD_config').removeClass('btn_opend').addClass('btn_closed');
+        $('#popup_ADD_config').stop(true,true).fadeOut(300);
+        $('#ADD_config').removeClass('btn_opend').addClass('btn_closed');
     }
     else
     {
-        J$('#popup_ADD_quick').stop(true,true).fadeOut(300);
-        J$('#ADD_quick_list').removeClass('btn_opend').addClass('btn_closed');
+        $('#popup_ADD_quick').stop(true,true).fadeOut(300);
+        $('#ADD_quick_list').removeClass('btn_opend').addClass('btn_closed');
     }
 });
 
-J$(document).on('click', 'a.nav-brand, a.nav-brand_mod, #stream, #popup_ADD_quick', function() {
-    if (J$('#ADD_quick_list').hasClass('btn_opend'))
+$(document).on('click', 'a.nav-brand, a.nav-brand_mod, #stream, #popup_ADD_quick', function() {
+    if ($('#ADD_quick_list').hasClass('btn_opend'))
     {
-        J$('#popup_ADD_quick').stop(true,true).fadeOut(300);
-        J$('#ADD_quick_list').removeClass('btn_opend').addClass('btn_closed');
+        $('#popup_ADD_quick').stop(true,true).fadeOut(300);
+        $('#ADD_quick_list').removeClass('btn_opend').addClass('btn_closed');
     }
 });
 
 
 //////////////////////////////////////////////////////////////////////////////////
 // config popup On-Off event
-J$(document).on('click', '#ADD_config', function() {
-    if (J$('#ADD_config').hasClass('btn_closed'))
+$(document).on('click', '#ADD_config', function() {
+    if ($('#ADD_config').hasClass('btn_closed'))
     {
         ADD_var_to_config_form();
-        J$('#popup_ADD_config').stop(true,true).fadeIn(300);
-        J$('#ADD_config').removeClass('btn_closed').addClass('btn_opend');
+        $('#popup_ADD_config').stop(true,true).fadeIn(300);
+        $('#ADD_config').removeClass('btn_closed').addClass('btn_opend');
         //ADD_DEBUG_MODE && console.log('config popup open');
 
         // 17-11-08 추가됨
-        J$('#popup_ADD_quick').stop(true,true).fadeOut(300);
-        J$('#ADD_quick_list').removeClass('btn_opend').addClass('btn_closed');
+        $('#popup_ADD_quick').stop(true,true).fadeOut(300);
+        $('#ADD_quick_list').removeClass('btn_opend').addClass('btn_closed');
     }
     else
     {
-        J$('#popup_ADD_config').stop(true,true).fadeOut(300);
-        J$('#ADD_config').removeClass('btn_opend').addClass('btn_closed');
+        $('#popup_ADD_config').stop(true,true).fadeOut(300);
+        $('#ADD_config').removeClass('btn_opend').addClass('btn_closed');
         //ADD_DEBUG_MODE && console.log('config popup close');
     }
 });
 
-J$(document).on('click', 'a.nav-brand, a.nav-brand_mod, #stream', function() {
-    if (J$('#ADD_config').hasClass('btn_opend'))
+$(document).on('click', 'a.nav-brand, a.nav-brand_mod, #stream', function() {
+    if ($('#ADD_config').hasClass('btn_opend'))
     {
-        J$('#popup_ADD_config').stop(true,true).fadeOut(300);
-        J$('#ADD_config').removeClass('btn_opend').addClass('btn_closed');
+        $('#popup_ADD_config').stop(true,true).fadeOut(300);
+        $('#ADD_config').removeClass('btn_opend').addClass('btn_closed');
     }
 });
 
 
 //////////////////////////////////////////////////////////////////////////////////
 // DEBUG popup On-Off event
-J$(document).on('click', '#ADD_test_button', function() {
-    if (J$('#ADD_test_button').hasClass('btn_closed'))
+$(document).on('click', '#ADD_test_button', function() {
+    if ($('#ADD_test_button').hasClass('btn_closed'))
     {
-        J$('#popup_ADD_test').stop(true,true).fadeIn(300);
-        J$('#ADD_test_button').removeClass('btn_closed').addClass('btn_opend');
+        $('#popup_ADD_test').stop(true,true).fadeIn(300);
+        $('#ADD_test_button').removeClass('btn_closed').addClass('btn_opend');
         //ADD_DEBUG_MODE && console.log('DEBUG popup open');
     }
     else
     {
-        J$('#popup_ADD_test').stop(true,true).fadeOut(300);
-        J$('#ADD_test_button').removeClass('btn_opend').addClass('btn_closed');
+        $('#popup_ADD_test').stop(true,true).fadeOut(300);
+        $('#ADD_test_button').removeClass('btn_opend').addClass('btn_closed');
         //ADD_DEBUG_MODE && console.log('DEBUG popup close');
     }
 });
 
-J$(document).on('click', 'a.nav-brand, a.nav-brand_mod, #stream', function() {
-    if (J$('#ADD_test_button').hasClass('btn_opend'))
+$(document).on('click', 'a.nav-brand, a.nav-brand_mod, #stream', function() {
+    if ($('#ADD_test_button').hasClass('btn_opend'))
     {
-        J$('#popup_ADD_test').stop(true,true).fadeOut(300);
-        J$('ADD_test_button').removeClass('btn_opend').addClass('btn_closed');
+        $('#popup_ADD_test').stop(true,true).fadeOut(300);
+        $('ADD_test_button').removeClass('btn_opend').addClass('btn_closed');
     }
 });
 
@@ -3131,7 +3298,7 @@ J$(document).on('click', 'a.nav-brand, a.nav-brand_mod, #stream', function() {
 //////////////////////////////////////////////////////////////////////////////////
 // Save cookie event
 
-J$(document).on('click', '#ADD_config_save', function() {
+$(document).on('click', '#ADD_config_save', function() {
     ADD_save_config_to_cookie();
 
     ADD_DEBUG_MODE && console.log('ADD_config_save event 에서 ADD_cookie_to_var() 실행됨');
@@ -3151,13 +3318,13 @@ J$(document).on('click', '#ADD_config_save', function() {
 
 
     // 설정 팝업 알림 영역 표시
-    J$('#ADD_config_Success').fadeIn('1000').delay('3000').fadeOut('1000');
+    $('#ADD_config_Success').fadeIn('1000').delay('3000').fadeOut('1000');
 });
 
 
 //////////////////////////////////////////////////////////////////////////////////
 // reset cookie event
-J$(document).on('click', '#Cookie_reset', function() {
+$(document).on('click', '#Cookie_reset', function() {
     ADD_cookie_var_initialize();
     ADD_config_cookie_remove();
     ADD_main_config_cookie();
@@ -3167,7 +3334,7 @@ J$(document).on('click', '#Cookie_reset', function() {
     ADD_status_cookie_remove();
 
     // 설정 팝업 알림 영역 표시
-    J$('#ADD_config_Success').fadeIn('1000').delay('3000').fadeOut('1000');
+    $('#ADD_config_Success').fadeIn('1000').delay('3000').fadeOut('1000');
     ADD_DEBUG_MODE && console.log('cookie reset!');
 });
 
@@ -3175,15 +3342,15 @@ J$(document).on('click', '#Cookie_reset', function() {
 //////////////////////////////////////////////////////////////////////////////////
 // Checkbox click event
 // 체크박스가 체크되면 멀티트위치 버튼을 강조표시한다.
-    J$(document).on('change','input[name=chk]',function(){
-        if( J$('#multitwitch').hasClass('multitwitch_ready') )
-            J$('#multitwitch').removeClass('multitwitch_ready');
+    $(document).on('change','input[name=chk]',function(){
+        if( $('#multitwitch').hasClass('multitwitch_ready') )
+            $('#multitwitch').removeClass('multitwitch_ready');
 
-        if(J$('input[name=chk]:checked').length >= 1)
+        if($('input[name=chk]:checked').length >= 1)
         {
             setTimeout(
                 function() {
-                    J$('#multitwitch').addClass('multitwitch_ready');
+                    $('#multitwitch').addClass('multitwitch_ready');
                 },
                 100);
         }
@@ -3202,12 +3369,12 @@ function ADD_config_enable(id)
     // 먼저 전부 켠다.
     for(var i=0;i<ADD_config_enable_init.length;i++)
     {
-        id_elem[i] = J$('#'+ADD_config_enable_init[i]);
+        id_elem[i] = $('#'+ADD_config_enable_init[i]);
         if(id_elem[i].length === 0)
             continue;
 
         form_class[i] = '.'+id_elem[i].attr('id')+'_form';
-        class_elem[i] = J$(form_class[i]);
+        class_elem[i] = $(form_class[i]);
         if(class_elem[i].length === 0)
             continue;
         else
@@ -3226,7 +3393,7 @@ function ADD_config_enable(id)
 for(var i=0;i<ADD_config_enable_init.length;i++)
 {
     (function(id) {
-    J$(document).on('click', '#'+id, function() {
+    $(document).on('click', '#'+id, function() {
         // ADD_DEBUG_MODE && console.log(id);
         ADD_config_enable([id]);
     });
@@ -3236,21 +3403,21 @@ for(var i=0;i<ADD_config_enable_init.length;i++)
 
 //////////////////////////////////////////////////////////////////////////////////
 // imgur click event
-J$(document).on('click', '.imgur_safe_button', function() {
-    J$(this).parent('.imgur_safe_screen').fadeOut(500);
+$(document).on('click', '.imgur_safe_button', function() {
+    $(this).parent('.imgur_safe_screen').fadeOut(500);
 });
-J$(document).on('click', '.imgur_control_hide', function() {
+$(document).on('click', '.imgur_control_hide', function() {
     ADD_DEBUG_MODE && console.log('- clicked');
-    J$(this).closest('.imgur_container').find('.imgur_safe_screen').fadeTo(500, 0.93);
+    $(this).closest('.imgur_container').find('.imgur_safe_screen').fadeTo(500, 0.93);
 });
-J$(document).on('click', '.imgur_control_remove', function() {
+$(document).on('click', '.imgur_control_remove', function() {
     ADD_DEBUG_MODE && console.log('x clicked');
-    J$(this).closest('.imgur_container').hide();
+    $(this).closest('.imgur_container').hide();
 });
 
 // scroll lock click event
-J$(document).on('click', '.uchat_scroll', function() {
-    J$(this).toggleClass('uchat_scroll_clicked');
+$(document).on('click', '.uchat_scroll', function() {
+    $(this).toggleClass('uchat_scroll_clicked');
 });
 
 
@@ -3258,42 +3425,42 @@ J$(document).on('click', '.uchat_scroll', function() {
 
 
 // send location click event
-J$(document).on('click', '#ADD_send_location_button', function() {
+$(document).on('click', '#ADD_send_location_button', function() {
     ADD_send_location();
 });
 
 
 //////////////////////////////////////////////////////////////////////////////////
 // dev on click event
-J$(document).on('click', '#ADD_config_dev_on', function() {
+$(document).on('click', '#ADD_config_dev_on', function() {
     if( true ) // ADD_config_ary.ADD_config_dev_on, 체크 여부와 상관 없이 볼 수 있다.
     {
-        if( J$('#ADD_config_dev_on:checked').is(':checked') )
+        if( $('#ADD_config_dev_on:checked').is(':checked') )
         {
-            J$('.ADD_under_dev').show();
+            $('.ADD_under_dev').show();
         }
         else
         {
-            J$('.ADD_under_dev').hide();
+            $('.ADD_under_dev').hide();
         }
     }
 });
 
-J$(document).on('click', '#at', function() {
+$(document).on('click', '#at', function() {
     SIGONGJOA();
 });
 
 
 //////////////////////////////////////////////////////////////////////////////////
 // chat again event
-J$(document).on('click', '.ADD_chat_again', function() {
+$(document).on('click', '.ADD_chat_again', function() {
     reloadUchat();
 });
 
 
 //////////////////////////////////////////////////////////////////////////////////
 // api again event
-J$(document).on('click', '.ADD_twitch_api_again', function() {
+$(document).on('click', '.ADD_twitch_api_again', function() {
     ADD_twitch_api_again();
 });
 
@@ -3301,8 +3468,8 @@ J$(document).on('click', '.ADD_twitch_api_again', function() {
 //////////////////////////////////////////////////////////////////////////////////
 function SIGONGJOA()
 {
-J$('body').append('<div class="sigong"><div class="sigong_detail1"></div><div class="sigong_detail2"></div></div><div class="hos"></div><div style="display: none;"><audio autoplay="true" controls="" class="attach_audio" src="http://cdh0912.github.io/assets/files/시공의 폭풍은 정말 최고야.mp3" type="audio/mpeg"></audio><audio autoplay="true" controls="" class="attach_audio" src="http://cdh0912.github.io/assets/files/시공좋아시공좋아.mp3" type="audio/mpeg"></audio></div>');
-J$('head').append('\
+$('body').append('<div class="sigong"><div class="sigong_detail1"></div><div class="sigong_detail2"></div></div><div class="hos"></div><div style="display: none;"><audio autoplay="true" controls="" class="attach_audio" src="http://cdh0912.github.io/assets/files/시공의 폭풍은 정말 최고야.mp3" type="audio/mpeg"></audio><audio autoplay="true" controls="" class="attach_audio" src="http://cdh0912.github.io/assets/files/시공좋아시공좋아.mp3" type="audio/mpeg"></audio></div>');
+$('head').append('\
     <style id="addostreamCSS" rel="stylesheet" type="text/css">\
         .iframeclass {position: absolute; top: 0; left: 0; width:100%; height:100%;}\
         @keyframes shake {\
@@ -3905,14 +4072,14 @@ J$('head').append('\
 ');
     setTimeout(
         function() {
-        J$('.wrap').remove();
-        J$('.chat').remove();
+        $('.wrap').remove();
+        $('.chat').remove();
         },
         20000);
 
     setTimeout(
         function() {
-        J$('body').append('\
+        $('body').append('\
         <div id="hos_movie" style="display:none;z-index:0;">\
 		<!--<video class="iframeclass" poster="http://media.blizzard.com/heroes/media/promo/summer-event/summer_web_Loop_v3-first-frame.jpg" autoplay loop muted>\
 			<source src="http://media.blizzard.com/heroes/media/promo/summer-event/summer_web_Loop_v3.webm"\
@@ -3923,12 +4090,12 @@ J$('head').append('\
         <iframe class="iframeclass" src="https://www.youtube.com/embed/D5g8bGm-y6Q?rel=0&autoplay=1" frameborder="0" allowfullscreen></iframe>\
         </div>\
         ');
-        J$('.hos').fadeOut(1000);
-        J$('.sigong').fadeOut(1000);
+        $('.hos').fadeOut(1000);
+        $('.sigong').fadeOut(1000);
 
         setTimeout(
             function() {
-              J$('#hos_movie').fadeIn(3000);
+              $('#hos_movie').fadeIn(3000);
             },
             1000);
         },
