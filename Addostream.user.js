@@ -75,7 +75,7 @@ b(this).text(b(this).children(".tagit-label").text()))}),this.singleFieldNode&&t
 ""===c[0]&&(c=[])):this._tags().each(function(){c.push(a.tagLabel(this))});return c},_updateSingleTagsField:function(a){b(this.options.singleFieldNode).val(a.join(this.options.singleFieldDelimiter)).trigger("change")},_subtractArray:function(a,c){for(var d=[],f=0;f<a.length;f++)-1==b.inArray(a[f],c)&&d.push(a[f]);return d},tagLabel:function(a){return this.options.singleField?b(a).find(".tagit-label:first").text():b(a).find("input:first").val()},_showAutocomplete:function(){this.tagInput.autocomplete("search",
 "")},_findTagByLabel:function(a){var c=this,d=null;this._tags().each(function(f){if(c._formatStr(a)==c._formatStr(c.tagLabel(this)))return d=b(this),!1});return d},_isNew:function(a){return!this._findTagByLabel(a)},_formatStr:function(a){return this.options.caseSensitive?a:b.trim(a.toLowerCase())},_effectExists:function(a){return Boolean(b.effects&&(b.effects[a]||b.effects.effect&&b.effects.effect[a]))},createTag:function(a,c,d){var f=this;a=b.trim(a);this.options.preprocessTag&&(a=this.options.preprocessTag(a));
 if(""===a)return!1;if(!this.options.allowDuplicates&&!this._isNew(a))return a=this._findTagByLabel(a),!1!==this._trigger("onTagExists",null,{existingTag:a,duringInitialization:d})&&this._effectExists("highlight")&&a.effect("highlight"),!1;if(this.options.tagLimit&&this._tags().length>=this.options.tagLimit)return this._trigger("onTagLimitExceeded",null,{duringInitialization:d}),!1;var g=b(this.options.onTagClicked?'<a class="tagit-label"></a>':'<span class="tagit-label"></span>').text(a),e=b("<li></li>").addClass("tagit-choice ui-widget-content ui-state-default ui-corner-all").addClass(c).append(g);
-this.options.readOnly?e.addClass("tagit-choice-read-only"):(e.addClass("tagit-choice-editable"),c=b("<span></span>").addClass("ui-icon ui-icon-close"),c=b('<a><span class="text-icon">\u00d7</span></a>').addClass("tagit-close").append(c).click(function(a){f.removeTag(e)}),e.append(c));this.options.singleField||(g=g.html(),e.append('<input type="hidden" value="'+g+'" name="'+this.options.fieldName+'" class="tagit-hidden-field" />'));!1!==this._trigger("beforeTagAdded",null,{tag:e,tagLabel:this.tagLabel(e),
+this.options.readOnly?e.addClass("tagit-choice-read-only"):(e.addClass("tagit-choice-editable"),c=b("<span></span>").addClass("ui-icon ui-icon-close"),c=b('<a><span class="text-icon">\u00d7</span></a>').addClass("tagit-close").append(c).click(function(a){f.removeTag(e);return false}),e.append(c));this.options.singleField||(g=g.html(),e.append('<input type="hidden" value="'+g+'" name="'+this.options.fieldName+'" class="tagit-hidden-field" />'));!1!==this._trigger("beforeTagAdded",null,{tag:e,tagLabel:this.tagLabel(e),
 duringInitialization:d})&&(this.options.singleField&&(g=this.assignedTags(),g.push(a),this._updateSingleTagsField(g)),this._trigger("onTagAdded",null,e),this.tagInput.val(""),this.tagInput.parent().before(e),this._trigger("afterTagAdded",null,{tag:e,tagLabel:this.tagLabel(e),duringInitialization:d}),this.options.showAutocompleteOnFocus&&!d&&setTimeout(function(){f._showAutocomplete()},0))},removeTag:function(a,c){c="undefined"===typeof c?this.options.animate:c;a=b(a);this._trigger("onTagRemoved",
 null,a);if(!1!==this._trigger("beforeTagRemoved",null,{tag:a,tagLabel:this.tagLabel(a)})){if(this.options.singleField){var d=this.assignedTags(),f=this.tagLabel(a),d=b.grep(d,function(a){return a!=f});this._updateSingleTagsField(d)}if(c){a.addClass("removed");var d=this._effectExists("blind")?["blind",{direction:"horizontal"},"fast"]:["fast"],g=this;d.push(function(){a.remove();g._trigger("afterTagRemoved",null,{tag:a,tagLabel:g.tagLabel(a)})});a.fadeOut("fast").hide.apply(a,d).dequeue()}else a.remove(),
 this._trigger("afterTagRemoved",null,{tag:a,tagLabel:this.tagLabel(a)})}},removeTagByLabel:function(a,b){var d=this._findTagByLabel(a);if(!d)throw"No such tag exists with the name '"+a+"'";this.removeTag(d,b)},removeAll:function(){var a=this;this._tags().each(function(b,d){a.removeTag(d,!1)})}})})(jQuery);
@@ -210,6 +210,7 @@ function Addostream_CSS(){
 
         /* https://raw.githubusercontent.com/aehlke/tag-it/master/css/jquery.tagit.css */
         ul.tagit {
+            cursor:pointer;
             margin: 0px;
             padding: 1px 5px;
             overflow: auto;
@@ -227,6 +228,7 @@ function Addostream_CSS(){
             margin: 2px 5px 2px 0;
         }
         ul.tagit li.tagit-choice {
+            cursor:default;
             position: relative;
             line-height: inherit;
         }
@@ -1761,9 +1763,24 @@ function ADD_config_DOE()
       $("#ADD_config_top_fix_ID_Tags").tagit({autocomplete: {delay: 0, minLength: 1},availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $('#ADD_config_top_fix_ID')});
       $("#ADD_config_top_alarm_ID_Tags").tagit({autocomplete: {delay: 0, minLength: 1},availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $('#ADD_config_top_alarm_ID')});
       $("#ADD_config_streamer_hide_ID_Tags").tagit({autocomplete: {delay: 0, minLength: 1},availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $('#ADD_config_streamer_hide_ID')});
+      $("li.tagit-new").each(function() { $(this).hide(); });
       $("input:text .ui-autocomplete-input").each(function() { $(this).attr('spellcheck', false); });
 }
 
+// TAGS TEXT INPUT FOCUS EVENT
+$(document).on('click', 'ul.tagit', function() {
+    $(this).find("li.tagit-new").show();
+    $(this).find("li.tagit-new input:text").focus();
+});
+
+$(document).on('focusout', 'li.tagit-new input:text', function() {
+    $(this).closest("li.tagit-new").hide();
+});
+
+//SPAN 영역에 클릭 이벤트 설정
+$(document).on('click', 'li.tagit-choice', function(event) {
+    event.stopPropagation();
+});
 
 //////////////////////////////////////////////////////////////////////////////////
 // test event
