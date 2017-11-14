@@ -1,13 +1,12 @@
 # Addostream
 <!--Add new feature for dostream.com-->
 * 두스트림에 새로운 기능을 추가하는 브라우저 확장 Userscript
-* Firefox · Chrome 지원 (2017-09-14 v1.31 기준)
+* Firefox · Chrome 지원 (2017-11-14 v1.38 기준)
 * Userscript 확장 기능 필요
   * Firefox - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/)
   * Chrome - [Tampermonkey](http://tampermonkey.net/)
-* 설정 등은 브라우저 Cookie 에 저장 · 개인정보 등은 절대 수집하지 않음
-* 버전 업 하면서 문제 발생 시 브라우저 쿠키 (혹은 두스트림 쿠키) 초기화 하면 해결
 * 버그 많음 버그리포트 바랍니다 (__) nomotg@gmail.com
+* v1.38 에서 문제가 발생하는 경우 [v1.37](https://github.com/nomomo/Addostream/commit/39bff6066b6b6d0677ea10f5b000c6467ea1317a#diff-3105d786c4bdffc9571a51500115d0ed) 을 쓰고 버그리포트 해주세요.
 
 ## Preview
 <p align="center">
@@ -103,6 +102,8 @@ https://github.com/nomomo/Addostream/blob/master/Addostream.user.js
   * 멀티트위치↔트위치 전환 버튼 추가
 * 2017-09-30 (v 1.37)
   * 메인 접속 시마다 섬네일 이미지 갱신되도록 함 (1분 간격으로 갱신, 기존에는 새로고침 하지 않으면 처음 접속 시 섬네일 그대로 유지됨)
+* 2017-11-14 (v 1.38)
+  * 설정창 레이아웃 변경. 채팅창에 애드온 상태 알려줌. 설정 저장을 위해 쿠키 대신 확장기능의 저장공간을 이용하도록 변경 (쿠키의 저장 용량 한계 때문에)
   
 ## Future works (언제걸릴지 모름)
 * 섬네일에 마우스 오버 시 일정 간격으로 업데이트 (아프리카 기능과 유사)
