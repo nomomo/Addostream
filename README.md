@@ -6,7 +6,7 @@
   * Firefox - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/)
   * Chrome - [Tampermonkey](http://tampermonkey.net/)
 * 버그 많음 버그리포트 바랍니다 (__) nomotg@gmail.com
-* v1.38 에서 문제가 발생하는 경우 [v1.37](https://github.com/nomomo/Addostream/commit/39bff6066b6b6d0677ea10f5b000c6467ea1317a#diff-3105d786c4bdffc9571a51500115d0ed) 을 쓰고 버그리포트 해주세요.
+* v1.38 에서 문제가 발생하는 경우 [v1.37](https://github.com/nomomo/Addostream/raw/39bff6066b6b6d0677ea10f5b000c6467ea1317a/Addostream.user.js) 을 쓰고 버그리포트 해주세요.
 
 ## Preview
 <p align="center">
