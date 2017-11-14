@@ -190,7 +190,7 @@ function ADD_version_checker()
 }
 ADD_version_checker();
 ADD_config_var_read();
-console.log(GM_listValues());
+//console.log(GM_listValues());
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -208,27 +208,39 @@ function Addostream_CSS(){
         */
         [aria-label][role~="tooltip"]{position:relative}[aria-label][role~="tooltip"]:before,[aria-label][role~="tooltip"]:after{transform:translate3d(0,0,0);-webkit-backface-visibility:hidden;backface-visibility:hidden;will-change:transform;opacity:0;pointer-events:none;transition:all var(--microtip-transition-duration,.18s) var(--microtip-transition-easing,ease-in-out) var(--microtip-transition-delay,0s);position:absolute;box-sizing:border-box;z-index:10;transform-origin:top}[aria-label][role~="tooltip"]:before{background-size:100% auto!important;content:""}[aria-label][role~="tooltip"]:after{background:rgba(17,17,17,.9);border-radius:4px;color:#fff;content:attr(aria-label);font-size:var(--microtip-font-size,11px);font-weight:var(--microtip-font-weight,normal);text-transform:var(--microtip-text-transform,none);padding:.5em 1em;white-space:nowrap;box-sizing:content-box}[aria-label][role~="tooltip"]:hover:before,[aria-label][role~="tooltip"]:hover:after,[aria-label][role~="tooltip"]:focus:before,[aria-label][role~="tooltip"]:focus:after{opacity:1;pointer-events:auto}[role~="tooltip"][data-microtip-position|="top"]:before{background:url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%280%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E) no-repeat;height:6px;width:18px;margin-bottom:5px}[role~="tooltip"][data-microtip-position|="top"]:after{margin-bottom:11px}[role~="tooltip"][data-microtip-position|="top"]:before{transform:translate3d(-50%,0,0);bottom:100%;left:50%}[role~="tooltip"][data-microtip-position|="top"]:hover:before{transform:translate3d(-50%,-5px,0)}[role~="tooltip"][data-microtip-position|="top"]:after{transform:translate3d(-50%,0,0);bottom:100%;left:50%}[role~="tooltip"][data-microtip-position="top"]:hover:after{transform:translate3d(-50%,-5px,0)}[role~="tooltip"][data-microtip-position="top-left"]:after{transform:translate3d(calc(-100% + 16px),0,0);bottom:100%}[role~="tooltip"][data-microtip-position="top-left"]:hover:after{transform:translate3d(calc(-100% + 16px),-5px,0)}[role~="tooltip"][data-microtip-position="top-right"]:after{transform:translate3d(calc(0% + -16px),0,0);bottom:100%}[role~="tooltip"][data-microtip-position="top-right"]:hover:after{transform:translate3d(calc(0% + -16px),-5px,0)}[role~="tooltip"][data-microtip-position|="bottom"]:before{background:url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%28180%2018%206%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E) no-repeat;height:6px;width:18px;margin-top:5px;margin-bottom:0}[role~="tooltip"][data-microtip-position|="bottom"]:after{margin-top:11px}[role~="tooltip"][data-microtip-position|="bottom"]:before{transform:translate3d(-50%,-10px,0);bottom:auto;left:50%;top:100%}[role~="tooltip"][data-microtip-position|="bottom"]:hover:before{transform:translate3d(-50%,0,0)}[role~="tooltip"][data-microtip-position|="bottom"]:after{transform:translate3d(-50%,-10px,0);top:100%;left:50%}[role~="tooltip"][data-microtip-position="bottom"]:hover:after{transform:translate3d(-50%,0,0)}[role~="tooltip"][data-microtip-position="bottom-left"]:after{transform:translate3d(calc(-100% + 16px),-10px,0);top:100%}[role~="tooltip"][data-microtip-position="bottom-left"]:hover:after{transform:translate3d(calc(-100% + 16px),0,0)}[role~="tooltip"][data-microtip-position="bottom-right"]:after{transform:translate3d(calc(0% + -16px),-10px,0);top:100%}[role~="tooltip"][data-microtip-position="bottom-right"]:hover:after{transform:translate3d(calc(0% + -16px),0,0)}[role~="tooltip"][data-microtip-position="left"]:before,[role~="tooltip"][data-microtip-position="left"]:after{bottom:auto;left:auto;right:100%;top:50%;transform:translate3d(10px,-50%,0)}[role~="tooltip"][data-microtip-position="left"]:before{background:url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%28-90%2018%2018%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E) no-repeat;height:18px;width:6px;margin-right:5px;margin-bottom:0}[role~="tooltip"][data-microtip-position="left"]:after{margin-right:11px}[role~="tooltip"][data-microtip-position="left"]:hover:before,[role~="tooltip"][data-microtip-position="left"]:hover:after{transform:translate3d(0,-50%,0)}[role~="tooltip"][data-microtip-position="right"]:before,[role~="tooltip"][data-microtip-position="right"]:after{bottom:auto;left:100%;top:50%;transform:translate3d(-10px,-50%,0)}[role~="tooltip"][data-microtip-position="right"]:before{background:url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%2890%206%206%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E) no-repeat;height:18px;width:6px;margin-bottom:0;margin-left:5px}[role~="tooltip"][data-microtip-position="right"]:after{margin-left:11px}[role~="tooltip"][data-microtip-position="right"]:hover:before,[role~="tooltip"][data-microtip-position="right"]:hover:after{transform:translate3d(0,-50%,0)}[role~="tooltip"][data-microtip-size="small"]:after{white-space:pre-line;width:80px}[role~="tooltip"][data-microtip-size="medium"]:after{white-space:pre-line;width:150px}[role~="tooltip"][data-microtip-size="large"]:after{white-space:pre-line;width:260px}[role~="tooltip"][data-microtip-size="custom"]:after{white-space:pre-line;width:220px;text-align:center}\
 
-        /* https://raw.githubusercontent.com/aehlke/tag-it/master/css/jquery.tagit.css */
+        /* Customize CSS for tagit*/
         ul.tagit {
             cursor:pointer;
             margin: 0px;
-            padding: 1px 5px;
-            overflow: auto;
-            margin-left: inherit;
-            margin-right: inherit;
             -webkit-padding-start: 5px !important;
         }
         ul.tagit li span {
             text-overflow:ellipsis;
         }
+        ul.tagit li.tagit-choice {
+            cursor:default;
+        }
+        ul.tagit li.tagit-new {
+            padding: .25em 4px .25em 3px !important;
+            min-width:80px;
+            width:80px;
+            max-width:120px;
+            float:left;
+        }
+
+        /* https://raw.githubusercontent.com/aehlke/tag-it/master/css/jquery.tagit.css */
+        ul.tagit {
+            padding: 1px 5px;
+            overflow: auto;
+            margin-left: inherit; /* usually we don't want the regular ul margins. */
+            margin-right: inherit;
+        }
         ul.tagit li {
-            /*width:90px !important;*/
             display: block;
             float: left;
             margin: 2px 5px 2px 0;
         }
         ul.tagit li.tagit-choice {
-            cursor:default;
             position: relative;
             line-height: inherit;
         }
@@ -244,14 +256,10 @@ function Addostream_CSS(){
         }
 
         ul.tagit li.tagit-new {
-            padding: .25em 4px .25em 3px;
-            min-width:80px;
-            width:80px;
-            max-width:120px;
-            float:left;
+            padding: .25em 4px .25em 0;
         }
 
-        ul.tagit li.tagit-choice a.tagit-l {
+        ul.tagit li.tagit-choice a.tagit-label {
             cursor: pointer;
             text-decoration: none;
         }
@@ -264,6 +272,7 @@ function Addostream_CSS(){
             line-height: 17px;
         }
 
+        /* used for some custom themes that don't need image icons */
         ul.tagit li.tagit-choice .tagit-close .text-icon {
             display: none;
         }
@@ -277,9 +286,11 @@ function Addostream_CSS(){
             -moz-box-sizing:    border-box;
             -webkit-box-sizing: border-box;
             box-sizing:         border-box;
+
             -moz-box-shadow: none;
             -webkit-box-shadow: none;
             box-shadow: none;
+
             border: none;
             margin: 0;
             padding: 0;
@@ -306,7 +317,7 @@ function Addostream_CSS(){
             font-weight: normal;
         }
         ul.tagit li.tagit-choice .tagit-label:not(a) {
-            color: #555;
+            /*color: #555;*/
         }
         ul.tagit li.tagit-choice a.tagit-close {
             text-decoration: none;
@@ -512,6 +523,42 @@ function Addostream_CSS(){
     */
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+//                                 CSS THEME
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+//
+var ADD_THEME = {
+    default : {
+        header_font_color : '',
+        header_background : '',
+        chat_header : '',
+        chat_background : 'rgb(245, 245, 245)',
+        chat_font_color : 'rgb(51, 51, 51)'
+    },
+    dark : {
+        header_font_color : '',
+        header_background : '',
+        chat_header : '',
+        chat_background : 'rgb(10, 10, 10) !important',
+        chat_font_color : 'rgb(204, 204, 204) !important',
+        chat_container_border_color : 'rgb(44, 44, 44) !important'
+    }
+};
+
+function ADD_change_theme(key){
+    if( $('#ADD_THEME_CSS').length === 0){
+        $('head').append('<style id="ADD_THEME_CSS" rel="stylesheet" type="text/css"></style>');
+    }
+    $('#ADD_THEME_CSS').append('\
+        .chat-container { border-left-color : ' + ADD_THEME[key].chat_container_border_color + ' }\
+        .chat-dostream_super { background-color : ' + ADD_THEME[key].chat_container_border_color + ' }\
+        .conversation_contents { background-color:' + ADD_THEME[key].chat_background + '; color:' + ADD_THEME[key].chat_font_color + '}\
+    ');
+}
+//ADD_change_theme('dark');
 
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
