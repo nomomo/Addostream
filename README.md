@@ -1,9 +1,10 @@
 # Addostream
 <!--Add new feature for dostream.com-->
 * 두스트림에 새로운 기능을 추가하는 브라우저 확장 Userscript
-* Firefox 56.0, · Chrome 지원 (2017-11-14 v1.38 기준. Firefox 57.0 에서는 작동하지 않음)
+* Firefox , · Chrome 지원 (2017-11-15 v1.39 기준)
 * Userscript 확장 기능 필요
-  * Firefox - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/)
+  * Firefox 57.0(Quantum) ↑ - [Violentmonkey](https://addons.mozilla.org/ko/firefox/addon/violentmonkey/)
+  * Firefox 56.0 ↓ - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/)
   * Chrome - [Tampermonkey](http://tampermonkey.net/)
 * 버그 많음 버그리포트 바랍니다 (__) nomotg@gmail.com
 * v1.38 에서 문제가 발생하는 경우 [v1.37](https://github.com/nomomo/Addostream/raw/39bff6066b6b6d0677ea10f5b000c6467ea1317a/Addostream.user.js) 을 쓰고 버그리포트 해주세요.
