@@ -1090,7 +1090,7 @@ function ADD_var_to_config_form(){
     }
 
     // 설정 팝업 내 체크에 따른 enable 여부 초기화
-    // ADD_config_enable(ADD_config_enable_init);
+    ADD_config_enable(ADD_config_enable_init);
 
     // 설정 팝업 내 개발 중 옵션을 보여주는지 여부를 확인하여 초기화
     if(ADD_config.dev_on){
