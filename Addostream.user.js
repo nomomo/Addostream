@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.38
+// @version     1.39
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
@@ -2757,7 +2757,7 @@ $(document).ready(function()
 ///////////////////////////////////////////////////////////////////////////////////
     // Hijacking
     // Firefox 의 경우
-    if(web_browser === 'firefox')
+    if((web_browser === 'firefox') && (typeof exportFunction === 'function'))
     {
         newdsStream = function() {
           $('.loader_container').fadeIn(200);
