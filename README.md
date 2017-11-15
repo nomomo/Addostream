@@ -1,7 +1,7 @@
 # Addostream
 <!--Add new feature for dostream.com-->
 * 두스트림에 새로운 기능을 추가하는 브라우저 확장 Userscript
-* Firefox · Chrome 지원 (2017-11-14 v1.38 기준)
+* Firefox 56.0, · Chrome 지원 (2017-11-14 v1.38 기준. Firefox 57.0 에서는 작동하지 않음)
 * Userscript 확장 기능 필요
   * Firefox - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/)
   * Chrome - [Tampermonkey](http://tampermonkey.net/)
