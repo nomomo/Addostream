@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.39
+// @version     1.40.0
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
@@ -23,7 +23,19 @@
 //"use strict";
 
 var ADD_DEBUG_MODE = false;
-var version = GM_info.script.version;
+function ADD_version_string(str){
+    var tempString = str.toString();
+    var tempStringArray = tempString.split('.');
+    for (var i = 0; i<tempStringArray.length; i++){
+        if(tempStringArray[i].length < 2){
+            tempStringArray[i] = '0'+tempStringArray[i];
+        }
+    }
+    return tempStringArray.join('');
+}
+var version_str = GM_info.script.version;
+var version = Number(ADD_version_string(version_str));
+
 
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
@@ -184,8 +196,10 @@ function ADD_version_checker()
         ADD_config_var_write();
     }
     ADD_config_var_read();
-    if( Number(version) !== Number(ADD_config.last_version.value)){
-        ADD_notice('\(+\) 최근 버전이 '+version+' 로 변경되었습니다',2000);
+    if( version !== Number(ADD_config.last_version.value)){
+        ADD_notice('\(+\) 최근 버전이 '+version_str+' 로 변경되었습니다',2000);
+        ADD_config.last_version.value = version;
+        ADD_config_var_write();
     }
 }
 ADD_version_checker();
@@ -2595,7 +2609,7 @@ function ADD_memo_menu_doe(){
 
 // 메모 입력 DOE 생성 함수
 function ADD_memo_doe(){
-    if(!ADD_config.config_chat_ctr.value)
+    if(!ADD_config.chat_ctr.value)
         return;
 
     var memo_nick = $('.user_nick > div').html();
