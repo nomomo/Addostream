@@ -4,10 +4,9 @@
 * Firefox , · Chrome 지원 (2017-11-15 v1.39 기준)
 * Userscript 확장 기능 필요
   * Firefox 57.0(Quantum) ↑ - [Violentmonkey](https://addons.mozilla.org/ko/firefox/addon/violentmonkey/)
-  * Firefox 56.0 ↓ - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/)
+  * Firefox 56.0 ↓ - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/) - (Firefox 57.0, Greasemonkey 4.0 이상 지원은 추후 예정)
   * Chrome - [Tampermonkey](http://tampermonkey.net/)
 * 버그 많음 버그리포트 바랍니다 (__) nomotg@gmail.com
-* v1.38 에서 문제가 발생하는 경우 [v1.37](https://github.com/nomomo/Addostream/raw/39bff6066b6b6d0677ea10f5b000c6467ea1317a/Addostream.user.js) 을 쓰고 버그리포트 해주세요.
 
 ## Preview
 <p align="center">
@@ -107,8 +106,14 @@ https://github.com/nomomo/Addostream/blob/master/Addostream.user.js
   * 설정창 레이아웃 변경. 채팅창에 애드온 상태 알려줌. 설정 저장을 위해 쿠키 대신 확장기능의 저장공간을 이용하도록 변경 (쿠키의 저장 용량 한계 때문에)
   
 ## Future works (언제걸릴지 모름)
-* 섬네일에 마우스 오버 시 일정 간격으로 업데이트 (아프리카 기능과 유사)
-* 보기 싫은 스트리머 일일히 타이핑하는 대신 체크 후 버튼 클릭으로 숨기기 가능하게 변경
-* 트위치, 카카오, 유투브 ON/OFF 여부 기억하기
 * 채팅 내용 키워드 필터링하여 해당 키워드 포함된 채팅 안 보이게 하기
 * 메인 화면에 있을 때 일정 간격으로 자동 새로고침 하기
+* 테마 기능(Default/Black/etc.)
+* Twitch Clip 섬네일 미리보기
+* Imgur image album 의 경우 이미지 더 가져오기
+* 익명으로 Imgur 이미지 업로드 및 내가 업로드한 이미지 목록 보기
+* 팔로워 정보 가져와서 자동으로 추가 (로그인 필요 X)
+* Greasemonkey 4.0 호환(GM dot function)
+* 현재 보고있는 or 특정 Twitch 스트리머의 채팅을 두스 채팅에서 같이보기
+  * 특정 닉네임 가진 사람 채팅만 보여주기
+* 업데이트 안 한 상태에서도 유저스크립트 업데이트 가능 여부 확인
