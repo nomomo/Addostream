@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.40.0
+// @version     1.41.0
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
@@ -131,6 +131,8 @@ const ADD_config_init = {
     thumbnail_size : { enable:null, type: 'radio', value: 1 },
     streamer_hide : { enable:null, type: 'checkbox', value: false },
     streamer_hide_ID : { enable:null, type: 'tag', value: ['nalcs1', 'nalcs2'] },
+    remember_platform : { enable:null, type: 'checkbox', value: false },
+    remember_twitch : { enable:null, type: 'checkbox', value: false },
     remember_kakao : { enable:null, type: 'checkbox', value: false },
     remember_youtube : { enable:null, type: 'checkbox', value: false },
     last_version : { enable:null, type: 'set', value: version },
@@ -154,10 +156,18 @@ function ADD_config_var_write(){
 }
 
 function ADD_config_var_read(){
-    ADD_config = ADD_GetVal("ADD_config");
-    if(ADD_config === undefined  || ADD_config === null){
+    var ADD_config_temp = ADD_GetVal("ADD_config");
+    if(ADD_config_temp === undefined || ADD_config_temp === null || ADD_config_temp === {}){
         ADD_config = deepCopy(ADD_config_init);
         ADD_config_var_write();
+        return;
+    }
+
+    ADD_config = deepCopy(ADD_config_init);
+    for(var key in ADD_config){
+        if(ADD_config_temp[key] !== undefined && ADD_config_temp[key] !== null){
+            ADD_config[key] = ADD_config_temp[key];
+        }
     }
 }
 
@@ -785,6 +795,18 @@ function ADD_run(json,flag) {
   	  var favorite_append = '';
   	  var display_name = '';
 
+      if(ADD_config.remember_platform.value){
+          if(data.from === 'twitch' && ADD_config.remember_twitch.value){
+              return true;
+          }
+          else if(data.from === 'kakao' && ADD_config.remember_kakao.value){
+              return true;
+          }
+          else if(data.from === 'youtube' && ADD_config.remember_youtube.value){
+              return true;
+          }
+      }
+
       if(data.from === 'twitch')
       {
           twitch_append='\
@@ -821,13 +843,11 @@ function ADD_run(json,flag) {
         	}
       }
 
-      if(data.main_fixed)
-      {
+      if(data.main_fixed){
           fixed_class = ' fixed_streamer';
           fixed_append = '<div style="position:relative;"><div class="glyphicon glyphicon-pushpin icon_pushpin"></div></div>';
       }
-      if(data.main_favorite)
-      {
+      if(data.main_favorite){
           favorite_class = ' favorite_streamer';
           favorite_append = '<div style="position:relative;color:#333;"><div class="glyphicon glyphicon-star icon_star"></div></div>';
       }
@@ -1001,6 +1021,7 @@ var ADD_config_enable_init = ['ADD_config_top_fix'
                               ,'ADD_config_chat_ctr'
                               ,'ADD_config_imgur_preview'
                               ,'ADD_config_imgur_preview_safe'
+                              ,'ADD_config_remember_platform'
                               ];
 var ADD_status = [];
 var ADD_status_init = {'ad_remove' : 0
@@ -1062,7 +1083,6 @@ ADD_event_binding();
 // 설정 창에 설정 값을 덮어씌우기 위한 함수
 function ADD_var_to_config_form(){
     ADD_config_var_read();
-
     for(var key in ADD_config){
         var ADD_ct = ADD_config[key].value;
         var ADD_config_ID_text;
@@ -1668,6 +1688,20 @@ function ADD_config_DOE()
                                  <td><input type="text" id="ADD_config_streamer_hide_ID" style="width:100%;" class="input_text_by_tag ADD_config_streamer_hide_form form_enabled" /><ul id="ADD_config_streamer_hide_ID_Tags"></ul></td>\
                               </tr>\
                               <tr>\
+                                 <td class="td_strong"><input type="checkbox" id="ADD_config_remember_platform" onfocus="this.blur()" class="form_enabled" /> 특정 플랫폼 숨기기</td>\
+                                 <td>\
+                                     <span style="margin-left:0px;">\
+                                      <input type="checkbox" id="ADD_config_remember_twitch" class="ADD_config_remember_platform_form form_enabled" onfocus="this.blur()"  /> 트위치\
+                                     </span>\
+                                     <span style="margin-left:10px;">\
+                                      <input type="checkbox" id="ADD_config_remember_kakao" class="ADD_config_remember_platform_form form_enabled" onfocus="this.blur()"  /> 카카오\
+                                     </span>\
+                                     <span style="margin-left:10px;">\
+                                      <input type="checkbox" id="ADD_config_remember_youtube" class="ADD_config_remember_platform_form form_enabled" onfocus="this.blur()"  /> 유투브\
+                                     </span>\
+                                 </td>\
+                              </tr>\
+                              <tr>\
                                  <td class="td_strong"><input type="checkbox" id="ADD_config_chat_ctr" onfocus="this.blur()" class="form_enabled"/> 채팅 컨트롤\
                                      <span class="tooltip_container" aria-label="채팅 관련 기능을 활성화 한다. 채팅창에서 닉네임을 클릭하면 메모를 추가할 수 있는 기능을 기본으로 제공한다." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
                                          <span class="glyphicon glyphicon-question-sign" style="color:#333;"></span>\
@@ -1738,17 +1772,6 @@ function ADD_config_DOE()
                                      </span>\
                                  </td>\
                                  <td><input type="checkbox" id="ADD_config_dev_on" onfocus="this.blur()" class="form_enabled" /></td>\
-                              </tr>\
-                              <tr class="active" style="display:none;">\
-                                 <td class="td_strong">활성화/비활성화 여부 기억</td>\
-                                 <td>\
-                                     <label class="radio-inline">\
-                                      <input type="checkbox" id="ADD_config_remember_kakao" onfocus="this.blur()"  /> 카카오\
-                                     </label>\
-                                     <label class="radio-inline">\
-                                      <input type="checkbox" id="ADD_config_remember_youtube" onfocus="this.blur()"  /> 유투브\
-                                     </label>\
-                                 </td>\
                               </tr>\
                           </tbody>\
                        </table>\
