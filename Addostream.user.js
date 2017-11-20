@@ -1265,7 +1265,7 @@ function ADD_status_cookie_add_data(_key)
 // 채팅창에 쓰기
 function ADD_status_noti()
 {
-    ADD_send_sys_msg('두스트림 애드온이 동작 중 입니다 (v'+version+')',0);
+    ADD_send_sys_msg('두스트림 애드온이 동작 중 입니다 (v'+version_str+')',0);
     ADD_status_cookie_read();
     ADD_text = '';
     //console.log(ADD_status);
@@ -1642,7 +1642,7 @@ function ADD_config_DOE()
                            <thead>\
                                <tr>\
                                    <th colspan="2">\
-                                       <a href="https://github.com/nomomo/Addostream" target="_blank">ADDostram version: '+version+'</a>\
+                                       <a href="https://github.com/nomomo/Addostream" target="_blank">ADDostram version: '+version_str+'</a>\
                                        <a href="https://github.com/nomomo/Addostream" target="_blank"><span style="font-weight:normal;color:#444;font-size:11px;margin-left:5px;">\(https://github.com/nomomo/Addostream\)</span></a>\
                                    </th>\
                                </tr>\
