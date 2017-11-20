@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.41.1
+// @version     1.41.2
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
@@ -784,6 +784,9 @@ function parse_data_from_list(flag)
 //////////////////////////////////////////////////////////////////////////////////
 // 파싱 데이터 이용하여 DOE 생성
 function ADD_run(json,flag) {
+    // 메인 접속 시 실행될 것들.
+    checkedID = [];
+
 	var append = '';
 	if(ADD_DEBUG_MODE) console.log('ADD_run 실행됨!');
 	//console.log('json :',json);
@@ -1007,6 +1010,7 @@ for(var i=0; i<streamerArray.length; i++){
 }
 
 var href = 'initialize';            //
+var checkedID = [];
 var multitwitchID = 'hanryang1125'; // 멀티트위치 ID 저장용
 var streamerID = '';                //
 var ADD_API_SET_INTERVAL;           //
@@ -2007,19 +2011,35 @@ function ADD_send_location()
 // 멀티트위치 버튼 동작 관련 함수
 function multitwitch_run()
 {
-    multitwitchID = '';
-    $("input[name=chk]:checked").each(function() {
-        if(multitwitchID==='')
-           multitwitchID = $(this).val();
-        else
-           multitwitchID = multitwitchID+'&'+$(this).val();
-    });
-    //alert(multitwitchID);
-    if(multitwitchID==='')
+    var multitext = checkedID.join('&');
+    if(checkedID.length === 0)
         alert('Check the checkboxs to use multitwitch!');
     else
-        $(location).attr('href','/#/stream/multitwitch/'+multitwitchID);
+        $(location).attr('href','/#/stream/multitwitch/'+multitext);
 }
+
+$(document).on('click', 'input[name=chk]', function() {
+    var thisVal = $(this).val();
+    var IndexThisVal = $.inArray(thisVal, checkedID);
+
+    if(IndexThisVal === -1){
+        checkedID.push(thisVal);
+    }
+    else{
+        checkedID.splice(IndexThisVal,1);
+    }
+
+    if( $('#multitwitch').hasClass('multitwitch_ready') ){
+        $('#multitwitch').removeClass('multitwitch_ready');
+    }
+
+    if($('input[name=chk]:checked').length >= 1){
+        setTimeout(
+            function() {
+                $('#multitwitch').addClass('multitwitch_ready');
+            },100);
+    }
+});
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -3116,24 +3136,6 @@ $(document).on('click', '#Cookie_reset', function() {
     $('#ADD_config_Success').fadeIn('1000').delay('3000').fadeOut('1000');
     if(ADD_DEBUG_MODE) console.log('cookie reset!');
 });
-
-
-//////////////////////////////////////////////////////////////////////////////////
-// Checkbox click event
-// 체크박스가 체크되면 멀티트위치 버튼을 강조표시한다.
-    $(document).on('change','input[name=chk]',function(){
-        if( $('#multitwitch').hasClass('multitwitch_ready') )
-            $('#multitwitch').removeClass('multitwitch_ready');
-
-        if($('input[name=chk]:checked').length >= 1)
-        {
-            setTimeout(
-                function() {
-                    $('#multitwitch').addClass('multitwitch_ready');
-                },
-                100);
-        }
-    });
 
 
 //////////////////////////////////////////////////////////////////////////////////
