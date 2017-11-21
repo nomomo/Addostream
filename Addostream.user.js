@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.41.2
+// @version     1.42.0
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
@@ -1201,7 +1201,6 @@ function ADD_save_config_to_data(){
 }
 
 
-
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
 //                          FUNCTION -  STATUS CHECK
@@ -1588,13 +1587,6 @@ function ADD_twitch_api_again(){
 //                                FUNCTION - DOE
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
-
-
-
-function ADD_multitwitch_DOE(){
-    if( $('#multitwitch').length === 0 )
-        $('.search').append('<span id="multitwitch" style="cursor: pointer; display:inline-block; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #eee none repeat scroll 0 0; color: #222;">멀티트위치</span>');
-}
 
 // 17-09-19 : 임시로 필요 없는 것을 숨긴다.
 function ADD_temp(){
@@ -2006,6 +1998,17 @@ function ADD_send_location()
     $('#ADD_send_location_notice').hide().html(ADD_send_location_notice_text).fadeIn('fast').delay(2000).fadeOut('fast');
 }
 
+//////////////////////////////////////////////////////////////////////////////////
+// 멀티트위치 관련 버튼 생성 함수
+function ADD_multitwitch_DOE(){
+    // 멀티트위치 버튼
+    if( $('#multitwitch').length === 0 )
+        $('.search').append('<span id="multitwitch" style="cursor: pointer; display:inline-block; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #eee none repeat scroll 0 0; color: #222;">멀티트위치</span>');
+
+    // Hide Streamer 버튼
+    if( $('#addHideStreamer').length === 0 )
+        $('.search').append('<span id="addHideStreamer" style="display:none; cursor: pointer; float:right; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #C64D4D none repeat scroll 0 0; color: #fff;">HIDE</span>');
+}
 
 //////////////////////////////////////////////////////////////////////////////////
 // 멀티트위치 버튼 동작 관련 함수
@@ -2018,6 +2021,27 @@ function multitwitch_run()
         $(location).attr('href','/#/stream/multitwitch/'+multitext);
 }
 
+//////////////////////////////////////////////////////////////////////////////////
+// Hide Streamer 버튼 동작 관련 함수
+function addHideStreamer_run()
+{
+    var IndexCheckedID = true;
+    if(checkedID.length !== 0){
+        for(var i=0; i<checkedID.length; i++){
+            IndexCheckedID = $.inArray(checkedID[i], ADD_config.streamer_hide_ID.value);
+            if(IndexCheckedID == -1){
+                (ADD_config.streamer_hide_ID.value).push(checkedID[i]);
+            }
+        }
+        ADD_config_var_write();
+        ADD_var_to_config_form();
+        $('header .nav-brand, header .nav-brand_mod').trigger('click');
+        $('#addHideStreamer').hide();
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+// 체크박스 클릭 시 이벤트
 $(document).on('click', 'input[name=chk]', function() {
     var thisVal = $(this).val();
     var IndexThisVal = $.inArray(thisVal, checkedID);
@@ -2034,11 +2058,28 @@ $(document).on('click', 'input[name=chk]', function() {
     }
 
     if($('input[name=chk]:checked').length >= 1){
+        $('#addHideStreamer').fadeIn('fast');
+
         setTimeout(
             function() {
                 $('#multitwitch').addClass('multitwitch_ready');
             },100);
     }
+    else{
+        $('#addHideStreamer').fadeOut('fast');
+    }
+});
+
+//////////////////////////////////////////////////////////////////////////////////
+// run Multitwitch
+$(document).on('click', '#multitwitch', function(){
+    multitwitch_run();
+});
+
+//////////////////////////////////////////////////////////////////////////////////
+// run addHideStreamer
+$(document).on('click', '#addHideStreamer', function(){
+    addHideStreamer_run();
 });
 
 
@@ -2641,11 +2682,11 @@ function ADD_memo_menu_doe(){
         $('#do_memo_container').remove();
     }
 
-    $('.user_menu').after('<div id="do_memo_container" style=""><div id="do_memo" style="position:relative;top:125px;left:0;width:112px;height:30px;padding:6px 5px;background-color:red;color:#fff;font-weight:bold;cursor:pointer;">메모하기</div></div>');
+    $('.user_menu').after('<div id="do_memo_container" style=""><div id="do_memo_inner_container" style="position:relative;top:125px;left:0;width:112px;height:61px;padding:6px 5px;background-color:red;color:#fff;font-weight:bold;cursor:pointer;"><div id="do_memo" style="height:30px;">메모하기</div><div id="do_forced_dancha" style="height:30px;">강제단차</div></div></div>');
     var save_style = $('.user_menu').attr('style');
     save_style = save_style+'position:absolute;z-index:1101;';
     $('#do_memo_container').attr('style', save_style);
-    $('#do_memo').css('top', $('.user_menu').height() );
+    $('#do_memo_inner_container').css('top', $('.user_menu').height() );
 
     save_style = null;
 }
@@ -2770,10 +2811,33 @@ function ADD_memo_save_event(){
 
 }
 
+function ADD_forced_dancha(){
+    var ADD_ignores = $.cookie('ignores');
+    if(ADD_ignores === null || ADD_ignores === undefined) {
+        ADD_ignores = [];
+    } else {
+        ADD_ignores = JSON.parse(ADD_ignores);
+    }
+    console.log(ADD_ignores);
+    var forced_dancha_nick = $('.user_nick > div').html();
+    if(forced_dancha_nick !== null || forced_dancha_nick !== undefined){
+        (ADD_ignores).push(forced_dancha_nick);
+        $.cookie('ignores', JSON.stringify(ADD_ignores), { expires : 365, path : '/' });
+        if(ignores !== null && ignores !== undefined){
+            ignores = ADD_ignores;
+        }
+    }
+}
+
 // 메모 DOE 생성 이벤트
 $(document).on('click', '#do_memo', function() {
     ADD_memo_doe();
 });
+
+$(document).on('click', '#do_forced_dancha', function() {
+    ADD_forced_dancha();
+});
+
 
 // Memo 창 클릭해도 안 꺼지도록 이벤트
 $(document).on('click', '.memo_doe > .modal-content', function(e) {
@@ -2943,13 +3007,6 @@ window.addEventListener ("load", function()
 //                                    EVENT
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////////////
-// run Multitwitch
-$(document).on('click', '#multitwitch', function(){
-  multitwitch_run();
-});
 
 
 //////////////////////////////////////////////////////////////////////////////////
