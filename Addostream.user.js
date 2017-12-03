@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.42.0
+// @version     1.42.1
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
@@ -1001,7 +1001,18 @@ var streamerArray = [
     ['yuriseo','서유리'],
     ['kimminyoung','아옳이'],
     ['gabrielcro','가브리엘'],
-    ['starcraft_kr','스타크래프트 KR']
+    ['starcraft_kr','스타크래프트 KR'],
+    ['yeziss','신예지'],
+    ['ch1ckenkun','치킨쿤'],
+    ['lds7131','더헬'],
+    ['nodolly','노돌리'],
+    ['haku861024','정직원'],
+    ['nanajam777','우정잉'],
+    ['leehunnyeo','별루다'],
+    ['streamer2u','이유님'],
+    ['hatsalsal','햇살살'],
+    ['pommel0303','폼멜'],
+    ['hosu0904','호수']
     ];// ['',''],
 
 var streamerArray_AutoComplete = [];
