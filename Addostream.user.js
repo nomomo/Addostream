@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.42.1
+// @version     1.42.2
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
@@ -145,7 +145,8 @@ const ADD_config_init = {
     sys_meg : { enable:null, type: 'checkbox', value: false },
     alarm_noti : { enable:null, type: 'checkbox', value: false },
     url_self : { enable:null, type: 'checkbox', value: false },
-    chat_scroll : { enable:null, type: 'checkbox', value: true }
+    chat_scroll : { enable:null, type: 'checkbox', value: true },
+    hide_nick_change : { enable:null, type: 'checkbox', value: false }
 };
 
 function ADD_config_var_write(){
@@ -1715,9 +1716,18 @@ function ADD_config_DOE()
                                      </span>\
                                  </td>\
                                  <td>\
-                                     \
                                      <input type="checkbox" id="ADD_config_chat_adb" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 광고차단\
                                      <span class="tooltip_container" aria-label="U chat 광고 메시지를 없앤다." data-microtip-position="top-left" role="tooltip">\
+                                         <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
+                                     </span>\
+                                 </td>\
+                              </tr>\
+                              <tr>\
+                              <td></td>\
+                                 <td>\
+                                     \
+                                     <input type="checkbox" id="ADD_config_hide_nick_change" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 닉변 메시지 차단\
+                                     <span class="tooltip_container" aria-label="U chat 닉네임 변경 메시지를 없앤다." data-microtip-position="top-left" role="tooltip">\
                                          <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
                                      </span>\
                                  </td>\
@@ -2211,6 +2221,11 @@ function ADD_chatting_arrive(){
             var systemElem = $(systemElem);
             if( systemElem.html().indexOf('새로운 창에서') != -1 ){
                 systemElem.addClass('ADD_chat_again').prop('title', 'Dosteam+ System Message').html('\(+\) 새 창 감지 됨. 채팅을 다시 시작하려면 클릭');
+            }
+            if( ADD_config.hide_nick_change.value ){
+                if( systemElem.html().indexOf('로 변경') != -1 ){
+                    systemElem.remove();
+                }
             }
             systemElem = null;
         });
