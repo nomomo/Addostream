@@ -51,7 +51,7 @@
 
 ## Config
 <p align="center">
-<img src="https://github.com/nomomo/Addostream/blob/master/images/170731_config.jpg" width="498px" />
+<img src="https://github.com/nomomo/Addostream/blob/master/images/ADD_CONFIG.png" width="503px" />
 </p>
 
 * 메인에 없는 스트리머 갱신 간격은 최소 1분 간격
@@ -106,12 +106,10 @@ https://github.com/nomomo/Addostream/blob/master/Addostream.user.js
   * 설정창 레이아웃 변경. 채팅창에 애드온 상태 알려줌. 설정 저장을 위해 쿠키 대신 확장기능의 저장공간을 이용하도록 변경 (쿠키의 저장 용량 한계 때문에)
 * 2017-11-21 (v 1.42.0)
   *  강제단차 기능 추가
-* 2017-12-16 (v 1.42.2)
-  *  채팅 닉변 메시지 차단 기능 추가
+* 2017-12-16 (v 1.43.0)
+  *  채팅 닉변 메시지 차단, 채팅 키워드 차단, API 갱신 시 메인 새로고침 등
   
 ## Future works (언제걸릴지 모름)
-* 채팅 내용 키워드 필터링하여 해당 키워드 포함된 채팅 or 닉네임 안 보이게 하기
-* 메인 화면에 있을 때 일정 간격으로 자동 새로고침 하기
 * 테마 기능(Default/Black/etc.)
 * Twitch Clip 섬네일 미리보기
 * Imgur image album 의 경우 이미지 더 가져오기
