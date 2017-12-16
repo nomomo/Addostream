@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.42.2
+// @version     1.43.0
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
@@ -146,7 +146,12 @@ const ADD_config_init = {
     alarm_noti : { enable:null, type: 'checkbox', value: false },
     url_self : { enable:null, type: 'checkbox', value: false },
     chat_scroll : { enable:null, type: 'checkbox', value: true },
-    hide_nick_change : { enable:null, type: 'checkbox', value: false }
+    hide_nick_change : { enable:null, type: 'checkbox', value: false },
+    chat_block : { enable:null, type: 'checkbox', value: false },
+    chat_block_noti : { enable:null, type: 'checkbox', value: false },
+    chat_block_nickname : { enable:null, type: 'checkbox', value: false },
+    chat_block_contents : { enable:null, type: 'checkbox', value: false },
+    chat_block_tag : { enable:null, type: 'tag', value: ['네다통','통구이','민주화','ㅁㅈㅎ','느금마','니애미','니어미','니엄마','니애비','느그애비','느그애미','애미터','애미뒤','앰뒤','앰창'] }
 };
 
 function ADD_config_var_write(){
@@ -1038,6 +1043,7 @@ var ADD_config_enable_init = ['ADD_config_top_fix'
                               ,'ADD_config_imgur_preview'
                               ,'ADD_config_imgur_preview_safe'
                               ,'ADD_config_remember_platform'
+                              ,'ADD_config_chat_block'
                               ];
 var ADD_status = [];
 var ADD_status_init = {'ad_remove' : 0
@@ -1509,6 +1515,9 @@ function twitch_api(){
                           streams = null;
                           temp_body = null;
                           noti_check = null;
+
+                         // 메인일 경우 리로드
+                         reloadMain();
                      },
 
                      // API CALL ERROR
@@ -1716,24 +1725,16 @@ function ADD_config_DOE()
                                      </span>\
                                  </td>\
                                  <td>\
-                                     <input type="checkbox" id="ADD_config_chat_adb" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 광고차단\
-                                     <span class="tooltip_container" aria-label="U chat 광고 메시지를 없앤다." data-microtip-position="top-left" role="tooltip">\
-                                         <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
+                                     <span style="margin-left:0px;">\
+                                      <input type="checkbox" id="ADD_config_chat_adb" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 광고 차단\
+                                     </span>\
+                                     <span style="margin-left:10px;">\
+                                      <input type="checkbox" id="ADD_config_hide_nick_change" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 닉변 메시지 차단\
                                      </span>\
                                  </td>\
                               </tr>\
                               <tr>\
-                              <td></td>\
-                                 <td>\
-                                     \
-                                     <input type="checkbox" id="ADD_config_hide_nick_change" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 닉변 메시지 차단\
-                                     <span class="tooltip_container" aria-label="U chat 닉네임 변경 메시지를 없앤다." data-microtip-position="top-left" role="tooltip">\
-                                         <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
-                                     </span>\
-                                 </td>\
-                              </tr>\
-                              <tr>\
-                                 <td class="td_strong">\
+                                 <td class="no_border">\
                                  </td>\
                                  <td><input type="checkbox" id="ADD_config_chat_scroll" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 휠로 채팅 자동스크롤 정지 \
                                      <span class="tooltip_container" aria-label="트위치 채팅창에서 마우스 휠을 위로 돌리면 채팅창 자동스크롤이 정지하는 것을 단순하게 구현함." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
@@ -1750,7 +1751,7 @@ function ADD_config_DOE()
                               <tr>\
                                  <td class="no_border"></td>\
                                  <td><input type="checkbox" id="ADD_config_imgur_preview" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 채팅 imgur 이미지 미리보기\
-                                     <span class="tooltip_container" aria-label="imgur 링크가 채팅창에 등록되면 바로 보여준다." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
+                                     <span class="tooltip_container" aria-label="imgur 링크가 채팅창에 등록되면 바로 보여준다." data-microtip-position="top-left" role="tooltip">\
                                          <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
                                      </span>\
                                      <br /><span style="margin-left:20px;"></span><input type="checkbox" id="ADD_config_imgur_preview_safe" onfocus="this.blur()" class="ADD_config_chat_ctr_form ADD_config_imgur_preview_form form_enabled" /> 버튼 클릭 후 이미지 활성(후방주의 기능) \
@@ -1759,6 +1760,45 @@ function ADD_config_DOE()
                                      </span>\
                                      <br /><span style="margin-left:40px;">└ 박스 투명도(0:투명, 1:불투명)</span> <input type="text" id="ADD_config_imgur_preview_opacity" style="width:32px;height:20px;padding-left:3px;" class="ADD_config_chat_ctr_form ADD_config_imgur_preview_form ADD_config_imgur_preview_safe_form form_enabled" />\
                                  </td>\
+                              </tr>\
+                              <tr>\
+                                 <td class="no_border" style="height:10px"></td>\
+                                 <td style="height:10px">\
+                                 <input type="checkbox" id="ADD_config_chat_block" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 금지단어 설정\
+                                 <span style="margin-left:10px;">\
+                                     <span aria-label="채팅이 삭제되면 &lt;Message deleted&gt; 로 표시" data-microtip-position="top-left" role="tooltip">\
+                                         <input type="checkbox" id="ADD_config_chat_block_noti" onfocus="this.blur()" class="ADD_config_chat_ctr_form ADD_config_chat_block_form form_enabled" /> 삭제 여부 알림\
+                                     </span>\
+                                 </span>\
+                                     <span class="tooltip_container" aria-label="특정 단어가 닉네임 또는 채팅 내용에 있으면 해당 채팅을 차단한다. 첫 접속 시 느려질 수 있다. (기본값: 신비한 곰보사전)" data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
+                                         <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
+                                     </span>\
+                                 </td>\
+                              </tr>\
+                              <tr>\
+                                 <td class="no_border" style="height:10px"></td>\
+                                 <td class="no_border" style="height:10px">\
+                                 <span style="margin-left:20px;">\
+                                     <span aria-label="닉네임에 금지단어가 있으면 차단" data-microtip-position="top-left" role="tooltip">\
+                                         <input type="checkbox" id="ADD_config_chat_block_nickname" onfocus="this.blur()" class="ADD_config_chat_ctr_form ADD_config_chat_block_form form_enabled" /> 닉네임\
+                                     </span>\
+                                 </span>\
+                                 <span style="margin-left:10px;">\
+                                     <span aria-label="채팅 내용에 금지단어가 있으면 차단" data-microtip-position="top-left" role="tooltip">\
+                                         <input type="checkbox" id="ADD_config_chat_block_contents" onfocus="this.blur()" class="ADD_config_chat_ctr_form ADD_config_chat_block_form form_enabled" /> 내용\
+                                     </span>\
+                                 </span>\
+                                 <span id="show_block_contents_on" style="margin-left:10px;text-decoration:underline;cursor:pointer">▼ 단어 보기</span>\
+                                 <span id="show_block_contents_off" style="margin-left:10px;text-decoration:underline;cursor:pointer;display:none;">▲ 단어 숨기기</span>\
+                                 <span class="tooltip_container" aria-label="차단된 채팅 보기" data-microtip-position="top-left" role="tooltip">\
+                                     <span id="show_blocked_chat" style="float:right;text-decoration:underline;cursor:pointer;">Log</span>\
+                                 </span>\
+                                 </td>\
+                              </tr>\
+                              <tr>\
+                                 <td class="no_border" style="height:0px;"></td>\
+                                 <td class="no_border" style="height:0px;"><div id="block_contents_tr" style="display:none;">\
+                                     <input type="text" id="ADD_config_chat_block_tag" style="width:100%;" class="input_text_by_tag ADD_config_chat_ctr_form ADD_config_chat_block_form form_enabled" /><ul id="ADD_config_chat_block_tag_Tags"></ul></div></td>\
                               </tr>\
                               <tr style="display:none">\
                                  <td class="td_strong">스크립트 작동 상태를 알림 \
@@ -1864,9 +1904,40 @@ function ADD_config_DOE()
       $("#ADD_config_top_fix_ID_Tags").tagit({autocomplete: {delay: 0, minLength: 1},availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $('#ADD_config_top_fix_ID')});
       $("#ADD_config_top_alarm_ID_Tags").tagit({autocomplete: {delay: 0, minLength: 1},availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $('#ADD_config_top_alarm_ID')});
       $("#ADD_config_streamer_hide_ID_Tags").tagit({autocomplete: {delay: 0, minLength: 1},availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $('#ADD_config_streamer_hide_ID')});
+      $("#ADD_config_chat_block_tag_Tags").tagit({autocomplete: {delay: 0, minLength: 1},singleField: true,singleFieldNode: $('#ADD_config_chat_block_tag')});
+
       $("li.tagit-new").each(function() { $(this).hide(); });
       $("input:text .ui-autocomplete-input").each(function() { $(this).attr('spellcheck', false); });
 }
+
+// blocked chat
+$(document).on('click', '#show_block_contents_on', function() {
+    $('#block_contents_tr').slideDown('fast');
+    $('#show_block_contents_on').hide();
+    $('#show_block_contents_off').show();
+});
+$(document).on('click', '#show_block_contents_off', function() {
+    $('#block_contents_tr').slideUp('fast');
+    $('#show_block_contents_off').hide();
+    $('#show_block_contents_on').show();
+});
+$(document).on('click', '#show_blocked_chat', function(e) {
+  //e.preventDefault();
+  //var image = $(this).attr('href');
+  $('html').addClass('no-scroll');
+  var ADD_Blocked_Chat  = ADD_GetVal('ADD_Blocked_Chat');
+  if(ADD_Blocked_Chat === undefined){
+      ADD_Blocked_Chat = [];
+  }
+  var Blocked_text = '';
+  if(ADD_Blocked_Chat.length === 0){
+      Blocked_text = "현재 차단된 채팅이 없습니다.";
+  }
+  else{
+      Blocked_text = ADD_Blocked_Chat.join('<br />');
+  }
+  $('body').append('<div class="lightbox-opened"><div style="background-color:#fff; max-width:600px; margin:0 auto; text-align:left;padding:15px;font-size:12px;"><span style="font-weight:bold;">차단된 채팅은 100개까지 저장됩니다.</span><br />'+Blocked_text+'</div></div>');
+});
 
 // TAGS TEXT INPUT FOCUS EVENT
 $(document).on('click', 'ul.tagit', function() {
@@ -1960,6 +2031,19 @@ function urlchecker()
         //if(ADD_DEBUG_MODE) console.log('urlchecker false');
         return false;
         }
+}
+
+function reloadMain(){
+    if(urlchecker()){
+        if(typeof newdsStream === 'function'){
+            page = new newdsStream();
+        }
+        else{
+            page = new dsStream();
+        }
+        page.reload();
+        ADD_multitwitch_DOE();
+    }
 }
 
 
@@ -2056,7 +2140,7 @@ function addHideStreamer_run()
         }
         ADD_config_var_write();
         ADD_var_to_config_form();
-        $('header .nav-brand, header .nav-brand_mod').trigger('click');
+        reloadMain();
         $('#addHideStreamer').hide();
     }
 }
@@ -2219,6 +2303,34 @@ function ADD_chatting_arrive(){
         // 설정이 변경되고 true 이면 false 에서 true로 바뀐 것이므로 bind 한다.
         $(document).arrive('.system', function(systemElem) {
             var systemElem = $(systemElem);
+            if(ADD_config.chat_block.value){
+                var block_tag_array = ADD_config.chat_block_tag.value;
+                if(ADD_config.chat_block_nickname.value || ADD_config.chat_block_contents.value){
+                    for(var i=0;i<block_tag_array.length;i++){
+                        if(systemElem.html().indexOf(block_tag_array[i]) != -1){
+                            var ADD_Blocked_Chat = [];
+                            ADD_Blocked_Chat = ADD_GetVal('ADD_Blocked_Chat');
+                            var current_Blocked_Chat = "SYSTEM" + " : " + systemElem.html();
+                            if(ADD_Blocked_Chat === undefined){
+                                ADD_Blocked_Chat = [];
+                            }
+                            if(ADD_Blocked_Chat.length > 100){
+                                ADD_Blocked_Chat.shift();
+                            }
+                            ADD_Blocked_Chat.push(current_Blocked_Chat);
+                            ADD_SetVal('ADD_Blocked_Chat', ADD_Blocked_Chat);
+
+                            if(ADD_config.chat_block_noti.value){
+                                systemElem.html('<div style="text-align:center;color:#aaa;">&ltMessage deleted&gt</div>');
+                            }
+                            else{
+                                systemElem.remove();
+                            }
+                            return false;
+                        }
+                    }
+                }
+            }
             if( systemElem.html().indexOf('새로운 창에서') != -1 ){
                 systemElem.addClass('ADD_chat_again').prop('title', 'Dosteam+ System Message').html('\(+\) 새 창 감지 됨. 채팅을 다시 시작하려면 클릭');
             }
@@ -2235,6 +2347,61 @@ function ADD_chatting_arrive(){
             var ADD_chatting_nickname = newElem.find('.conversation_nick').html();
             var ADD_chatting_cs_content_elem = newElem.find('.cs_contents');
             var ADD_chatting_content = ADD_chatting_cs_content_elem.html();
+
+            // 키워드 차단 (ADD_Blocked_Chat)
+            if(ADD_config.chat_block.value){
+                var block_tag_array = ADD_config.chat_block_tag.value;
+                if(ADD_config.chat_block_nickname.value){
+                    for(var i=0;i<block_tag_array.length;i++){
+                        if(ADD_chatting_nickname !== undefined && ADD_chatting_nickname.indexOf(block_tag_array[i]) != -1){
+                            var ADD_Blocked_Chat = [];
+                            ADD_Blocked_Chat = ADD_GetVal('ADD_Blocked_Chat');
+                            var current_Blocked_Chat = newElem.attr('title') + " : " + ADD_chatting_content;
+                            if(ADD_Blocked_Chat === undefined){
+                                ADD_Blocked_Chat = [];
+                            }
+                            if(ADD_Blocked_Chat.length > 100){
+                                ADD_Blocked_Chat.shift();
+                            }
+                            ADD_Blocked_Chat.push(current_Blocked_Chat);
+                            ADD_SetVal('ADD_Blocked_Chat', ADD_Blocked_Chat);
+
+                            if(ADD_config.chat_block_noti.value){
+                                newElem.html('<div style="text-align:center;color:#aaa;">&ltMessage deleted&gt</div>');
+                            }
+                            else{
+                                newElem.remove();
+                            }
+                            return false;
+                        }
+                    }
+                }
+                if(ADD_config.chat_block_contents.value){
+                    for(var i=0;i<block_tag_array.length;i++){
+                        if(ADD_chatting_content !== undefined && ADD_chatting_content.indexOf(block_tag_array[i]) != -1){
+                            var ADD_Blocked_Chat = [];
+                            ADD_Blocked_Chat = ADD_GetVal('ADD_Blocked_Chat');
+                            var current_Blocked_Chat = newElem.attr('title') + " : " + ADD_chatting_content;
+                            if(ADD_Blocked_Chat === undefined){
+                                ADD_Blocked_Chat = [];
+                            }
+                            if(ADD_Blocked_Chat.length > 100){
+                                ADD_Blocked_Chat.shift();
+                            }
+                            ADD_Blocked_Chat.push(current_Blocked_Chat);
+                            ADD_SetVal('ADD_Blocked_Chat', ADD_Blocked_Chat);
+
+                            if(ADD_config.chat_block_noti.value){
+                                newElem.html('<div style="text-align:center;color:#aaa;">&ltMessage deleted&gt</div>');
+                            }
+                            else{
+                                newElem.remove();
+                            }
+                            return false;
+                        }
+                    }
+                }
+            }
 
             if(ADD_config.chat_adb.value)
             {
@@ -3200,9 +3367,11 @@ $(document).on('click', '#ADD_config_save', function() {
         }, 5000);
     }
 
-
     // 설정 팝업 알림 영역 표시
     $('#ADD_config_Success').fadeIn('1000').delay('3000').fadeOut('1000');
+
+    // 메인일 경우 메인 리로드
+    reloadMain();
 });
 
 
@@ -3214,6 +3383,8 @@ $(document).on('click', '#Cookie_reset', function() {
     ADD_config_var_write();
     ADD_var_to_config_form();
     ADD_status_cookie_remove();
+    var emptyArray = [];
+    ADD_SetVal('ADD_Blocked_Chat',emptyArray);
 
     // 설정 팝업 알림 영역 표시
     $('#ADD_config_Success').fadeIn('1000').delay('3000').fadeOut('1000');
