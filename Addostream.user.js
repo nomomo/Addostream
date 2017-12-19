@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.43.0
+// @version     1.43.1
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
@@ -931,22 +931,22 @@ var streamerArray = [
     ['zzamtiger0310','짬타수아'],
     ['rldnddl789','아빠킹'],
     ['eulcs1','EU LCS'],
-    ['kkoma','SKT T1 Kkoma'],
+    ['kkoma','Kkoma'],
     ['1983kej','단군'],
-    ['lol_peanut','SKT T1 Peanut'],
-    ['faker','SKT T1 Faker'],
+    ['lol_peanut','Peanut'],
+    ['faker','Faker'],
     ['nrmtzv','으음'],
     ['nicegametv','나겜'],
     ['teaminven','인벤'],
     ['capta1n_pony','포니'],
-    ['huni','SKT T1 Huni'],
-    ['sktt1_wolf','SKT T1 Wolf'],
-    ['bang','SKT T1 Bang'],
+    ['huni','Huni'],
+    ['sktt1_wolf','Wolf'],
+    ['bang','Bang'],
     ['wpghd321','류제홍'],
     ['jmjdoc','칸데르니아'],
     ['yungi131','윤기'],
     ['mediamuse','미디어뮤즈'],
-    ['veritaskk','CJE Veritas'],
+    ['veritaskk','Veritas'],
     ['themarinekr','김정민'],
     ['tvindra','인드라'],
     ['tranth','자동'],
@@ -962,7 +962,7 @@ var streamerArray = [
     ['alenenwooptv','웁_게임방송'],
     ['mr_coat','노래하는코트'],
     ['ajehr','머독'],
-    ['lol_crown','SSG Crown'],
+    ['lol_crown','Crown'],
     ['rooftopcat99','옥냥이'],
     ['myzet1990','개구멍'],
     ['yoonroot','윤루트'],
@@ -974,11 +974,11 @@ var streamerArray = [
     ['queenhuz','후즈'],
     ['kiyulking','김기열'],
     ['asdn6388','나락호프'],
-    ['lol_cuvee','SSG Cuvee'],
+    ['lol_cuvee','Cuvee'],
     ['VSL','VSL'],
     ['drlee_kor','이민우33세'],
-    ['CoreJJ','SSG CoreJJ'],
-    ['lol_ambition','SSG Ambition'],
+    ['CoreJJ','CoreJJ'],
+    ['lol_ambition','Ambition'],
     ['Axenix','아제닉스'],
     ['maknoonlol','막눈'],
     ['zilioner','침착맨'],
@@ -987,7 +987,7 @@ var streamerArray = [
     ['kangqui','강퀴'],
     ['team_spiritzero','team_spiritzero'],
     ['zizionmy','젼마이'],
-    ['lol_blank','SKT T1 Blank'],
+    ['lol_blank','Blank'],
     ['ogn_ow','OGN 오버워치'],
     ['juankorea','juankorea'],
     ['woowakgood','우왁굳'],
@@ -1766,7 +1766,7 @@ function ADD_config_DOE()
                                  <td style="height:10px">\
                                  <input type="checkbox" id="ADD_config_chat_block" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 금지단어 설정\
                                  <span style="margin-left:10px;">\
-                                     <span aria-label="채팅이 삭제되면 &lt;Message deleted&gt; 로 표시" data-microtip-position="top-left" role="tooltip">\
+                                     <span aria-label="채팅이 삭제되면 &lt;message deleted&gt; 로 표시" data-microtip-position="top-left" role="tooltip">\
                                          <input type="checkbox" id="ADD_config_chat_block_noti" onfocus="this.blur()" class="ADD_config_chat_ctr_form ADD_config_chat_block_form form_enabled" /> 삭제 여부 알림\
                                      </span>\
                                  </span>\
@@ -2321,7 +2321,7 @@ function ADD_chatting_arrive(){
                             ADD_SetVal('ADD_Blocked_Chat', ADD_Blocked_Chat);
 
                             if(ADD_config.chat_block_noti.value){
-                                systemElem.html('<div style="text-align:center;color:#aaa;">&ltMessage deleted&gt</div>');
+                                systemElem.html('<div style="text-align:center;color:#aaa;">&ltmessage deleted&gt</div>');
                             }
                             else{
                                 systemElem.remove();
