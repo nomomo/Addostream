@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.43.2
+// @version     1.43.3
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
@@ -599,33 +599,33 @@ var ADD_THEME_CONNECT = {
         'background-color' : ['.fixed_streamer']
     },
     chat_fc : {
-        'color' : ['.modal-body, .modal-content, #stream .title, #multitwitch, .search a.checked, .search a, input.conversation, input.conversation::placeholder, #btnRefreshChat, #btnIgnoreList, #btnOpenHrm, .chat-close span, #Cookie_reset, .modal-body select, .modal-body input[type="text"], .lightbox-opened-blocked-chat, #memo_textbox, #memo_text, input.uchat_nick, div.floor label, .uchat_setting_wrap div.top'],
+        'color' : ['.modal-body','.modal-content','#stream .title','#multitwitch','.search a.checked','.search a','input.conversation','input.conversation::placeholder','#btnRefreshChat','#btnIgnoreList','#btnOpenHrm','.chat-close span','#Cookie_reset','.modal-body select','.modal-body input[type="text"]','.lightbox-opened-blocked-chat','#memo_textbox','#memo_text','input.uchat_nick','div.floor label','.uchat_setting_wrap div.top'],
         'background-color' : []
     },
     color_lightest :{
-        'color' : ['#view_additional_message, .conversation_contents, .conversation_contents a, div.from, #popup_ADD_quick div.title']
+        'color' : ['#view_additional_message','.conversation_contents','.conversation_contents a','div.from','#popup_ADD_quick div.title']
     },
     color_lighter : {
-        'color' : ['#stream .viewers, .btn-default, #stream .glyphicon, .large_check span, #ADD_send_location_button, #ADD_send_location_button::before, .topbar, .topbar a , .topbar span, .footer']
+        'color' : ['#stream .viewers','.btn-default','#stream .glyphicon','.large_check span','#ADD_send_location_button','#ADD_send_location_button::before','.topbar','.topbar a ','.topbar span','.footer']
     },
     color_hard : {
         'color' : ['.tagit-label'],
-        'background-color' : ['.modal-body, .modal-footer, .modal-content, .warp, .ADD_checkbox, ::-webkit-scrollbar-track-piece, .search a, #popup_ADD_quick div.from']
+        'background-color' : ['.modal-body','.modal-footer','.modal-content','.warp','.ADD_checkbox','::-webkit-scrollbar-track-piece','.search a','#popup_ADD_quick div.from']
     },
     color_harder : {
-        'color' : ['.nav-brand, .nav-brand_mod'],
-        'background-color' : ['::-webkit-scrollbar-track, .lightbox-opened-blocked-chat, #multitwitch, .search a.checked, .uchat_setting_wrap div.top'],
-        'border-color' : ['.modal-body td, .modal-body tr, .modal-body th, .modal-footer, .modal-body ul.tagit, #popup_ADD_quick .quick_list_title']
+        'color' : ['.nav-brand','.nav-brand_mod'],
+        'background-color' : ['::-webkit-scrollbar-track','.lightbox-opened-blocked-chat','#multitwitch','.search a.checked','.uchat_setting_wrap div.top'],
+        'border-color' : ['.modal-body td','.modal-body tr','.modal-body th','.modal-footer','.modal-body ul.tagit','#popup_ADD_quick .quick_list_title']
     },
     color_hardest : {
         'color' : [],
-        'background-color' : ['body, .conversation_contents, .chat-dostream_super, .user_conversation, .topbar, .modal-body tr:hover, .btn-default, #chat-dostream .input, .large_check input, .large_check input, #Cookie_reset, .modal-body select, .modal-body input[type="text"], #btnRefreshChat, #btnIgnoreList, #btnOpenHrm, .chat-close, ::-webkit-scrollbar-thumb, #popup_ADD_quick a:hover, .user_menu_background, #memo_textbox, input.uchat_nick'],
+        'background-color' : ['body','.conversation_contents','.chat-dostream_super','.user_conversation','.topbar','.modal-body tr:hover','.btn-default','#chat-dostream .input','.large_check input','.large_check input','#Cookie_reset','.modal-body select','.modal-body input[type="text"]','#btnRefreshChat','#btnIgnoreList','#btnOpenHrm','.chat-close','::-webkit-scrollbar-thumb','#popup_ADD_quick a:hover','.user_menu_background','#memo_textbox','input.uchat_nick'],
         'border-color' : []
     },
     chat_container_bdc : {
         'color' : [],
-        'background-color' : ['.main-streams>ul>li>a:hover, header.onstream, div.onstream, div.from, .uchat_setting_wrap div.content'],
-        'border-color' : ['#chat-dostream .input, .btn-default, .chat-container, input.conversation, input[type="text"], .topbar, #stream .main-streams>ul>li, .modal-body select, .modal-body ul, .modal-body li'],
+        'background-color' : ['.main-streams>ul>li>a:hover','header.onstream','div.onstream','div.from','.uchat_setting_wrap div.content'],
+        'border-color' : ['#chat-dostream .input','.btn-default','.chat-container','input.conversation','input[type="text"]','.topbar','#stream .main-streams>ul>li','.modal-body select','.modal-body ul','.modal-body li'],
     },
     color_complementary : {
         'color' : [],
@@ -636,19 +636,19 @@ var ADD_THEME_CONNECT = {
         'background-color' : ['#view_additional_message']
     },
     tagit_color: {
-        'color' : ['ul.tagit li.tagit-choice, ul.tagit li span']
+        'color' : ['ul.tagit li.tagit-choice','ul.tagit li span']
     },
     tagit_bgc: {
         'background-color' : ['ul.tagit li.tagit-choice']
     },
     tagit_bg: {
-        'background' : ['ui-autocomplete, .tagit-autocomplete.ui-widget-content']
+        'background' : ['ui-autocomplete','.tagit-autocomplete.ui-widget-content']
     },
     tagit_bdc: {
-        'border-color' : ['ul.tagit li.tagit-choice, .tagit-autocomplete.ui-widget-content']
+        'border-color' : ['ul.tagit li.tagit-choice','.tagit-autocomplete.ui-widget-content']
     },
     logo : {
-        'background-image' : ['.nav-brand, .nav-brand_mod']
+        'background-image' : ['.nav-brand','.nav-brand_mod']
     },
     lock_image : {
         'background-image' : ['.uchat_scroll']
@@ -693,7 +693,7 @@ function ADD_change_theme(key){
             var bt_length = temp_obj.length;
             if(bt_length !== 0){
                 for(var i=0; i<bt_length; i++){
-                    append_text += append_theme_line(key,temp_obj[i],prop,key2);
+                    append_text += append_theme_line(key,temp_obj[i],prop,key2) + '\n';
                 }
             }
         }
@@ -708,7 +708,7 @@ function append_theme_line(key,element,property,value){
     if (key_value === undefined){
         key_value = ADD_THEME['Default'][value];
     }
-    var append_text = element + ' { ' + property + ':'+ key_value +' !important}';
+    var append_text = element + ' { ' + property + ':'+ key_value +' !important} ';
     return append_text;
 }
 
