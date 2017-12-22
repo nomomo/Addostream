@@ -10,7 +10,7 @@
 
 ## Preview
 <p align="center">
-<img src="https://github.com/nomomo/Addostream/blob/master/images/170702_preview.jpg" width="500px" />
+<img src="https://raw.githubusercontent.com/nomomo/Addostream/master/images/170702_preview.jpg" width="500px" />
 </p>
 
 * 원하는 스트리머 최상단 고정 (핀 표시)
@@ -20,9 +20,18 @@
 <br />
 
 ## Key features
+
+* ▼ [1.43 update!] DARK 테마 추가 (Test)
+<p align="center">
+<img src="https://raw.githubusercontent.com/nomomo/Addostream/master/images/171223_DARK_DOS.jpg" />
+</p>
+
+<br />
+
+
 * ▼ [1.36 update!] 멀티트위치↔트위치 전환 버튼 추가
 <p align="center">
-<img src="https://github.com/nomomo/Addostream/blob/master/images/170929_change_twitch.jpg" />
+<img src="https://raw.githubusercontent.com/nomomo/Addostream/master/images/170929_change_twitch.jpg" />
 </p>
 
 <br />
@@ -30,28 +39,28 @@
 
 * ▼ [1.31 update!] 채팅창에서 마우스 휠을 위로 할 시 자동 스크롤 멈춤 기능 추가 (트위치 채팅창의 기능과 유사)
 <p align="center">
-<img src="https://github.com/nomomo/Addostream/blob/master/images/170914_chat_scroll_auto_stop.jpg" />
+<img src="https://raw.githubusercontent.com/nomomo/Addostream/master/images/170914_chat_scroll_auto_stop.jpg" />
 </p>
 
 <br />
 
 * ▼ [1.27 update!] 재생 중 화면에서 메인 목록 보기 가능 (버튼을 클릭할 때마다 메인과 동일한 내용으로 갱신 됨)
 <p align="center">
-<img src="https://github.com/nomomo/Addostream/blob/master/images/170806_Quick_list.png" width="500px" />
+<img src="https://raw.githubusercontent.com/nomomo/Addostream/master/images/170806_Quick_list.png" width="500px" />
 </p>
 
 <br />
 
 * ▼ [1.26 update!]채팅에 올라온 Imgur 이미지 링크를 감지하여 바로보여줌 (Album, Gallery, Image 타입 및 Imgur 이미지 주소 대상)
 <p align="center">
-<img src="https://github.com/nomomo/Addostream/blob/master/images/170731_chat_image_preview.jpg" />
+<img src="https://raw.githubusercontent.com/nomomo/Addostream/master/images/170731_chat_image_preview.jpg" />
 </p>
 
 <br />
 
 ## Config
 <p align="center">
-<img src="https://github.com/nomomo/Addostream/blob/master/images/ADD_CONFIG.png" width="503px" />
+<img src="https://raw.githubusercontent.com/nomomo/Addostream/master/images/ADD_CONFIG.png" width="503px" />
 </p>
 
 * 메인에 없는 스트리머 갱신 간격은 최소 1분 간격
@@ -60,7 +69,7 @@
 * Firefox - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/), Chrome - [Tampermonkey](http://tampermonkey.net/) 확장 기능 설치
 * 확장 기능 설치 이후 아래의 링크로 이동<br />
 https://github.com/nomomo/Addostream/blob/master/Addostream.user.js
-* 이후 다음의 이미지를 참고하여 설치<br /><br /><img src="https://github.com/nomomo/Addostream/blob/master/images/Install.jpg" width="500px" />
+* 이후 다음의 이미지를 참고하여 설치<br /><br /><img src="https://raw.githubusercontent.com/nomomo/Addostream/master/images/Install.jpg" width="500px" />
 * 주의: 본 스크립트를 설치 및 사용하며 브라우저 과부하로 인한 응답 없음/뻗음 등 으로 인한 데이터 손실 등 문제 발생 시 개발자는 책임지지 않음(보고된 문제는 없음)
 
 ## History
@@ -108,9 +117,10 @@ https://github.com/nomomo/Addostream/blob/master/Addostream.user.js
   *  강제단차 기능 추가
 * 2017-12-16 (v 1.43.0)
   *  채팅 닉변 메시지 차단, 채팅 키워드 차단, API 갱신 시 메인 새로고침 등
-  
+* 2017-12-23 (v 1.43.2)
+  *  DARK 테마 추가 (Test)
+
 ## Future works (언제걸릴지 모름)
-* 테마 기능(Default/Black/etc.)
 * Twitch Clip 섬네일 미리보기
 * Imgur image album 의 경우 이미지 더 가져오기
 * 익명으로 Imgur 이미지 업로드 및 내가 업로드한 이미지 목록 보기
