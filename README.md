@@ -21,7 +21,7 @@
 
 ## Key features
 
-* ▼ [1.43 update!] DARK 테마 추가 (Test)
+* ▼ [1.43 update!] Dark 테마 추가 (Test 중, 현재 Chrome 에서만 작동)
 <p align="center">
 <img src="https://raw.githubusercontent.com/nomomo/Addostream/master/images/171223_DARK_DOS.jpg" />
 </p>
@@ -118,7 +118,7 @@ https://github.com/nomomo/Addostream/blob/master/Addostream.user.js
 * 2017-12-16 (v 1.43.0)
   *  채팅 닉변 메시지 차단, 채팅 키워드 차단, API 갱신 시 메인 새로고침 등
 * 2017-12-23 (v 1.43.2)
-  *  DARK 테마 추가 (Test)
+  *  DARK 테마 추가 (Test)
 
 ## Future works (언제걸릴지 모름)
 * Twitch Clip 섬네일 미리보기
