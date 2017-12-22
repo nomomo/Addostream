@@ -655,7 +655,7 @@ var ADD_THEME_CONNECT = {
         'background-image' : ['.uchat_scroll']
     },
     body_back : {
-        'background' : ['#stream, div.footer']
+        'background' : ['#stream .container']
     },
     border_top : {
         'border-top' : ['.topbar']
