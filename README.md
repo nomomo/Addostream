@@ -21,8 +21,9 @@
 
 ## Install
 * Firefox - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/), Chrome - [Tampermonkey](http://tampermonkey.net/) 확장 기능 설치
-* 확장 기능 설치 이후 아래의 링크로 이동<br />
-[https://github.com/nomomo/Addostream/blob/master/Addostream.user.js](https://github.com/nomomo/Addostream/blob/master/Addostream.user.js)
+* 확장 기능 설치 이후 아래의 링크로 이동
+* [https://github.com/nomomo/Addostream/blob/master/Addostream.user.js](https://github.com/nomomo/Addostream/blob/master/Addostream.user.js)
+* [(Raw 직링크: https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js)](https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js)
 * 이후 다음의 이미지를 참고하여 설치<br /><br />![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/Install.jpg)
 * 주의: 본 스크립트를 설치 및 사용하며 브라우저 과부하로 인한 응답 없음/뻗음 등 으로 인한 데이터 손실 등 문제 발생 시 개발자는 책임지지 않음(보고된 문제는 없음)
 
