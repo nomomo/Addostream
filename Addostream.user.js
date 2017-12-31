@@ -3,38 +3,252 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.43.4
+// @version     1.44.0
+// @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
+// @grant       GM.addStyle
 // @grant       GM_addStyle
+// @grant       GM.getValue
 // @grant       GM_getValue
+// @grant       GM.setValue
 // @grant       GM_setValue
+// @grant       GM.listValues
 // @grant       GM_listValues
+// @grant       GM.info
 // @grant       GM_info
-// @grant       GM_registerMenuCommand
+// @grant       GM.xmlHttpRequest
 // @grant       GM_xmlhttpRequest
+// @grant       GM.registerMenuCommand
+// @grant       GM_registerMenuCommand
 // @grant       unsafeWindow
 // @run-at      document-start
 // @updateURL   https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js
 // @downloadURL https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js
 // ==/UserScript==
 /*jshint multistr: true */
+
 //"use strict";
 
-var ADD_DEBUG_MODE = false;
-function ADD_version_string(str){
-    var tempString = str.toString();
-    var tempStringArray = tempString.split('.');
-    for (var i = 0; i<tempStringArray.length; i++){
-        if(tempStringArray[i].length < 2){
-            tempStringArray[i] = '0'+tempStringArray[i];
-        }
-    }
-    return tempStringArray.join('');
+(async () => {
+
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+//                               GLOBAL VARIABLES
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+
+// API로 접근해서 스트리머 이름을 가져올 수도 있으나,
+// API CALL 을 줄이기 위해 원래부터 두스 MAIN에 있던 스트리머 이름을 적어두기로 한다.
+var streamerArray = [
+    ['hanryang1125','풍월량'],
+    ['ddahyoni','따효니'],
+    ['kss7749','쉐리'],
+    ['looksam','룩삼'],
+    ['yapyap30','얍얍'],
+    ['saddummy','서새봄냥'],
+    ['109ace','철면수심'],
+    ['rhdgurwns','공혁준'],
+    ['gmdkdsla','흐앙님'],
+    ['jungtaejune','똘똘똘이'],
+    ['mascahs','마스카'],
+    ['steelohs','스틸로'],
+    ['kimdoe','김도'],
+    ['togom','토곰'],
+    ['ogn_lol','OGN 롤챔스'],
+    ['kanetv8','케인TV'],
+    ['yumyumyu77','소풍왔니'],
+    ['sung0','쥬팬더'],
+    ['game2eye','홍방장'],
+    ['cocopopp671','초승달'],
+    ['dingception','딩셉션'],
+    ['redteahs','홍차'],
+    ['zzamtiger0310','짬타수아'],
+    ['rldnddl789','아빠킹'],
+    ['eulcs1','EU LCS'],
+    ['kkoma','Kkoma'],
+    ['1983kej','단군'],
+    ['lol_peanut','Peanut'],
+    ['faker','Faker'],
+    ['nrmtzv','으음'],
+    ['nicegametv','나겜'],
+    ['teaminven','인벤'],
+    ['capta1n_pony','포니'],
+    ['huni','Huni'],
+    ['sktt1_wolf','Wolf'],
+    ['bang','Bang'],
+    ['wpghd321','류제홍'],
+    ['jmjdoc','칸데르니아'],
+    ['yungi131','윤기'],
+    ['mediamuse','미디어뮤즈'],
+    ['veritaskk','Veritas'],
+    ['themarinekr','김정민'],
+    ['tvindra','인드라'],
+    ['tranth','자동'],
+    ['seine1026','세인님'],
+    ['sonycast_','소니쇼'],
+    ['dou3796','뱅붕'],
+    ['rudbeckia7','연두는말안드뤄'],
+    ['trisha','트리샤'],
+    ['naseongkim','김나성'],
+    ['mari0712','마리'],
+    ['dlxowns45','태준이'],
+    ['handongsuk','한동숙'],
+    ['alenenwooptv','웁_게임방송'],
+    ['mr_coat','노래하는코트'],
+    ['ajehr','머독'],
+    ['lol_crown','Crown'],
+    ['rooftopcat99','옥냥이'],
+    ['myzet1990','개구멍'],
+    ['yoonroot','윤루트'],
+    ['sn400ja','액시스마이콜'],
+    ['tape22222','테이프2'],
+    ['miracle0o0','미라클티비'],
+    ['bighead033','빅헤드'],
+    ['wkgml','견자희'],
+    ['queenhuz','후즈'],
+    ['kiyulking','김기열'],
+    ['asdn6388','나락호프'],
+    ['lol_cuvee','Cuvee'],
+    ['VSL','VSL'],
+    ['drlee_kor','이민우33세'],
+    ['CoreJJ','CoreJJ'],
+    ['lol_ambition','Ambition'],
+    ['Axenix','아제닉스'],
+    ['maknoonlol','막눈'],
+    ['zilioner','침착맨'],
+    ['timeofcreate','홍랑'],
+    ['twitchshow','트위치쇼'],
+    ['kangqui','강퀴'],
+    ['team_spiritzero','team_spiritzero'],
+    ['zizionmy','젼마이'],
+    ['lol_blank','Blank'],
+    ['ogn_ow','OGN 오버워치'],
+    ['juankorea','주안코리아'],
+    ['woowakgood','우왁굳'],
+    ['www0606','푸딩'],
+    ['runner0608','러너'],
+    ['flowervin','꽃빈'],
+    ['h920103','이초홍'],
+    ['hj0514','백설양'],
+    ['pbstream77','피비스트림'],
+    ['llilka','릴카'],
+    ['beyou0728','피유'],
+    ['serayang','세라양'],
+    ['mister903','갱생레바'],
+    ['what9honggildong','왓구홍길동'],
+    ['chicken_angel','통닭천사'],
+    ['godbokihs','갓보기'],
+    ['yuriseo','서유리'],
+    ['kimminyoung','아옳이'],
+    ['gabrielcro','가브리엘'],
+    ['starcraft_kr','스타크래프트 KR'],
+    ['yeziss','신예지'],
+    ['ch1ckenkun','치킨쿤'],
+    ['lds7131','더헬'],
+    ['nodolly','노돌리'],
+    ['haku861024','정직원'],
+    ['nanajam777','우정잉'],
+    ['leehunnyeo','별루다'],
+    ['streamer2u','이유님'],
+    ['hatsalsal','햇살살'],
+    ['pommel0303','폼멜'],
+    ['hosu0904','호수'],
+    ['surrenderhs','서렌더'],
+    ['s_wngud','뜨뜨뜨뜨'],
+    ['eukkzzang','윾짱'],
+    ['gageu','가그'],
+    ['ange_i','요뿌니'],
+    ['menpa1030','멘파'],
+    ['dua3362','서넹'],
+    ['dda_ju','다주'],
+    ['taesangyun','태상'],
+    ['oreo4679','리치1'],
+    ['dmdtkadl69','응삼이'],
+    ['sigwon','시권'],
+    ['rngudwnswkd','푸린_'],
+    ['jungjil','정질'],
+    ['ses836','인간젤리'],
+    ['DrAquinas','DrAquinas'],
+    ['tree2512','말퓨'],
+    ['frog135','게구리'],
+    ['leechunhyang','이춘향'],
+    ['cherrypach','꽃핀'],
+    ['lovelyyeon','연두부'],
+    ['yd0821','양띵'],
+    ['2chamcham2','탬탬버린'],
+    ['jinu6734','김진우'],
+    ['ddolking555','똘킹'],
+    ['erenjjing','에렌디라'],
+    ['suk_tv','석티비'],
+    ['h0720','군림보'],
+    ['rellacast','렐라'],
+    ['silphtv','실프'],
+    ['playhearthstonekr','playhearthstonekr'],
+    ['mirage720','미라지오빠'],
+    ['1am_shin','신기해'],
+    ['maruemon1019','마루에몽'],
+    ['ulsanbigwhale','울산큰고래'],
+    ['areuming','알밍'],
+    ['esther950','에쓰더'],
+    ['pacific8815','쌍베'],
+    ['dogswellfish','개복어'],
+    ['DawNHS','던'],
+    ['ssambahong','홍진영'],
+    ['Twipkr','트윕KR']
+    ];// ['',''],
+
+var streamerArray_name = [];
+var streamerArray_display_name = [];
+var streamerArray_AutoComplete = [];
+for(var i=0; i<streamerArray.length; i++){
+    streamerArray_name[i] = streamerArray[i][0];
+    streamerArray_display_name[i] = streamerArray[i][1];
+    streamerArray_AutoComplete[i] = streamerArray[i][1]+' ('+streamerArray[i][0]+')';
 }
-var version_str = GM_info.script.version;
-var version = Number(ADD_version_string(version_str));
+
+var href = 'initialize';            //
+var checkedID = [];
+var multitwitchID = 'hanryang1125'; // 멀티트위치 ID 저장용
+var streamerID = '';                //
+var ADD_API_SET_INTERVAL;           //
+
+var twitch_api_cookie = [];         // Twitch api 쿠키
+
+// 설정 클릭 시 enable 요소가 있는 설정을 아래 배열에 등록
+var ADD_config_enable_init = ['ADD_config_top_fix'
+                              ,'ADD_config_alarm'
+                              ,'ADD_config_thumbnail_mouse'
+                              ,'ADD_config_streamer_hide'
+                              ,'ADD_config_chat_ctr'
+                              ,'ADD_config_imgur_preview'
+                              ,'ADD_config_imgur_preview_safe'
+                              ,'ADD_config_remember_platform'
+                              ,'ADD_config_chat_block'
+                              ];
+var ADD_status = [];
+var ADD_status_init = {'ad_remove' : 0
+                 ,'auto_image' : 0
+                 ,'api_call' : 0
+                 ,'update' : 0
+                 };
+
+var first_main_call = false;       // 첫번째 main 호출인지 체크함
+var first_api_call = true;          // 첫번째 api 호출인지 체크함
+var api_push_forced = false;        // true 이면 twitch api를 강제로 push 함, Setting save 시 사용
+var local_api_refresh = true;       // Setting save 버튼 연속으로 눌렀을 때 막기 위한 용도
+var unique_window_check = true;     // Unique window 감지용
+var backbutton_checker = false;     // 현재 사용 안 함, Back button 감지용
+var chat_send_location = true;      // 현재 사용 안 함, ADD_send_location() 좌표 복사 딜레이를 위해 사용
+var chatting_arrive_check = null;   // 채팅창 arrive 체크용
+var thumbnail_check = null;         // 섬네일 마우스 오버 설정 변경 체크용
+var thumbnail_size_check = null;    // 현재 사용 안 함, 섬네일 마우스 오버시 사이즈 설정 변경 체크용
+var chatting_scroll_pause = null;   // 채팅 스크롤 일시정지 여부
+
+var max_iteration = 100;            // DOE 생성 체크 최대 횟수
+var iteration = 0;                  // DOE 생성 체크 현재 횟수
+var checked_box_no = 0;
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -74,23 +288,591 @@ var Arrive=function(e,t,n){"use strict";function r(e,t,n){l.addMethod(t,n,e.unbi
 * Maintainer: Alex Ehlke - Twitter: @aehlke
 * Dependencies: jQuery v1.4+ jQuery UI v1.8+
 */
-(function(b){b.widget("ui.tagit",{options:{allowDuplicates:!1,caseSensitive:!0,fieldName:"tags",placeholderText:null,readOnly:!1,removeConfirmation:!1,tagLimit:null,availableTags:[],autocomplete:{},showAutocompleteOnFocus:!1,allowSpaces:!1,singleField:!1,singleFieldDelimiter:",",singleFieldNode:null,animate:!0,tabIndex:null,beforeTagAdded:null,afterTagAdded:null,beforeTagRemoved:null,afterTagRemoved:null,onTagClicked:null,onTagLimitExceeded:null,onTagAdded:null,onTagRemoved:null,tagSource:null},_create:function(){var a=
-this;this.element.is("input")?(this.tagList=b("<ul></ul>").insertAfter(this.element),this.options.singleField=!0,this.options.singleFieldNode=this.element,this.element.addClass("tagit-hidden-field")):this.tagList=this.element.find("ul, ol").andSelf().last();this.tagInput=b('<input type="text" />').addClass("ui-widget-content");this.options.readOnly&&this.tagInput.attr("disabled","disabled");this.options.tabIndex&&this.tagInput.attr("tabindex",this.options.tabIndex);this.options.placeholderText&&this.tagInput.attr("placeholder",
-this.options.placeholderText);this.options.autocomplete.source||(this.options.autocomplete.source=function(a,e){var d=a.term.toLowerCase(),c=b.grep(this.options.availableTags,function(a){return 0===a.toLowerCase().indexOf(d)});this.options.allowDuplicates||(c=this._subtractArray(c,this.assignedTags()));e(c)});this.options.showAutocompleteOnFocus&&(this.tagInput.focus(function(b,d){a._showAutocomplete()}),"undefined"===typeof this.options.autocomplete.minLength&&(this.options.autocomplete.minLength=
-0));b.isFunction(this.options.autocomplete.source)&&(this.options.autocomplete.source=b.proxy(this.options.autocomplete.source,this));b.isFunction(this.options.tagSource)&&(this.options.tagSource=b.proxy(this.options.tagSource,this));this.tagList.addClass("tagit").addClass("ui-widget ui-widget-content ui-corner-all").append(b('<li class="tagit-new"></li>').append(this.tagInput)).click(function(d){var c=b(d.target);c.hasClass("tagit-label")?(c=c.closest(".tagit-choice"),c.hasClass("removed")||a._trigger("onTagClicked",
-d,{tag:c,tagLabel:a.tagLabel(c)})):a.tagInput.focus()});var c=!1;if(this.options.singleField)if(this.options.singleFieldNode){var d=b(this.options.singleFieldNode),f=d.val().split(this.options.singleFieldDelimiter);d.val("");b.each(f,function(b,d){a.createTag(d,null,!0);c=!0})}else this.options.singleFieldNode=b('<input type="hidden" style="display:none;" value="" name="'+this.options.fieldName+'" />'),this.tagList.after(this.options.singleFieldNode);c||this.tagList.children("li").each(function(){b(this).hasClass("tagit-new")||
-(a.createTag(b(this).text(),b(this).attr("class"),!0),b(this).remove())});this.tagInput.keydown(function(c){if(c.which==b.ui.keyCode.BACKSPACE&&""===a.tagInput.val()){var d=a._lastTag();!a.options.removeConfirmation||d.hasClass("remove")?a.removeTag(d):a.options.removeConfirmation&&d.addClass("remove ui-state-highlight")}else a.options.removeConfirmation&&a._lastTag().removeClass("remove ui-state-highlight");if(c.which===b.ui.keyCode.COMMA&&!1===c.shiftKey||c.which===b.ui.keyCode.ENTER||c.which==
-b.ui.keyCode.TAB&&""!==a.tagInput.val()||c.which==b.ui.keyCode.SPACE&&!0!==a.options.allowSpaces&&('"'!=b.trim(a.tagInput.val()).replace(/^s*/,"").charAt(0)||'"'==b.trim(a.tagInput.val()).charAt(0)&&'"'==b.trim(a.tagInput.val()).charAt(b.trim(a.tagInput.val()).length-1)&&0!==b.trim(a.tagInput.val()).length-1))c.which===b.ui.keyCode.ENTER&&""===a.tagInput.val()||c.preventDefault(),a.options.autocomplete.autoFocus&&a.tagInput.data("autocomplete-open")||(a.tagInput.autocomplete("close"),a.createTag(a._cleanedInput()))}).blur(function(b){a.tagInput.data("autocomplete-open")||
-a.createTag(a._cleanedInput())});if(this.options.availableTags||this.options.tagSource||this.options.autocomplete.source)d={select:function(b,c){a.createTag(c.item.value);return!1}},b.extend(d,this.options.autocomplete),d.source=this.options.tagSource||d.source,this.tagInput.autocomplete(d).bind("autocompleteopen.tagit",function(b,c){a.tagInput.data("autocomplete-open",!0)}).bind("autocompleteclose.tagit",function(b,c){a.tagInput.data("autocomplete-open",!1)}),this.tagInput.autocomplete("widget").addClass("tagit-autocomplete")},
-destroy:function(){b.Widget.prototype.destroy.call(this);this.element.unbind(".tagit");this.tagList.unbind(".tagit");this.tagInput.removeData("autocomplete-open");this.tagList.removeClass("tagit ui-widget ui-widget-content ui-corner-all tagit-hidden-field");this.element.is("input")?(this.element.removeClass("tagit-hidden-field"),this.tagList.remove()):(this.element.children("li").each(function(){b(this).hasClass("tagit-new")?b(this).remove():(b(this).removeClass("tagit-choice ui-widget-content ui-state-default ui-state-highlight ui-corner-all remove tagit-choice-editable tagit-choice-read-only"),
-b(this).text(b(this).children(".tagit-label").text()))}),this.singleFieldNode&&this.singleFieldNode.remove());return this},_cleanedInput:function(){return b.trim(this.tagInput.val().replace(/^"(.*)"$/,"$1"))},_lastTag:function(){return this.tagList.find(".tagit-choice:last:not(.removed)")},_tags:function(){return this.tagList.find(".tagit-choice:not(.removed)")},assignedTags:function(){var a=this,c=[];this.options.singleField?(c=b(this.options.singleFieldNode).val().split(this.options.singleFieldDelimiter),
-""===c[0]&&(c=[])):this._tags().each(function(){c.push(a.tagLabel(this))});return c},_updateSingleTagsField:function(a){b(this.options.singleFieldNode).val(a.join(this.options.singleFieldDelimiter)).trigger("change")},_subtractArray:function(a,c){for(var d=[],f=0;f<a.length;f++)-1==b.inArray(a[f],c)&&d.push(a[f]);return d},tagLabel:function(a){return this.options.singleField?b(a).find(".tagit-label:first").text():b(a).find("input:first").val()},_showAutocomplete:function(){this.tagInput.autocomplete("search",
-"")},_findTagByLabel:function(a){var c=this,d=null;this._tags().each(function(f){if(c._formatStr(a)==c._formatStr(c.tagLabel(this)))return d=b(this),!1});return d},_isNew:function(a){return!this._findTagByLabel(a)},_formatStr:function(a){return this.options.caseSensitive?a:b.trim(a.toLowerCase())},_effectExists:function(a){return Boolean(b.effects&&(b.effects[a]||b.effects.effect&&b.effects.effect[a]))},createTag:function(a,c,d){var f=this;a=b.trim(a);this.options.preprocessTag&&(a=this.options.preprocessTag(a));
-if(""===a)return!1;if(!this.options.allowDuplicates&&!this._isNew(a))return a=this._findTagByLabel(a),!1!==this._trigger("onTagExists",null,{existingTag:a,duringInitialization:d})&&this._effectExists("highlight")&&a.effect("highlight"),!1;if(this.options.tagLimit&&this._tags().length>=this.options.tagLimit)return this._trigger("onTagLimitExceeded",null,{duringInitialization:d}),!1;var g=b(this.options.onTagClicked?'<a class="tagit-label"></a>':'<span class="tagit-label"></span>').text(a),e=b("<li></li>").addClass("tagit-choice ui-widget-content ui-state-default ui-corner-all").addClass(c).append(g);
-this.options.readOnly?e.addClass("tagit-choice-read-only"):(e.addClass("tagit-choice-editable"),c=b("<span></span>").addClass("ui-icon ui-icon-close"),c=b('<a><span class="text-icon">\u00d7</span></a>').addClass("tagit-close").append(c).click(function(a){f.removeTag(e);return false}),e.append(c));this.options.singleField||(g=g.html(),e.append('<input type="hidden" value="'+g+'" name="'+this.options.fieldName+'" class="tagit-hidden-field" />'));!1!==this._trigger("beforeTagAdded",null,{tag:e,tagLabel:this.tagLabel(e),
-duringInitialization:d})&&(this.options.singleField&&(g=this.assignedTags(),g.push(a),this._updateSingleTagsField(g)),this._trigger("onTagAdded",null,e),this.tagInput.val(""),this.tagInput.parent().before(e),this._trigger("afterTagAdded",null,{tag:e,tagLabel:this.tagLabel(e),duringInitialization:d}),this.options.showAutocompleteOnFocus&&!d&&setTimeout(function(){f._showAutocomplete()},0))},removeTag:function(a,c){c="undefined"===typeof c?this.options.animate:c;a=b(a);this._trigger("onTagRemoved",
-null,a);if(!1!==this._trigger("beforeTagRemoved",null,{tag:a,tagLabel:this.tagLabel(a)})){if(this.options.singleField){var d=this.assignedTags(),f=this.tagLabel(a),d=b.grep(d,function(a){return a!=f});this._updateSingleTagsField(d)}if(c){a.addClass("removed");var d=this._effectExists("blind")?["blind",{direction:"horizontal"},"fast"]:["fast"],g=this;d.push(function(){a.remove();g._trigger("afterTagRemoved",null,{tag:a,tagLabel:g.tagLabel(a)})});a.fadeOut("fast").hide.apply(a,d).dequeue()}else a.remove(),
-this._trigger("afterTagRemoved",null,{tag:a,tagLabel:this.tagLabel(a)})}},removeTagByLabel:function(a,b){var d=this._findTagByLabel(a);if(!d)throw"No such tag exists with the name '"+a+"'";this.removeTag(d,b)},removeAll:function(){var a=this;this._tags().each(function(b,d){a.removeTag(d,!1)})}})})(jQuery);
+(function($) {
+
+    $.widget('ui.tagit', {
+        options: {
+            allowDuplicates   : false,
+            caseSensitive     : true,
+            fieldName         : 'tags',
+            placeholderText   : null,   // Sets `placeholder` attr on input field.
+            readOnly          : false,  // Disables editing.
+            removeConfirmation: false,  // Require confirmation to remove tags.
+            tagLimit          : null,   // Max number of tags allowed (null for unlimited).
+
+            // Used for autocomplete, unless you override `autocomplete.source`.
+            availableTags     : [],
+
+            // Use to override or add any options to the autocomplete widget.
+            //
+            // By default, autocomplete.source will map to availableTags,
+            // unless overridden.
+            autocomplete: {},
+
+            // Shows autocomplete before the user even types anything.
+            showAutocompleteOnFocus: false,
+
+            // When enabled, quotes are unneccesary for inputting multi-word tags.
+            allowSpaces: false,
+
+            // The below options are for using a single field instead of several
+            // for our form values.
+            //
+            // When enabled, will use a single hidden field for the form,
+            // rather than one per tag. It will delimit tags in the field
+            // with singleFieldDelimiter.
+            //
+            // The easiest way to use singleField is to just instantiate tag-it
+            // on an INPUT element, in which case singleField is automatically
+            // set to true, and singleFieldNode is set to that element. This
+            // way, you don't need to fiddle with these options.
+            singleField: false,
+
+            // This is just used when preloading data from the field, and for
+            // populating the field with delimited tags as the user adds them.
+            singleFieldDelimiter: ',',
+
+            // Set this to an input DOM node to use an existing form field.
+            // Any text in it will be erased on init. But it will be
+            // populated with the text of tags as they are created,
+            // delimited by singleFieldDelimiter.
+            //
+            // If this is not set, we create an input node for it,
+            // with the name given in settings.fieldName.
+            singleFieldNode: null,
+
+            // Whether to animate tag removals or not.
+            animate: true,
+
+            // Optionally set a tabindex attribute on the input that gets
+            // created for tag-it.
+            tabIndex: null,
+
+            // Event callbacks.
+            beforeTagAdded      : null,
+            afterTagAdded       : null,
+
+            beforeTagRemoved    : null,
+            afterTagRemoved     : null,
+
+            onTagClicked        : null,
+            onTagLimitExceeded  : null,
+
+
+            // DEPRECATED:
+            //
+            // /!\ These event callbacks are deprecated and WILL BE REMOVED at some
+            // point in the future. They're here for backwards-compatibility.
+            // Use the above before/after event callbacks instead.
+            onTagAdded  : null,
+            onTagRemoved: null,
+            // `autocomplete.source` is the replacement for tagSource.
+            tagSource: null
+            // Do not use the above deprecated options.
+        },
+
+        _create: function() {
+            // for handling static scoping inside callbacks
+            var that = this;
+
+            // There are 2 kinds of DOM nodes this widget can be instantiated on:
+            //     1. UL, OL, or some element containing either of these.
+            //     2. INPUT, in which case 'singleField' is overridden to true,
+            //        a UL is created and the INPUT is hidden.
+            if (this.element.is('input')) {
+                this.tagList = $('<ul></ul>').insertAfter(this.element);
+                this.options.singleField = true;
+                this.options.singleFieldNode = this.element;
+                this.element.addClass('tagit-hidden-field');
+            } else {
+                this.tagList = this.element.find('ul, ol').andSelf().last();
+            }
+
+            this.tagInput = $('<input type="text" />').addClass('ui-widget-content');
+
+            if (this.options.readOnly) this.tagInput.attr('disabled', 'disabled');
+
+            if (this.options.tabIndex) {
+                this.tagInput.attr('tabindex', this.options.tabIndex);
+            }
+
+            if (this.options.placeholderText) {
+                this.tagInput.attr('placeholder', this.options.placeholderText);
+            }
+
+            if (!this.options.autocomplete.source) {/*
+                this.options.autocomplete.source = function(search, showChoices) {
+                    var filter = search.term.toLowerCase();
+                    var choices = $.grep(this.options.availableTags, function(element) {
+                        // Only match autocomplete options that begin with the search term.
+                        // (Case insensitive.)
+                        return (element.toLowerCase().indexOf(filter) === 0);
+                    });
+                    if (!this.options.allowDuplicates) {
+                        choices = this._subtractArray(choices, this.assignedTags());
+                    }
+                    showChoices(choices);
+                };*/
+                this.options.autocomplete.source = this.options.availableTags;
+            }
+
+            if (this.options.showAutocompleteOnFocus) {
+                //this.tagInput.focus(function(event, ui) {
+                //    that._showAutocomplete();
+                //});
+
+                //if (typeof this.options.autocomplete.minLength === 'undefined') {
+                //    this.options.autocomplete.minLength = 0;
+                //}
+            }
+            var focused_value = '';
+            this.options.autocomplete.focus = function( event, ui ) {
+                //console.log(event);
+                focused_value = ui.item.value;
+                event.preventDefault();
+                //return false;
+            };
+
+            // Bind autocomplete.source callback functions to this context.
+            if ($.isFunction(this.options.autocomplete.source)) {
+                this.options.autocomplete.source = $.proxy(this.options.autocomplete.source, this);
+            }
+
+            // DEPRECATED.
+            if ($.isFunction(this.options.tagSource)) {
+                this.options.tagSource = $.proxy(this.options.tagSource, this);
+            }
+
+            this.tagList
+                .addClass('tagit')
+                .addClass('ui-widget ui-widget-content ui-corner-all')
+                // Create the input field.
+                .append($('<li class="tagit-new"></li>').append(this.tagInput))
+                .click(function(e) {
+                    var target = $(e.target);
+                    if (target.hasClass('tagit-label')) {
+                        var tag = target.closest('.tagit-choice');
+                        if (!tag.hasClass('removed')) {
+                            that._trigger('onTagClicked', e, {tag: tag, tagLabel: that.tagLabel(tag)});
+                        }
+                    } else {
+                        // Sets the focus() to the input field, if the user
+                        // clicks anywhere inside the UL. This is needed
+                        // because the input field needs to be of a small size.
+                        that.tagInput.focus();
+                    }
+                });
+
+            // Single field support.
+            var addedExistingFromSingleFieldNode = false;
+            if (this.options.singleField) {
+                if (this.options.singleFieldNode) {
+                    // Add existing tags from the input field.
+                    var node = $(this.options.singleFieldNode);
+                    var tags = node.val().split(this.options.singleFieldDelimiter);
+                    node.val('');
+                    $.each(tags, function(index, tag) {
+                        that.createTag(tag, null, true);
+                        addedExistingFromSingleFieldNode = true;
+                    });
+                } else {
+                    // Create our single field input after our list.
+                    this.options.singleFieldNode = $('<input type="hidden" style="display:none;" value="" name="' + this.options.fieldName + '" />');
+                    this.tagList.after(this.options.singleFieldNode);
+                }
+            }
+
+            // Add existing tags from the list, if any.
+            if (!addedExistingFromSingleFieldNode) {
+                this.tagList.children('li').each(function() {
+                    if (!$(this).hasClass('tagit-new')) {
+                        that.createTag($(this).text(), $(this).attr('class'), true);
+                        $(this).remove();
+                    }
+                });
+            }
+
+            // Events.
+            this.tagInput
+                .keydown(function(event) {
+                    //if (event.which == $.ui.keyCode.DOWN){
+                    //    console.log('down key pressed!');
+                    //    event.preventDefault();
+                    //    return false;
+                    //}
+                    // Backspace is not detected within a keypress, so it must use keydown.
+                    if (event.which == $.ui.keyCode.BACKSPACE && that.tagInput.val() === '') {
+                        var tag = that._lastTag();
+                        if (!that.options.removeConfirmation || tag.hasClass('remove')) {
+                            // When backspace is pressed, the last tag is deleted.
+                            that.removeTag(tag);
+                        } else if (that.options.removeConfirmation) {
+                            tag.addClass('remove ui-state-highlight');
+                        }
+                    } else if (that.options.removeConfirmation) {
+                        that._lastTag().removeClass('remove ui-state-highlight');
+                    }
+
+                    // Comma/Space/Enter are all valid delimiters for new tags,
+                    // except when there is an open quote or if setting allowSpaces = true.
+                    // Tab will also create a tag, unless the tag input is empty,
+                    // in which case it isn't caught.
+                    if (
+                        (event.which === $.ui.keyCode.COMMA && event.shiftKey === false) ||
+                        event.which === $.ui.keyCode.ENTER ||
+                        (
+                            event.which == $.ui.keyCode.TAB &&
+                            that.tagInput.val() !== ''
+                        ) ||
+                        (
+                            event.which == $.ui.keyCode.SPACE &&
+                            that.options.allowSpaces !== true &&
+                            (
+                                $.trim(that.tagInput.val()).replace( /^s*/, '' ).charAt(0) != '"' ||
+                                (
+                                    $.trim(that.tagInput.val()).charAt(0) == '"' &&
+                                    $.trim(that.tagInput.val()).charAt($.trim(that.tagInput.val()).length - 1) == '"' &&
+                                    $.trim(that.tagInput.val()).length - 1 !== 0
+                                )
+                            )
+                        )
+                    ) {
+                        // Enter submits the form if there's no text in the input.
+                        if (!(event.which === $.ui.keyCode.ENTER && that.tagInput.val() === '')) {
+                            event.preventDefault();
+                        }
+
+                        // Autocomplete will create its own tag from a selection and close automatically.
+                        if (!(that.options.autocomplete.autoFocus && that.tagInput.data('autocomplete-open'))) {
+                            that.tagInput.autocomplete('close');
+                            if( focused_value === '' || focused_value === null || focused_value === undefined){
+                                that.createTag(that._cleanedInput());
+                            }
+                            else {
+                                that.tagInput.val(''+focused_value);
+                                that.createTag(''+focused_value);
+                            }
+                        }
+                    }
+                }).blur(function(e){
+                    // Create a tag when the element loses focus.
+                    // If autocomplete is enabled and suggestion was clicked, don't add it.
+                    if (!that.tagInput.data('autocomplete-open')) {
+                        that.createTag(that._cleanedInput());
+                    }
+                });
+
+            // Autocomplete.
+            if (this.options.availableTags || this.options.tagSource || this.options.autocomplete.source) {
+                var autocompleteOptions = {
+                    select: function(event, ui) {
+                        that.createTag(ui.item.value);
+                        // Preventing the tag input to be updated with the chosen value.
+                        return false;
+                    }
+                };
+                $.extend(autocompleteOptions, this.options.autocomplete);
+
+                // tagSource is deprecated, but takes precedence here since autocomplete.source is set by default,
+                // while tagSource is left null by default.
+                autocompleteOptions.source = this.options.tagSource || autocompleteOptions.source;
+
+                this.tagInput.autocomplete(autocompleteOptions).bind('autocompleteopen.tagit', function(event, ui) {
+                //this.tagInput.autocomplete({source:streamerArray_AutoComplete}).bind('autocompleteopen.tagit', function(event, ui) {
+                    that.tagInput.data('autocomplete-open', true);
+                }).bind('autocompleteclose.tagit', function(event, ui) {
+                    that.tagInput.data('autocomplete-open', false);
+                });
+
+                this.tagInput.autocomplete('widget').addClass('tagit-autocomplete');
+            }
+        },
+
+        destroy: function() {
+            $.Widget.prototype.destroy.call(this);
+
+            this.element.unbind('.tagit');
+            this.tagList.unbind('.tagit');
+
+            this.tagInput.removeData('autocomplete-open');
+
+            this.tagList.removeClass([
+                'tagit',
+                'ui-widget',
+                'ui-widget-content',
+                'ui-corner-all',
+                'tagit-hidden-field'
+            ].join(' '));
+
+            if (this.element.is('input')) {
+                this.element.removeClass('tagit-hidden-field');
+                this.tagList.remove();
+            } else {
+                this.element.children('li').each(function() {
+                    if ($(this).hasClass('tagit-new')) {
+                        $(this).remove();
+                    } else {
+                        $(this).removeClass([
+                            'tagit-choice',
+                            'ui-widget-content',
+                            'ui-state-default',
+                            'ui-state-highlight',
+                            'ui-corner-all',
+                            'remove',
+                            'tagit-choice-editable',
+                            'tagit-choice-read-only'
+                        ].join(' '));
+
+                        $(this).text($(this).children('.tagit-label').text());
+                    }
+                });
+
+                if (this.singleFieldNode) {
+                    this.singleFieldNode.remove();
+                }
+            }
+
+            return this;
+        },
+
+        _cleanedInput: function() {
+            // Returns the contents of the tag input, cleaned and ready to be passed to createTag
+            return $.trim(this.tagInput.val().replace(/^"(.*)"$/, '$1'));
+        },
+
+        _lastTag: function() {
+            return this.tagList.find('.tagit-choice:last:not(.removed)');
+        },
+
+        _tags: function() {
+            return this.tagList.find('.tagit-choice:not(.removed)');
+        },
+
+        assignedTags: function() {
+            // Returns an array of tag string values
+            var that = this;
+            var tags = [];
+            if (this.options.singleField) {
+                tags = $(this.options.singleFieldNode).val().split(this.options.singleFieldDelimiter);
+                if (tags[0] === '') {
+                    tags = [];
+                }
+            } else {
+                this._tags().each(function() {
+                    tags.push(that.tagLabel(this));
+                });
+            }
+            return tags;
+        },
+
+        _updateSingleTagsField: function(tags) {
+            // Takes a list of tag string values, updates this.options.singleFieldNode.val to the tags delimited by this.options.singleFieldDelimiter
+            $(this.options.singleFieldNode).val(tags.join(this.options.singleFieldDelimiter)).trigger('change');
+        },
+
+        _subtractArray: function(a1, a2) {
+            var result = [];
+            for (var i = 0; i < a1.length; i++) {
+                if ($.inArray(a1[i], a2) == -1) {
+                    result.push(a1[i]);
+                }
+            }
+            return result;
+        },
+
+        tagLabel: function(tag) {
+            // Returns the tag's string label.
+            if (this.options.singleField) {
+                return $(tag).find('.tagit-label:first').text();
+            } else {
+                return $(tag).find('input:first').val();
+            }
+        },
+
+        _showAutocomplete: function() {
+            this.tagInput.autocomplete('search', '');
+        },
+
+        _findTagByLabel: function(name) {
+            var that = this;
+            var tag = null;
+            this._tags().each(function(i) {
+                if (that._formatStr(name) == that._formatStr(that.tagLabel(this))) {
+                    tag = $(this);
+                    return false;
+                }
+            });
+            return tag;
+        },
+
+        _isNew: function(name) {
+            return !this._findTagByLabel(name);
+        },
+
+        _formatStr: function(str) {
+            if (this.options.caseSensitive) {
+                return str;
+            }
+            return $.trim(str.toLowerCase());
+        },
+
+        _effectExists: function(name) {
+            return Boolean($.effects && ($.effects[name] || ($.effects.effect && $.effects.effect[name])));
+        },
+
+        createTag: function(value, additionalClass, duringInitialization) {
+            var that = this;
+
+            value = $.trim(value);
+
+            if(this.options.preprocessTag) {
+                value = this.options.preprocessTag(value);
+            }
+
+            if (value === '') {
+                return false;
+            }
+
+            if (!this.options.allowDuplicates && !this._isNew(value)) {
+                var existingTag = this._findTagByLabel(value);
+                if (this._trigger('onTagExists', null, {
+                    existingTag: existingTag,
+                    duringInitialization: duringInitialization
+                }) !== false) {
+                    if (this._effectExists('highlight')) {
+                        existingTag.effect('highlight');
+                    }
+                }
+                return false;
+            }
+
+            if (this.options.tagLimit && this._tags().length >= this.options.tagLimit) {
+                this._trigger('onTagLimitExceeded', null, {duringInitialization: duringInitialization});
+                return false;
+            }
+
+            var label = $(this.options.onTagClicked ? '<a class="tagit-label"></a>' : '<span class="tagit-label"></span>').text(value);
+
+            // Create tag.
+            var tag = $('<li></li>')
+                .addClass('tagit-choice ui-widget-content ui-state-default ui-corner-all')
+                .addClass(additionalClass)
+                .append(label);
+
+            if (this.options.readOnly){
+                tag.addClass('tagit-choice-read-only');
+            } else {
+                tag.addClass('tagit-choice-editable');
+                // Button for removing the tag.
+                var removeTagIcon = $('<span></span>')
+                    .addClass('ui-icon ui-icon-close');
+                var removeTag = $('<a><span class="text-icon">\xd7</span></a>') // \xd7 is an X
+                    .addClass('tagit-close')
+                    .append(removeTagIcon)
+                    .click(function(e) {
+                        // Removes a tag when the little 'x' is clicked.
+                        that.removeTag(tag);
+                    });
+                tag.append(removeTag);
+            }
+
+            // Unless options.singleField is set, each tag has a hidden input field inline.
+            if (!this.options.singleField) {
+                var escapedValue = label.html();
+                tag.append('<input type="hidden" value="' + escapedValue + '" name="' + this.options.fieldName + '" class="tagit-hidden-field" />');
+            }
+
+            if (this._trigger('beforeTagAdded', null, {
+                tag: tag,
+                tagLabel: this.tagLabel(tag),
+                duringInitialization: duringInitialization
+            }) === false) {
+                return;
+            }
+
+            if (this.options.singleField) {
+                var tags = this.assignedTags();
+                tags.push(value);
+                this._updateSingleTagsField(tags);
+            }
+
+            // DEPRECATED.
+            this._trigger('onTagAdded', null, tag);
+
+            this.tagInput.val('');
+
+            // Insert tag.
+            this.tagInput.parent().before(tag);
+
+            this._trigger('afterTagAdded', null, {
+                tag: tag,
+                tagLabel: this.tagLabel(tag),
+                duringInitialization: duringInitialization
+            });
+
+            if (this.options.showAutocompleteOnFocus && !duringInitialization) {
+                setTimeout(function () { that._showAutocomplete(); }, 0);
+            }
+        },
+
+        removeTag: function(tag, animate) {
+            animate = typeof animate === 'undefined' ? this.options.animate : animate;
+
+            tag = $(tag);
+
+            // DEPRECATED.
+            this._trigger('onTagRemoved', null, tag);
+
+            if (this._trigger('beforeTagRemoved', null, {tag: tag, tagLabel: this.tagLabel(tag)}) === false) {
+                return;
+            }
+
+            if (this.options.singleField) {
+                var tags = this.assignedTags();
+                var removedTagLabel = this.tagLabel(tag);
+                tags = $.grep(tags, function(el){
+                    return el != removedTagLabel;
+                });
+                this._updateSingleTagsField(tags);
+            }
+
+            if (animate) {
+                tag.addClass('removed'); // Excludes this tag from _tags.
+                var hide_args = this._effectExists('blind') ? ['blind', {direction: 'horizontal'}, 'fast'] : ['fast'];
+
+                var thisTag = this;
+                hide_args.push(function() {
+                    tag.remove();
+                    thisTag._trigger('afterTagRemoved', null, {tag: tag, tagLabel: thisTag.tagLabel(tag)});
+                });
+
+                tag.fadeOut('fast').hide.apply(tag, hide_args).dequeue();
+            } else {
+                tag.remove();
+                this._trigger('afterTagRemoved', null, {tag: tag, tagLabel: this.tagLabel(tag)});
+            }
+
+        },
+
+        removeTagByLabel: function(tagLabel, animate) {
+            var toRemove = this._findTagByLabel(tagLabel);
+            if (!toRemove) {
+                throw "No such tag exists with the name '" + tagLabel + "'";
+            }
+            this.removeTag(toRemove, animate);
+        },
+
+        removeAll: function() {
+            // Removes all tags.
+            var that = this;
+            this._tags().each(function(index, tag) {
+                that.removeTag(tag, false);
+            });
+        }
+
+    });
+})(jQuery);
+
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -105,12 +887,12 @@ function deepCopy(obj){
     return JSON.parse(JSON.stringify(obj));
 }
 
-function ADD_SetVal(key, value){
-    GM_setValue(key, JSON.stringify(value));
+async function ADD_SetVal(key, value){
+    await GM.setValue(key, JSON.stringify(value));
 }
 
-function ADD_GetVal(key){
-    var temp = GM_getValue(key);
+async function ADD_GetVal(key){
+    var temp = await GM.getValue(key);
     if (temp !== undefined && temp !== null){
         return JSON.parse(temp);
     }
@@ -119,7 +901,7 @@ function ADD_GetVal(key){
     }
 }
 
-var ADD_config = {};
+let ADD_config = {};
 const ADD_config_init = {
     top_fix : { enable:null, type: 'checkbox', value: false },
     top_off_fix : { enable:null, type: 'checkbox', value: false },
@@ -155,18 +937,18 @@ const ADD_config_init = {
     theme : { enable:null, type: 'text', value: 'default' }
 };
 
-function ADD_config_var_write(){
+async function ADD_config_var_write(){
     if(ADD_config === undefined  || ADD_config === null){
         ADD_config = deepCopy(ADD_config_init);
     }
-    ADD_SetVal("ADD_config",ADD_config);
+    await ADD_SetVal("ADD_config",ADD_config);
 }
 
-function ADD_config_var_read(){
-    var ADD_config_temp = ADD_GetVal("ADD_config");
+async function ADD_config_var_read(){
+    var ADD_config_temp = await ADD_GetVal("ADD_config");
     if(ADD_config_temp === undefined || ADD_config_temp === null || ADD_config_temp === {}){
         ADD_config = deepCopy(ADD_config_init);
-        ADD_config_var_write();
+        await ADD_config_var_write();
         return;
     }
 
@@ -178,10 +960,55 @@ function ADD_config_var_read(){
     }
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+//                     Version check & DEBUG mode enable
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+
+var ADD_DEBUG_MODE = false;
+ADD_DEBUG_MODE = await ADD_GetVal('ADD_DEBUG_MODE');
+if(ADD_DEBUG_MODE === undefined){
+    ADD_DEBUG_MODE = false;
+    await ADD_SetVal('ADD_DEBUG_MODE', ADD_DEBUG_MODE);
+}
+ADD_DEBUG('DEBUG MODE ON');
+
+function ADD_DEBUG(msg1, msg2, msg3){
+    if(ADD_DEBUG_MODE){
+        var arg_no = arguments.length;
+        if(arg_no === 1){
+            console.log('(+Dostream) ', msg1);
+        }
+        else if(arg_no === 2){
+            console.log('(+Dostream) ', msg1, msg2);
+        }
+        else if(arg_no === 3){
+            console.log('(+Dostream) ', msg1, msg2, msg3);
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+// 버전 문자열을 체크하기 쉬운 숫자로 변환
+function ADD_version_string(str){
+    var tempString = str.toString();
+    var tempStringArray = tempString.split('.');
+    for (var i = 0; i<tempStringArray.length; i++){
+        if(tempStringArray[i].length < 2){
+            tempStringArray[i] = '0'+tempStringArray[i];
+        }
+    }
+    return tempStringArray.join('');
+}
+const version_str = GM.info.script.version;
+var version = Number(ADD_version_string(version_str));
+const root = "https://raw.githubusercontent.com/nomomo/Addostream/master/";
+
 //////////////////////////////////////////////////////////////////////////////////
 // 쿠키에 저장된 마지막 버전 체크하여 버전별 호환성 체크
-function ADD_version_checker()
-{
+async function ADD_migration(){
     // 설정 쿠키값이 존재하는 경우 기존에 존재하는 설정을 포팅한다.
     if (!!$.cookie("ADD_config_ary")){
         var ADD_config_ary_temp = JSON.parse($.cookie("ADD_config_ary"));
@@ -210,18 +1037,121 @@ function ADD_version_checker()
         if(ADD_config_ary_temp.ADD_config_url_self !== undefined) ADD_config.url_self.value = ADD_config_ary_temp.ADD_config_url_self;
         if(ADD_config_ary_temp.ADD_config_chat_scroll !== undefined) ADD_config.chat_scroll.value = ADD_config_ary_temp.ADD_config_chat_scroll;
         $.removeCookie("ADD_config_ary");
-        ADD_config_var_write();
-    }
-    ADD_config_var_read();
-    if( version !== Number(ADD_config.last_version.value)){
-        ADD_notice('\(+\) 최근 버전이 '+version_str+' 로 변경되었습니다',2000);
-        ADD_config.last_version.value = version;
-        ADD_config_var_write();
+        await ADD_config_var_write();
     }
 }
-ADD_version_checker();
-ADD_config_var_read();
-//console.log(GM_listValues());
+
+//////////////////////////////////////////////////////////////////////////////////
+// 하루 한 번 버전 체크
+async function checkNewVersion() {
+    ADD_DEBUG('Version - 버전 체크 중...');
+    var ver_fut;
+    var ver_fut_text = '';
+    var return_val = '';
+    var new_version_available = false;
+    let result;
+
+    var time_check_version = await ADD_GetVal('time_check_version');
+    if(time_check_version === undefined){
+        ADD_DEBUG('Version - 이전에 버전 체크한 시간이 없어 새로 쓴다');
+        time_check_version = new Date(Date.parse(new Date()) - 2 * 1000 * 60 * 60 * 24);
+        await ADD_SetVal('time_check_version',time_check_version);
+    }
+    var time_pre = new Date(time_check_version);
+    var time_cur = new Date();
+    var time_bet = Number((time_cur - time_pre)/24/60/60/1000).toFixed(4);
+    ADD_DEBUG('Version - 현재 버전 체크 시간 :',getTimeStampWithText(time_cur,'s'));
+
+    // 현재 및 이전 버전을 확인함
+    if(ADD_config.last_version === undefined || ADD_config.last_version === null){
+        await ADD_config_var_read();
+    }
+
+    var ver_pre = Number(ADD_config.last_version.value);
+    var ver_cur = version;
+
+    if(time_bet > 1){
+        ADD_DEBUG('Version - 버전 체크 시도');
+        try {
+            response = await $.ajax({
+                url: root + "package.json",
+                type: 'GET',
+                dataType:'json'
+            });
+            ADD_DEBUG('Version - 버전확인 성공', return_val);
+
+            // 버전 체크 시간을 다시 씀
+            await ADD_SetVal('time_check_version',new Date());
+
+            ver_fut_text = response.version;
+            ver_fut = Number(ADD_version_string(ver_fut_text));
+            ADD_DEBUG('Version - 현재 버전: '+ver_cur+', 이전 버전: '+ver_pre+' , 최신 버전: '+ver_fut);
+
+            // 현재 버전 > 이전 버전
+            if( ver_cur > ver_pre ){
+                if(ADD_config.sys_meg.value !== undefined && ADD_config.sys_meg.value){
+                    ADD_send_sys_msg('애드온이 최근 업데이트 됨('+version_str+').',500);
+                }
+                ADD_config.last_version.value = version;
+                await ADD_config_var_write();
+            }
+
+            // 업데이트 가능한 버전 > 현재 버전
+            if( ver_fut > ver_cur ){
+                if(ADD_config.sys_meg.value !== undefined && ADD_config.sys_meg.value){
+                    ADD_send_sys_msg('(+) 새로운 버전(<a href="https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js" target="_blank">v'+ver_fut_text+'</a>) 으로 업데이트 가능',500);
+                }
+                await ADD_SetVal('available_version',{version:ver_fut, version_str:ver_fut_text});
+                new_version_available = true;
+            }
+            response = null;
+
+        } catch (error) {
+            ADD_DEBUG('Version - 버전확인 실패');
+            console.error(error);
+        }
+    }
+    else{
+        ADD_DEBUG('Version - 이전 버전 체크 시간 :',getTimeStampWithText(time_pre,'s'));
+        ADD_DEBUG('Version - 현재 와의 시간 차이 : ' + time_bet + ' 시간 < 1 이므로 체크하지 않음');
+
+        var available_version = await ADD_GetVal('available_version');
+        if(available_version === undefined || available_version === null){
+            ADD_DEBUG('Version - 이용가능한 버전 확인 실패');
+            return false;
+        }
+        ver_fut_text = available_version.version_str;
+        ver_fut = available_version.version;
+        if(ver_fut > ver_cur){
+            new_version_available = true;
+        }
+    }
+
+    if(new_version_available){
+        if($('#new_version_available_text').length !== 0){
+            $('#new_version_available_text').show().html('- <a href="https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js" target="_blank">New Version(v'+ver_fut_text+') Available!</a>');
+            $('#github_url_text').hide();
+        }
+        else{
+            setTimeout(
+            function() {
+                if($('#new_version_available_text').length !== 0){
+                    $('#new_version_available_text').show().html('- <a href="https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js" target="_blank">New Version(v'+ver_fut_text+') Available!</a>');
+                    $('#github_url_text').hide();
+                }
+                else{
+                    ADD_DEBUG('Version - #new_version_available_text 가 존재하지 않음');
+                }
+            },1000);
+        }
+    }
+
+    return true;
+}
+
+checkNewVersion();
+await ADD_migration();
+await ADD_config_var_read();
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -244,6 +1174,7 @@ function Addostream_CSS(){
             cursor:pointer;
             margin: 0px;
             -webkit-padding-start: 5px !important;
+            min-height:30px;
         }
         ul.tagit li span {
             text-overflow:ellipsis;
@@ -416,7 +1347,7 @@ function Addostream_CSS(){
             font-weight: normal;
             margin: -1px;
         }
-        .tagit-autocomplete.ui-widget-content { border: 1px solid #aaaaaa; background: #ffffff 50% 50% repeat-x; color: #222222; }
+        .tagit-autocomplete.ui-widget-content { border: 1px solid #aaaaaa; background: #ffffff 50% 50% repeat-x; color: #222222;}
         .tagit-autocomplete.ui-corner-all, .tagit-autocomplete .ui-corner-all { -moz-border-radius: 4px; -webkit-border-radius: 4px; -khtml-border-radius: 4px; border-radius: 4px; }
         .tagit-autocomplete .ui-state-hover, .tagit-autocomplete .ui-state-focus { border: 1px solid #999999; background: #dadada; font-weight: normal; color: #212121; }
         .tagit-autocomplete .ui-state-active  { border: 1px solid #aaaaaa; }
@@ -478,13 +1409,18 @@ function Addostream_CSS(){
         .ADD_li_box_container{position:relative;}
         .ADD_li_box{position:absolute; top:-42px; right:70px; height:30px; vertical-align:middle; text-align:center; font-size:12px; z-index:100; margin:0;}
         .ADD_li_box:before{content: "";display:inline-block;vertical-align: middle;height: 100%;}
+        #popup_ADD_quick .ADD_checkbox_container{display:none;}
+        #popup_ADD_quick .multitwitch_button btn:hover{background:none;}
         .ADD_checkbox_container{display:inline-block;line-height:100%;vertical-align:middle; }
-        .ADD_checkbox{width:20px;height:20px;margin:1px 2px 1px 0 !important;border:none !important;}
+        .ADD_checkbox{display:none;width:15px;height:15px;margin:1px 2px 1px 0 !important;border:none !important;}
+        .ADD_li_box .btn-default{color:#7d7d7d}
+        .ADD_checkbox_container .btn span.glyphicon {opacity: 0.2;}
+        .ADD_checkbox_container .btn.active span.glyphicon {opacity: 1; color:#9B59B6}
         .multitwitch_button{vertical-align:middle;display:inline-block;} //background-color:#eee; padding:5px 8px; height:26px;
         .form_disabled {color:#888;}
         .form_enabled {color:#222;}
         #popup_ADD_config table td {height:26px; line-height: 1.5; font-size:11px; padding:2px 5px 2px 10px; vertical-align:middle; border-top-color:#e5e5e5;}
-        #popup_ADD_config table td label{vertical-align:middle; margin-bottom:0px;}
+        #popup_ADD_config table td label{vertical-align:middle;}
         #popup_ADD_config table td input[type="text"]{font-size:11px;}
         #popup_ADD_config table td input[type="checkbox"]{vertical-align:middle; margin-bottom:0; margin-top:0;}
         #popup_ADD_config table td input[type="radio"]{vertical-align:middle; margin-bottom:0; margin-top:0;}
@@ -539,8 +1475,15 @@ function Addostream_CSS(){
         #view_additional_message_container {position:absolute;bottom:46px;left:0px;z-index:15;width:100%; height:30px;cursor:pointer;}
         #view_additional_message {position:relative;padding:5px 0;background-color:rgba(0,0,0,0.6);text-align:center;color:#fff;font-size:12px;}
         .ADD_chat_again, .ADD_twitch_api_again{cursor:pointer;}
-        .modal-body tr:hover {background-color:#E6E6E6;}
+        .modal-body tbody tr:hover {background-color:#E6E6E6;}
         .lightbox-opened-blocked-chat {background-color:#fff; max-width:600px; margin:0 auto; text-align:left;padding:15px;font-size:12px}
+        .modal-body tbody .btn-xxs {padding: 1px 2px;font-size: 9px;line-height: 1.0;border-radius: 3px;margin:0 2px 2px 0;cursor:pointer;}
+        .modal-body tbody .btn-xxs .glyphicon{}
+        .modal-body tbody .btn-xxs span.glyphicon {opacity: 0.2;}
+        .modal-body tbody .btn-xxs.active span.glyphicon {opacity: 1;}
+        .modal-body tbody .btn-xxs.disable {opacity: 0.3;cursor:not-allowed;}
+        #popup_ADD_config .modal-body tbody input[type="checkbox"]{display:none;}
+        #new_version_available_text a{color:#E3242B}
     `);
 
     /*
@@ -562,31 +1505,32 @@ function Addostream_CSS(){
 //                                 CSS THEME
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
-//
+// 테마
 var ADD_THEME = {
     Default : {},
     Dark : {
-        header_ftc : '#ccc',
-        chat_contents_bgc : '#191919',
-        chat_fc : '#ccc',
-        color_lightest: '#ababab',
-        color_lighter : '#999',
-        color_hard : '#333',
-        color_harder : '#222',
-        color_hardest : '#111',
-        chat_container_bdc : '#000',
-        color_complementary : '#fff',
-        complementary_bgc_alpha : 'rgba(21,21,21,0.8)',
-        tagit_color : '#999',
+        header_ftc : '#ccc !important',
+        chat_contents_bgc : '#191919 !important',
+        chat_fc : '#ccc !important',
+        color_lightest: '#ababab !important',
+        color_lighter : '#999 !important',
+        color_mid : '#777 !important',
+        color_hard : '#333 !important',
+        color_harder : '#222 !important',
+        color_hardest : '#111 !important',
+        chat_container_bdc : '#000 !important',
+        color_complementary : '#fff !important',
+        complementary_bgc_alpha : 'rgba(21,21,21,0.8) !important',
+        tagit_color : '#999 !important',
         tagit_bgc : '#222',
         tagit_bg : '#222 50% 50% repeat-x',
         tagit_bdc :'#111',
-        logo : 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFsAAAANCAYAAADG4RJzAAAACXBIWXMAAAsTAAALEwEAmpwYAABIZmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxMzggNzkuMTU5ODI0LCAyMDE2LzA5LzE0LTAxOjA5OjAxICAgICAgICAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgICAgICAgICB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIgogICAgICAgICAgICB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIKICAgICAgICAgICAgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIgogICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICAgICAgICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIgogICAgICAgICAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyI+CiAgICAgICAgIDx4bXA6Q3JlYXRvclRvb2w+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgICAgIDx4bXA6Q3JlYXRlRGF0ZT4yMDE3LTA3LTI5VDAyOjExOjEwKzA5OjAwPC94bXA6Q3JlYXRlRGF0ZT4KICAgICAgICAgPHhtcDpNZXRhZGF0YURhdGU+MjAxNy0xMi0yM1QwMjo1MjoxOCswOTowMDwveG1wOk1ldGFkYXRhRGF0ZT4KICAgICAgICAgPHhtcDpNb2RpZnlEYXRlPjIwMTctMTItMjNUMDI6NTI6MTgrMDk6MDA8L3htcDpNb2RpZnlEYXRlPgogICAgICAgICA8eG1wTU06SW5zdGFuY2VJRD54bXAuaWlkOmNmY2NhNTc1LTQ5M2ItMmQ0ZC04NTYxLTE4YTJlMTg3NDU4OTwveG1wTU06SW5zdGFuY2VJRD4KICAgICAgICAgPHhtcE1NOkRvY3VtZW50SUQ+YWRvYmU6ZG9jaWQ6cGhvdG9zaG9wOmQzNTQyYWUyLWU3NDAtMTFlNy04MTc3LTg1NWM2NWM0OGMwYTwveG1wTU06RG9jdW1lbnRJRD4KICAgICAgICAgPHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD54bXAuZGlkOmNjMGIwYjdjLWE2MGItYTM0Ny1hNzFiLWRlMWVlNTM2MmRkNTwveG1wTU06T3JpZ2luYWxEb2N1bWVudElEPgogICAgICAgICA8eG1wTU06SGlzdG9yeT4KICAgICAgICAgICAgPHJkZjpTZXE+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPmNyZWF0ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDpjYzBiMGI3Yy1hNjBiLWEzNDctYTcxYi1kZTFlZTUzNjJkZDU8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTctMDctMjlUMDI6MTE6MTArMDk6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE3IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPnNhdmVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDppbnN0YW5jZUlEPnhtcC5paWQ6ZDZlNmM5ZDctYTQ5NS0yYjQ4LWFkNTQtODk4Y2YxOGYxNmNiPC9zdEV2dDppbnN0YW5jZUlEPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6d2hlbj4yMDE3LTA3LTI5VDAyOjExOjEwKzA5OjAwPC9zdEV2dDp3aGVuPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6c29mdHdhcmVBZ2VudD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNyAoV2luZG93cyk8L3N0RXZ0OnNvZnR3YXJlQWdlbnQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpjaGFuZ2VkPi88L3N0RXZ0OmNoYW5nZWQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5zYXZlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOmE2MjE4M2JhLWM2ZjItY2U0MC04ZjZkLTQ1YWU5YWViNzRjMDwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxNy0xMi0yM1QwMjo0OToxMCswOTowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICAgICA8c3RFdnQ6Y2hhbmdlZD4vPC9zdEV2dDpjaGFuZ2VkPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+Y29udmVydGVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpwYXJhbWV0ZXJzPmZyb20gaW1hZ2UvcG5nIHRvIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3A8L3N0RXZ0OnBhcmFtZXRlcnM+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5kZXJpdmVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpwYXJhbWV0ZXJzPmNvbnZlcnRlZCBmcm9tIGltYWdlL3BuZyB0byBhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9wPC9zdEV2dDpwYXJhbWV0ZXJzPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDo0MzZkMDcyNS1kZDc3LTNmNGUtYmIzYi0zMzlhOTZhNjE4YzU8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTctMTItMjNUMDI6NDk6MTArMDk6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE3IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPnNhdmVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDppbnN0YW5jZUlEPnhtcC5paWQ6YjE0YWEyNzItOWFjZC1lMzRlLTgxNjMtMWU4NzhiZDAwZWNjPC9zdEV2dDppbnN0YW5jZUlEPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6d2hlbj4yMDE3LTEyLTIzVDAyOjUyOjE4KzA5OjAwPC9zdEV2dDp3aGVuPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6c29mdHdhcmVBZ2VudD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNyAoV2luZG93cyk8L3N0RXZ0OnNvZnR3YXJlQWdlbnQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpjaGFuZ2VkPi88L3N0RXZ0OmNoYW5nZWQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5jb252ZXJ0ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnBhcmFtZXRlcnM+ZnJvbSBhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9wIHRvIGltYWdlL3BuZzwvc3RFdnQ6cGFyYW1ldGVycz4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPmRlcml2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnBhcmFtZXRlcnM+Y29udmVydGVkIGZyb20gYXBwbGljYXRpb24vdm5kLmFkb2JlLnBob3Rvc2hvcCB0byBpbWFnZS9wbmc8L3N0RXZ0OnBhcmFtZXRlcnM+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5zYXZlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOmNmY2NhNTc1LTQ5M2ItMmQ0ZC04NTYxLTE4YTJlMTg3NDU4OTwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxNy0xMi0yM1QwMjo1MjoxOCswOTowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICAgICA8c3RFdnQ6Y2hhbmdlZD4vPC9zdEV2dDpjaGFuZ2VkPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgPC9yZGY6U2VxPgogICAgICAgICA8L3htcE1NOkhpc3Rvcnk+CiAgICAgICAgIDx4bXBNTTpEZXJpdmVkRnJvbSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgIDxzdFJlZjppbnN0YW5jZUlEPnhtcC5paWQ6YjE0YWEyNzItOWFjZC1lMzRlLTgxNjMtMWU4NzhiZDAwZWNjPC9zdFJlZjppbnN0YW5jZUlEPgogICAgICAgICAgICA8c3RSZWY6ZG9jdW1lbnRJRD54bXAuZGlkOjQzNmQwNzI1LWRkNzctM2Y0ZS1iYjNiLTMzOWE5NmE2MThjNTwvc3RSZWY6ZG9jdW1lbnRJRD4KICAgICAgICAgICAgPHN0UmVmOm9yaWdpbmFsRG9jdW1lbnRJRD54bXAuZGlkOmNjMGIwYjdjLWE2MGItYTM0Ny1hNzFiLWRlMWVlNTM2MmRkNTwvc3RSZWY6b3JpZ2luYWxEb2N1bWVudElEPgogICAgICAgICA8L3htcE1NOkRlcml2ZWRGcm9tPgogICAgICAgICA8cGhvdG9zaG9wOkNvbG9yTW9kZT4zPC9waG90b3Nob3A6Q29sb3JNb2RlPgogICAgICAgICA8cGhvdG9zaG9wOlRleHRMYXllcnM+CiAgICAgICAgICAgIDxyZGY6QmFnPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHBob3Rvc2hvcDpMYXllck5hbWU+RG9zdHJlYW0rPC9waG90b3Nob3A6TGF5ZXJOYW1lPgogICAgICAgICAgICAgICAgICA8cGhvdG9zaG9wOkxheWVyVGV4dD5Eb3N0cmVhbSs8L3Bob3Rvc2hvcDpMYXllclRleHQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICA8L3JkZjpCYWc+CiAgICAgICAgIDwvcGhvdG9zaG9wOlRleHRMYXllcnM+CiAgICAgICAgIDxwaG90b3Nob3A6RG9jdW1lbnRBbmNlc3RvcnM+CiAgICAgICAgICAgIDxyZGY6QmFnPgogICAgICAgICAgICAgICA8cmRmOmxpPnhtcC5kaWQ6Q0Q5MDgzNDI5NTUyMTFFMzg5N0RFOTExMjE3RDQ2Mzk8L3JkZjpsaT4KICAgICAgICAgICAgPC9yZGY6QmFnPgogICAgICAgICA8L3Bob3Rvc2hvcDpEb2N1bWVudEFuY2VzdG9ycz4KICAgICAgICAgPGRjOmZvcm1hdD5pbWFnZS9wbmc8L2RjOmZvcm1hdD4KICAgICAgICAgPHRpZmY6T3JpZW50YXRpb24+MTwvdGlmZjpPcmllbnRhdGlvbj4KICAgICAgICAgPHRpZmY6WFJlc29sdXRpb24+NzIwMDAwLzEwMDAwPC90aWZmOlhSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpZUmVzb2x1dGlvbj43MjAwMDAvMTAwMDA8L3RpZmY6WVJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDxleGlmOkNvbG9yU3BhY2U+NjU1MzU8L2V4aWY6Q29sb3JTcGFjZT4KICAgICAgICAgPGV4aWY6UGl4ZWxYRGltZW5zaW9uPjkxPC9leGlmOlBpeGVsWERpbWVuc2lvbj4KICAgICAgICAgPGV4aWY6UGl4ZWxZRGltZW5zaW9uPjEzPC9leGlmOlBpeGVsWURpbWVuc2lvbj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgCjw/eHBhY2tldCBlbmQ9InciPz6a2oV1AAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAOySURBVHja7Fivb+Q4GH2pim6pSQtWc6QszMSktyga4vKgU8iwQfkDohSUDTIbMioKb8go6JiJ2bCi6EhJ6BVV8gLHEyexM9Vql9ydpYA4jr/n973vRxKhH3Gu9CFFcMhyjW3dRfh//NDQWk9m4lwrJTQnGD8hXAultFK5jgH9qwARLrTKY/2fIJtwESbUEv6ryOj3z2P8K8h+eXn55/Hx8XeX7Ct3wc0dC7/d1dG+ApAmmDkjzrVSyrk8DjtHh3MJrgmI5kJpdSzAAKQHBXePOLfrTcQN9xMb0/09ohjeNZfgXOfO2qmt8blsxPd4+/mQOG5vb3+7vr7+GpKW2URwTQKpwih/nGYMQHfOgnHI8Kg2zseELEWVeTYcjnAxwjnD1ZM02AtjmhLm2jrb6NcKIeakB/hSSumnp6c/Asq+wR0D0LbogIVCyHB3Myj6kEqU6y3qzr7TRXVZQiLFhhNzAJaAoUJzCu+6FFX2WZVR7E4TbHGujwWDLMsBw9sr5GjNnyiYRLne4WTP1tVRWUoAEq9vHhxVBrqtI5cLxlpk1D3rPHVYRwFAkiR/ufdXs67DtezvS3pwRPNNCsgGsvtMFkuRxMPdaUcjujtFVnmrFQD5irdwO4Tnk81o28gSEScpgAr7unO4LRznXsLZou2G6DY4Sqx3J9cDYACqzHGWR5wPDw9fKKURpTQCgKZpvrn3A9lkhdUFuozXLThjTDbyQiQAXb1Hdc7Hnm5nMap6ArzPYm24bgwJffow0WaJCe8djKbJWmI8AJ8OL4tzGFdT77VtSKb9waz6PuEcR8fRjtKI0gwVGIqjwue7mp4sbxHpMaQHU1QPQEYpKN1G51Dv18xJ8UVTLyAvgW4EXD7/+/u7/vj4+Nudu/6M90zh2CAFUO1r6/UgWSZHS5SzuD1FO0rxzIU+Fhvw562uO0RhQpbI+kkfXK6KAwTaiJ5MmtQSEOf9/f1VUNnjFDHvgYuCAVU2FKiuRQuAnavloBiWsCFHxvmsYnetH7g3qpaeBTFcHnF+RDFVsdfWUj0Ji3MhjYQ3jPO+B64yDAXNqLQxiRjjlu5oKn9pIsBEzKTFDBSs1YpcKMrz9GQwbODWAcLF0M51Eo0EWMJgHG5aNvtrYu7EqS1/zjfnCogzMExRWf4pgvW2DhbB2T+VyXrChT4W7MKeRHNhlGZHlVE0icIYWoWMuh2B/12gQrl+Rt31qYVwLfqPpnPakQx2TpZr7O+OY1tWXKN3rX0C16a3JfV8rn8fAJWt/iNyFCmZAAAAAElFTkSuQmCC")',
-        lock_image : 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAwCAYAAAALiLqjAAAACXBIWXMAAAsTAAALEwEAmpwYAABEymlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxMzggNzkuMTU5ODI0LCAyMDE2LzA5LzE0LTAxOjA5OjAxICAgICAgICAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgICAgICAgICB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIKICAgICAgICAgICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgICAgICAgICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIgogICAgICAgICAgICB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIgogICAgICAgICAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyI+CiAgICAgICAgIDx4bXA6Q3JlYXRvclRvb2w+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgICAgIDx4bXA6Q3JlYXRlRGF0ZT4yMDE3LTEyLTIzVDAzOjA2OjQ2KzA5OjAwPC94bXA6Q3JlYXRlRGF0ZT4KICAgICAgICAgPHhtcDpNb2RpZnlEYXRlPjIwMTctMTItMjNUMDM6MDc6NTkrMDk6MDA8L3htcDpNb2RpZnlEYXRlPgogICAgICAgICA8eG1wOk1ldGFkYXRhRGF0ZT4yMDE3LTEyLTIzVDAzOjA3OjU5KzA5OjAwPC94bXA6TWV0YWRhdGFEYXRlPgogICAgICAgICA8eG1wTU06SW5zdGFuY2VJRD54bXAuaWlkOjFmZTViOGVjLWVhNWItNjM0ZC1iNjg3LTk0ZDg2MGJjMThkMzwveG1wTU06SW5zdGFuY2VJRD4KICAgICAgICAgPHhtcE1NOkRvY3VtZW50SUQ+YWRvYmU6ZG9jaWQ6cGhvdG9zaG9wOjBiNDMzMDVjLWU3NDMtMTFlNy04MTc3LTg1NWM2NWM0OGMwYTwveG1wTU06RG9jdW1lbnRJRD4KICAgICAgICAgPHhtcE1NOkRlcml2ZWRGcm9tIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgPHN0UmVmOmluc3RhbmNlSUQ+eG1wLmlpZDpkNjI5YTBjNC1kYWUxLTQ4NDMtYmNlYy1kOTBmZDkwOTFhZWQ8L3N0UmVmOmluc3RhbmNlSUQ+CiAgICAgICAgICAgIDxzdFJlZjpkb2N1bWVudElEPnhtcC5kaWQ6MDQ2MmIwMTUtY2FkNy0zZDQxLWJiOWYtMWZhMzc3ODU3NTVlPC9zdFJlZjpkb2N1bWVudElEPgogICAgICAgICAgICA8c3RSZWY6b3JpZ2luYWxEb2N1bWVudElEPnhtcC5kaWQ6MTQ5QjI5OURCQjJGMTFFM0EwMkZGODhCQzc4QTZCNDY8L3N0UmVmOm9yaWdpbmFsRG9jdW1lbnRJRD4KICAgICAgICAgPC94bXBNTTpEZXJpdmVkRnJvbT4KICAgICAgICAgPHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD54bXAuZGlkOjE0OUIyOTlEQkIyRjExRTNBMDJGRjg4QkM3OEE2QjQ2PC94bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ+CiAgICAgICAgIDx4bXBNTTpIaXN0b3J5PgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDozNTIyMmY1MC0yOWJiLWE0NDItOTNhOC0xZmE2MGVjNzk4M2Y8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTctMTItMjNUMDM6MDc6MDkrMDk6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE3IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPnNhdmVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDppbnN0YW5jZUlEPnhtcC5paWQ6ZWM3NmY4MWUtODBmZi00NTRjLThlOWUtMDdiYmFmZjUzYjdhPC9zdEV2dDppbnN0YW5jZUlEPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6d2hlbj4yMDE3LTEyLTIzVDAzOjA3OjUwKzA5OjAwPC9zdEV2dDp3aGVuPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6c29mdHdhcmVBZ2VudD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNyAoV2luZG93cyk8L3N0RXZ0OnNvZnR3YXJlQWdlbnQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpjaGFuZ2VkPi88L3N0RXZ0OmNoYW5nZWQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5jb252ZXJ0ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnBhcmFtZXRlcnM+ZnJvbSBpbWFnZS9wbmcgdG8gYXBwbGljYXRpb24vdm5kLmFkb2JlLnBob3Rvc2hvcDwvc3RFdnQ6cGFyYW1ldGVycz4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPmRlcml2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnBhcmFtZXRlcnM+Y29udmVydGVkIGZyb20gaW1hZ2UvcG5nIHRvIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3A8L3N0RXZ0OnBhcmFtZXRlcnM+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5zYXZlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOjA0NjJiMDE1LWNhZDctM2Q0MS1iYjlmLTFmYTM3Nzg1NzU1ZTwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxNy0xMi0yM1QwMzowNzo1MCswOTowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICAgICA8c3RFdnQ6Y2hhbmdlZD4vPC9zdEV2dDpjaGFuZ2VkPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDpkNjI5YTBjNC1kYWUxLTQ4NDMtYmNlYy1kOTBmZDkwOTFhZWQ8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTctMTItMjNUMDM6MDc6NTkrMDk6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE3IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPmNvbnZlcnRlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6cGFyYW1ldGVycz5mcm9tIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3AgdG8gaW1hZ2UvcG5nPC9zdEV2dDpwYXJhbWV0ZXJzPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+ZGVyaXZlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6cGFyYW1ldGVycz5jb252ZXJ0ZWQgZnJvbSBhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9wIHRvIGltYWdlL3BuZzwvc3RFdnQ6cGFyYW1ldGVycz4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPnNhdmVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDppbnN0YW5jZUlEPnhtcC5paWQ6MWZlNWI4ZWMtZWE1Yi02MzRkLWI2ODctOTRkODYwYmMxOGQzPC9zdEV2dDppbnN0YW5jZUlEPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6d2hlbj4yMDE3LTEyLTIzVDAzOjA3OjU5KzA5OjAwPC9zdEV2dDp3aGVuPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6c29mdHdhcmVBZ2VudD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNyAoV2luZG93cyk8L3N0RXZ0OnNvZnR3YXJlQWdlbnQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpjaGFuZ2VkPi88L3N0RXZ0OmNoYW5nZWQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICA8L3JkZjpTZXE+CiAgICAgICAgIDwveG1wTU06SGlzdG9yeT4KICAgICAgICAgPGRjOmZvcm1hdD5pbWFnZS9wbmc8L2RjOmZvcm1hdD4KICAgICAgICAgPHBob3Rvc2hvcDpDb2xvck1vZGU+MzwvcGhvdG9zaG9wOkNvbG9yTW9kZT4KICAgICAgICAgPHRpZmY6T3JpZW50YXRpb24+MTwvdGlmZjpPcmllbnRhdGlvbj4KICAgICAgICAgPHRpZmY6WFJlc29sdXRpb24+NzIwMDAwLzEwMDAwPC90aWZmOlhSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpZUmVzb2x1dGlvbj43MjAwMDAvMTAwMDA8L3RpZmY6WVJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDxleGlmOkNvbG9yU3BhY2U+NjU1MzU8L2V4aWY6Q29sb3JTcGFjZT4KICAgICAgICAgPGV4aWY6UGl4ZWxYRGltZW5zaW9uPjI0PC9leGlmOlBpeGVsWERpbWVuc2lvbj4KICAgICAgICAgPGV4aWY6UGl4ZWxZRGltZW5zaW9uPjQ4PC9leGlmOlBpeGVsWURpbWVuc2lvbj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgCjw/eHBhY2tldCBlbmQ9InciPz58brDwAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAM7SURBVHjaxNfLixxVFAbwX1X3GN8ag6IgKiooriQ+0OjCjWAi6D8w6EYQ3bhwYURwJYhuhGwkrhRHN7pzIYMgPjYG8UEwCMZFGBR1UEcz0Uky3VVuTsm1qO661VG80FTd7nvPd97n62JlZcWCq4zPNPajeK/bhxYVXmMSz+YdijMFKFHhUjyPL/EFnsMlAVYuCtAIvxGHsB8nsIVn4rsb4kw5FKCIi2O8gZ24FXdjD+7EZXg1UaQoB2oPD2I3HsFnWArQT/AY7sD9zZ1FYrAPG3g39pMkk97BJvY2Vo9bl0ftLGhZMMW1+Al/xPkqOXMc67gm9nUbYJrhom9DkBBet5T6Gb+nAEUcOgcP4byWVumqsYbv8CR+w+s4nZzZm9yvUgsuiLze2aFVezVpuIa3AqBRdOPfqOS+dP5budSCP/EyLoxYzLOgjvRcx6mO33QBjHEzdmE7A+CsiMVonjkpwA7chYsGxOCKloy5ABP8GMJPZ1hwdqRklQuwhYM4v6ce0hj8mqRo3QdwLp6ONlxluGiEY3itlaYzAcpkX/QAFMmdItdFp7AaQ2OSYcEOfB8ZNxegMetEDI3xLH92WLGd1EFvDLRmbA7ApO/QuGX2ep9PO7Kp8n+uf2g7hyMVCe9JaUun9svLyzNjME+JScdgKvtcVGYIr2NW7MenOIwDuCqlJ4sANMIvx/sxjER7eByfB12ZC5IzcA7iFtyH23APbgr28GZ035mtpezhnrfjgZi/qxGzMb7Bw7gay/NklT2W3RvPt5NaaabdRziakKx6CEBj7nVBUTaSVB0l2fdDwoHktIq0qkU7/jpIVkrXG8WOBnXJ7kUpe94XAlfxRIeAhiOt4angph+2a2MWwB68GP4e9WTZJOQcCIAz/gMyaI1n+P4wXgmu1KdEFXTzgz5elGbPrqiBzQyAKS7GV10NdBbAlUHCJhkNsTlzfY6LGvM2YxRuZAR5GnP8+BCAI3gBJzMmXBWU5+OcGDRpuhvPhvk5abqEl/BeXwyatTRr6s1pK6MhLjoWRbOZQa6mQfmP5LioqYNDeHQAYxjhlxyAOgHaHgBQJXO6zonBVrTiIauThBV1Xf+nveivAQAt4uqU7ORcMgAAAABJRU5ErkJggg==")',
-        body_back : '#111 url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAIAAAD+THXTAAAACXBIWXMAAAsTAAALEwEAmpwYAABBB2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxMzggNzkuMTU5ODI0LCAyMDE2LzA5LzE0LTAxOjA5OjAxICAgICAgICAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIKICAgICAgICAgICAgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iCiAgICAgICAgICAgIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiCiAgICAgICAgICAgIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIgogICAgICAgICAgICB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIgogICAgICAgICAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyI+CiAgICAgICAgIDx4bXA6Q3JlYXRvclRvb2w+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgICAgIDx4bXA6Q3JlYXRlRGF0ZT4yMDE3LTEyLTIzVDA2OjU0OjEwKzA5OjAwPC94bXA6Q3JlYXRlRGF0ZT4KICAgICAgICAgPHhtcDpNZXRhZGF0YURhdGU+MjAxNy0xMi0yM1QwNjo1ODo1MCswOTowMDwveG1wOk1ldGFkYXRhRGF0ZT4KICAgICAgICAgPHhtcDpNb2RpZnlEYXRlPjIwMTctMTItMjNUMDY6NTg6NTArMDk6MDA8L3htcDpNb2RpZnlEYXRlPgogICAgICAgICA8ZGM6Zm9ybWF0PmltYWdlL3BuZzwvZGM6Zm9ybWF0PgogICAgICAgICA8eG1wTU06SW5zdGFuY2VJRD54bXAuaWlkOjUwYTFkMjdhLTk2NWQtY2Q0Zi1iNzI0LTQ2MDJlNjk2ZDk0NTwveG1wTU06SW5zdGFuY2VJRD4KICAgICAgICAgPHhtcE1NOkRvY3VtZW50SUQ+YWRvYmU6ZG9jaWQ6cGhvdG9zaG9wOjQ2ZTg2OGUwLWU3NjMtMTFlNy1hNmI0LTkzMDUzYzQzNDczNzwveG1wTU06RG9jdW1lbnRJRD4KICAgICAgICAgPHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD54bXAuZGlkOjgyYmYzNDJkLWJhZWEtMzc0NS1iOWVjLTdiZGM1MDNjY2RkMTwveG1wTU06T3JpZ2luYWxEb2N1bWVudElEPgogICAgICAgICA8eG1wTU06SGlzdG9yeT4KICAgICAgICAgICAgPHJkZjpTZXE+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPmNyZWF0ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDo4MmJmMzQyZC1iYWVhLTM3NDUtYjllYy03YmRjNTAzY2NkZDE8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTctMTItMjNUMDY6NTQ6MTArMDk6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE3IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPnNhdmVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDppbnN0YW5jZUlEPnhtcC5paWQ6ZTg0YTJiNDItMGM2MC1lYTQ2LTkxNmEtOTMwYzJhZTE2N2ExPC9zdEV2dDppbnN0YW5jZUlEPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6d2hlbj4yMDE3LTEyLTIzVDA2OjU1OjIwKzA5OjAwPC9zdEV2dDp3aGVuPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6c29mdHdhcmVBZ2VudD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNyAoV2luZG93cyk8L3N0RXZ0OnNvZnR3YXJlQWdlbnQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpjaGFuZ2VkPi88L3N0RXZ0OmNoYW5nZWQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5zYXZlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOmM1MjIwMjQyLTE1MTItYTk0OC05NzVhLTY2NzM4ODliNWY0NTwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxNy0xMi0yM1QwNjo1ODo1MCswOTowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICAgICA8c3RFdnQ6Y2hhbmdlZD4vPC9zdEV2dDpjaGFuZ2VkPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+Y29udmVydGVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpwYXJhbWV0ZXJzPmZyb20gYXBwbGljYXRpb24vdm5kLmFkb2JlLnBob3Rvc2hvcCB0byBpbWFnZS9wbmc8L3N0RXZ0OnBhcmFtZXRlcnM+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5kZXJpdmVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpwYXJhbWV0ZXJzPmNvbnZlcnRlZCBmcm9tIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3AgdG8gaW1hZ2UvcG5nPC9zdEV2dDpwYXJhbWV0ZXJzPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDo1MGExZDI3YS05NjVkLWNkNGYtYjcyNC00NjAyZTY5NmQ5NDU8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTctMTItMjNUMDY6NTg6NTArMDk6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE3IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC94bXBNTTpIaXN0b3J5PgogICAgICAgICA8eG1wTU06RGVyaXZlZEZyb20gcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICA8c3RSZWY6aW5zdGFuY2VJRD54bXAuaWlkOmM1MjIwMjQyLTE1MTItYTk0OC05NzVhLTY2NzM4ODliNWY0NTwvc3RSZWY6aW5zdGFuY2VJRD4KICAgICAgICAgICAgPHN0UmVmOmRvY3VtZW50SUQ+eG1wLmRpZDo4MmJmMzQyZC1iYWVhLTM3NDUtYjllYy03YmRjNTAzY2NkZDE8L3N0UmVmOmRvY3VtZW50SUQ+CiAgICAgICAgICAgIDxzdFJlZjpvcmlnaW5hbERvY3VtZW50SUQ+eG1wLmRpZDo4MmJmMzQyZC1iYWVhLTM3NDUtYjllYy03YmRjNTAzY2NkZDE8L3N0UmVmOm9yaWdpbmFsRG9jdW1lbnRJRD4KICAgICAgICAgPC94bXBNTTpEZXJpdmVkRnJvbT4KICAgICAgICAgPHBob3Rvc2hvcDpDb2xvck1vZGU+MzwvcGhvdG9zaG9wOkNvbG9yTW9kZT4KICAgICAgICAgPHRpZmY6T3JpZW50YXRpb24+MTwvdGlmZjpPcmllbnRhdGlvbj4KICAgICAgICAgPHRpZmY6WFJlc29sdXRpb24+NzIwMDAwLzEwMDAwPC90aWZmOlhSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpZUmVzb2x1dGlvbj43MjAwMDAvMTAwMDA8L3RpZmY6WVJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDxleGlmOkNvbG9yU3BhY2U+NjU1MzU8L2V4aWY6Q29sb3JTcGFjZT4KICAgICAgICAgPGV4aWY6UGl4ZWxYRGltZW5zaW9uPjcwPC9leGlmOlBpeGVsWERpbWVuc2lvbj4KICAgICAgICAgPGV4aWY6UGl4ZWxZRGltZW5zaW9uPjcwPC9leGlmOlBpeGVsWURpbWVuc2lvbj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgCjw/eHBhY2tldCBlbmQ9InciPz55EBHqAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAoqSURBVHjajFvZcttADNMeaeNO+9Bm+v8falnbBzgQClCe+KHjerXagyQIHmkfHx9rrW3b1lr4sm1ba23OuW3bcRzHcWC0tbZ9fnrv+PfxeOAXfQBz11qPx8Mmbts2xmitYUh/x3/nnL33tda+77orvqT3jnWxMfyOVVprY4xxu934NH7FqtgQd6+fOSdepyu11vDeMca2bZiL7zn38XiMMfBmnhn3iFHdhq4y58RhWmu9d12do10lw1tca1E4vNc8z1qr9z7n5J7whaKzU805eeu6LcoH56F4ubQ+oBfEFfEqzBq32011A0LHejySagVUkc9T4mstvQuO8g0qPXyO44AWHccBXYWy6cupI9yYKSqeH2Pwzb3UY9MWnOHt7S2NiruErMq5YwyM6nnw2fcdbz6OA9/zHjEdr7Lp2AxGTzvXs7bWUrL8AhW38+QCdoulNuZL8i6+8qG+6bbH+/s7Dqp4YEvC7KBa0BPdh6qEYYmiBb/bmykrQwsFg6u7wGagwMSScbvdMKD3pDNplJAhdsaHuQ8aDFWXKoGbIhjQFMcYwAMKk7DJdfXNsEzFg1Knepqdfrf3Yn+w2rWW2h7+3fddNVmxi66Gc7kW9ko5c7uqDpDznBMYqNeKk2CfrbXZe8dKelaIkh7TjARvB1rQIfIB+Byex8wMo9BAWxePYa5eTeKbOoOc3ktjVWZAfTD7MRXVB/Ta8v2GFrqzK5BQRYC09Tps1vj+/bviAWGR58lt0ScakNAGKA1zCbzg+/2OS6FhqLk/Hg88ZrQGWA9TTOwlUeqnvD7XUCedPkdtgDhGf8LT8hmM4oONAt+StVDPFVHsLiB5k79CyxPxVFson/QtODlPwgeIYJBJKhLvggiRjCZRShFszrnve45ilpmGswfz35QVOQsRzEQPLHrh4PU8ybNekIPkWcYtbLdd2RQfSgfFH1+ghWq/LoO5uaeSCtrvSQ5s6YSop+LhglWIuj+MKj9QQZk/LdkD7CdJICw+kUadKeWsARKxhEBwiuR2u0Er1AWpoMx+MJmnent7U/+jUZDu2GJHntYIgQIsb7kEd7VbHvV5pF+/fnFJixDzPMQD7AZXa/FCRiKmkDgVEcwsh8cz1qJoQT1KFrttWy/9LNSXEXVpl2BDJfMYY4Bb2Hk0alTrUvNQ1pL2RpQzy8Tok0zRGBw3PjVEldAsUkHPghSLJuwibU/2knJi+Z50NmdwkROY8chNK5rjwBkRQFev4hQyAFuUUYwR0xIPVMjKeE7EO83rfz+gYELk4aixHsYLhpZYWBmNCZnBthEoW3fJx7gFzrPW+o9rMw7T7ALvG/RcEYbojN3Q/zDsMW5h8YLhkJ6HtqHZtcwRZO6ttdapvgwK9I6JYzaaATmYRxJkHEnxQOcyikl84/M8T4kHYwyDqG784DUDMJKfvMkSaxqnlPyAaHE1aqGrqSUuwrIDpy2Zxeu2GO0xs6Wgp/F22rTxEgtGiBYle6A20hdZuEE6pvbcywybsQfGycZuDS3ohfW0KQEdpfTMg3EUb04OzrsjGz4l8fHxkU7J1IYZNks1lfG2ajLxOrlM4pslmOwuVMKKB3bI4zh6qgpREkmCRIsrPCjjhXR6V/yAaKHsToegAokHlBUONhX+1fS5quZmy3gmd8YpeReZqSpRLl9L46GbLjVrrTVzu8aCM5+o/tTyeJrHJB/TpB8TupCV1lSY7oVT1nDTEt9Xxn+yB40m1E9bxUGlR7SwGCFjdUVIFbiFxrxHorOxB+gbc08ZnlIbnyDOtckAiD8at1p2ToORMvdAc1J8M79no8lEYV26qN4CNqYlj67pzIwmKBzkHkpLYLT3IhFHyyyRRqPmrHqUlqlGZYSmZ3YbgrIMm2pFmce8Sh5QZ67ugjZTBgSavi3TQ0zQejqF6liCG+z4fr8noNNLYNPGTRj2UntpHmSl5OaWn8IvoCyMU1TVmWkxlBo/fvzQfIhmFzS3qh5GOWjyA52rNcUMH1W2PIZSJ0MLPk+XSLTQFNX4+fOnAaLhgU7mBeO/iH/MpjXbmKFrk08G2xy60nPgQRkuYMNjjDMfopdNPEhXzcdKPLA8c3KZK19X4kFZX72iLDS5k7ZanhVStgybSqDkB1cc7KpskaMM8q9AKPHAamrPyoVBFiRwv9/L3AW9fsYqWqy3zH3ykuyo0IyvWRq9E2MN41lnk8D7+7uhcNbr0+LJ7sg8ytYE3CitQrm5Wp1Fe5nuLZmHJlLUnbY/f/5k/HjVMVHGp1rXKEdNellHUV21xLW1IiQI0f2cJMZyqCWxpwaXQXWpY+lty6KgalQaDzPpZZGGW6JCPfXZNGrf91RxTrjKv6nXK/HgKkwsR82DXRVtqRQaR5+0Vat3JXtgNJHn0fy12pXqpFbNVD7qT3UuKalmKvWcOIYGJv8RoqxJKaRoVwQ1kI5Y2cMzTu7dOqyYXVAhM3rVoFXrGup/bJRVd3okHZ3ZAWKRTPp4iiu9HtdOjWITB3OgigeW7kltZAzPN6tlaq2xp+PT3IPalTGAKzygBDg3o6ArvmMBjrl4uuDsilCQ6KW7JCInuSYesNXkih9kGyLnokmANm0NLZpLrPmBVOnVAeJgz8pFmU9UfqC1OvU/ltnQUc3JaKMmm6/UvxseaDRAeFA6aiUicvO1VreEuvXdaSuUWq2iBTfHaE/RInORyuWsy4X2o6Nqt9ZtpBycozNryYYWGm5A38wu2XpmQb7GOaU/hRawEUUZQFnATqujFuho/2L/QfYJXGUXSjzItlSjcCWvZ0JX9VyBV+P88wrgas0nlpm9FxGBer3EAxZwSz9BpX3xZmPlWoe2WuAznUIOxrKh7YkWz0D/ih+UtQkagKKcZueYcNS5ihY5inQVWZh2BnZCfiaTMieqbcMle9AaaUYExg/oCaBFxANeq6oW/Sw/WvX4L075+/evNjYa56d3ym5+hkxlrHHVX8dsDom2rktcVVPR5gG+kOFpho/dWKbdN1/9Gg8yT1+2FmieWWk7D0aqVULU/X7XOD/TusDAbhGBRWxlvPCV7ILGMPkGhDAlqWeAUzYvXvUU02fs+z7VpSYeaI1dR7ljnasVyKzwWgrAtCBryTqqzRaPx+Pbt29244pSz9yD1p6zf6fsTsjeBYsXMvdgf0ljfxih59H0hpWSzWFkl1T7/ft39hCU2oirIu8o1TUjUGYMzeKNHJSjCtxIUKsmGw551+RVn0B2tJTumNykjKvNJ5a9P+Wo8YOyplhksL+YP0BEkL2xigeWiTfGaaVlNRjDAxtVdptN0Zk+OKuAL+KFqyifNqAthjpXG9z658c0x+bqny9gFEsr3FkVtDgSNcpKN1n0TVZv3E97ZC0at+ws+U7ZFWB4UHrz7PR6Hr6M8vXo1qtpZTW6PyXIhHJtmODV0AtnrkubA+2WlV5mjRSv7VZHuoomymyjRgRlUtewKCHxqmqY8UL2jCdBA0XChv8NAONbx0GVv8YOAAAAAElFTkSuQmCC") repeat scroll left top',
-        border_top : '1px solid #000',
-        border_left : '1px solid #000',
-        none : 'none'
+        logo : 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFsAAAANCAYAAADG4RJzAAAACXBIWXMAAAsTAAALEwEAmpwYAABIZmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxMzggNzkuMTU5ODI0LCAyMDE2LzA5LzE0LTAxOjA5OjAxICAgICAgICAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgICAgICAgICB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIgogICAgICAgICAgICB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIKICAgICAgICAgICAgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIgogICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICAgICAgICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIgogICAgICAgICAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyI+CiAgICAgICAgIDx4bXA6Q3JlYXRvclRvb2w+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgICAgIDx4bXA6Q3JlYXRlRGF0ZT4yMDE3LTA3LTI5VDAyOjExOjEwKzA5OjAwPC94bXA6Q3JlYXRlRGF0ZT4KICAgICAgICAgPHhtcDpNZXRhZGF0YURhdGU+MjAxNy0xMi0yM1QwMjo1MjoxOCswOTowMDwveG1wOk1ldGFkYXRhRGF0ZT4KICAgICAgICAgPHhtcDpNb2RpZnlEYXRlPjIwMTctMTItMjNUMDI6NTI6MTgrMDk6MDA8L3htcDpNb2RpZnlEYXRlPgogICAgICAgICA8eG1wTU06SW5zdGFuY2VJRD54bXAuaWlkOmNmY2NhNTc1LTQ5M2ItMmQ0ZC04NTYxLTE4YTJlMTg3NDU4OTwveG1wTU06SW5zdGFuY2VJRD4KICAgICAgICAgPHhtcE1NOkRvY3VtZW50SUQ+YWRvYmU6ZG9jaWQ6cGhvdG9zaG9wOmQzNTQyYWUyLWU3NDAtMTFlNy04MTc3LTg1NWM2NWM0OGMwYTwveG1wTU06RG9jdW1lbnRJRD4KICAgICAgICAgPHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD54bXAuZGlkOmNjMGIwYjdjLWE2MGItYTM0Ny1hNzFiLWRlMWVlNTM2MmRkNTwveG1wTU06T3JpZ2luYWxEb2N1bWVudElEPgogICAgICAgICA8eG1wTU06SGlzdG9yeT4KICAgICAgICAgICAgPHJkZjpTZXE+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPmNyZWF0ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDpjYzBiMGI3Yy1hNjBiLWEzNDctYTcxYi1kZTFlZTUzNjJkZDU8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTctMDctMjlUMDI6MTE6MTArMDk6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE3IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPnNhdmVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDppbnN0YW5jZUlEPnhtcC5paWQ6ZDZlNmM5ZDctYTQ5NS0yYjQ4LWFkNTQtODk4Y2YxOGYxNmNiPC9zdEV2dDppbnN0YW5jZUlEPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6d2hlbj4yMDE3LTA3LTI5VDAyOjExOjEwKzA5OjAwPC9zdEV2dDp3aGVuPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6c29mdHdhcmVBZ2VudD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNyAoV2luZG93cyk8L3N0RXZ0OnNvZnR3YXJlQWdlbnQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpjaGFuZ2VkPi88L3N0RXZ0OmNoYW5nZWQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5zYXZlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOmE2MjE4M2JhLWM2ZjItY2U0MC04ZjZkLTQ1YWU5YWViNzRjMDwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxNy0xMi0yM1QwMjo0OToxMCswOTowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICAgICA8c3RFdnQ6Y2hhbmdlZD4vPC9zdEV2dDpjaGFuZ2VkPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+Y29udmVydGVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpwYXJhbWV0ZXJzPmZyb20gaW1hZ2UvcG5nIHRvIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3A8L3N0RXZ0OnBhcmFtZXRlcnM+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5kZXJpdmVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpwYXJhbWV0ZXJzPmNvbnZlcnRlZCBmcm9tIGltYWdlL3BuZyB0byBhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9wPC9zdEV2dDpwYXJhbWV0ZXJzPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDo0MzZkMDcyNS1kZDc3LTNmNGUtYmIzYi0zMzlhOTZhNjE4YzU8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTctMTItMjNUMDI6NDk6MTArMDk6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE3IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPnNhdmVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDppbnN0YW5jZUlEPnhtcC5paWQ6YjE0YWEyNzItOWFjZC1lMzRlLTgxNjMtMWU4NzhiZDAwZWNjPC9zdEV2dDppbnN0YW5jZUlEPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6d2hlbj4yMDE3LTEyLTIzVDAyOjUyOjE4KzA5OjAwPC9zdEV2dDp3aGVuPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6c29mdHdhcmVBZ2VudD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNyAoV2luZG93cyk8L3N0RXZ0OnNvZnR3YXJlQWdlbnQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpjaGFuZ2VkPi88L3N0RXZ0OmNoYW5nZWQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5jb252ZXJ0ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnBhcmFtZXRlcnM+ZnJvbSBhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9wIHRvIGltYWdlL3BuZzwvc3RFdnQ6cGFyYW1ldGVycz4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPmRlcml2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnBhcmFtZXRlcnM+Y29udmVydGVkIGZyb20gYXBwbGljYXRpb24vdm5kLmFkb2JlLnBob3Rvc2hvcCB0byBpbWFnZS9wbmc8L3N0RXZ0OnBhcmFtZXRlcnM+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5zYXZlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOmNmY2NhNTc1LTQ5M2ItMmQ0ZC04NTYxLTE4YTJlMTg3NDU4OTwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxNy0xMi0yM1QwMjo1MjoxOCswOTowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICAgICA8c3RFdnQ6Y2hhbmdlZD4vPC9zdEV2dDpjaGFuZ2VkPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgPC9yZGY6U2VxPgogICAgICAgICA8L3htcE1NOkhpc3Rvcnk+CiAgICAgICAgIDx4bXBNTTpEZXJpdmVkRnJvbSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgIDxzdFJlZjppbnN0YW5jZUlEPnhtcC5paWQ6YjE0YWEyNzItOWFjZC1lMzRlLTgxNjMtMWU4NzhiZDAwZWNjPC9zdFJlZjppbnN0YW5jZUlEPgogICAgICAgICAgICA8c3RSZWY6ZG9jdW1lbnRJRD54bXAuZGlkOjQzNmQwNzI1LWRkNzctM2Y0ZS1iYjNiLTMzOWE5NmE2MThjNTwvc3RSZWY6ZG9jdW1lbnRJRD4KICAgICAgICAgICAgPHN0UmVmOm9yaWdpbmFsRG9jdW1lbnRJRD54bXAuZGlkOmNjMGIwYjdjLWE2MGItYTM0Ny1hNzFiLWRlMWVlNTM2MmRkNTwvc3RSZWY6b3JpZ2luYWxEb2N1bWVudElEPgogICAgICAgICA8L3htcE1NOkRlcml2ZWRGcm9tPgogICAgICAgICA8cGhvdG9zaG9wOkNvbG9yTW9kZT4zPC9waG90b3Nob3A6Q29sb3JNb2RlPgogICAgICAgICA8cGhvdG9zaG9wOlRleHRMYXllcnM+CiAgICAgICAgICAgIDxyZGY6QmFnPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHBob3Rvc2hvcDpMYXllck5hbWU+RG9zdHJlYW0rPC9waG90b3Nob3A6TGF5ZXJOYW1lPgogICAgICAgICAgICAgICAgICA8cGhvdG9zaG9wOkxheWVyVGV4dD5Eb3N0cmVhbSs8L3Bob3Rvc2hvcDpMYXllclRleHQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICA8L3JkZjpCYWc+CiAgICAgICAgIDwvcGhvdG9zaG9wOlRleHRMYXllcnM+CiAgICAgICAgIDxwaG90b3Nob3A6RG9jdW1lbnRBbmNlc3RvcnM+CiAgICAgICAgICAgIDxyZGY6QmFnPgogICAgICAgICAgICAgICA8cmRmOmxpPnhtcC5kaWQ6Q0Q5MDgzNDI5NTUyMTFFMzg5N0RFOTExMjE3RDQ2Mzk8L3JkZjpsaT4KICAgICAgICAgICAgPC9yZGY6QmFnPgogICAgICAgICA8L3Bob3Rvc2hvcDpEb2N1bWVudEFuY2VzdG9ycz4KICAgICAgICAgPGRjOmZvcm1hdD5pbWFnZS9wbmc8L2RjOmZvcm1hdD4KICAgICAgICAgPHRpZmY6T3JpZW50YXRpb24+MTwvdGlmZjpPcmllbnRhdGlvbj4KICAgICAgICAgPHRpZmY6WFJlc29sdXRpb24+NzIwMDAwLzEwMDAwPC90aWZmOlhSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpZUmVzb2x1dGlvbj43MjAwMDAvMTAwMDA8L3RpZmY6WVJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDxleGlmOkNvbG9yU3BhY2U+NjU1MzU8L2V4aWY6Q29sb3JTcGFjZT4KICAgICAgICAgPGV4aWY6UGl4ZWxYRGltZW5zaW9uPjkxPC9leGlmOlBpeGVsWERpbWVuc2lvbj4KICAgICAgICAgPGV4aWY6UGl4ZWxZRGltZW5zaW9uPjEzPC9leGlmOlBpeGVsWURpbWVuc2lvbj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgCjw/eHBhY2tldCBlbmQ9InciPz6a2oV1AAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAOySURBVHja7Fivb+Q4GH2pim6pSQtWc6QszMSktyga4vKgU8iwQfkDohSUDTIbMioKb8go6JiJ2bCi6EhJ6BVV8gLHEyexM9Vql9ydpYA4jr/n973vRxKhH3Gu9CFFcMhyjW3dRfh//NDQWk9m4lwrJTQnGD8hXAultFK5jgH9qwARLrTKY/2fIJtwESbUEv6ryOj3z2P8K8h+eXn55/Hx8XeX7Ct3wc0dC7/d1dG+ApAmmDkjzrVSyrk8DjtHh3MJrgmI5kJpdSzAAKQHBXePOLfrTcQN9xMb0/09ohjeNZfgXOfO2qmt8blsxPd4+/mQOG5vb3+7vr7+GpKW2URwTQKpwih/nGYMQHfOgnHI8Kg2zseELEWVeTYcjnAxwjnD1ZM02AtjmhLm2jrb6NcKIeakB/hSSumnp6c/Asq+wR0D0LbogIVCyHB3Myj6kEqU6y3qzr7TRXVZQiLFhhNzAJaAoUJzCu+6FFX2WZVR7E4TbHGujwWDLMsBw9sr5GjNnyiYRLne4WTP1tVRWUoAEq9vHhxVBrqtI5cLxlpk1D3rPHVYRwFAkiR/ufdXs67DtezvS3pwRPNNCsgGsvtMFkuRxMPdaUcjujtFVnmrFQD5irdwO4Tnk81o28gSEScpgAr7unO4LRznXsLZou2G6DY4Sqx3J9cDYACqzHGWR5wPDw9fKKURpTQCgKZpvrn3A9lkhdUFuozXLThjTDbyQiQAXb1Hdc7Hnm5nMap6ArzPYm24bgwJffow0WaJCe8djKbJWmI8AJ8OL4tzGFdT77VtSKb9waz6PuEcR8fRjtKI0gwVGIqjwue7mp4sbxHpMaQHU1QPQEYpKN1G51Dv18xJ8UVTLyAvgW4EXD7/+/u7/vj4+Nudu/6M90zh2CAFUO1r6/UgWSZHS5SzuD1FO0rxzIU+Fhvw562uO0RhQpbI+kkfXK6KAwTaiJ5MmtQSEOf9/f1VUNnjFDHvgYuCAVU2FKiuRQuAnavloBiWsCFHxvmsYnetH7g3qpaeBTFcHnF+RDFVsdfWUj0Ji3MhjYQ3jPO+B64yDAXNqLQxiRjjlu5oKn9pIsBEzKTFDBSs1YpcKMrz9GQwbODWAcLF0M51Eo0EWMJgHG5aNvtrYu7EqS1/zjfnCogzMExRWf4pgvW2DhbB2T+VyXrChT4W7MKeRHNhlGZHlVE0icIYWoWMuh2B/12gQrl+Rt31qYVwLfqPpnPakQx2TpZr7O+OY1tWXKN3rX0C16a3JfV8rn8fAJWt/iNyFCmZAAAAAElFTkSuQmCC") !important',
+        lock_image : 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAwCAYAAAALiLqjAAAACXBIWXMAAAsTAAALEwEAmpwYAABEymlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxMzggNzkuMTU5ODI0LCAyMDE2LzA5LzE0LTAxOjA5OjAxICAgICAgICAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgICAgICAgICB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIKICAgICAgICAgICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgICAgICAgICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIgogICAgICAgICAgICB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIgogICAgICAgICAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyI+CiAgICAgICAgIDx4bXA6Q3JlYXRvclRvb2w+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgICAgIDx4bXA6Q3JlYXRlRGF0ZT4yMDE3LTEyLTIzVDAzOjA2OjQ2KzA5OjAwPC94bXA6Q3JlYXRlRGF0ZT4KICAgICAgICAgPHhtcDpNb2RpZnlEYXRlPjIwMTctMTItMjNUMDM6MDc6NTkrMDk6MDA8L3htcDpNb2RpZnlEYXRlPgogICAgICAgICA8eG1wOk1ldGFkYXRhRGF0ZT4yMDE3LTEyLTIzVDAzOjA3OjU5KzA5OjAwPC94bXA6TWV0YWRhdGFEYXRlPgogICAgICAgICA8eG1wTU06SW5zdGFuY2VJRD54bXAuaWlkOjFmZTViOGVjLWVhNWItNjM0ZC1iNjg3LTk0ZDg2MGJjMThkMzwveG1wTU06SW5zdGFuY2VJRD4KICAgICAgICAgPHhtcE1NOkRvY3VtZW50SUQ+YWRvYmU6ZG9jaWQ6cGhvdG9zaG9wOjBiNDMzMDVjLWU3NDMtMTFlNy04MTc3LTg1NWM2NWM0OGMwYTwveG1wTU06RG9jdW1lbnRJRD4KICAgICAgICAgPHhtcE1NOkRlcml2ZWRGcm9tIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgPHN0UmVmOmluc3RhbmNlSUQ+eG1wLmlpZDpkNjI5YTBjNC1kYWUxLTQ4NDMtYmNlYy1kOTBmZDkwOTFhZWQ8L3N0UmVmOmluc3RhbmNlSUQ+CiAgICAgICAgICAgIDxzdFJlZjpkb2N1bWVudElEPnhtcC5kaWQ6MDQ2MmIwMTUtY2FkNy0zZDQxLWJiOWYtMWZhMzc3ODU3NTVlPC9zdFJlZjpkb2N1bWVudElEPgogICAgICAgICAgICA8c3RSZWY6b3JpZ2luYWxEb2N1bWVudElEPnhtcC5kaWQ6MTQ5QjI5OURCQjJGMTFFM0EwMkZGODhCQzc4QTZCNDY8L3N0UmVmOm9yaWdpbmFsRG9jdW1lbnRJRD4KICAgICAgICAgPC94bXBNTTpEZXJpdmVkRnJvbT4KICAgICAgICAgPHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD54bXAuZGlkOjE0OUIyOTlEQkIyRjExRTNBMDJGRjg4QkM3OEE2QjQ2PC94bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ+CiAgICAgICAgIDx4bXBNTTpIaXN0b3J5PgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDozNTIyMmY1MC0yOWJiLWE0NDItOTNhOC0xZmE2MGVjNzk4M2Y8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTctMTItMjNUMDM6MDc6MDkrMDk6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE3IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPnNhdmVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDppbnN0YW5jZUlEPnhtcC5paWQ6ZWM3NmY4MWUtODBmZi00NTRjLThlOWUtMDdiYmFmZjUzYjdhPC9zdEV2dDppbnN0YW5jZUlEPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6d2hlbj4yMDE3LTEyLTIzVDAzOjA3OjUwKzA5OjAwPC9zdEV2dDp3aGVuPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6c29mdHdhcmVBZ2VudD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNyAoV2luZG93cyk8L3N0RXZ0OnNvZnR3YXJlQWdlbnQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpjaGFuZ2VkPi88L3N0RXZ0OmNoYW5nZWQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5jb252ZXJ0ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnBhcmFtZXRlcnM+ZnJvbSBpbWFnZS9wbmcgdG8gYXBwbGljYXRpb24vdm5kLmFkb2JlLnBob3Rvc2hvcDwvc3RFdnQ6cGFyYW1ldGVycz4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPmRlcml2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnBhcmFtZXRlcnM+Y29udmVydGVkIGZyb20gaW1hZ2UvcG5nIHRvIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3A8L3N0RXZ0OnBhcmFtZXRlcnM+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5zYXZlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOjA0NjJiMDE1LWNhZDctM2Q0MS1iYjlmLTFmYTM3Nzg1NzU1ZTwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxNy0xMi0yM1QwMzowNzo1MCswOTowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICAgICA8c3RFdnQ6Y2hhbmdlZD4vPC9zdEV2dDpjaGFuZ2VkPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDpkNjI5YTBjNC1kYWUxLTQ4NDMtYmNlYy1kOTBmZDkwOTFhZWQ8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTctMTItMjNUMDM6MDc6NTkrMDk6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE3IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPmNvbnZlcnRlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6cGFyYW1ldGVycz5mcm9tIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3AgdG8gaW1hZ2UvcG5nPC9zdEV2dDpwYXJhbWV0ZXJzPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+ZGVyaXZlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6cGFyYW1ldGVycz5jb252ZXJ0ZWQgZnJvbSBhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9wIHRvIGltYWdlL3BuZzwvc3RFdnQ6cGFyYW1ldGVycz4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPnNhdmVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDppbnN0YW5jZUlEPnhtcC5paWQ6MWZlNWI4ZWMtZWE1Yi02MzRkLWI2ODctOTRkODYwYmMxOGQzPC9zdEV2dDppbnN0YW5jZUlEPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6d2hlbj4yMDE3LTEyLTIzVDAzOjA3OjU5KzA5OjAwPC9zdEV2dDp3aGVuPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6c29mdHdhcmVBZ2VudD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNyAoV2luZG93cyk8L3N0RXZ0OnNvZnR3YXJlQWdlbnQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpjaGFuZ2VkPi88L3N0RXZ0OmNoYW5nZWQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICA8L3JkZjpTZXE+CiAgICAgICAgIDwveG1wTU06SGlzdG9yeT4KICAgICAgICAgPGRjOmZvcm1hdD5pbWFnZS9wbmc8L2RjOmZvcm1hdD4KICAgICAgICAgPHBob3Rvc2hvcDpDb2xvck1vZGU+MzwvcGhvdG9zaG9wOkNvbG9yTW9kZT4KICAgICAgICAgPHRpZmY6T3JpZW50YXRpb24+MTwvdGlmZjpPcmllbnRhdGlvbj4KICAgICAgICAgPHRpZmY6WFJlc29sdXRpb24+NzIwMDAwLzEwMDAwPC90aWZmOlhSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpZUmVzb2x1dGlvbj43MjAwMDAvMTAwMDA8L3RpZmY6WVJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDxleGlmOkNvbG9yU3BhY2U+NjU1MzU8L2V4aWY6Q29sb3JTcGFjZT4KICAgICAgICAgPGV4aWY6UGl4ZWxYRGltZW5zaW9uPjI0PC9leGlmOlBpeGVsWERpbWVuc2lvbj4KICAgICAgICAgPGV4aWY6UGl4ZWxZRGltZW5zaW9uPjQ4PC9leGlmOlBpeGVsWURpbWVuc2lvbj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgCjw/eHBhY2tldCBlbmQ9InciPz58brDwAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAM7SURBVHjaxNfLixxVFAbwX1X3GN8ag6IgKiooriQ+0OjCjWAi6D8w6EYQ3bhwYURwJYhuhGwkrhRHN7pzIYMgPjYG8UEwCMZFGBR1UEcz0Uky3VVuTsm1qO661VG80FTd7nvPd97n62JlZcWCq4zPNPajeK/bhxYVXmMSz+YdijMFKFHhUjyPL/EFnsMlAVYuCtAIvxGHsB8nsIVn4rsb4kw5FKCIi2O8gZ24FXdjD+7EZXg1UaQoB2oPD2I3HsFnWArQT/AY7sD9zZ1FYrAPG3g39pMkk97BJvY2Vo9bl0ftLGhZMMW1+Al/xPkqOXMc67gm9nUbYJrhom9DkBBet5T6Gb+nAEUcOgcP4byWVumqsYbv8CR+w+s4nZzZm9yvUgsuiLze2aFVezVpuIa3AqBRdOPfqOS+dP5budSCP/EyLoxYzLOgjvRcx6mO33QBjHEzdmE7A+CsiMVonjkpwA7chYsGxOCKloy5ABP8GMJPZ1hwdqRklQuwhYM4v6ce0hj8mqRo3QdwLp6ONlxluGiEY3itlaYzAcpkX/QAFMmdItdFp7AaQ2OSYcEOfB8ZNxegMetEDI3xLH92WLGd1EFvDLRmbA7ApO/QuGX2ep9PO7Kp8n+uf2g7hyMVCe9JaUun9svLyzNjME+JScdgKvtcVGYIr2NW7MenOIwDuCqlJ4sANMIvx/sxjER7eByfB12ZC5IzcA7iFtyH23APbgr28GZ035mtpezhnrfjgZi/qxGzMb7Bw7gay/NklT2W3RvPt5NaaabdRziakKx6CEBj7nVBUTaSVB0l2fdDwoHktIq0qkU7/jpIVkrXG8WOBnXJ7kUpe94XAlfxRIeAhiOt4angph+2a2MWwB68GP4e9WTZJOQcCIAz/gMyaI1n+P4wXgmu1KdEFXTzgz5elGbPrqiBzQyAKS7GV10NdBbAlUHCJhkNsTlzfY6LGvM2YxRuZAR5GnP8+BCAI3gBJzMmXBWU5+OcGDRpuhvPhvk5abqEl/BeXwyatTRr6s1pK6MhLjoWRbOZQa6mQfmP5LioqYNDeHQAYxjhlxyAOgHaHgBQJXO6zonBVrTiIauThBV1Xf+nveivAQAt4uqU7ORcMgAAAABJRU5ErkJggg==") !important',
+        body_back : '#111 url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAIAAAD+THXTAAAACXBIWXMAAAsTAAALEwEAmpwYAABBB2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxMzggNzkuMTU5ODI0LCAyMDE2LzA5LzE0LTAxOjA5OjAxICAgICAgICAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIKICAgICAgICAgICAgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iCiAgICAgICAgICAgIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiCiAgICAgICAgICAgIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIgogICAgICAgICAgICB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIgogICAgICAgICAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyI+CiAgICAgICAgIDx4bXA6Q3JlYXRvclRvb2w+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgICAgIDx4bXA6Q3JlYXRlRGF0ZT4yMDE3LTEyLTIzVDA2OjU0OjEwKzA5OjAwPC94bXA6Q3JlYXRlRGF0ZT4KICAgICAgICAgPHhtcDpNZXRhZGF0YURhdGU+MjAxNy0xMi0yM1QwNjo1ODo1MCswOTowMDwveG1wOk1ldGFkYXRhRGF0ZT4KICAgICAgICAgPHhtcDpNb2RpZnlEYXRlPjIwMTctMTItMjNUMDY6NTg6NTArMDk6MDA8L3htcDpNb2RpZnlEYXRlPgogICAgICAgICA8ZGM6Zm9ybWF0PmltYWdlL3BuZzwvZGM6Zm9ybWF0PgogICAgICAgICA8eG1wTU06SW5zdGFuY2VJRD54bXAuaWlkOjUwYTFkMjdhLTk2NWQtY2Q0Zi1iNzI0LTQ2MDJlNjk2ZDk0NTwveG1wTU06SW5zdGFuY2VJRD4KICAgICAgICAgPHhtcE1NOkRvY3VtZW50SUQ+YWRvYmU6ZG9jaWQ6cGhvdG9zaG9wOjQ2ZTg2OGUwLWU3NjMtMTFlNy1hNmI0LTkzMDUzYzQzNDczNzwveG1wTU06RG9jdW1lbnRJRD4KICAgICAgICAgPHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD54bXAuZGlkOjgyYmYzNDJkLWJhZWEtMzc0NS1iOWVjLTdiZGM1MDNjY2RkMTwveG1wTU06T3JpZ2luYWxEb2N1bWVudElEPgogICAgICAgICA8eG1wTU06SGlzdG9yeT4KICAgICAgICAgICAgPHJkZjpTZXE+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPmNyZWF0ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDo4MmJmMzQyZC1iYWVhLTM3NDUtYjllYy03YmRjNTAzY2NkZDE8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTctMTItMjNUMDY6NTQ6MTArMDk6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE3IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6YWN0aW9uPnNhdmVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDppbnN0YW5jZUlEPnhtcC5paWQ6ZTg0YTJiNDItMGM2MC1lYTQ2LTkxNmEtOTMwYzJhZTE2N2ExPC9zdEV2dDppbnN0YW5jZUlEPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6d2hlbj4yMDE3LTEyLTIzVDA2OjU1OjIwKzA5OjAwPC9zdEV2dDp3aGVuPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6c29mdHdhcmVBZ2VudD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNyAoV2luZG93cyk8L3N0RXZ0OnNvZnR3YXJlQWdlbnQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpjaGFuZ2VkPi88L3N0RXZ0OmNoYW5nZWQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5zYXZlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOmM1MjIwMjQyLTE1MTItYTk0OC05NzVhLTY2NzM4ODliNWY0NTwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxNy0xMi0yM1QwNjo1ODo1MCswOTowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICAgICA8c3RFdnQ6Y2hhbmdlZD4vPC9zdEV2dDpjaGFuZ2VkPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+Y29udmVydGVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpwYXJhbWV0ZXJzPmZyb20gYXBwbGljYXRpb24vdm5kLmFkb2JlLnBob3Rvc2hvcCB0byBpbWFnZS9wbmc8L3N0RXZ0OnBhcmFtZXRlcnM+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5kZXJpdmVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpwYXJhbWV0ZXJzPmNvbnZlcnRlZCBmcm9tIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3AgdG8gaW1hZ2UvcG5nPC9zdEV2dDpwYXJhbWV0ZXJzPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDo1MGExZDI3YS05NjVkLWNkNGYtYjcyNC00NjAyZTY5NmQ5NDU8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTctMTItMjNUMDY6NTg6NTArMDk6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE3IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC94bXBNTTpIaXN0b3J5PgogICAgICAgICA8eG1wTU06RGVyaXZlZEZyb20gcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICA8c3RSZWY6aW5zdGFuY2VJRD54bXAuaWlkOmM1MjIwMjQyLTE1MTItYTk0OC05NzVhLTY2NzM4ODliNWY0NTwvc3RSZWY6aW5zdGFuY2VJRD4KICAgICAgICAgICAgPHN0UmVmOmRvY3VtZW50SUQ+eG1wLmRpZDo4MmJmMzQyZC1iYWVhLTM3NDUtYjllYy03YmRjNTAzY2NkZDE8L3N0UmVmOmRvY3VtZW50SUQ+CiAgICAgICAgICAgIDxzdFJlZjpvcmlnaW5hbERvY3VtZW50SUQ+eG1wLmRpZDo4MmJmMzQyZC1iYWVhLTM3NDUtYjllYy03YmRjNTAzY2NkZDE8L3N0UmVmOm9yaWdpbmFsRG9jdW1lbnRJRD4KICAgICAgICAgPC94bXBNTTpEZXJpdmVkRnJvbT4KICAgICAgICAgPHBob3Rvc2hvcDpDb2xvck1vZGU+MzwvcGhvdG9zaG9wOkNvbG9yTW9kZT4KICAgICAgICAgPHRpZmY6T3JpZW50YXRpb24+MTwvdGlmZjpPcmllbnRhdGlvbj4KICAgICAgICAgPHRpZmY6WFJlc29sdXRpb24+NzIwMDAwLzEwMDAwPC90aWZmOlhSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpZUmVzb2x1dGlvbj43MjAwMDAvMTAwMDA8L3RpZmY6WVJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDxleGlmOkNvbG9yU3BhY2U+NjU1MzU8L2V4aWY6Q29sb3JTcGFjZT4KICAgICAgICAgPGV4aWY6UGl4ZWxYRGltZW5zaW9uPjcwPC9leGlmOlBpeGVsWERpbWVuc2lvbj4KICAgICAgICAgPGV4aWY6UGl4ZWxZRGltZW5zaW9uPjcwPC9leGlmOlBpeGVsWURpbWVuc2lvbj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgCjw/eHBhY2tldCBlbmQ9InciPz55EBHqAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAoqSURBVHjajFvZcttADNMeaeNO+9Bm+v8falnbBzgQClCe+KHjerXagyQIHmkfHx9rrW3b1lr4sm1ba23OuW3bcRzHcWC0tbZ9fnrv+PfxeOAXfQBz11qPx8Mmbts2xmitYUh/x3/nnL33tda+77orvqT3jnWxMfyOVVprY4xxu934NH7FqtgQd6+fOSdepyu11vDeMca2bZiL7zn38XiMMfBmnhn3iFHdhq4y58RhWmu9d12do10lw1tca1E4vNc8z1qr9z7n5J7whaKzU805eeu6LcoH56F4ubQ+oBfEFfEqzBq32011A0LHejySagVUkc9T4mstvQuO8g0qPXyO44AWHccBXYWy6cupI9yYKSqeH2Pwzb3UY9MWnOHt7S2NiruErMq5YwyM6nnw2fcdbz6OA9/zHjEdr7Lp2AxGTzvXs7bWUrL8AhW38+QCdoulNuZL8i6+8qG+6bbH+/s7Dqp4YEvC7KBa0BPdh6qEYYmiBb/bmykrQwsFg6u7wGagwMSScbvdMKD3pDNplJAhdsaHuQ8aDFWXKoGbIhjQFMcYwAMKk7DJdfXNsEzFg1Knepqdfrf3Yn+w2rWW2h7+3fddNVmxi66Gc7kW9ko5c7uqDpDznBMYqNeKk2CfrbXZe8dKelaIkh7TjARvB1rQIfIB+Byex8wMo9BAWxePYa5eTeKbOoOc3ktjVWZAfTD7MRXVB/Ta8v2GFrqzK5BQRYC09Tps1vj+/bviAWGR58lt0ScakNAGKA1zCbzg+/2OS6FhqLk/Hg88ZrQGWA9TTOwlUeqnvD7XUCedPkdtgDhGf8LT8hmM4oONAt+StVDPFVHsLiB5k79CyxPxVFson/QtODlPwgeIYJBJKhLvggiRjCZRShFszrnve45ilpmGswfz35QVOQsRzEQPLHrh4PU8ybNekIPkWcYtbLdd2RQfSgfFH1+ghWq/LoO5uaeSCtrvSQ5s6YSop+LhglWIuj+MKj9QQZk/LdkD7CdJICw+kUadKeWsARKxhEBwiuR2u0Er1AWpoMx+MJmnent7U/+jUZDu2GJHntYIgQIsb7kEd7VbHvV5pF+/fnFJixDzPMQD7AZXa/FCRiKmkDgVEcwsh8cz1qJoQT1KFrttWy/9LNSXEXVpl2BDJfMYY4Bb2Hk0alTrUvNQ1pL2RpQzy8Tok0zRGBw3PjVEldAsUkHPghSLJuwibU/2knJi+Z50NmdwkROY8chNK5rjwBkRQFev4hQyAFuUUYwR0xIPVMjKeE7EO83rfz+gYELk4aixHsYLhpZYWBmNCZnBthEoW3fJx7gFzrPW+o9rMw7T7ALvG/RcEYbojN3Q/zDsMW5h8YLhkJ6HtqHZtcwRZO6ttdapvgwK9I6JYzaaATmYRxJkHEnxQOcyikl84/M8T4kHYwyDqG784DUDMJKfvMkSaxqnlPyAaHE1aqGrqSUuwrIDpy2Zxeu2GO0xs6Wgp/F22rTxEgtGiBYle6A20hdZuEE6pvbcywybsQfGycZuDS3ohfW0KQEdpfTMg3EUb04OzrsjGz4l8fHxkU7J1IYZNks1lfG2ajLxOrlM4pslmOwuVMKKB3bI4zh6qgpREkmCRIsrPCjjhXR6V/yAaKHsToegAokHlBUONhX+1fS5quZmy3gmd8YpeReZqSpRLl9L46GbLjVrrTVzu8aCM5+o/tTyeJrHJB/TpB8TupCV1lSY7oVT1nDTEt9Xxn+yB40m1E9bxUGlR7SwGCFjdUVIFbiFxrxHorOxB+gbc08ZnlIbnyDOtckAiD8at1p2ToORMvdAc1J8M79no8lEYV26qN4CNqYlj67pzIwmKBzkHkpLYLT3IhFHyyyRRqPmrHqUlqlGZYSmZ3YbgrIMm2pFmce8Sh5QZ67ugjZTBgSavi3TQ0zQejqF6liCG+z4fr8noNNLYNPGTRj2UntpHmSl5OaWn8IvoCyMU1TVmWkxlBo/fvzQfIhmFzS3qh5GOWjyA52rNcUMH1W2PIZSJ0MLPk+XSLTQFNX4+fOnAaLhgU7mBeO/iH/MpjXbmKFrk08G2xy60nPgQRkuYMNjjDMfopdNPEhXzcdKPLA8c3KZK19X4kFZX72iLDS5k7ZanhVStgybSqDkB1cc7KpskaMM8q9AKPHAamrPyoVBFiRwv9/L3AW9fsYqWqy3zH3ykuyo0IyvWRq9E2MN41lnk8D7+7uhcNbr0+LJ7sg8ytYE3CitQrm5Wp1Fe5nuLZmHJlLUnbY/f/5k/HjVMVHGp1rXKEdNellHUV21xLW1IiQI0f2cJMZyqCWxpwaXQXWpY+lty6KgalQaDzPpZZGGW6JCPfXZNGrf91RxTrjKv6nXK/HgKkwsR82DXRVtqRQaR5+0Vat3JXtgNJHn0fy12pXqpFbNVD7qT3UuKalmKvWcOIYGJv8RoqxJKaRoVwQ1kI5Y2cMzTu7dOqyYXVAhM3rVoFXrGup/bJRVd3okHZ3ZAWKRTPp4iiu9HtdOjWITB3OgigeW7kltZAzPN6tlaq2xp+PT3IPalTGAKzygBDg3o6ArvmMBjrl4uuDsilCQ6KW7JCInuSYesNXkih9kGyLnokmANm0NLZpLrPmBVOnVAeJgz8pFmU9UfqC1OvU/ltnQUc3JaKMmm6/UvxseaDRAeFA6aiUicvO1VreEuvXdaSuUWq2iBTfHaE/RInORyuWsy4X2o6Nqt9ZtpBycozNryYYWGm5A38wu2XpmQb7GOaU/hRawEUUZQFnATqujFuho/2L/QfYJXGUXSjzItlSjcCWvZ0JX9VyBV+P88wrgas0nlpm9FxGBer3EAxZwSz9BpX3xZmPlWoe2WuAznUIOxrKh7YkWz0D/ih+UtQkagKKcZueYcNS5ihY5inQVWZh2BnZCfiaTMieqbcMle9AaaUYExg/oCaBFxANeq6oW/Sw/WvX4L075+/evNjYa56d3ym5+hkxlrHHVX8dsDom2rktcVVPR5gG+kOFpho/dWKbdN1/9Gg8yT1+2FmieWWk7D0aqVULU/X7XOD/TusDAbhGBRWxlvPCV7ILGMPkGhDAlqWeAUzYvXvUU02fs+z7VpSYeaI1dR7ljnasVyKzwWgrAtCBryTqqzRaPx+Pbt29244pSz9yD1p6zf6fsTsjeBYsXMvdgf0ljfxih59H0hpWSzWFkl1T7/ft39hCU2oirIu8o1TUjUGYMzeKNHJSjCtxIUKsmGw551+RVn0B2tJTumNykjKvNJ5a9P+Wo8YOyplhksL+YP0BEkL2xigeWiTfGaaVlNRjDAxtVdptN0Zk+OKuAL+KFqyifNqAthjpXG9z658c0x+bqny9gFEsr3FkVtDgSNcpKN1n0TVZv3E97ZC0at+ws+U7ZFWB4UHrz7PR6Hr6M8vXo1qtpZTW6PyXIhHJtmODV0AtnrkubA+2WlV5mjRSv7VZHuoomymyjRgRlUtewKCHxqmqY8UL2jCdBA0XChv8NAONbx0GVv8YOAAAAAElFTkSuQmCC") repeat scroll left top !important',
+        border_top : '1px solid #000 !important',
+        border_left : '1px solid #000 !important',
+        none : 'none !important'
     }
 };
 
@@ -600,33 +1544,36 @@ var ADD_THEME_CONNECT = {
         'background-color' : ['.fixed_streamer']
     },
     chat_fc : {
-        'color' : ['.modal-body','.modal-content','#stream .title','#multitwitch','.search a.checked','.search a','input.conversation','input.conversation::placeholder','#btnRefreshChat','#btnIgnoreList','#btnOpenHrm','.chat-close span','#Cookie_reset','.modal-body select','.modal-body input[type="text"]','.lightbox-opened-blocked-chat','#memo_textbox','#memo_text','input.uchat_nick','div.floor label','.uchat_setting_wrap div.top'],
+        'color' : ['.modal-body','.modal-content','#stream .title','#multitwitch','.search a.checked','.search a','input.conversation','input.conversation::placeholder','#btnRefreshChat','#btnIgnoreList','#btnOpenHrm','.chat-close span','#Cookie_reset','.modal-body select','.modal-body input[type="text"]','.lightbox-opened-blocked-chat','#memo_textbox','#memo_text','input.uchat_nick','div.floor label','.uchat_setting_wrap div.top','textarea'],
         'background-color' : []
     },
     color_lightest :{
         'color' : ['#view_additional_message','.conversation_contents','.conversation_contents a','div.from','#popup_ADD_quick div.title']
     },
     color_lighter : {
-        'color' : ['#stream .viewers','.btn-default','#stream .glyphicon','.large_check span','#ADD_send_location_button','#ADD_send_location_button::before','.topbar','.topbar a ','.topbar span','.footer']
+        'color' : ['#stream .viewers','.btn-default','#stream .glyphicon','.large_check span','#ADD_send_location_button','#ADD_send_location_button::before','.topbar','.topbar a ','.topbar span']
+    },
+    color_mid : {
+        'color' : ['label.btn-xxs']
     },
     color_hard : {
         'color' : ['.tagit-label'],
-        'background-color' : ['.modal-body','.modal-footer','.modal-content','.warp','.ADD_checkbox','::-webkit-scrollbar-track-piece','.search a','#popup_ADD_quick div.from']
+        'background-color' : ['.modal-body','.modal-footer','.modal-body td','.modal-content','.warp','.ADD_checkbox','::-webkit-scrollbar-track-piece','.search a']
     },
     color_harder : {
         'color' : ['.nav-brand','.nav-brand_mod'],
-        'background-color' : ['::-webkit-scrollbar-track','.lightbox-opened-blocked-chat','#multitwitch','.search a.checked','.uchat_setting_wrap div.top'],
-        'border-color' : ['.modal-body td','.modal-body tr','.modal-body th','.modal-footer','.modal-body ul.tagit','#popup_ADD_quick .quick_list_title']
+        'background-color' : ['::-webkit-scrollbar-track','.lightbox-opened-blocked-chat','#multitwitch','.search a.checked','.uchat_setting_wrap div.top','label.btn-xxs'],
+        'border-color' : ['.modal-body td','.modal-body tr','.modal-body th','.modal-footer','.modal-body ul.tagit','#popup_ADD_quick .quick_list_title','label.btn-xxs']
     },
     color_hardest : {
         'color' : [],
-        'background-color' : ['body','.conversation_contents','.chat-dostream_super','.user_conversation','.topbar','.modal-body tr:hover','.btn-default','#chat-dostream .input','.large_check input','.large_check input','#Cookie_reset','.modal-body select','.modal-body input[type="text"]','#btnRefreshChat','#btnIgnoreList','#btnOpenHrm','.chat-close','::-webkit-scrollbar-thumb','#popup_ADD_quick a:hover','.user_menu_background','#memo_textbox','input.uchat_nick'],
+        'background-color' : ['body','.conversation_contents','.chat-dostream_super','.user_conversation','.topbar','.modal-body tbody tr:hover','.btn-default','#chat-dostream .input','.large_check input','.large_check input','#Cookie_reset','.modal-body select','.modal-body input[type="text"]','#btnRefreshChat','#btnIgnoreList','#btnOpenHrm','.chat-close','::-webkit-scrollbar-thumb','#popup_ADD_quick li>a:hover','.user_menu_background','#memo_textbox','input.uchat_nick','textarea'],
         'border-color' : []
     },
     chat_container_bdc : {
         'color' : [],
         'background-color' : ['.main-streams>ul>li>a:hover','header.onstream','div.onstream','div.from','.uchat_setting_wrap div.content'],
-        'border-color' : ['#chat-dostream .input','.btn-default','.chat-container','input.conversation','input[type="text"]','.topbar','#stream .main-streams>ul>li','.modal-body select','.modal-body ul','.modal-body li'],
+        'border-color' : ['#chat-dostream .input','.btn-default','.chat-container','input.conversation','input[type="text"]','.topbar','#stream .main-streams>ul>li','.modal-body select','.modal-body ul','.modal-body li','textarea'],
     },
     color_complementary : {
         'color' : [],
@@ -640,7 +1587,7 @@ var ADD_THEME_CONNECT = {
         'color' : ['ul.tagit li.tagit-choice','ul.tagit li span']
     },
     tagit_bgc: {
-        'background-color' : ['ul.tagit li.tagit-choice']
+        'background-color' : ['ul.tagit li.tagit-choice:not(.ui-state-highlight)']
     },
     tagit_bg: {
         'background' : ['ui-autocomplete','.tagit-autocomplete.ui-widget-content']
@@ -664,7 +1611,7 @@ var ADD_THEME_CONNECT = {
         'border-left' : ['#btnRefreshChat']
     },
     none : {
-        'background-color' : []
+        'background' : ['#popup_ADD_quick .multitwitch_button .btn-default','#popup_ADD_quick div.from','.modal-body li.tagit-new input']
     }
 }
 
@@ -712,7 +1659,7 @@ function append_theme_line(key,element,property,value){
     if (key_value === undefined){
         key_value = ADD_THEME['Default'][value];
     }
-    var append_text = element + ' { ' + property + ':'+ key_value +' !important} ';
+    var append_text = element + ' { ' + property + ':'+ key_value +'} ';
     return append_text;
 }
 
@@ -736,17 +1683,44 @@ function leadingZeros(n, digits) {
   return zero + n;
 }
 
-function getTimeStamp() {
+function getTimeStamp(flag) {
   var d = new Date();
 
   var s = '' +
     leadingZeros(d.getFullYear(), 4) +
     leadingZeros(d.getMonth() + 1, 2) +
     leadingZeros(d.getDate(), 2) +
+    leadingZeros(d.getHours(), 2);
 
-    leadingZeros(d.getHours(), 2) +
-    leadingZeros(d.getMinutes(), 2);
-    //leadingZeros(d.getSeconds(), 2);
+    if(flag === 'm' || flag === 's'){
+        s += leadingZeros(d.getMinutes(), 2);
+    }
+
+    if(flag === 's'){
+        s += leadingZeros(d.getSeconds(), 2);
+    }
+
+  return s;
+}
+
+function getTimeStampWithText(d, flag) {
+  if($.type(d) !== 'date'){
+      return '';
+  }
+
+  var s = '' +
+    d.getFullYear() + '년 ' +
+    (d.getMonth() + 1) + '월 ' +
+    d.getDate() + '일 ' +
+    d.getHours() + '시 ';
+
+    if(flag === 'm' || flag === 's'){
+        s += d.getMinutes() + '분 ';
+    }
+
+    if(flag === 's'){
+        s += d.getSeconds() + '초';
+    }
 
   return s;
 }
@@ -757,8 +1731,14 @@ function getTimeStamp() {
 // 파싱 후 데이터 정리
 function parse_data_from_list(flag)
 {
-    $.getJSON("/dev/stream_list.php", function(data) {
-        var getTimeResult = '?' + getTimeStamp();
+    ADD_DEBUG('RUNNING - parse_data_from_list');
+    $.ajax({
+        url: "http://www.dostream.com/dev/stream_list.php",
+        async: false,
+        type: 'GET',
+        dataType:'json',
+      success:function(data) {
+        var getTimeResult = '?' + getTimeStamp('m');
 
         // 숨길 대상 스트리머 지우기
         if(ADD_config.streamer_hide.value){
@@ -798,11 +1778,12 @@ function parse_data_from_list(flag)
 
         // Twitch api 쿠키로부터 스트리머 가져오기
         if ( ADD_config.alarm.value && (!!$.cookie('twitch_api_cookie')) ){
-            if(ADD_DEBUG_MODE) console.log('...twitch_api_cookie 쿠키 정리 중...');
+            ADD_DEBUG('DOE 생성을 위해 Twitch API cookie 쿠키 정리 중...');
             // 로컬 변수 선언
             var temp_api_cookie = JSON.parse($.cookie('twitch_api_cookie'));
             if(temp_api_cookie === undefined || temp_api_cookie === null || temp_api_cookie.length === 0){
-                if(ADD_DEBUG_MODE) console.log('twitch_api_cookie 쿠키 확인 실패', temp_api_cookie);
+                ADD_DEBUG('DOE 생성 중 Twitch API cookie 확인 실패!');
+                if(ADD_DEBUG_MODE) console.log(temp_api_cookie);
             }
             else{
                 for( var i=0; i<temp_api_cookie.length ; i++ ){
@@ -901,7 +1882,7 @@ function parse_data_from_list(flag)
 
                 if(j === streamerArray.length-1)
                 {
-                    data[i].display_name = data[i].streamer;
+                    data[i].display_name = '';//data[i].streamer;
                     break;
                 }
             }
@@ -909,6 +1890,10 @@ function parse_data_from_list(flag)
 
         ADD_run(data,flag);
 
+      },
+      error:function() {
+          ADD_DEBUG('파싱 실패함');
+      }
     });
 }
 
@@ -920,7 +1905,7 @@ function ADD_run(json,flag) {
     checkedID = [];
 
 	var append = '';
-	if(ADD_DEBUG_MODE) console.log('ADD_run 실행됨!');
+	ADD_DEBUG('ADD_run - 파싱된 데이터 이용하여 스트림 리스트 DOE 생성');
 	//console.log('json :',json);
 	$(json).each(function(k, data) {
   	  var twitch_append = '';
@@ -948,18 +1933,25 @@ function ADD_run(json,flag) {
               <div class="ADD_li_box_container">\
                   <div class="ADD_li_box">\
                       <div class="ADD_checkbox_container">\
-                          <input class="ADD_checkbox" type="checkbox" name="chk" value="'+data.streamer+'" onfocus="this.blur()" />\
+                          <label class="btn btn-default btn-xs" aria-label="멀티트위치 체크박스" data-microtip-position="top-left" role="tooltip">\
+                              <input class="ADD_checkbox" type="checkbox" name="chk" value="'+data.streamer+'" onfocus="this.blur()" autocomplete="off" />\
+                              <span class="glyphicon glyphicon-ok"></span>\
+                          </label>\
                       </div>\
                       <div class="multitwitch_button">\
                           <a href="/#/stream/multitwitch/'+data.streamer+'">\
-                              <span class="btn btn-default btn-xs">With chat</span>\
+                              <span class="btn btn-default btn-xs" aria-label="채팅모드" data-microtip-position="top-right" role="tooltip"><span class="glyphicon glyphicon-comment"></span></span>\
                           </a>\
                       </div>\
                   </div>\
               </div>\
           ';
-
-          display_name = data.display_name+' ('+data.streamer+')';
+          if(data.display_name === ''){
+              display_name = data.streamer;
+          }
+          else{
+              display_name = data.display_name+' ('+data.streamer+')';
+          }
       }
       else
       {
@@ -1022,177 +2014,6 @@ function ADD_run(json,flag) {
 	append = null;
 }
 
-
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-//                               GLOBAL VARIABLES
-//////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-
-// API로 접근해서 스트리머 이름을 가져올 수도 있으나,
-// API CALL 을 줄이기 위해 원래부터 두스 MAIN에 있던 스트리머 이름을 적어두기로 한다.
-var streamerArray = [
-    ['hanryang1125','풍월량'],
-    ['ddahyoni','따효니'],
-    ['kss7749','쉐리'],
-    ['looksam','룩삼'],
-    ['yapyap30','얍얍'],
-    ['saddummy','서새봄냥'],
-    ['109ace','철면수심'],
-    ['rhdgurwns','공혁준'],
-    ['gmdkdsla','흐앙님'],
-    ['jungtaejune','똘똘똘이'],
-    ['mascahs','마스카'],
-    ['steelohs','스틸로'],
-    ['kimdoe','김도'],
-    ['togom','토곰'],
-    ['ogn_lol','OGN 롤챔스'],
-    ['kanetv8','케인TV'],
-    ['yumyumyu77','소풍왔니'],
-    ['sung0','쥬팬더'],
-    ['game2eye','홍방장'],
-    ['cocopopp671','초승달'],
-    ['dingception','딩셉션'],
-    ['redteahs','홍차'],
-    ['zzamtiger0310','짬타수아'],
-    ['rldnddl789','아빠킹'],
-    ['eulcs1','EU LCS'],
-    ['kkoma','Kkoma'],
-    ['1983kej','단군'],
-    ['lol_peanut','Peanut'],
-    ['faker','Faker'],
-    ['nrmtzv','으음'],
-    ['nicegametv','나겜'],
-    ['teaminven','인벤'],
-    ['capta1n_pony','포니'],
-    ['huni','Huni'],
-    ['sktt1_wolf','Wolf'],
-    ['bang','Bang'],
-    ['wpghd321','류제홍'],
-    ['jmjdoc','칸데르니아'],
-    ['yungi131','윤기'],
-    ['mediamuse','미디어뮤즈'],
-    ['veritaskk','Veritas'],
-    ['themarinekr','김정민'],
-    ['tvindra','인드라'],
-    ['tranth','자동'],
-    ['seine1026','세인님'],
-    ['sonycast_','소니쇼'],
-    ['dou3796','뱅붕'],
-    ['rudbeckia7','연두는말안드뤄'],
-    ['trisha','트리샤'],
-    ['naseongkim','김나성'],
-    ['mari0712','마리'],
-    ['dlxowns45','태준이'],
-    ['handongsuk','한동숙'],
-    ['alenenwooptv','웁_게임방송'],
-    ['mr_coat','노래하는코트'],
-    ['ajehr','머독'],
-    ['lol_crown','Crown'],
-    ['rooftopcat99','옥냥이'],
-    ['myzet1990','개구멍'],
-    ['yoonroot','윤루트'],
-    ['sn400ja','액시스마이콜'],
-    ['tape22222','테이프2'],
-    ['miracle0o0','미라클티비'],
-    ['bighead033','빅헤드'],
-    ['wkgml','견자희'],
-    ['queenhuz','후즈'],
-    ['kiyulking','김기열'],
-    ['asdn6388','나락호프'],
-    ['lol_cuvee','Cuvee'],
-    ['VSL','VSL'],
-    ['drlee_kor','이민우33세'],
-    ['CoreJJ','CoreJJ'],
-    ['lol_ambition','Ambition'],
-    ['Axenix','아제닉스'],
-    ['maknoonlol','막눈'],
-    ['zilioner','침착맨'],
-    ['timeofcreate','홍랑'],
-    ['twitchshow','트위치쇼'],
-    ['kangqui','강퀴'],
-    ['team_spiritzero','team_spiritzero'],
-    ['zizionmy','젼마이'],
-    ['lol_blank','Blank'],
-    ['ogn_ow','OGN 오버워치'],
-    ['juankorea','juankorea'],
-    ['woowakgood','우왁굳'],
-    ['www0606','푸딩'],
-    ['runner0608','러너'],
-    ['flowervin','꽃빈'],
-    ['h920103','이초홍'],
-    ['hj0514','백설양'],
-    ['pbstream77','피비스트림'],
-    ['llilka','릴카'],
-    ['beyou0728','피유'],
-    ['serayang','세라양'],
-    ['mister903','갱생레바'],
-    ['what9honggildong','왓구홍길동'],
-    ['chicken_angel','통닭천사'],
-    ['godbokihs','갓보기'],
-    ['yuriseo','서유리'],
-    ['kimminyoung','아옳이'],
-    ['gabrielcro','가브리엘'],
-    ['starcraft_kr','스타크래프트 KR'],
-    ['yeziss','신예지'],
-    ['ch1ckenkun','치킨쿤'],
-    ['lds7131','더헬'],
-    ['nodolly','노돌리'],
-    ['haku861024','정직원'],
-    ['nanajam777','우정잉'],
-    ['leehunnyeo','별루다'],
-    ['streamer2u','이유님'],
-    ['hatsalsal','햇살살'],
-    ['pommel0303','폼멜'],
-    ['hosu0904','호수']
-    ];// ['',''],
-
-var streamerArray_AutoComplete = [];
-for(var i=0; i<streamerArray.length; i++){
-    streamerArray_AutoComplete[i] = streamerArray[i][0];
-}
-
-var href = 'initialize';            //
-var checkedID = [];
-var multitwitchID = 'hanryang1125'; // 멀티트위치 ID 저장용
-var streamerID = '';                //
-var ADD_API_SET_INTERVAL;           //
-
-var twitch_api_cookie = [];         // Twitch api 쿠키
-
-// 설정 클릭 시 enable 요소가 있는 설정을 아래 배열에 등록
-var ADD_config_enable_init = ['ADD_config_top_fix'
-                              ,'ADD_config_alarm'
-                              ,'ADD_config_thumbnail_mouse'
-                              ,'ADD_config_streamer_hide'
-                              ,'ADD_config_chat_ctr'
-                              ,'ADD_config_imgur_preview'
-                              ,'ADD_config_imgur_preview_safe'
-                              ,'ADD_config_remember_platform'
-                              ,'ADD_config_chat_block'
-                              ];
-var ADD_status = [];
-var ADD_status_init = {'ad_remove' : 0
-                 ,'auto_image' : 0
-                 ,'api_call' : 0
-                 ,'update' : 0
-                 };
-
-var first_main_call = false;       // 첫번째 main 호출인지 체크함
-var first_api_call = true;          // 첫번째 api 호출인지 체크함
-var api_push_forced = false;        // true 이면 twitch api를 강제로 push 함, Setting save 시 사용
-var local_api_refresh = true;       // Setting save 버튼 연속으로 눌렀을 때 막기 위한 용도
-var unique_window_check = true;     // Unique window 감지용
-var backbutton_checker = false;     // 현재 사용 안 함, Back button 감지용
-var chat_send_location = true;      // 현재 사용 안 함, ADD_send_location() 좌표 복사 딜레이를 위해 사용
-var chatting_arrive_check = null;   // 채팅창 arrive 체크용
-var thumbnail_check = null;         // 섬네일 마우스 오버 설정 변경 체크용
-var thumbnail_size_check = null;    // 현재 사용 안 함, 섬네일 마우스 오버시 사이즈 설정 변경 체크용
-var chatting_scroll_pause = null;   // 채팅 스크롤 일시정지 여부
-
-var max_iteration = 100;            // DOE 생성 체크 최대 횟수
-var iteration = 0;                  // DOE 생성 체크 현재 횟수
-var checked_box_no = 0;
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -1259,6 +2080,9 @@ function ADD_var_to_config_form(){
         else if (ADD_config_type == 'checkbox'){
             // 2. 설정창 타입이 checkbox 인 경우
             ADD_config_ID.prop('checked', ADD_ct);
+            if(ADD_ct){
+                ADD_config_ID.parent('label.btn').removeClass('active').addClass('active');
+            }
         }
         else if (ADD_config_type == 'radio'){
             // 3. 설정창 타입이 radio 인 경우
@@ -1293,7 +2117,7 @@ function ADD_var_to_config_form(){
 
 //////////////////////////////////////////////////////////////////////////////////
 // 설정창 값을 변수에 저장
-function ADD_save_config_to_data(){
+async function ADD_save_config_to_data(){
     // 설정 변수가 없는 경우, 기본값으로 초기화한다.
     if (ADD_config === undefined || ADD_config === null)
         ADD_config_var_read();
@@ -1352,7 +2176,7 @@ function ADD_save_config_to_data(){
     }
 
     // 데이터 저장
-    ADD_config_var_write();
+    await ADD_config_var_write();
 }
 
 
@@ -1426,9 +2250,6 @@ function ADD_status_noti()
     ADD_send_sys_msg('두스트림 애드온이 동작 중 입니다 (v'+version_str+')',0);
     ADD_status_cookie_read();
     ADD_text = '';
-    //console.log(ADD_status);
-    //console.log('ADD_status.ad_remove', ADD_status.ad_remove);
-    //console.log('ADD_status.auto_image', ADD_status.auto_image);
     if(Number(ADD_status.ad_remove) > 0 && ADD_config.chat_adb.value){
         ADD_text += '광고 차단: '+ADD_status.ad_remove+ '회, ';
     }
@@ -1480,34 +2301,36 @@ function twitch_api(){
     // 로컬변수 선언
     var ADD_config_alarm_gap;
     var api_update = true;
+    var api_pre_time;
     var now_time = new Date();
+    var next_time;
 
-    // 쿠키에 저장된 api 갱신 간격 시간을 ADD_config_alarm_gap에 저장,
-    // 해당 값이 1.0 보다 작을 경우 1.0 으로 고정함
+    // 쿠키에 저장된 api 갱신 간격 검증
     ADD_config_alarm_gap = Number(ADD_config.alarm_gap.value);
-    if (ADD_config_alarm_gap < 1.0)
+    if($.isNumeric(ADD_config.alarm_gap.value) && ADD_config_alarm_gap < 1.0)
         ADD_config_alarm_gap = 1.0;
 
+    // 업데이트 여부 계산
     if (!!$.cookie('api_check_pre_time')){
         api_pre_time = new Date($.cookie('api_check_pre_time'));
-        left_time = (api_pre_time - now_time); // in ms, .getTime()
-        api_update = left_time < 0;
+        left_time = (api_pre_time - now_time) + ADD_config_alarm_gap*60000; // 남은 시간 in ms
+        api_update = left_time < 0 ;
+
+        // 다음 업데이트 시간 계산
+        next_time = new Date(api_pre_time.getTime() + ADD_config_alarm_gap*60000);
     }
 
     if (unique_window_check && ADD_config_alarm && (api_push_forced || api_update)){
         api_push_forced = false;
-        // Dostream+ api update
 
-        // cookie update
+        // 쿠키 업데이트
         var api_expires = new Date();
-        api_expires.setMinutes( api_expires.getMinutes() + ADD_config_alarm_gap );
-        $.cookie('api_check_pre_time', api_expires, { expires : api_expires, path : '/' });
-        if(ADD_DEBUG_MODE) console.log('Current time is '+now_time+'.\nCookie time for api update is '+api_expires+'.\nCookie is updated.');
+        $.cookie('api_check_pre_time', api_expires, { expires : 365, path : '/' });
+        ADD_DEBUG('Current time is '+now_time+'.\nCookie time for api update is '+api_expires+'.\nCookie is updated.');
 
         // cookie check
-        if ((!!$.cookie('api_check_pre_time')))
-        {
-            if(ADD_DEBUG_MODE) console.log('All cookie checked for api');
+        if ((!!$.cookie('api_check_pre_time'))){
+            ADD_DEBUG('All cookie checked for api');
 
             // 로컬 변수 선언
             var ADD_Client_ID = 'phcxzq5994awjrevkt45p6711bt77s';
@@ -1518,7 +2341,7 @@ function twitch_api(){
 
             if(possibleChannelsNo > 0)
             {
-                if(ADD_DEBUG_MODE) console.log('Api call channels no. :'+possibleChannels.length + ', name : ' + possibleChannelsString.replace(' ', ''));
+                ADD_DEBUG('Api call channels no. :'+possibleChannels.length + ', name : ' + possibleChannelsString.replace(' ', ''));
                 $.ajax({
                      url:'https://api.twitch.tv/kraken/streams?offset=0&limit=100&channel='+possibleChannelsString.replace(' ', ''),
                      type: 'GET',
@@ -1541,23 +2364,19 @@ function twitch_api(){
                           var noti_check = ((ADD_config.alarm_noti.value !== undefined) && ADD_config.alarm_noti.value);
                           api_expires.setMinutes( api_expires.getMinutes() + 10 );
 
-                          if(ADD_DEBUG_MODE) console.log('noti_check :',noti_check);
-                          if(ADD_DEBUG_MODE) console.log('Twitch API request succeeded', channel);
-                          if(ADD_DEBUG_MODE) console.log('streams.length = ', streams.length);
+                          ADD_DEBUG('Twitch API - noti_check', noti_check);
+                          ADD_DEBUG('Twitch API - request succeeded', channel);
 
                           // 온라인 스트리머가 있는 경우
-                          if(streams.length !== 0)
-                          {
+                          if(streams.length !== 0){
                               for (var i = 0; i < streams.length; i++) {
-                                  if(i === 0)
-                                  {
+                                  if(i === 0){
                                       // API 변수 초기화
                                       twitch_api_cookie = [];
                                   }
 
                                   var stream = streams[i];
-                                  if (stream !== null)
-                                  {
+                                  if (stream !== null){
                                       twitch_api_cookie[i] = {
                                           'name' : stream.channel.name,
                                           'display_name' : stream.channel.display_name,
@@ -1569,18 +2388,16 @@ function twitch_api(){
 
                                   var noti_options;
                                   // 데스크톱 알림 허용인 경우
-                                  if( noti_check )
-                                  {
+                                  if( noti_check ){
                                       // 첫번째 call 이고 기존 쿠키 존재 안 하는 경우 (완전히 첫 접속인 경우)
-                                      if(first_api_call && (!$.cookie('twitch_api_cookie')) )
-                                      {
-                                          if(i !== 0)
+                                      if(first_api_call && (!$.cookie('twitch_api_cookie'))){
+                                          if(i !== 0){
                                               temp_body += ' ,';
+                                          }
                                           temp_body += stream.channel.name;
 
-                                          if(i === streams.length -1)
-                                          {
-                                              if(ADD_DEBUG_MODE) console.log('Twitch api 첫번째 알림', temp_body);
+                                          if(i === streams.length -1){
+                                              ADD_DEBUG('Twitch API - 첫번째 알림', temp_body);
                                               noti_options = {
                                                     title: 'Dostream+',
                                                     options: {
@@ -1589,16 +2406,12 @@ function twitch_api(){
                                                       lang: 'ko-KR'
                                                     }
                                               };
-
                                               $("#easyNotify").easyNotify(noti_options);
-
-                                              // GC
-                                              noti_options = null;
                                           }
                                       }
+
                                       // 기존 쿠키 존재 하는 경우
-                                      else if( (!!$.cookie('twitch_api_cookie')) )
-                                      {
+                                      else if( (!!$.cookie('twitch_api_cookie')) ){
                                           // 이전 api call 한 내역에 이번에 api call 한 이름이 있는지 체크
                                           var first_call_check = temp_twitch_api_cookie.filter(function (obj) {
                                                   return obj.name === stream.channel.name;
@@ -1622,9 +2435,8 @@ function twitch_api(){
                                               first_call_check = null;
                                               noti_options = null;
                                           }
-                                          else
-                                          {
-                                              if(ADD_DEBUG_MODE) console.log(stream.channel.name + ' : 이전에 이미 api call 하였으므로 알림하지 않음');
+                                          else{
+                                              ADD_DEBUG(stream.channel.name + ' : 이전에 이미 api call 하였으므로 알림하지 않음');
                                           }
                                       }
                                   }
@@ -1637,9 +2449,8 @@ function twitch_api(){
                               $.cookie('twitch_api_cookie', JSON.stringify(twitch_api_cookie), { expires : api_expires, path : '/' });
                           }
                           // 온라인 스트리머가 없는 경우
-                          else
-                          {
-                              if(ADD_DEBUG_MODE) console.log('There is no online streamer, Twitch API cookie is removed');
+                          else{
+                              ADD_DEBUG('Twitch API - NO ONLINE STREAMER, API cookie is REMOVED');
                               $.removeCookie('twitch_api_cookie');
                           }
 
@@ -1654,26 +2465,35 @@ function twitch_api(){
                           noti_check = null;
 
                          // 메인일 경우 리로드
+                         ADD_DEBUG('Twitch API - API 호출에 의하여 메인 리로드 됨');
                          reloadMain();
+
+                         // 채팅에 메시지 띄움
+                         if(ADD_config.sys_meg.value !== undefined && ADD_config.sys_meg.value){
+                             var temp_date = new Date();
+                             var temp_date = leadingZeros(temp_date.getFullYear(), 4) + '-' + leadingZeros(temp_date.getMonth() + 1, 2) + '-' +  leadingZeros(temp_date.getDate(), 2) + ' ' + leadingZeros(temp_date.getHours(), 2) + ':' + leadingZeros(temp_date.getMinutes(), 2) + ':' + leadingZeros(temp_date.getSeconds(), 2);
+                             ADD_send_sys_msg('\(+\) Twitch API 호출 완료 ('+temp_date+')',0);
+                         }
                      },
 
                      // API CALL ERROR
                      error:function()
                      {
-                          if(ADD_DEBUG_MODE) console.log('api request failed');
+                          ADD_DEBUG('Twitch API - Request failed');
                      }
                 });
             }
 
         }
     }
-    else
-    {
+    else{
         // not update
-        left_time = Math.floor(left_time/60/1000)+' min '+Math.floor((left_time/1000)%60)+' sec';
-        if(ADD_DEBUG_MODE) console.log('Current time is '+now_time+'.\nCookie time for api update is '+api_pre_time+'.\nCookie is not updated.\nCookie will update after '+left_time);
-        if ( !!$.cookie('twitch_api_cookie') )
-        {
+        var left_time_text = Math.floor(left_time/60/1000)+' min '+Math.floor((left_time/1000)%60)+' sec';
+        ADD_DEBUG('Twitch API - 이전 API 업데이트 시간 : ',getTimeStampWithText(api_pre_time,'s'));
+        ADD_DEBUG('Twitch API - 현재 시간              : ',getTimeStampWithText(now_time,'s'));
+        ADD_DEBUG('Twitch API - 다음 API 업데이트 시간 : ',getTimeStampWithText(next_time,'s'));
+        ADD_DEBUG('Twitch API - API 업데이트 남은 시간 : ',left_time_text);
+        if ( !!$.cookie('twitch_api_cookie') ){
             // 쿠키 존재 시 변수로 쓴다.
             twitch_api_cookie = JSON.parse($.cookie('twitch_api_cookie'));
         }
@@ -1796,8 +2616,9 @@ function ADD_config_DOE()
                            <thead>\
                                <tr>\
                                    <th colspan="2">\
-                                       <a href="https://github.com/nomomo/Addostream" target="_blank">ADDostram version: '+version_str+'</a>\
-                                       <a href="https://github.com/nomomo/Addostream" target="_blank"><span style="font-weight:normal;font-size:11px;margin-left:5px;">\(https://github.com/nomomo/Addostream\)</span></a>\
+                                       <a href="https://nomomo.github.io/Addostream/" target="_blank">ADDostram v'+version_str+'</a>\
+                                       <span id="new_version_available_text" style="display:none;"></span>\
+                                       <a id="github_url_text" href="https://nomomo.github.io/Addostream/" target="_blank"><span style="font-weight:normal;font-size:11px;margin-left:5px;">\(https://nomomo.github.io/Addostream/\)</span></a>\
                                    </th>\
                                </tr>\
                            </thead>\
@@ -1811,19 +2632,32 @@ function ADD_config_DOE()
                               </tr>\
                               <tr>\
                                    <td class="td_strong">\
-                                       <input type="checkbox" id="ADD_config_top_fix" onfocus="this.blur()"  /> 특정 스트리머 상단 고정\
+                                       <label class="btn btn-default btn-xxs">\
+                                           <input type="checkbox" id="ADD_config_top_fix" onfocus="this.blur()"  />\
+                                           <span class="glyphicon glyphicon-ok"></span>\
+                                       </label> 특정 스트리머 상단 고정\
                                    </td>\
                                    <td>\
                                        <input type="text" id="ADD_config_top_fix_ID" style="width:100%;" class="input_text_by_tag ADD_config_top_fix_form form_enabled" />\
-                                   <ul id="ADD_config_top_fix_ID_Tags"></ul>\
-                                 </td>\
+                                       <ul id="ADD_config_top_fix_ID_Tags"></ul>\
+                                   </td>\
                               </tr>\
                               <tr>\
                                  <td class="no_border"></td>\
-                                 <td><input type="checkbox" id="ADD_config_top_off_fix" onfocus="this.blur()" class="ADD_config_top_fix_form form_enabled" /> 오프라인 시에도 고정</td>\
+                                 <td>\
+                                 <label class="btn btn-default btn-xxs">\
+                                     <input type="checkbox" id="ADD_config_top_off_fix" onfocus="this.blur()" class="ADD_config_top_fix_form form_enabled" />\
+                                     <span class="glyphicon glyphicon-ok"></span>\
+                                 </label> 오프라인 시에도 고정\
+                                 </td>\
                               </tr>\
                               <tr>\
-                                 <td class="td_strong"><input type="checkbox" id="ADD_config_alarm" onfocus="this.blur()" /> 메인에 스트리머 추가</td>\
+                                 <td class="td_strong">\
+                                     <label class="btn btn-default btn-xxs">\
+                                         <input type="checkbox" id="ADD_config_alarm" onfocus="this.blur()"  />\
+                                         <span class="glyphicon glyphicon-ok"></span>\
+                                     </label> 메인에 스트리머 추가\
+                                 </td>\
                                  <td><input type="text" id="ADD_config_top_alarm_ID" style="width:100%;" class="input_text_by_tag ADD_config_alarm_form form_enabled" /><ul id="ADD_config_top_alarm_ID_Tags"></ul></td>\
                               </tr>\
                               <tr>\
@@ -1832,79 +2666,148 @@ function ADD_config_DOE()
                               </tr>\
                               <tr>\
                                  <td class="no_border"></td>\
-                                 <td><input type="checkbox" id="ADD_config_alarm_noti" onfocus="this.blur()" class="ADD_config_alarm_form form_enabled" /> 온라인 시 알림\
+                                 <td>\
+                                     <label class="btn btn-default btn-xxs">\
+                                         <input type="checkbox" id="ADD_config_alarm_noti" onfocus="this.blur()" class="ADD_config_alarm_form form_enabled" />\
+                                         <span class="glyphicon glyphicon-ok"></span>\
+                                     </label> 온라인 시 알림\
                                      <span class="tooltip_container" aria-label="위 메인에 없는 스트리머 아이디 목록에 등록된 스트리머가 온라인이 되면 알린다." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
                                          <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
                                      </span></td>\
                               </tr>\
                               <tr>\
-                                 <td class="td_strong"><input type="checkbox" id="ADD_config_streamer_hide" onfocus="this.blur()" class="form_enabled" /> 특정 스트리머 숨기기</td>\
+                                 <td class="td_strong">\
+                                     <label class="btn btn-default btn-xxs">\
+                                         <input type="checkbox" id="ADD_config_streamer_hide" onfocus="this.blur()"  />\
+                                         <span class="glyphicon glyphicon-ok"></span>\
+                                     </label> 특정 스트리머 숨기기\
+                                 </td>\
                                  <td><input type="text" id="ADD_config_streamer_hide_ID" style="width:100%;" class="input_text_by_tag ADD_config_streamer_hide_form form_enabled" /><ul id="ADD_config_streamer_hide_ID_Tags"></ul></td>\
                               </tr>\
                               <tr>\
-                                 <td class="td_strong"><input type="checkbox" id="ADD_config_remember_platform" onfocus="this.blur()" class="form_enabled" /> 특정 플랫폼 숨기기</td>\
+                                 <td class="td_strong">\
+                                     <label class="btn btn-default btn-xxs">\
+                                         <input type="checkbox" id="ADD_config_remember_platform" onfocus="this.blur()"  />\
+                                         <span class="glyphicon glyphicon-ok"></span>\
+                                     </label> 특정 플랫폼 숨기기\
+                                 </td>\
                                  <td>\
                                      <span style="margin-left:0px;">\
-                                      <input type="checkbox" id="ADD_config_remember_twitch" class="ADD_config_remember_platform_form form_enabled" onfocus="this.blur()"  /> 트위치\
+                                     <label class="btn btn-default btn-xxs">\
+                                         <input type="checkbox" id="ADD_config_remember_twitch" class="ADD_config_remember_platform_form form_enabled" onfocus="this.blur()"  />\
+                                         <span class="glyphicon glyphicon-ok"></span>\
+                                     </label> 트위치\
                                      </span>\
                                      <span style="margin-left:10px;">\
-                                      <input type="checkbox" id="ADD_config_remember_kakao" class="ADD_config_remember_platform_form form_enabled" onfocus="this.blur()"  /> 카카오\
+                                     <label class="btn btn-default btn-xxs">\
+                                         <input type="checkbox" id="ADD_config_remember_kakao" class="ADD_config_remember_platform_form form_enabled" onfocus="this.blur()"  />\
+                                         <span class="glyphicon glyphicon-ok"></span>\
+                                     </label> 카카오\
                                      </span>\
                                      <span style="margin-left:10px;">\
-                                      <input type="checkbox" id="ADD_config_remember_youtube" class="ADD_config_remember_platform_form form_enabled" onfocus="this.blur()"  /> 유투브\
+                                     <label class="btn btn-default btn-xxs">\
+                                         <input type="checkbox" id="ADD_config_remember_youtube" class="ADD_config_remember_platform_form form_enabled" onfocus="this.blur()"  />\
+                                         <span class="glyphicon glyphicon-ok"></span>\
+                                     </label> 유투브\
                                      </span>\
                                  </td>\
                               </tr>\
                               <tr>\
-                                 <td class="td_strong"><input type="checkbox" id="ADD_config_chat_ctr" onfocus="this.blur()" class="form_enabled"/> 채팅 컨트롤\
+                                 <td class="td_strong">\
+                                     <label class="btn btn-default btn-xxs">\
+                                         <input type="checkbox" id="ADD_config_chat_ctr" onfocus="this.blur()"  />\
+                                         <span class="glyphicon glyphicon-ok"></span>\
+                                     </label> 채팅 컨트롤\
                                      <span class="tooltip_container" aria-label="채팅 관련 기능을 활성화 한다. 채팅창에서 닉네임을 클릭하면 메모를 추가할 수 있는 기능을 기본으로 제공한다." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
                                          <span class="glyphicon glyphicon-question-sign" style="color:#333;"></span>\
                                      </span>\
                                  </td>\
                                  <td>\
-                                     <span style="margin-left:0px;">\
-                                      <input type="checkbox" id="ADD_config_chat_adb" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 광고 차단\
+                                     <span aria-label="애드온의 작동 상태를 채팅창 메시지로 알림" data-microtip-position="top-left" role="tooltip">\
+                                         <span style="margin-left:0px;">\
+                                         <label class="btn btn-default btn-xxs">\
+                                             <input type="checkbox" id="ADD_config_sys_meg" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" />\
+                                             <span class="glyphicon glyphicon-ok"></span>\
+                                         </label> 작동 상태 알림\
+                                         </span>\
                                      </span>\
                                      <span style="margin-left:10px;">\
-                                      <input type="checkbox" id="ADD_config_hide_nick_change" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 닉변 메시지 차단\
+                                         <label class="btn btn-default btn-xxs">\
+                                             <input type="checkbox" id="ADD_config_chat_adb" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" />\
+                                             <span class="glyphicon glyphicon-ok"></span>\
+                                         </label>  광고 차단\
+                                     </span>\
+                                     <span style="margin-left:10px;">\
+                                         <label class="btn btn-default btn-xxs">\
+                                             <input type="checkbox" id="ADD_config_hide_nick_change" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" />\
+                                             <span class="glyphicon glyphicon-ok"></span>\
+                                         </label>  닉변 메시지 차단\
                                      </span>\
                                  </td>\
                               </tr>\
                               <tr>\
                                  <td class="no_border">\
                                  </td>\
-                                 <td><input type="checkbox" id="ADD_config_chat_scroll" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 휠로 채팅 자동스크롤 정지 \
-                                     <span class="tooltip_container" aria-label="트위치 채팅창에서 마우스 휠을 위로 돌리면 채팅창 자동스크롤이 정지하는 것을 단순하게 구현함." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
-                                         <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
+                                 <td>\
+                                     <span aria-label="채팅창에서 마우스 휠을 위로 돌리면 채팅창 자동스크롤을 정지시킴" data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
+                                         <label class="btn btn-default btn-xxs">\
+                                             <input type="checkbox" id="ADD_config_chat_scroll" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" />\
+                                             <span class="glyphicon glyphicon-ok"></span>\
+                                         </label>  휠로 채팅 자동스크롤 정지\
                                      </span></td>\
                               </tr>\
                               <tr>\
                                  <td class="no_border"></td>\
-                                 <td><input type="checkbox" id="ADD_config_url_self" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 채팅 내 두스 좌표 현재 창 열기 \
-                                     <span class="tooltip_container" aria-label="좌표 클릭 시 매번 새 창으로 뜨는 것이 귀찮아서 추가함. ctrl 또는 shift 키를 누른 채로 클릭하여 기존처럼 새 탭 또는 새 창으로 여는 것도 가능. 이 설정을 켠 이후 등록된 채팅에만 적용." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
-                                         <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
+                                 <td>\
+                                     <span aria-label="채팅 내 좌표 링크 클릭 시 현재 창에서 열림. ctrl 또는 shift 키를 누른 채로 클릭하여 기존처럼 새 탭으로 열 수 있음." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
+                                         <label class="btn btn-default btn-xxs">\
+                                             <input type="checkbox" id="ADD_config_url_self" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" />\
+                                             <span class="glyphicon glyphicon-ok"></span>\
+                                         </label>  채팅 내 두스 좌표 현재 창 열기\
                                      </span></td>\
                               </tr>\
                               <tr>\
-                                 <td class="no_border"></td>\
-                                 <td><input type="checkbox" id="ADD_config_imgur_preview" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 채팅 imgur 이미지 미리보기\
-                                     <span class="tooltip_container" aria-label="imgur 링크가 채팅창에 등록되면 바로 보여준다." data-microtip-position="top-left" role="tooltip">\
-                                         <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
+                                 <td class="no_border" style="height:16px;padding:2px 5px 0px 10px;"></td>\
+                                 <td style="height:16px;padding:2px 5px 0px 10px;">\
+                                     <span aria-label="채팅창에 imgur 링크가 채팅창에 등록되면 바로 보여줌" data-microtip-position="top-left" role="tooltip">\
+                                         <label class="btn btn-default btn-xxs">\
+                                             <input type="checkbox" id="ADD_config_imgur_preview" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" />\
+                                             <span class="glyphicon glyphicon-ok"></span>\
+                                         </label> 채팅 imgur 이미지 미리보기\
                                      </span>\
-                                     <br /><span style="margin-left:20px;"></span><input type="checkbox" id="ADD_config_imgur_preview_safe" onfocus="this.blur()" class="ADD_config_chat_ctr_form ADD_config_imgur_preview_form form_enabled" /> 버튼 클릭 후 이미지 활성(후방주의 기능) \
-                                     <span class="tooltip_container" aria-label="이미지를 어둡게 가려진 상태로 보여준다." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
-                                         <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
-                                     </span>\
-                                     <br /><span style="margin-left:40px;">└ 박스 투명도(0:투명, 1:불투명)</span> <input type="text" id="ADD_config_imgur_preview_opacity" style="width:32px;height:20px;padding-left:3px;" class="ADD_config_chat_ctr_form ADD_config_imgur_preview_form ADD_config_imgur_preview_safe_form form_enabled" />\
                                  </td>\
                               </tr>\
                               <tr>\
-                                 <td class="no_border" style="height:10px"></td>\
-                                 <td style="height:10px">\
-                                 <input type="checkbox" id="ADD_config_chat_block" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /> 금지단어 설정\
+                                 <td class="no_border" style="height:16px;padding:1px 5px 1px 10px;"></td>\
+                                 <td class="no_border" style="height:16px;padding:1px 5px 1px 10px;">\
+                                     <span aria-label="이미지를 어둡게 가려진 상태로 보여준다." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
+                                         <span style="margin-left:20px;"></span>\
+                                         <label class="btn btn-default btn-xxs">\
+                                             <input type="checkbox" id="ADD_config_imgur_preview_safe" onfocus="this.blur()" class="ADD_config_chat_ctr_form ADD_config_imgur_preview_form form_enabled" />\
+                                             <span class="glyphicon glyphicon-ok"></span>\
+                                         </label> 버튼 클릭 후 이미지 활성(후방주의 기능) \
+                                     </span>\
+                                 </td>\
+                              </tr>\
+                              <tr>\
+                                 <td class="no_border" style="height:16px;padding:0px 5px 3px 10px;"></td>\
+                                 <td class="no_border" style="height:16px;padding:0px 5px 3px 10px;">\
+                                     <span style="margin-left:40px;">└ 박스 투명도(0:투명, 1:불투명)</span> <input type="text" id="ADD_config_imgur_preview_opacity" style="width:32px;height:20px;padding-left:3px;" class="ADD_config_chat_ctr_form ADD_config_imgur_preview_form ADD_config_imgur_preview_safe_form form_enabled" />\
+                                 </td>\
+                              </tr>\
+                              <tr>\
+                                 <td class="no_border" style="height:16px;padding:3px 5px 0px 10px;"></td>\
+                                 <td style="height:16px;padding:3px 5px 0px 10px;">\
+                                 <label class="btn btn-default btn-xxs">\
+                                     <input type="checkbox" id="ADD_config_chat_block" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" />\
+                                     <span class="glyphicon glyphicon-ok"></span>\
+                                 </label> 금지단어 설정\
                                  <span style="margin-left:10px;">\
                                      <span aria-label="채팅이 삭제되면 &lt;message deleted&gt; 로 표시" data-microtip-position="top-left" role="tooltip">\
-                                         <input type="checkbox" id="ADD_config_chat_block_noti" onfocus="this.blur()" class="ADD_config_chat_ctr_form ADD_config_chat_block_form form_enabled" /> 삭제 여부 알림\
+                                         <label class="btn btn-default btn-xxs">\
+                                             <input type="checkbox" id="ADD_config_chat_block_noti" onfocus="this.blur()" class="ADD_config_chat_ctr_form ADD_config_chat_block_form form_enabled" />\
+                                             <span class="glyphicon glyphicon-ok"></span>\
+                                         </label> 삭제 여부 알림\
                                      </span>\
                                  </span>\
                                      <span class="tooltip_container" aria-label="특정 단어가 닉네임 또는 채팅 내용에 있으면 해당 채팅을 차단한다. 첫 접속 시 느려질 수 있다. (기본값: 신비한 곰보사전)" data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
@@ -1913,16 +2816,22 @@ function ADD_config_DOE()
                                  </td>\
                               </tr>\
                               <tr>\
-                                 <td class="no_border" style="height:10px"></td>\
-                                 <td class="no_border" style="height:10px">\
+                                 <td class="no_border" style="height:16px;padding:1px 5px 3px 10px;"></td>\
+                                 <td class="no_border" style="height:16px;padding:1px 5px 3px 10px;">\
                                  <span style="margin-left:20px;">\
                                      <span aria-label="닉네임에 금지단어가 있으면 차단" data-microtip-position="top-left" role="tooltip">\
-                                         <input type="checkbox" id="ADD_config_chat_block_nickname" onfocus="this.blur()" class="ADD_config_chat_ctr_form ADD_config_chat_block_form form_enabled" /> 닉네임\
+                                         <label class="btn btn-default btn-xxs">\
+                                             <input type="checkbox" id="ADD_config_chat_block_nickname" onfocus="this.blur()" class="ADD_config_chat_ctr_form ADD_config_chat_block_form form_enabled" />\
+                                             <span class="glyphicon glyphicon-ok"></span>\
+                                         </label> 닉네임\
                                      </span>\
                                  </span>\
                                  <span style="margin-left:10px;">\
                                      <span aria-label="채팅 내용에 금지단어가 있으면 차단" data-microtip-position="top-left" role="tooltip">\
-                                         <input type="checkbox" id="ADD_config_chat_block_contents" onfocus="this.blur()" class="ADD_config_chat_ctr_form ADD_config_chat_block_form form_enabled" /> 내용\
+                                         <label class="btn btn-default btn-xxs">\
+                                             <input type="checkbox" id="ADD_config_chat_block_contents" onfocus="this.blur()" class="ADD_config_chat_ctr_form ADD_config_chat_block_form form_enabled" />\
+                                             <span class="glyphicon glyphicon-ok"></span>\
+                                         </label> 내용\
                                      </span>\
                                  </span>\
                                  <span id="show_block_contents_on" style="margin-left:10px;text-decoration:underline;cursor:pointer">▼ 단어 보기</span>\
@@ -1937,25 +2846,21 @@ function ADD_config_DOE()
                                  <td class="no_border" style="height:0px;"><div id="block_contents_tr" style="display:none;">\
                                      <input type="text" id="ADD_config_chat_block_tag" style="width:100%;" class="input_text_by_tag ADD_config_chat_ctr_form ADD_config_chat_block_form form_enabled" /><ul id="ADD_config_chat_block_tag_Tags"></ul></div></td>\
                               </tr>\
-                              <tr style="display:none">\
-                                 <td class="td_strong">스크립트 작동 상태를 알림 \
-                                     <span class="tooltip_container" aria-label="스트리머 조회, 페이지 갱신 등 스크립트의 주요 동작 상태를 채팅창의 시스템 메시지처럼 알려준다." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">\
-                                         <span class="glyphicon glyphicon-question-sign" style="color:#999;"></span>\
-                                     </span>\
-                                 </td>\
-                                 <td><input type="checkbox" id="ADD_config_sys_meg" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" /></td>\
-                              </tr>\
                               <tr>\
-                                 <td class="td_strong"><input type="checkbox" id="ADD_config_thumbnail_mouse" class="ADD_config_chat_ctr_form" onfocus="this.blur()"  /> 섬네일 마우스온 확대</td>\
+                                 <td class="td_strong">\
+                                     <label class="btn btn-default btn-xxs">\
+                                         <input type="checkbox" id="ADD_config_thumbnail_mouse" class="" onfocus="this.blur()"  />\
+                                         <span class="glyphicon glyphicon-ok"></span>\
+                                     </label> 섬네일 마우스온 확대</td>\
                                  <td>\
                                      <label class="radio-inline">\
-                                         <input type="radio" name="ADD_config_thumbnail_size" id="ADD_config_thumbnail_size_1" value="1" class="ADD_config_chat_ctr_form ADD_config_thumbnail_mouse_form form_enabled" onfocus="this.blur()"> 작음\
+                                         <input type="radio" name="ADD_config_thumbnail_size" id="ADD_config_thumbnail_size_1" value="1" class="ADD_config_thumbnail_mouse_form form_enabled" onfocus="this.blur()"> 작음\
                                      </label>\
                                      <label class="radio-inline">\
-                                         <input type="radio" name="ADD_config_thumbnail_size" id="ADD_config_thumbnail_size_2" value="2" class="ADD_config_chat_ctr_form ADD_config_thumbnail_mouse_form form_enabled" onfocus="this.blur()"> 중간\
+                                         <input type="radio" name="ADD_config_thumbnail_size" id="ADD_config_thumbnail_size_2" value="2" class="ADD_config_thumbnail_mouse_form form_enabled" onfocus="this.blur()"> 중간\
                                      </label>\
                                      <label class="radio-inline">\
-                                         <input type="radio" name="ADD_config_thumbnail_size" id="ADD_config_thumbnail_size_3" value="3" class="ADD_config_chat_ctr_form ADD_config_thumbnail_mouse_form form_enabled" onfocus="this.blur()"> 큼\
+                                         <input type="radio" name="ADD_config_thumbnail_size" id="ADD_config_thumbnail_size_3" value="3" class="ADD_config_thumbnail_mouse_form form_enabled" onfocus="this.blur()"> 큼\
                                      </label>\
                                  </td>\
                               </tr>\
@@ -1984,9 +2889,10 @@ function ADD_config_DOE()
                     </div>\
                     <div class="modal-footer">\
                       <!--<div class="glyphicon glyphicon-ok bg-success" style="display:block;float:left;height:30px; width:100%;padding:7px 0px;">Saved successfully!</div>-->\
-                      <div id="ADD_config_Success" class="btn btn-success confirm_selection" style="display:none;">Done! 문제가 있다면 새로고침 또는<br /> 브라우저 쿠키 초기화 후 재설정 하세요.</div>\
-                        <button type="button" id="Cookie_reset" class="btn btn-sm">Config reset</button>\
-                        <button type="button" id="ADD_config_save" class="btn btn-primary btn-sm">Save changes</button>\
+                      <div id="ADD_config_Success" class="btn btn-success confirm_selection" style="display:none;">Done! 문제 발생 시 새로고침 or 재설치!</div>\
+                        <button type="button" id="ADD_config_restore" class="btn btn-default btn-sm">Backup & Restore</button>\
+                        <button type="button" id="Cookie_reset" class="btn btn-sm">Reset</button>\
+                        <button type="button" id="ADD_config_save" class="btn btn-primary btn-sm">Save</button>\
                     </div>\
                  </div>\
               </div>\
@@ -2045,15 +2951,70 @@ function ADD_config_DOE()
       }
 
       // @
-      var at_fix = $('.footer').html().replace('@','<div id="at" title="????">@</div>');
-      $('.footer').html(at_fix);
-      at_fix = null;
+      if($('.footer').html() !== undefined){
+          var at_fix = $('.footer').html().replace('@','<div id="at" title="????">@</div>');
+          $('.footer').html(at_fix);
+      }
+
+      // 자동완성 이후 처리
+      var afterTagCreate = function(event, ui) {
+        var tag_elem = ui.tag.children('span.tagit-label');
+        var tag_text = tag_elem.html();
+        if(tag_text === null || tag_text === undefined){
+            return;
+        }
+        if(tag_text.indexOf('\(') != -1 && tag_text.indexOf('\)') != -1){
+            tag_text = tag_text.split('\(')[1].split('\)')[0].replace(' ','');
+            if(tag_text === undefined || tag_text === null){
+                return;
+            }
+            if($.inArray(tag_text, streamerArray_name) != -1){
+                tag_elem.html(tag_text);
+            }
+         }
+         else {
+             var temp_index = $.inArray(tag_text, streamerArray_display_name);
+             if(temp_index != -1){
+                 tag_elem.html(streamerArray_name[temp_index]);
+             }
+         }
+      };
+
+        var preprocessingTag = function(val) {
+        var tag_text = val;
+        if(tag_text === null || tag_text === undefined){
+            return val;
+        }
+        if(tag_text.indexOf('\(') != -1 && tag_text.indexOf('\)') != -1){
+            tag_text = tag_text.split('\(')[1].split('\)')[0].replace(' ','');
+            if(tag_text === undefined || tag_text === null){
+                return val;
+            }
+            if($.inArray(tag_text, streamerArray_name) != -1){
+                return tag_text;
+            }
+         }
+         else {
+             var temp_index = $.inArray(tag_text, streamerArray_display_name);
+             if(temp_index != -1){
+                 return streamerArray_name[temp_index];
+             }
+         }
+         return val;
+      };
+
+      var TagExist = function(evt, ui) {
+          var new_elem = ui.existingTag.closest('ul').find('li.tagit-new input[type="text"]');
+          var new_elem_text = new_elem.val();
+          new_elem.val(preprocessingTag(new_elem_text));
+          //addEvent('onTagExists: ' + eventTags.tagit('tagLabel', ui.existingTag));
+      };
 
       $("#myTags").tagit({singleField: true,singleFieldNode: $('#my')});
-      $("#ADD_config_top_fix_ID_Tags").tagit({autocomplete: {delay: 0, minLength: 1},availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $('#ADD_config_top_fix_ID')});
-      $("#ADD_config_top_alarm_ID_Tags").tagit({autocomplete: {delay: 0, minLength: 1},availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $('#ADD_config_top_alarm_ID')});
-      $("#ADD_config_streamer_hide_ID_Tags").tagit({autocomplete: {delay: 0, minLength: 1},availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $('#ADD_config_streamer_hide_ID')});
-      $("#ADD_config_chat_block_tag_Tags").tagit({autocomplete: {delay: 0, minLength: 1},singleField: true,singleFieldNode: $('#ADD_config_chat_block_tag')});
+      $("#ADD_config_top_fix_ID_Tags").tagit({autocomplete: {delay: 0},onTagExists:TagExist,preprocessTag:preprocessingTag,availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $('#ADD_config_top_fix_ID')});
+      $("#ADD_config_top_alarm_ID_Tags").tagit({autocomplete: {delay: 0},onTagExists:TagExist,preprocessTag:preprocessingTag,availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $('#ADD_config_top_alarm_ID')});
+      $("#ADD_config_streamer_hide_ID_Tags").tagit({autocomplete: {delay: 0},onTagExists:TagExist,preprocessTag:preprocessingTag,availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $('#ADD_config_streamer_hide_ID')});
+      $("#ADD_config_chat_block_tag_Tags").tagit({autocomplete: {delay: 0},singleField: true,singleFieldNode: $('#ADD_config_chat_block_tag')});
 
       $("li.tagit-new").each(function() { $(this).hide(); });
       $("input:text .ui-autocomplete-input").each(function() { $(this).attr('spellcheck', false); });
@@ -2069,7 +3030,7 @@ $(document).on('change', '#ADD_config_theme_select', function() {
     ADD_change_theme(str);
 });
 
-
+////////////////////////////////////////////////////////////////
 // blocked chat
 $(document).on('click', '#show_block_contents_on', function() {
     $('#block_contents_tr').slideDown('fast');
@@ -2081,11 +3042,9 @@ $(document).on('click', '#show_block_contents_off', function() {
     $('#show_block_contents_off').hide();
     $('#show_block_contents_on').show();
 });
-$(document).on('click', '#show_blocked_chat', function(e) {
-  //e.preventDefault();
-  //var image = $(this).attr('href');
+$(document).on('click', '#show_blocked_chat', async event => {
   $('html').addClass('no-scroll');
-  var ADD_Blocked_Chat  = ADD_GetVal('ADD_Blocked_Chat');
+  var ADD_Blocked_Chat = await ADD_GetVal('ADD_Blocked_Chat');
   if(ADD_Blocked_Chat === undefined){
       ADD_Blocked_Chat = [];
   }
@@ -2099,6 +3058,38 @@ $(document).on('click', '#show_blocked_chat', function(e) {
   $('body').append('<div class="lightbox-opened"><div class="lightbox-opened-blocked-chat"><span style="font-weight:bold;">차단된 채팅은 100개까지 저장됩니다.</span><br />'+Blocked_text+'</div></div>');
 });
 
+async function ADD_Chat_block(Elem, Contents, Chat, Condition){
+    if(ADD_config !== undefined && Chat !== undefined && ADD_config.chat_block.value){
+        var block_tag_array = ADD_config.chat_block_tag.value;
+        if(Condition !== undefined && Condition){
+            for(var i=0;i<block_tag_array.length;i++){
+                if(Chat.indexOf(block_tag_array[i]) != -1){
+                    var ADD_Blocked_Chat = [];
+                    ADD_Blocked_Chat = await ADD_GetVal('ADD_Blocked_Chat');
+                    if(ADD_Blocked_Chat === undefined){
+                        ADD_Blocked_Chat = [];
+                    }
+                    if(ADD_Blocked_Chat.length > 100){
+                        ADD_Blocked_Chat.shift();
+                    }
+                    ADD_Blocked_Chat.push(Contents);
+                    await ADD_SetVal('ADD_Blocked_Chat', ADD_Blocked_Chat);
+
+                    if(ADD_config.chat_block_noti.value){
+                        Elem.html('<div style="text-align:center;color:#aaa;">&ltmessage deleted&gt</div>');
+                    }
+                    else{
+                        Elem.remove();
+                    }
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////
 // TAGS TEXT INPUT FOCUS EVENT
 $(document).on('click', 'ul.tagit', function() {
     $(this).find("li.tagit-new").show();
@@ -2107,6 +3098,7 @@ $(document).on('click', 'ul.tagit', function() {
 
 $(document).on('focusout', 'li.tagit-new input:text', function() {
     $(this).closest("li.tagit-new").hide();
+    $(this).val('');
 });
 
 //SPAN 영역에 클릭 이벤트 설정
@@ -2119,7 +3111,7 @@ $(document).on('click', 'li.tagit-choice', function(event) {
 $(document).on('click', '#ADD_test_id_1', function() {
     var test_text = '\
         <div class="user_conversation" title="테스트맨 - 2017-07-11 11:11:11"><span class="conversation_nick" nick="%uCF58%uC0D0%uC9F1%uC9F1%uB9E8">테스트맨</span><span style="vertical-align: middle;">&nbsp; </span><span class="cs_contents" style="">\
-         테스트 http://i.imgur.com/7bzMRmqh.gif</span></div>';
+         테스트 https://imgur.com/a/45ps1</span></div>';
     $('.conversation_contents').append(test_text);
     test_text = null;
 }); // http://imgur.com/a/cKXVX
@@ -2215,7 +3207,6 @@ function ADD_send_location_DOE()
     var ADD_send_location_button_id = $('#ADD_send_location_button');
     var ADD_send_location_button_elem;
 
-    if(ADD_DEBUG_MODE) console.log('ADD_chat_window_id.length = '+ADD_chat_window_id.length+' , ADD_send_location_button_id.length = '+ADD_send_location_button_id.length);
     // 채팅창 존재 여부 확인, 좌표 보내기 버튼 이미 존재하는지 확인
     if( (ADD_chat_window_id.length !== 0) && (ADD_send_location_button_id.length === 0) )
     {
@@ -2268,11 +3259,11 @@ function ADD_send_location()
 function ADD_multitwitch_DOE(){
     // 멀티트위치 버튼
     if( $('#multitwitch').length === 0 )
-        $('.search').append('<span id="multitwitch" style="cursor: pointer; display:inline-block; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #eee none repeat scroll 0 0; color: #222;">멀티트위치</span>');
+        $('.search').append('<span aria-label="체크한 스트리머를 멀티트위치로 실행" data-microtip-position="right" role="tooltip"><span id="multitwitch" style="cursor: pointer; display:inline-block; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #eee none repeat scroll 0 0; color: #222;">멀티트위치</span></span>');
 
     // Hide Streamer 버튼
     if( $('#addHideStreamer').length === 0 )
-        $('.search').append('<span id="addHideStreamer" style="display:none; cursor: pointer; float:right; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #C64D4D none repeat scroll 0 0; color: #fff;">HIDE</span>');
+        $('.search').append('<span style="float:right;"><span aria-label="체크한 스트리머를 메인에서 숨김" data-microtip-position="left" role="tooltip"><span id="addHideStreamer" style="display:none; cursor: pointer; font-size:12px; line-height:20px; margin:0 5px 0 0; padding: 5px 10px; background: #C64D4D none repeat scroll 0 0; color: #fff;">HIDE</span></span></span>');
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -2288,7 +3279,7 @@ function multitwitch_run()
 
 //////////////////////////////////////////////////////////////////////////////////
 // Hide Streamer 버튼 동작 관련 함수
-function addHideStreamer_run()
+async function addHideStreamer_run()
 {
     var IndexCheckedID = true;
     if(checkedID.length !== 0){
@@ -2298,7 +3289,7 @@ function addHideStreamer_run()
                 (ADD_config.streamer_hide_ID.value).push(checkedID[i]);
             }
         }
-        ADD_config_var_write();
+        await ADD_config_var_write();
         ADD_var_to_config_form();
         reloadMain();
         $('#addHideStreamer').hide();
@@ -2310,6 +3301,7 @@ function addHideStreamer_run()
 $(document).on('click', 'input[name=chk]', function() {
     var thisVal = $(this).val();
     var IndexThisVal = $.inArray(thisVal, checkedID);
+    $(this).parent('label.btn').toggleClass('active');
 
     if(IndexThisVal === -1){
         checkedID.push(thisVal);
@@ -2333,6 +3325,10 @@ $(document).on('click', 'input[name=chk]', function() {
     else{
         $('#addHideStreamer').fadeOut('fast');
     }
+});
+
+$(document).on('click', '#popup_ADD_config table td input[type="checkbox"]', function() {
+    $(this).parent('label.btn').toggleClass('active');
 });
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -2361,7 +3357,7 @@ function getImgurData(Imgur_ID, Imgur_type) {
   // Imgur_type --------------- 0 = image   ,    1 = album    ,    2 = gallery    ,    10 = etc
     var imgur_api_call_url = 'https://api.imgur.com/3/';
     var imgur_client_id = 'a57c643ca3a51ee';
-    var imgur_return_link = '';
+    var imgur_return_link = [''];
 
     if (Imgur_type === 0)
         {
@@ -2389,33 +3385,33 @@ function getImgurData(Imgur_ID, Imgur_type) {
           'Authorization': 'Client-ID '+imgur_client_id
       },
     success:function(response) {
-      if(ADD_DEBUG_MODE) console.log('Imgur api request succeed');
+      ADD_DEBUG('Imgur api request succeed');
       var response_data = response.data;
-      if(ADD_DEBUG_MODE) console.log(response);
-      //if(ADD_DEBUG_MODE) console.log(response_data);
-      if(response_data[0] !== undefined)
-      {
-          if(ADD_DEBUG_MODE) console.log('type:album',response_data[0].link);
-          imgur_return_link = response_data[0].link;
+      ADD_DEBUG('response: ',response);
+      if(response_data[0] !== undefined){
+          for(var i=0;i<response_data.length;i++){
+              ADD_DEBUG('type:album',response_data[i].link);
+              imgur_return_link[i] = response_data[i].link;
+          }
       }
       else
       {
-          if(ADD_DEBUG_MODE) console.log('type:image',response_data.link);
-          imgur_return_link = response_data.link;
+          ADD_DEBUG('type:image',response_data.link);
+          imgur_return_link[0] = response_data.link;
       }
       response_data = null;
       response = null;
     },
     error:function() {
         // request failed
-        if(ADD_DEBUG_MODE) console.log('Imgur api request failed');
+        ADD_DEBUG('Imgur api request failed');
     }
   });
 
   if(Imgur_type == 2)
   {
-      // gallery 타입의 경우 album 주소를 가져오므로 해당 album 에 대하여 재호출한다.
-      imgur_return_link = imgur_return_link.split('a')[1];
+      // gallery 타입의 경우 album 주소를 가져오므로 첫번째 album 에 대하여 재호출한다.
+      imgur_return_link = imgur_return_link[0].split('a')[1];
       if(imgur_return_link !== undefined && imgur_return_link !== null)
           imgur_return_link = getImgurData(imgur_return_link, 1);
   }
@@ -2430,7 +3426,7 @@ function getImgurData(Imgur_ID, Imgur_type) {
 
 //////////////////////////////////////////////////////////////////////////////////
 // 채팅창에서 문자열 탐지, 이벤트 bind, API 함수 호출 동작 실행
-function ADD_chatting_arrive(){
+async function ADD_chatting_arrive(){
    // 기존에 꺼져있는 경우
     if(!chatting_arrive_check || chatting_arrive_check === null){
         // True 이면 켠다.
@@ -2461,38 +3457,11 @@ function ADD_chatting_arrive(){
     // arrive bind 및 unbind
     if(chatting_arrive_check && ADD_config.chat_ctr.value){
         // 설정이 변경되고 true 이면 false 에서 true로 바뀐 것이므로 bind 한다.
-        $(document).arrive('.system', function(systemElem) {
-            var systemElem = $(systemElem);
-            if(ADD_config.chat_block.value){
-                var block_tag_array = ADD_config.chat_block_tag.value;
-                if(ADD_config.chat_block_nickname.value || ADD_config.chat_block_contents.value){
-                    for(var i=0;i<block_tag_array.length;i++){
-                        if(systemElem.html().indexOf(block_tag_array[i]) != -1){
-                            var ADD_Blocked_Chat = [];
-                            ADD_Blocked_Chat = ADD_GetVal('ADD_Blocked_Chat');
-                            var current_Blocked_Chat = "SYSTEM" + " : " + systemElem.html();
-                            if(ADD_Blocked_Chat === undefined){
-                                ADD_Blocked_Chat = [];
-                            }
-                            if(ADD_Blocked_Chat.length > 100){
-                                ADD_Blocked_Chat.shift();
-                            }
-                            ADD_Blocked_Chat.push(current_Blocked_Chat);
-                            ADD_SetVal('ADD_Blocked_Chat', ADD_Blocked_Chat);
-
-                            if(ADD_config.chat_block_noti.value){
-                                systemElem.html('<div style="text-align:center;color:#aaa;">&ltmessage deleted&gt</div>');
-                            }
-                            else{
-                                systemElem.remove();
-                            }
-                            return false;
-                        }
-                    }
-                }
-            }
+        $(document).arrive('.system', async systemElems => {
+            var systemElem = $(systemElems);
+            if(await ADD_Chat_block(systemElem, "SYSTEM : " + systemElem.html(), systemElem.html(), (ADD_config.chat_block_nickname.value || ADD_config.chat_block_contents.value))) return false;
             if( systemElem.html().indexOf('새로운 창에서') != -1 ){
-                systemElem.addClass('ADD_chat_again').prop('title', 'Dosteam+ System Message').html('\(+\) 새 창 감지 됨. 채팅을 다시 시작하려면 클릭');
+                systemElem.addClass('ADD_chat_again').prop('title', 'Dosteam+ System Message').html('\(+\) 채팅 중지 됨. 채팅을 다시 시작하려면 클릭');
             }
             if( ADD_config.hide_nick_change.value ){
                 if( systemElem.html().indexOf('로 변경') != -1 ){
@@ -2502,66 +3471,15 @@ function ADD_chatting_arrive(){
             systemElem = null;
         });
 
-        $(document).arrive('.user_conversation', function(newElems) {
+        $(document).arrive('.user_conversation', async newElems => {
             var newElem = $(newElems);
             var ADD_chatting_nickname = newElem.find('.conversation_nick').html();
             var ADD_chatting_cs_content_elem = newElem.find('.cs_contents');
             var ADD_chatting_content = ADD_chatting_cs_content_elem.html();
 
             // 키워드 차단 (ADD_Blocked_Chat)
-            if(ADD_config.chat_block.value){
-                var block_tag_array = ADD_config.chat_block_tag.value;
-                if(ADD_config.chat_block_nickname.value){
-                    for(var i=0;i<block_tag_array.length;i++){
-                        if(ADD_chatting_nickname !== undefined && ADD_chatting_nickname.indexOf(block_tag_array[i]) != -1){
-                            var ADD_Blocked_Chat = [];
-                            ADD_Blocked_Chat = ADD_GetVal('ADD_Blocked_Chat');
-                            var current_Blocked_Chat = newElem.attr('title') + " : " + ADD_chatting_content;
-                            if(ADD_Blocked_Chat === undefined){
-                                ADD_Blocked_Chat = [];
-                            }
-                            if(ADD_Blocked_Chat.length > 100){
-                                ADD_Blocked_Chat.shift();
-                            }
-                            ADD_Blocked_Chat.push(current_Blocked_Chat);
-                            ADD_SetVal('ADD_Blocked_Chat', ADD_Blocked_Chat);
-
-                            if(ADD_config.chat_block_noti.value){
-                                newElem.html('<div style="text-align:center;color:#aaa;">&ltmessage deleted&gt</div>');
-                            }
-                            else{
-                                newElem.remove();
-                            }
-                            return false;
-                        }
-                    }
-                }
-                if(ADD_config.chat_block_contents.value){
-                    for(var i=0;i<block_tag_array.length;i++){
-                        if(ADD_chatting_content !== undefined && ADD_chatting_content.indexOf(block_tag_array[i]) != -1){
-                            var ADD_Blocked_Chat = [];
-                            ADD_Blocked_Chat = ADD_GetVal('ADD_Blocked_Chat');
-                            var current_Blocked_Chat = newElem.attr('title') + " : " + ADD_chatting_content;
-                            if(ADD_Blocked_Chat === undefined){
-                                ADD_Blocked_Chat = [];
-                            }
-                            if(ADD_Blocked_Chat.length > 100){
-                                ADD_Blocked_Chat.shift();
-                            }
-                            ADD_Blocked_Chat.push(current_Blocked_Chat);
-                            ADD_SetVal('ADD_Blocked_Chat', ADD_Blocked_Chat);
-
-                            if(ADD_config.chat_block_noti.value){
-                                newElem.html('<div style="text-align:center;color:#aaa;">&ltmessage deleted&gt</div>');
-                            }
-                            else{
-                                newElem.remove();
-                            }
-                            return false;
-                        }
-                    }
-                }
-            }
+            if(await ADD_Chat_block(newElem, '' + newElem.attr('title') + ' : ' + ADD_chatting_content, ADD_chatting_nickname, ADD_config.chat_block_nickname.value)) return false;
+            if(await ADD_Chat_block(newElem, '' + newElem.attr('title') + ' : ' + ADD_chatting_content, ADD_chatting_content, ADD_config.chat_block_contents.value)) return false;
 
             if(ADD_config.chat_adb.value)
             {
@@ -2591,7 +3509,7 @@ function ADD_chatting_arrive(){
                 var ADD_imgur_id;
                 var ADD_imgur_type;
                 var ADD_imgur_match;
-                var ADD_imgur_link;
+                var ADD_imgur_link = [''];
                 var ADD_imgur_DOE_text;
                 var ADD_imgur_safe_screen_opacity;
                 var ADD_imgur_reg = /https?:\/\/(\w+\.)?imgur.com\/(a\/|gallery\/)?(\w*)+(\.[a-zA-Z]{3})?/;
@@ -2631,13 +3549,24 @@ function ADD_chatting_arrive(){
                     // imgur api 호출
                     if(ADD_DEBUG_MODE) console.log('ADD_imgur_id = '+ADD_imgur_id+'  ADD_imgur_type = '+ADD_imgur_type);
                     ADD_imgur_link = getImgurData(ADD_imgur_id, ADD_imgur_type);
+                    var ADD_imgur_link_length = ADD_imgur_link.length;
+                    var left_image = '';
+                    var more_images = '';
+                    if(ADD_imgur_link_length != 1){
+                        left_image = '<div class="imgur_more_images_button" style="text-align:center;cursor:pointer;margin:2px 0px">'+(ADD_imgur_link.length-1)+'개의 이미지를 클릭하여 바로 로드.</div>';
+                        for(var i=1;i<ADD_imgur_link_length;i++){
+                            more_images += '<a href="'+ADD_imgur_link[i]+'" class="open-lightbox">\
+                            </a>'
+                        }
+                        more_images = '<div class="imgur_more_images" style="display:none;">'+more_images+'</div>';
+                    }
 
                     // imgur DOE 생성
-                    if(ADD_config.imgur_preview_safe.value)
+                    if(ADD_config.imgur_preview_safe.value && ADD_imgur_link !== undefined && ADD_imgur_link !== null)
                     {
                         // 클릭시 이미지 활성화 체크 시
                         ADD_imgur_safe_screen_opacity = Number(ADD_config.imgur_preview_opacity.value);
-                        if(ADD_imgur_safe_screen_opacity === undefined || ADD_imgur_safe_screen_opacity === null)
+                        if(ADD_imgur_safe_screen_opacity === undefined || ADD_imgur_safe_screen_opacity === null || !($.isNumeric(ADD_config.imgur_preview_opacity.value)))
                             ADD_imgur_safe_screen_opacity = 0.93;
                         else if(ADD_imgur_safe_screen_opacity < 0 || ADD_imgur_safe_screen_opacity > 1)
                             ADD_imgur_safe_screen_opacity = 0.93;
@@ -2655,9 +3584,11 @@ function ADD_chatting_arrive(){
                                 <span class="imgur_control_hide glyphicon glyphicon-minus-sign"></span>\
                                 <span class="imgur_control_remove glyphicon glyphicon-remove-sign"></span>\
                             </div>\
-                            <a href="'+ADD_imgur_link+'" class="open-lightbox">\
-                                <img src="'+ADD_imgur_link+'" class="imgur_image_in_chat" />\
+                            <a href="'+ADD_imgur_link[0]+'" class="open-lightbox">\
+                                <img src="'+ADD_imgur_link[0]+'" class="imgur_image_in_chat" />\
                             </a>\
+                            '+more_images+'\
+                            '+left_image+'\
                         </div>';
                     }
                     else
@@ -2673,18 +3604,18 @@ function ADD_chatting_arrive(){
                                 <span class="imgur_control_remove glyphicon glyphicon-remove-sign"></span>\
                             </div>\
                             </div>\
-                                <a href="'+ADD_imgur_link+'" class="open-lightbox">\
-                                    <img src="'+ADD_imgur_link+'" class="imgur_image_in_chat" />\
-                                </a>\
+                            <a href="'+ADD_imgur_link[0]+'" class="open-lightbox">\
+                                <img src="'+ADD_imgur_link[0]+'" class="imgur_image_in_chat" />\
+                            </a>\
+                            '+more_images+'\
+                            '+left_image+'\
                         </div>';
                     }
 
                     ADD_chatting_cs_content_elem.append(ADD_imgur_DOE_text);
 
-                    if( !($('.uchat_scroll').hasClass('uchat_scroll_clicked')) )
-                    {
-                        conversation_contents_elem = $('.conversation_contents');
-                        conversation_contents_elem.animate({ scrollTop: conversation_contents_elem.prop('scrollHeight')}, 'fast');
+                    if( isChatScrollOn() ){
+                        goScrollDown();
                     }
                     ADD_status_cookie_add_data('auto_image');
                 }
@@ -2740,6 +3671,8 @@ function ADD_chatting_arrive(){
 }
 
 
+
+
 //////////////////////////////////////////////////////////////////////////////////
 // 애드온 공지
 function ADD_notice(msg, delay){
@@ -2752,7 +3685,7 @@ function ADD_notice(msg, delay){
     }
     else{
         setTimeout(function() {
-            console.log('length', $('#notice_text').length);
+            ADD_DEBUG('length', $('#notice_text').length);
             if( $('#notice_text').length !== 0 ){
                 $('#notice_text_elem').fadeOut(300);
                 $('#notice_text').html(msg);
@@ -2765,31 +3698,31 @@ function ADD_notice(msg, delay){
 //////////////////////////////////////////////////////////////////////////////////
 // 채팅창 시스템 메시지
 function ADD_send_sys_msg(msg, delay){
-    if( $('.conversation_contents').length !== 0 )
+    if(delay === 0)
     {
-        var conversation_contents_elem = $('.conversation_contents');
-        var msg_text = '<div class="system" title="Dosteam+ System Message">'+msg+'</div>';
-        if(delay === 0)
-        {
+        if( $('.conversation_contents').length !== 0 ){
+            var conversation_contents_elem = $('.conversation_contents');
+            var msg_text = '<div class="system" title="Dosteam+ System Message">'+msg+'</div>';
             conversation_contents_elem.append(msg_text);
             // GC
             conversation_contents_elem = null;
             msg_text = null;
+
+            if( isChatScrollOn() ){
+                goScrollDown();
+            }
         }
         else{
-            setTimeout(function() {
-                conversation_contents_elem.append(msg_text);
-                // GC
-                conversation_contents_elem = null;
-                msg_text = null;
-            }, delay);
+            ADD_DEBUG('채팅창이 없어서 다음의 메시지 출력하지 않음 - ' + msg);
         }
-        //if( !($('.uchat_scroll').hasClass('uchat_scroll_clicked')) )
-        //    conversation_contents_elem.animate({ scrollTop: conversation_contents_elem.prop('scrollHeight')}, '0');
-
-
+    }
+    else{
+        setTimeout(function() {
+            ADD_send_sys_msg(msg, 0);
+        }, delay);
     }
 }
+
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -2814,7 +3747,7 @@ function ADD_chat_scroll_pause() {
     {
         // 하나라도 False 이면 끈다.
         if(!ADD_config.chat_scroll.value || !ADD_config.chat_ctr.value){
-            if(ADD_DEBUG_MODE) console.log('scroll 이벤트 off');
+            ADD_DEBUG('CHAT - Scroll 이벤트 OFF');
             $(document).off('wheel.chatScrollFunc mousewheel.chatScrollFunc', '.conversation_contents');
             if( $('#view_additional_message_container').length !== 0 ){
                 $('#view_additional_message_container').remove();
@@ -2831,10 +3764,10 @@ function ADD_chat_scroll_pause() {
     }
 
     if(chatting_scroll_pause && ADD_config.chat_scroll.value && ADD_config.chat_ctr.value){
-        if(ADD_DEBUG_MODE) console.log('scroll 이벤트 on');
+        ADD_DEBUG('CHAT - Scroll 이벤트 ON');
         $(document).on('wheel.chatScrollFunc mousewheel.chatScrollFunc', '.conversation_contents', function(event) {
             // 현재 스크롤 정지 상태 아닌 경우
-            if( ADD_config.chat_scroll.value && ADD_config.chat_ctr.value && !($('.uchat_scroll').hasClass('uchat_scroll_clicked')) ){
+            if( ADD_config.chat_scroll.value && ADD_config.chat_ctr.value && isChatScrollOn() ){
 
                 //마우스휠 위로 돌릴때 이벤트
                 var scroll_val = -1;
@@ -2875,7 +3808,7 @@ function ADD_chat_scroll_pause() {
 
 $(document).on('click', '.uchat_scroll', function() {
   if( ADD_config.chat_scroll.value ){
-      if( ($('.uchat_scroll').hasClass('uchat_scroll_clicked')) && $('#view_additional_message_container').length !== 0 ){
+      if( !(isChatScrollOn()) && $('#view_additional_message_container').length !== 0 ){
           $('#view_additional_message_container').remove();
       }
   }
@@ -2883,7 +3816,7 @@ $(document).on('click', '.uchat_scroll', function() {
 
 $(document).on('click', '#view_additional_message_container', function() {
   if( ADD_config.chat_scroll.value ){
-      if( ($('.uchat_scroll').hasClass('uchat_scroll_clicked')) && $('#view_additional_message_container').length !== 0 ){
+      if( !(isChatScrollOn()) && $('#view_additional_message_container').length !== 0 ){
           //$('#view_additional_message_container').remove();
           $('.uchat_scroll').trigger('click');
       }
@@ -2908,39 +3841,48 @@ $(document).on('click', '.open-lightbox', function(e) {
 });
 
 
+// 추가 이미지 로드
+$(document).on('click', '.imgur_more_images_button', function() {
+    ADD_DEBUG('imgur_more_images_button 클릭됨');
+    var prev_div = $(this).prev("div.imgur_more_images");
+    prev_div.find('a').each(function() { $(this).html('<img src="'+$(this).prop("href")+'" class="imgur_image_in_chat" />') });
+    prev_div.show();
+    $(this).remove();
+});
+
 ////////////////////////////////////////////////////////////////////////////////
 // thumbnail image hover event
 function ADD_thumbnail_mouseover(){
-    //
     if(thumbnail_check === ADD_config.thumbnail_mouse.value)
     {
         // 이전 설정과 변경된 설정이 같으면 리턴한다.
-        if(ADD_DEBUG_MODE) console.log('기존 thumb 이벤트 bind 설정과 같으므로 리턴한다');
+        ADD_DEBUG('Thumbnail - 기존 thumb 이벤트 bind 설정과 같으므로 리턴한다');
         return;
     }
     else if ( (thumbnail_check === null) && (!ADD_config.thumbnail_mouse.value) )
     {
         // 초기 조건이 False 이므로 리턴한다.
-        if(ADD_DEBUG_MODE) console.log('초기 thumb 이벤트 설정이 False 이므로 리턴한다');
+        ADD_DEBUG('Thumbnail - 초기 thumb 이벤트 설정이 False 이므로 리턴한다');
         return;
     }
     else
     {
         // 이전 설정과 변경된 설정이 다르면 Global 변수를 업데이트 한다.
+        ADD_DEBUG('Thumbnail - 설정 바뀌었으므로 변수 업데이트, '+ thumbnail_check +' --> ' + ADD_config.thumbnail_mouse.value);
         thumbnail_check = ADD_config.thumbnail_mouse.value;
     }
 
     if(!thumbnail_check)
     {
         // 설정이 변경되고 false 이면 true 에서 false 로 바뀐 것이므로 off 한다.
+        ADD_DEBUG('Thumbnail - 설정 OFF');
         $(document).off('mouseenter mouseleave', 'li.twitch>a>img, li.kakao>a>img, li.youtube>a>img');
-        //$(div.ADD_thumb_elem_container).remove();
     }
     else
     {
         $(document).on({
             mouseenter: function() {
-                var getTimeResult = '?' + getTimeStamp();
+                var getTimeResult = '?' + getTimeStamp('m');
                 var thumb_this = $(this);
                 var thumb_this_parent = thumb_this.parent('a');
                 var thumb_size_class;
@@ -2966,28 +3908,26 @@ function ADD_thumbnail_mouseover(){
 
                 var ADD_thumb_href = '';
                 ADD_thumb_href = thumb_this.attr('src') + getTimeResult;
-                if( thumb_this_parent.find('.ADD_thumb_elem_container').length === 0 ) // 기존에 섬네일 영역 존재 안 하는 경우
-                {
-                    // check image size
-                    switch(ADD_config.thumbnail_size.value){
-                        case '1':
-                            // size : small
-                            // 240 과 360 은 차이가 크지 않으므로 그냥 쓴다.
-                            // ADD_thumb_href = ADD_thumb_href.replace('240x180','360x180');
-                            break;
-                        case '2':
-                            // size : medium
-                            ADD_thumb_href = ADD_thumb_href.replace('240x180','640x360');
-                            break;
-                        case '3':
-                            // size : large
-                            ADD_thumb_href = ADD_thumb_href.replace('240x180','1280x720');
-                            break;
-                        default:
-                            // 아무 작업도 하지 않음
-                            break;
-                    }
-
+                // check image size
+                switch(ADD_config.thumbnail_size.value){
+                    case '1':
+                        // size : small
+                        // 240 과 360 은 차이가 크지 않으므로 그냥 쓴다.
+                        // ADD_thumb_href = ADD_thumb_href.replace('240x180','360x180');
+                        break;
+                    case '2':
+                        // size : medium
+                        ADD_thumb_href = ADD_thumb_href.replace('240x180','640x360');
+                        break;
+                    case '3':
+                        // size : large
+                        ADD_thumb_href = ADD_thumb_href.replace('240x180','1280x720');
+                        break;
+                    default:
+                        // 아무 작업도 하지 않음
+                        break;
+                }
+                if( thumb_this_parent.find('.ADD_thumb_elem_container').length === 0 ){ // 기존에 섬네일 영역 존재 안 하는 경우
                     var ADD_thumb_elem_string = '\
                       <div class="ADD_thumb_elem_container">\
                           <div class="ADD_thumb_elem '+thumb_size_class+'">\
@@ -3193,7 +4133,7 @@ $(document).on('click', '#do_forced_dancha', function() {
 
 
 // Memo 창 클릭해도 안 꺼지도록 이벤트
-$(document).on('click', '.memo_doe > .modal-content', function(e) {
+$(document).on('click', '.lightbox-opened .modal-content', function(e) {
     e.stopPropagation();
 });
 
@@ -3234,10 +4174,10 @@ $(document).ready(function()
     if((web_browser === 'firefox') && (typeof exportFunction === 'function'))
     {
         newdsStream = function() {
+          ADD_DEBUG('newdsStream hijacked');
           first_main_call = true;
           $('.loader_container').fadeIn(200);
         	var d = this;
-          if(ADD_DEBUG_MODE) console.log('dsStream hijacked');
         	this.reload = function() {
         		  parse_data_from_list(0);
         	};
@@ -3247,6 +4187,7 @@ $(document).ready(function()
         unsafeWindow.dsStream = exportFunction (newdsStream, unsafeWindow);
 
         function newdostream(q) {
+            ADD_DEBUG('newdostream hijacked');
             q = q.split('/');
             switch(q[1]) {
                 case "stream":
@@ -3267,6 +4208,7 @@ $(document).ready(function()
                 break;
             }
         }
+        console.log(unsafeWindow);
         unsafeWindow.dostream = exportFunction (newdostream, unsafeWindow);
 
         $(document).on('click', 'header .nav-brand, header .nav-brand_mod', function(e) {
@@ -3281,10 +4223,10 @@ $(document).ready(function()
     else// if(web_browser === 'chrome')
     {
         unsafeWindow.dsStream = function() {
+            ADD_DEBUG('dsStream hijacked');
             first_main_call = true;
             $('.loader_container').fadeIn(200);
           	var d = this;
-            if(ADD_DEBUG_MODE) console.log('dsStream hijacked');
           	this.reload = function() {
           		  parse_data_from_list(0);
           	};
@@ -3301,17 +4243,22 @@ $(document).ready(function()
         });
     }
 
-    if(!first_main_call){
-        // HIJACKING 이 늦게 발생한 경우 재호출한다.
-        reloadMain();
-    }
+    setTimeout(function() {
+        if(!first_main_call){
+            // HIJACKING 이 늦게 발생한 경우 재호출한다.
+            ADD_DEBUG('초기 접속 시 100ms 이내 메인 리로드 하지 않을 시 강제 리로드 함');
+            reloadMain();
+        }
+    }, 100);
 
 
 //////////////////////////////////////////////////////////////////////////////////
     // Arrive event 관련
     // 채팅창 생길 때 send 위한 DOE 생성, 무조건 실행됨
     $('.chat').arrive('.uchat_middle', function() { //{onceOnly:true},
-        ADD_status_noti();
+        if(ADD_config.sys_meg.value !== undefined && ADD_config.sys_meg.value){
+            ADD_status_noti();
+        }
         ADD_send_location_DOE();
         $('.user_menu').attr('id','user_menu_id');
 
@@ -3454,7 +4401,7 @@ $(document).on('click', '#ADD_quick_list', function() {
     }
 });
 
-$(document).on('click', 'a.nav-brand, a.nav-brand_mod, #stream, #popup_ADD_quick', function() {
+$(document).on('click', 'a.nav-brand, a.nav-brand_mod, #stream, #popup_ADD_quick, div.footer', function() {
     if ($('#ADD_quick_list').hasClass('btn_opend'))
     {
         $('#popup_ADD_quick').stop(true,true).fadeOut(300);
@@ -3471,9 +4418,7 @@ $(document).on('click', '#ADD_config', function() {
         ADD_var_to_config_form();
         $('#popup_ADD_config').stop(true,true).fadeIn(300);
         $('#ADD_config').removeClass('btn_closed').addClass('btn_opend');
-        //if(ADD_DEBUG_MODE) console.log('config popup open');
 
-        // 17-11-08 추가됨
         $('#popup_ADD_quick').stop(true,true).fadeOut(300);
         $('#ADD_quick_list').removeClass('btn_opend').addClass('btn_closed');
     }
@@ -3481,11 +4426,10 @@ $(document).on('click', '#ADD_config', function() {
     {
         $('#popup_ADD_config').stop(true,true).fadeOut(300);
         $('#ADD_config').removeClass('btn_opend').addClass('btn_closed');
-        //if(ADD_DEBUG_MODE) console.log('config popup close');
     }
 });
 
-$(document).on('click', 'a.nav-brand, a.nav-brand_mod, #stream', function() {
+$(document).on('click', 'a.nav-brand, a.nav-brand_mod, #stream, div.footer', function() {
     if ($('#ADD_config').hasClass('btn_opend'))
     {
         $('#popup_ADD_config').stop(true,true).fadeOut(300);
@@ -3501,17 +4445,15 @@ $(document).on('click', '#ADD_test_button', function() {
     {
         $('#popup_ADD_test').stop(true,true).fadeIn(300);
         $('#ADD_test_button').removeClass('btn_closed').addClass('btn_opend');
-        //if(ADD_DEBUG_MODE) console.log('DEBUG popup open');
     }
     else
     {
         $('#popup_ADD_test').stop(true,true).fadeOut(300);
         $('#ADD_test_button').removeClass('btn_opend').addClass('btn_closed');
-        //if(ADD_DEBUG_MODE) console.log('DEBUG popup close');
     }
 });
 
-$(document).on('click', 'a.nav-brand, a.nav-brand_mod, #stream', function() {
+$(document).on('click', 'a.nav-brand, a.nav-brand_mod, #stream, div.footer', function() {
     if ($('#ADD_test_button').hasClass('btn_opend'))
     {
         $('#popup_ADD_test').stop(true,true).fadeOut(300);
@@ -3523,9 +4465,13 @@ $(document).on('click', 'a.nav-brand, a.nav-brand_mod, #stream', function() {
 //////////////////////////////////////////////////////////////////////////////////
 // Save cookie event
 
-$(document).on('click', '#ADD_config_save', function() {
+$(document).on('click', '#ADD_config_save', async event => {
+    ADD_save_config();
+});
+
+async function ADD_save_config(){
     ADD_save_config_to_data();
-    ADD_config_var_write();
+    await ADD_config_var_write();
 
     if (local_api_refresh === true)
     {
@@ -3539,36 +4485,168 @@ $(document).on('click', '#ADD_config_save', function() {
         }, 5000);
     }
 
+    // 이벤트 재결합
+    ADD_event_binding();
+
     // 설정 팝업 알림 영역 표시
     $('#ADD_config_Success').fadeIn('1000').delay('3000').fadeOut('1000');
 
     // 메인일 경우 메인 리로드
     reloadMain();
-});
 
+    // 테마 재적용
+    if(ADD_config.theme.value !== undefined){
+        ADD_change_theme(ADD_config.theme.value);
+    }
+}
 
 //////////////////////////////////////////////////////////////////////////////////
 // reset cookie event
-$(document).on('click', '#Cookie_reset', function() {
-    if(ADD_DEBUG_MODE) console.log('reset cookie event 에서 ADD_config_var_write() 실행됨');
-    ADD_config = deepCopy(ADD_config_init);
-    ADD_config_var_write();
-    ADD_var_to_config_form();
-    ADD_status_cookie_remove();
-    var emptyArray = [];
-    ADD_SetVal('ADD_Blocked_Chat',emptyArray);
+$(document).on('click', '#Cookie_reset', async event => {
+    var r = confirm("모든 설정을 초기화 하려면 확인\(OK\) 버튼을 누르세요.");
+    if (r == true) {
+        ADD_config = deepCopy(ADD_config_init);
+        await ADD_config_var_write();
+        ADD_var_to_config_form();
+        ADD_status_cookie_remove();
 
-    // 설정 팝업 알림 영역 표시
-    $('#ADD_config_Success').fadeIn('1000').delay('3000').fadeOut('1000');
-    if(ADD_DEBUG_MODE) console.log('cookie reset!');
+        // 블록된 채팅 로그 초기화
+        var emptyArray = [];
+        await ADD_SetVal('ADD_Blocked_Chat',emptyArray);
+
+        // 메모 쿠키 초기화
+        var temp_ADD_chat_memo = {'key' : 'value'};
+        $.cookie('ADD_chat_memo', JSON.stringify(temp_ADD_chat_memo), { expires : 365*2, path : '/' });
+
+        // 테마 리셋
+        if(ADD_config.theme.value !== undefined){
+            ADD_change_theme(ADD_config.theme.value);
+        }
+
+        // 버전 체크 데이터 리셋
+        var time_check_version = new Date(Date.parse(new Date()) - 2 * 1000 * 60 * 60 * 24);
+        await ADD_SetVal('time_check_version',time_check_version);
+
+        // 설정 팝업 알림 영역 표시
+        $('#ADD_config_Success').fadeIn('1000').delay('3000').fadeOut('1000');
+        ADD_DEBUG('설정 리셋 완료');
+    }
+    else {
+        alert('설정 초기화가 취소되었습니다.')
+        ADD_DEBUG('설정 리셋 취소');
+    }
 });
 
+//////////////////////////////////////////////////////////////////////////////////
+// backup and restore event
+function MD5(s){function L(k,d){return(k<<d)|(k>>>(32-d))}function K(G,k){var I,d,F,H,x;F=(G&2147483648);H=(k&2147483648);I=(G&1073741824);d=(k&1073741824);x=(G&1073741823)+(k&1073741823);if(I&d){return(x^2147483648^F^H)}if(I|d){if(x&1073741824){return(x^3221225472^F^H)}else{return(x^1073741824^F^H)}}else{return(x^F^H)}}function r(d,F,k){return(d&F)|((~d)&k)}function q(d,F,k){return(d&k)|(F&(~k))}function p(d,F,k){return(d^F^k)}function n(d,F,k){return(F^(d|(~k)))}function u(G,F,aa,Z,k,H,I){G=K(G,K(K(r(F,aa,Z),k),I));return K(L(G,H),F)}function f(G,F,aa,Z,k,H,I){G=K(G,K(K(q(F,aa,Z),k),I));return K(L(G,H),F)}function D(G,F,aa,Z,k,H,I){G=K(G,K(K(p(F,aa,Z),k),I));return K(L(G,H),F)}function t(G,F,aa,Z,k,H,I){G=K(G,K(K(n(F,aa,Z),k),I));return K(L(G,H),F)}function e(G){var Z;var F=G.length;var x=F+8;var k=(x-(x%64))/64;var I=(k+1)*16;var aa=Array(I-1);var d=0;var H=0;while(H<F){Z=(H-(H%4))/4;d=(H%4)*8;aa[Z]=(aa[Z]| (G.charCodeAt(H)<<d));H++}Z=(H-(H%4))/4;d=(H%4)*8;aa[Z]=aa[Z]|(128<<d);aa[I-2]=F<<3;aa[I-1]=F>>>29;return aa}function B(x){var k="",F="",G,d;for(d=0;d<=3;d++){G=(x>>>(d*8))&255;F="0"+G.toString(16);k=k+F.substr(F.length-2,2)}return k}function J(k){k=k.replace(/rn/g,"n");var d="";for(var F=0;F<k.length;F++){var x=k.charCodeAt(F);if(x<128){d+=String.fromCharCode(x)}else{if((x>127)&&(x<2048)){d+=String.fromCharCode((x>>6)|192);d+=String.fromCharCode((x&63)|128)}else{d+=String.fromCharCode((x>>12)|224);d+=String.fromCharCode(((x>>6)&63)|128);d+=String.fromCharCode((x&63)|128)}}}return d}var C=Array();var P,h,E,v,g,Y,X,W,V;var S=7,Q=12,N=17,M=22;var A=5,z=9,y=14,w=20;var o=4,m=11,l=16,j=23;var U=6,T=10,R=15,O=21;s=J(s);C=e(s);Y=1732584193;X=4023233417;W=2562383102;V=271733878;for(P=0;P<C.length;P+=16){h=Y;E=X;v=W;g=V;Y=u(Y,X,W,V,C[P+0],S,3614090360);V=u(V,Y,X,W,C[P+1],Q,3905402710);W=u(W,V,Y,X,C[P+2],N,606105819);X=u(X,W,V,Y,C[P+3],M,3250441966);Y=u(Y,X,W,V,C[P+4],S,4118548399);V=u(V,Y,X,W,C[P+5],Q,1200080426);W=u(W,V,Y,X,C[P+6],N,2821735955);X=u(X,W,V,Y,C[P+7],M,4249261313);Y=u(Y,X,W,V,C[P+8],S,1770035416);V=u(V,Y,X,W,C[P+9],Q,2336552879);W=u(W,V,Y,X,C[P+10],N,4294925233);X=u(X,W,V,Y,C[P+11],M,2304563134);Y=u(Y,X,W,V,C[P+12],S,1804603682);V=u(V,Y,X,W,C[P+13],Q,4254626195);W=u(W,V,Y,X,C[P+14],N,2792965006);X=u(X,W,V,Y,C[P+15],M,1236535329);Y=f(Y,X,W,V,C[P+1],A,4129170786);V=f(V,Y,X,W,C[P+6],z,3225465664);W=f(W,V,Y,X,C[P+11],y,643717713);X=f(X,W,V,Y,C[P+0],w,3921069994);Y=f(Y,X,W,V,C[P+5],A,3593408605);V=f(V,Y,X,W,C[P+10],z,38016083);W=f(W,V,Y,X,C[P+15],y,3634488961);X=f(X,W,V,Y,C[P+4],w,3889429448);Y=f(Y,X,W,V,C[P+9],A,568446438);V=f(V,Y,X,W,C[P+14],z,3275163606);W=f(W,V,Y,X,C[P+3],y,4107603335);X=f(X,W,V,Y,C[P+8],w,1163531501);Y=f(Y,X,W,V,C[P+13],A,2850285829);V=f(V,Y,X,W,C[P+2],z,4243563512);W=f(W,V,Y,X,C[P+7],y,1735328473);X=f(X,W,V,Y,C[P+12],w,2368359562);Y=D(Y,X,W,V,C[P+5],o,4294588738);V=D(V,Y,X,W,C[P+8],m,2272392833);W=D(W,V,Y,X,C[P+11],l,1839030562);X=D(X,W,V,Y,C[P+14],j,4259657740);Y=D(Y,X,W,V,C[P+1],o,2763975236);V=D(V,Y,X,W,C[P+4],m,1272893353);W=D(W,V,Y,X,C[P+7],l,4139469664);X=D(X,W,V,Y,C[P+10],j,3200236656);Y=D(Y,X,W,V,C[P+13],o,681279174);V=D(V,Y,X,W,C[P+0],m,3936430074);W=D(W,V,Y,X,C[P+3],l,3572445317);X=D(X,W,V,Y,C[P+6],j,76029189);Y=D(Y,X,W,V,C[P+9],o,3654602809);V=D(V,Y,X,W,C[P+12],m,3873151461);W=D(W,V,Y,X,C[P+15],l,530742520);X=D(X,W,V,Y,C[P+2],j,3299628645);Y=t(Y,X,W,V,C[P+0],U,4096336452);V=t(V,Y,X,W,C[P+7],T,1126891415);W=t(W,V,Y,X,C[P+14],R,2878612391);X=t(X,W,V,Y,C[P+5],O,4237533241);Y=t(Y,X,W,V,C[P+12],U,1700485571);V=t(V,Y,X,W,C[P+3],T,2399980690);W=t(W,V,Y,X,C[P+10],R,4293915773);X=t(X,W,V,Y,C[P+1],O,2240044497);Y=t(Y,X,W,V,C[P+8],U,1873313359);V=t(V,Y,X,W,C[P+15],T,4264355552);W=t(W,V,Y,X,C[P+6],R,2734768916);X=t(X,W,V,Y,C[P+13],O,1309151649);Y=t(Y,X,W,V,C[P+4],U,4149444226);V=t(V,Y,X,W,C[P+11],T,3174756917);W=t(W,V,Y,X,C[P+2],R,718787259);X=t(X,W,V,Y,C[P+9],O,3951481745);Y=K(Y,h);X=K(X,E);W=K(W,v);V=K(V,g)}var i=B(Y)+B(X)+B(W)+B(V);return i.toLowerCase()};
+
+$(document).on('click', '#ADD_config_restore', async event => {
+    var temp_ADD_config = await GM.getValue('ADD_config');
+    var temp_ADD_chat_memo;
+    if (!$.cookie('ADD_chat_memo')){
+        // 메모용 쿠키 없으면 메모용 쿠키 새로 생성
+        temp_ADD_chat_memo = {'key' : 'value'};
+        $.cookie('ADD_chat_memo', JSON.stringify(temp_ADD_chat_memo), { expires : 365*2, path : '/' });
+    }
+    // 메모용 쿠키 읽어옴
+    temp_ADD_chat_memo = $.cookie('ADD_chat_memo');
+
+    var backup_text = "<<<ADD_chat_memo>>>"+temp_ADD_chat_memo+"<<<ADD_config>>>"+temp_ADD_config+"<<<END>>>";
+    var MD5_key = MD5(backup_text);
+    var backup_text = "<VERIFICATION_KEY:"+MD5_key+">"+backup_text;
+    $('html').addClass('no-scroll');
+    var backup_doe_text = '\
+        <div class="lightbox-opened">\
+        <div class="backup_doe" style="position: absolute; top: 50%;left:50%; width: 600px; height:300px; margin-left:-300px; margin-top:-150px;">\
+        <div style="width:600px;height:200px;cursor:default;" class="modal-content">\
+        <div style="padding:7px 0;font-size:12px;"><span style="font-weight:bold;">Backup & Restore - 메모 및 주요 설정 백업 및 복원</span><br />복원 방법: 아래 기존 백업한 내용을 붙여넣기 후 SAVE (버전이 다르면 복원되지 않을 수 있음)</div>\
+        <textarea spellcheck="false" id="backup_textbox" style="width:90%;height:100px;font-size:11px;padding:2px;white-space: pre-wrap;word-wrap: break-all;">'+backup_text+'</textarea>\
+        <div style="padding:5px 0;"><span id="backup_ok" class="btn btn-default">SAVE</span></div>\
+        </div>\
+        <div id="backup_text_container" style="position:relative;top:10px;left:0px; width:600px;height:30px;font-size:12px;cursor:pointer;"><span id="backup_text" style="color:#fff">저장하지 않고 나가려면 배경화면을 누르세요.</span></div>\
+        </div>\
+        </div>\
+        ';
+    $('body').append(backup_doe_text);
+});
+
+$(document).on('click', '#backup_ok', async event => {
+    var temp_ADD_config = await GM.getValue('ADD_config');
+    var MD5_key = MD5(temp_ADD_config);
+    var restore_text = $('#backup_textbox').val();
+    $('#backup_text').fadeOut(200);
+    setTimeout(async () => {
+        var backup_text_contents;
+        var checked_text1 = restore_text.substr(0,18);
+        var checked_text2 = restore_text.substr(restore_text.length-9,9);
+        var checked_text3 = restore_text.indexOf('<<<ADD_chat_memo>>>');
+        var checked_text4 = restore_text.indexOf('<<<ADD_config>>>');
+        if(restore_text === 'DEBUG'){
+            ADD_DEBUG_MODE = !(ADD_DEBUG_MODE);
+            await ADD_SetVal('ADD_DEBUG_MODE', ADD_DEBUG_MODE);
+            text_contents = 'DEBUG 모드: '+ADD_DEBUG_MODE;
+        }
+        else if(checked_text1 !== '<VERIFICATION_KEY:'){
+            ADD_DEBUG('checked_text1:', checked_text1);
+            text_contents = '입력한 내용에 문제가 있습니다.<br />복원할 설정은 반드시 공백 없이 "&lt;VERIFICATION_KEY:" 로 시작해야 합니다.';
+        }
+        else if(checked_text2 !== '<<<END>>>'){
+            ADD_DEBUG('checked_text2:', checked_text2);
+            text_contents = '입력한 내용에 문제가 있습니다.<br />복원할 설정은 반드시 공백 없이 "&lt;&lt;&lt;END&gt;&gt;&gt;" 로 끝나야 합니다.';
+        }
+        else if(checked_text3 == -1){
+            ADD_DEBUG('checked_text3:', checked_text3);
+            text_contents = '입력한 내용에 문제가 있습니다. 메모 정보가 없습니다.(&lt;&lt;&lt;ADD_chat_memo&gt;&gt;&gt;)';
+        }
+        else if(checked_text4 == -1){
+            ADD_DEBUG('checked_text4:', checked_text4);
+            text_contents = '입력한 내용에 문제가 있습니다. 설정 정보가 없습니다.(&lt;&lt;&lt;ADD_config&gt;&gt;&gt;)';
+        }
+        else{
+            var restore_chat_config = restore_text.substr(51,restore_text.length - 51);
+            ADD_DEBUG('restore_chat_config :', restore_chat_config);
+            var validation_key = restore_text.substr(18,32);
+            var restore_MD5_key = MD5(restore_chat_config);
+            ADD_DEBUG('validation_key: ',validation_key);
+            ADD_DEBUG('restore_validation_key: ',restore_MD5_key);
+            restore_chat_config = restore_chat_config.replace('<<<END>>>','');
+
+            if(validation_key !== restore_MD5_key){
+                text_contents = 'VERIFICATION KEY가 일치하지 않아 정상적인 복원을 보증할 수 없습니다. <br />입력된 키:'+validation_key+'<br />복원한 키:'+restore_MD5_key;
+            }
+            else{
+                var recorver_chat_memo = restore_chat_config.split("<<<ADD_chat_memo>>>")[1].split("<<<ADD_config>>>")[0];
+                var restore_config = restore_chat_config.split("<<<ADD_config>>>")[1];
+                ADD_DEBUG('recorver_chat_memo: ',recorver_chat_memo);
+                ADD_DEBUG('restore_config: ',restore_config);
+
+                if(recorver_chat_memo === null || recorver_chat_memo === undefined){
+                    text_contents = '메모 복원 중 오류 발생!<br />나가려면 배경화면을 누르세요.';
+                }
+                    else if(restore_config === undefined || restore_config === null){
+                        text_contents = '설정 복원 중 오류 발생!<br />나가려면 배경화면을 누르세요.';
+                    }
+                    else if(temp_ADD_config == restore_config){
+                        text_contents = '현재 설정과 복원할 설정이 같아서 복원하지 않습니다. <br />나가려면 배경화면을 누르세요.';
+                    }
+                    else {
+                        await GM.setValue('ADD_config', restore_config);
+                        ADD_config = JSON.parse(restore_config);
+                        ADD_var_to_config_form();
+                        await ADD_save_config();
+                        $.cookie('ADD_chat_memo', recorver_chat_memo, { expires : 365*2, path : '/' });
+                        text_contents = '설정이 복원되었습니다. 문제 발생 시 확장기능에서 ADDostream을 초기화 or 삭제 후 재설치 하세요. <br /> 나가려면 배경화면을 누르세요.';
+                    }
+            }
+        }
+        $('#backup_text').html(text_contents).fadeIn(200);
+    }, 200);
+});
 
 //////////////////////////////////////////////////////////////////////////////////
 // config form click event
-function ADD_config_enable(id)
-{
-
+function ADD_config_enable(id){
     var id_elem = [];
     var form_class = [];
     var class_elem = [];
@@ -3584,15 +4662,19 @@ function ADD_config_enable(id)
         class_elem[i] = $(form_class[i]);
         if(class_elem[i].length === 0)
             continue;
-        else
+        else if(class_elem[i] !== undefined){
             class_elem[i].prop('disabled', false).addClass('form_enabled').removeClass('form_disabled');
+            class_elem[i].parent('label.btn').removeClass('disable');
+        }
     }
 
     // 체크 안 된 것을 끈다.
     for(var i=0;i<ADD_config_enable_init.length;i++)
     {
-        if( !(id_elem[i].is(':checked')) )
+        if( !(id_elem[i].is(':checked')) && (class_elem[i] !== undefined) ){
             class_elem[i].prop('disabled', true).addClass('form_disabled').removeClass('form_enabled');
+            class_elem[i].parent('label.btn').addClass('disable');
+        }
     }
 }
 
@@ -3601,7 +4683,6 @@ for(var i=0;i<ADD_config_enable_init.length;i++)
 {
     (function(id) {
     $(document).on('click', '#'+id, function() {
-        // if(ADD_DEBUG_MODE) console.log(id);
         ADD_config_enable([id]);
     });
     })(ADD_config_enable_init[i]);
@@ -3614,11 +4695,11 @@ $(document).on('click', '.imgur_safe_button', function() {
     $(this).parent('.imgur_safe_screen').fadeOut(500);
 });
 $(document).on('click', '.imgur_control_hide', function() {
-    if(ADD_DEBUG_MODE) console.log('- clicked');
+    ADD_DEBUG('Chatting 내 호출된 imgur 이미지 에서 - 버튼 클릭됨');
     $(this).closest('.imgur_container').find('.imgur_safe_screen').fadeTo(500, 0.93);
 });
 $(document).on('click', '.imgur_control_remove', function() {
-    if(ADD_DEBUG_MODE) console.log('x clicked');
+    ADD_DEBUG('Chatting 내 호출된 imgur 이미지 에서 x 버튼 클릭됨');
     $(this).closest('.imgur_container').hide();
 });
 
@@ -3626,6 +4707,21 @@ $(document).on('click', '.imgur_control_remove', function() {
 $(document).on('click', '.uchat_scroll', function() {
     $(this).toggleClass('uchat_scroll_clicked');
 });
+
+function isChatScrollOn(){
+    if( $('.uchat_scroll').length !== 0 && !($('.uchat_scroll').hasClass('uchat_scroll_clicked')) ){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+function goScrollDown(){
+    if( $('.conversation_contents').length !== 0 ){
+        $('.conversation_contents').animate({ scrollTop: 1000000 }, 'fast');
+    }
+}
 
 
 
@@ -4307,5 +5403,6 @@ $('head').append('\
             1000);
         },
         30000);
-
 }
+
+})();
