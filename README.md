@@ -27,31 +27,6 @@
 * 이후 다음의 이미지를 참고하여 설치<br /><br />![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/Install.jpg)
 * 주의: 본 스크립트를 설치 및 사용하며 브라우저 과부하로 인한 응답 없음/뻗음 등 으로 인한 데이터 손실 등 문제 발생 시 개발자는 책임지지 않음(보고된 문제는 없음)
 
-## Key features
-▼ [1.43 update!] Dark 테마 추가 (Test 중, 현재 Chrome 에서만 작동)
-
-![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/171223_DARK_DOS.jpg)
-
-
-▼ [1.36 update!] 멀티트위치↔트위치 전환 버튼 추가
-
-![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/170929_change_twitch.jpg)
-
-
-▼ [1.31 update!] 채팅창에서 마우스 휠을 위로 할 시 자동 스크롤 멈춤 기능 추가 (트위치 채팅창의 기능과 유사)
-
-![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/170914_chat_scroll_auto_stop.jpg)
-
-
-▼ [1.27 update!] 재생 중 화면에서 메인 목록 보기 가능 (버튼을 클릭할 때마다 메인과 동일한 내용으로 갱신 됨)
-
-![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/170806_Quick_list.png)
-
-
-▼ [1.26 update!]채팅에 올라온 Imgur 이미지 링크를 감지하여 바로보여줌 (Album, Gallery, Image 타입 및 Imgur 이미지 주소 대상)
-
-![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/170731_chat_image_preview.jpg)
-
 ## History
 * 2017-06-11
   * 설정 버튼 및 기능 추가
