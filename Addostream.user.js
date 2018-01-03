@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.44.2
+// @version     1.44.3
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
@@ -196,7 +196,10 @@ var streamerArray = [
     ['dogswellfish','개복어'],
     ['DawNHS','던'],
     ['ssambahong','홍진영'],
-    ['Twipkr','트윕KR']
+    ['Twipkr','트윕KR'],
+    ['reniehour','레니아워'],
+    ['caroline9071','숑아'],
+    ['ssambahong','쌈바홍']
     ];// ['',''],
 
 var streamerArray_name = [];
