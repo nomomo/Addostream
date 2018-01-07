@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.44.3
+// @version     1.44.4
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
@@ -554,6 +554,7 @@ var Arrive=function(e,t,n){"use strict";function r(e,t,n){l.addMethod(t,n,e.unbi
                             else {
                                 that.tagInput.val(''+focused_value);
                                 that.createTag(''+focused_value);
+				focused_value = '';
                             }
                         }
                     }
