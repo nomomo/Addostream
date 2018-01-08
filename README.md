@@ -1,10 +1,10 @@
 # Addostream
 <!--Add new feature for dostream.com-->
 * 두스트림에 새로운 기능을 추가하는 브라우저 확장 Userscript
-* Firefox , · Chrome 지원 (2017-11-15 v1.39 기준)
+* Firefox · Chrome 지원 (2018-01-07 v1.44 기준)
 * Userscript 확장 기능 필요
   * Firefox 57.0(Quantum) ↑ - [Violentmonkey](https://addons.mozilla.org/ko/firefox/addon/violentmonkey/)
-  * Firefox 56.0 ↓ - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/) - (Firefox 57.0, Greasemonkey 4.0 이상 지원은 추후 예정)
+  * Firefox 56.0 ↓ - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/)
   * Chrome - [Tampermonkey](http://tampermonkey.net/)
 * 버그 많음 버그리포트 바랍니다 (__) nomotg@gmail.com
 
@@ -20,12 +20,13 @@
 ![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/ADD_CONFIG.png)
 
 ## Install
-* Firefox - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/), Chrome - [Tampermonkey](http://tampermonkey.net/) 확장 기능 설치
-* 확장 기능 설치 이후 아래의 링크로 이동
-* [https://github.com/nomomo/Addostream/blob/master/Addostream.user.js](https://github.com/nomomo/Addostream/blob/master/Addostream.user.js)
-* [(Raw 직링크: https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js)](https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js)
-* 이후 다음의 이미지를 참고하여 설치<br /><br />![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/Install.jpg)
-* 주의: 본 스크립트를 설치 및 사용하며 브라우저 과부하로 인한 응답 없음/뻗음 등 으로 인한 데이터 손실 등 문제 발생 시 개발자는 책임지지 않음(보고된 문제는 없음)
+1. 브라우저 유저스크립트 확장기능 설치
+   * Firefox - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/) or [Violentmonkey](https://addons.mozilla.org/ko/firefox/addon/violentmonkey/)
+   * Chrome - [Tampermonkey](http://tampermonkey.net/)
+  
+2. 확장 기능 설치 이후 아래의 링크로 이동한 뒤 설치 버튼을 누름
+   * [https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js](https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js)
+   * 주의: 본 스크립트를 설치 및 사용하며 브라우저 과부하로 인한 응답 없음/뻗음 등 으로 인한 데이터 손실 등 문제 발생 시 개발자는 책임지지 않음(보고된 문제는 없음)
 
 ## History
 * 2017-06-11
@@ -81,6 +82,5 @@
 * Twitch Clip 섬네일 미리보기
 * 익명으로 Imgur 이미지 업로드 및 내가 업로드한 이미지 목록 보기
 * 팔로워 정보 가져와서 자동으로 추가 (로그인 필요 X)
-* Greasemonkey 4.0 호환(GM dot function)
 * 현재 보고있는 or 특정 Twitch 스트리머의 채팅을 두스 채팅에서 같이보기
   * 특정 닉네임 가진 사람 채팅만 보여주기
