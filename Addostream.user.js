@@ -204,7 +204,8 @@ var streamerArray = [
     ['loveseti','미모'],
     ['kimgaeune','김총무님'],
     ['1uming','루밍이'],
-    ['invenk01','김영일']
+    ['invenk01','김영일'],
+    ['gaminu3','살인마협회장']
     ];// ['',''],
 
 var streamerArray_name = [];
