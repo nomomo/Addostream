@@ -7,6 +7,7 @@
   * Firefox 56.0 ↓ - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/)
   * Chrome - [Tampermonkey](http://tampermonkey.net/)
 * 버그 많음 버그리포트 바랍니다 (__) nomotg@gmail.com
+* <span style="color:red;font-weight:bold;">[18-02-23] 변경된 채팅창에 대한 기능 적용은 두스가 안정화된 이후 진행할 예정이므로 현 버전에서 문제 생길 시 채팅 관련 기능 끄고 새로고침 또는 재설치 하십시오.</span>
 
 ## Preview
 ![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/170702_preview.jpg)
