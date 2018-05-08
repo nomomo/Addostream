@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     http://*.dostream.com/*
-// @version     1.44.5
+// @version     1.44.6
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
@@ -205,7 +205,10 @@ var streamerArray = [
     ['kimgaeune','김총무님'],
     ['1uming','루밍이'],
     ['invenk01','김영일'],
-    ['gaminu3','살인마협회장']
+    ['gaminu3','살인마협회장'],
+    ['flurry1989','플러리'],
+    ['hols7','홀스'],
+    ['hn950421','고말숙']
     ];// ['',''],
 
 var streamerArray_name = [];
@@ -249,7 +252,7 @@ var api_push_forced = false;        // true 이면 twitch api를 강제로 push 
 var local_api_refresh = true;       // Setting save 버튼 연속으로 눌렀을 때 막기 위한 용도
 var unique_window_check = true;     // Unique window 감지용
 var backbutton_checker = false;     // 현재 사용 안 함, Back button 감지용
-var chat_send_location = true;      // 현재 사용 안 함, ADD_send_location() 좌표 복사 딜레이를 위해 사용
+var chat_send_lion = true;      // 현재 사용 안 함, ADD_send_location() 좌표 복사 딜레이를 위해 사용
 var chatting_arrive_check = null;   // 채팅창 arrive 체크용
 var thumbnail_check = null;         // 섬네일 마우스 오버 설정 변경 체크용
 var thumbnail_size_check = null;    // 현재 사용 안 함, 섬네일 마우스 오버시 사이즈 설정 변경 체크용
@@ -3184,15 +3187,27 @@ function urlchecker()
     var document_url = location.href;
     document_url = document_url.toLowerCase();
     var stream_url = document_url.indexOf('#/stream/');
-        if( stream_url  == -1 )
-        {
-        //if(ADD_DEBUG_MODE) console.log('urlchecker true');
-        return true;
+        if( stream_url  == -1 ){
+            return true;
         }
-    else
-        {
-        //if(ADD_DEBUG_MODE) console.log('urlchecker false');
+    else{
         return false;
+        }
+}
+
+function urltchecker2(){
+    var document_url = location.href;
+    document_url = document_url.toLowerCase();
+    var keyword_stream = document_url.indexOf('#/stream/');
+    var keyword_uchat = document_url.indexOf('uchat2.php');
+    if(keyword_uchat !== -1){
+        return 2;
+    }
+    else if( keyword_stream == -1 ){
+            return 1;
+    }
+    else{
+        return 0;
         }
 }
 
@@ -4173,13 +4188,15 @@ $(document).on('click', '#memo_ok', function() {
 
 //////////////////////////////////////////////////////////////////////////////////
 // Call Twitch api
+if(urltchecker2() !== 2){
 twitch_api();
 ADD_API_CALL_INTERVAL();
 
 
 //////////////////////////////////////////////////////////////////////////////////
 // Multiwindows checker
-ADD_multiwindow_prevent();
+    ADD_multiwindow_prevent();
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -4188,89 +4205,90 @@ $(document).ready(function()
 {
     // CSS LOAD
     Addostream_CSS();
-
+    if(urltchecker2() !== 2){
 ///////////////////////////////////////////////////////////////////////////////////
-    // Hijacking
-    // Firefox 의 경우
-    if((web_browser === 'firefox') && (typeof exportFunction === 'function'))
-    {
-        newdsStream = function() {
-          ADD_DEBUG('newdsStream hijacked');
-          first_main_call = true;
-          $('.loader_container').fadeIn(200);
-        	var d = this;
-        	this.reload = function() {
-        		  parse_data_from_list(0);
-        	};
-        	$('.loader_container').fadeOut(200);
-          ADD_multitwitch_DOE();
-        };
-        unsafeWindow.dsStream = exportFunction (newdsStream, unsafeWindow);
-
-        function newdostream(q) {
-            ADD_DEBUG('newdostream hijacked');
-            q = q.split('/');
-            switch(q[1]) {
-                case "stream":
-                    $('header').addClass("onstream");
-                    $('#stream').addClass("onstream");
-                    $('.footer').hide();
-                    page = "stream";
-                    $('#stream').load('/stream.php', {'from':q[2], 'chan':q[3]});
-                break;
-                default:
-                    $('header').removeClass("onstream");
-                    $('#stream').removeClass("onstream");
-                    $('.footer').show();
-                    $('#stream').load('/main2.php',function() {
-                        page = new newdsStream();
-                        page.reload();
-                    });
-                break;
-            }
-        }
-        console.log(unsafeWindow);
-        unsafeWindow.dostream = exportFunction (newdostream, unsafeWindow);
-
-        $(document).on('click', 'header .nav-brand, header .nav-brand_mod', function(e) {
-            if( urlchecker() ) {
-                page = new newdsStream();
-                page.reload();
+        // Hijacking
+        // Firefox 의 경우
+        if((web_browser === 'firefox') && (typeof exportFunction === 'function'))
+        {
+            newdsStream = function() {
+                ADD_DEBUG('newdsStream hijacked');
+                first_main_call = true;
+                $('.loader_container').fadeIn(200);
+                var d = this;
+                this.reload = function() {
+                    parse_data_from_list(0);
+                };
+                $('.loader_container').fadeOut(200);
                 ADD_multitwitch_DOE();
-            }
-        });
-    }
-    // 그 이외(Chrome 등)의 경우
-    else// if(web_browser === 'chrome')
-    {
-        unsafeWindow.dsStream = function() {
-            ADD_DEBUG('dsStream hijacked');
-            first_main_call = true;
-            $('.loader_container').fadeIn(200);
-          	var d = this;
-          	this.reload = function() {
-          		  parse_data_from_list(0);
-          	};
-          	$('.loader_container').fadeOut(200);
-            ADD_multitwitch_DOE();
-        };
+            };
+            unsafeWindow.dsStream = exportFunction (newdsStream, unsafeWindow);
 
-        $(document).on('click', 'header .nav-brand, header .nav-brand_mod', function(e) {
-            if( urlchecker() ) {
-                page = new dsStream();
-                page.reload();
-                ADD_multitwitch_DOE();
+            function newdostream(q) {
+                ADD_DEBUG('newdostream hijacked');
+                q = q.split('/');
+                switch(q[1]) {
+                    case "stream":
+                        $('header').addClass("onstream");
+                        $('#stream').addClass("onstream");
+                        $('.footer').hide();
+                        page = "stream";
+                        $('#stream').load('/stream.php', {'from':q[2], 'chan':q[3]});
+                        break;
+                    default:
+                        $('header').removeClass("onstream");
+                        $('#stream').removeClass("onstream");
+                        $('.footer').show();
+                        $('#stream').load('/main2.php',function() {
+                            page = new newdsStream();
+                            page.reload();
+                        });
+                        break;
+                }
             }
-        });
-    }
+            console.log(unsafeWindow);
+            unsafeWindow.dostream = exportFunction (newdostream, unsafeWindow);
 
-    setTimeout(function() {
-        if(!first_main_call){
-            // HIJACKING 이 늦게 발생한 경우 재호출한다.
-            ADD_DEBUG('초기 접속 시 100ms 이내 메인 리로드 하지 않을 시 강제 리로드 함');
-            reloadMain();
+            $(document).on('click', 'header .nav-brand, header .nav-brand_mod', function(e) {
+                if( urlchecker() ) {
+                    page = new newdsStream();
+                    page.reload();
+                    ADD_multitwitch_DOE();
+                }
+            });
         }
-    }, 100);
+        // 그 이외(Chrome 등)의 경우
+        else// if(web_browser === 'chrome')
+        {
+            unsafeWindow.dsStream = function() {
+                ADD_DEBUG('dsStream hijacked');
+                first_main_call = true;
+                $('.loader_container').fadeIn(200);
+                var d = this;
+                this.reload = function() {
+                    parse_data_from_list(0);
+                };
+                $('.loader_container').fadeOut(200);
+                ADD_multitwitch_DOE();
+            };
+
+            $(document).on('click', 'header .nav-brand, header .nav-brand_mod', function(e) {
+                if( urlchecker() ) {
+                    page = new dsStream();
+                    page.reload();
+                    ADD_multitwitch_DOE();
+                }
+            });
+        }
+
+        setTimeout(function() {
+            if(!first_main_call){
+                // HIJACKING 이 늦게 발생한 경우 재호출한다.
+                ADD_DEBUG('초기 접속 시 100ms 이내 메인 리로드 하지 않을 시 강제 리로드 함');
+                reloadMain();
+            }
+        }, 100);
+    }
 
 
 //////////////////////////////////////////////////////////////////////////////////
