@@ -3,11 +3,10 @@
 * 두스트림에 새로운 기능을 추가하는 브라우저 확장 Userscript
 * Firefox · Chrome 지원 (2018-01-07 v1.44 기준)
 * Userscript 확장 기능 필요
-  * Firefox 57.0(Quantum) ↑ - [Violentmonkey](https://addons.mozilla.org/ko/firefox/addon/violentmonkey/)
-  * Firefox 56.0 ↓ - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/)
+  * Firefox - [Violentmonkey](https://addons.mozilla.org/ko/firefox/addon/violentmonkey/)
   * Chrome - [Tampermonkey](http://tampermonkey.net/)
 * 버그 많음 버그리포트 바랍니다 (__) nomotg@gmail.com
-* <span style="color:red;font-weight:bold;">[18-02-23] 변경된 채팅창에 대한 기능 적용은 두스가 안정화된 이후 진행할 예정이므로 현 버전에서 문제 생길 시 채팅 관련 기능 끄고 새로고침 또는 재설치 하십시오.</span>
+* 문제 생길 시 채팅 관련 기능 끄고 새로고침 또는 재설치 하십시오.
 
 ## Preview
 ![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/170702_preview.jpg)
@@ -22,7 +21,7 @@
 
 ## Install
 1. 브라우저 유저스크립트 확장기능 설치
-   * Firefox - [Greasemonkey](https://addons.mozilla.org/ko/firefox/addon/greasemonkey/) or [Violentmonkey](https://addons.mozilla.org/ko/firefox/addon/violentmonkey/)
+   * Firefox - [Violentmonkey](https://addons.mozilla.org/ko/firefox/addon/violentmonkey/)
    * Chrome - [Tampermonkey](http://tampermonkey.net/)
   
 2. 확장 기능 설치 이후 아래의 링크로 이동한 뒤 설치 버튼을 누름
