@@ -1,7 +1,7 @@
 # Addostream
 <!--Add new feature for dostream.com-->
 * 두스트림에 새로운 기능을 추가하는 브라우저 확장 Userscript
-* Firefox · Chrome 지원 (2018-01-07 v1.44 기준)
+* Firefox · Chrome 지원 (2018-07-25 v1.45 기준)
 * Userscript 확장 기능 필요
   * Firefox - [Violentmonkey](https://addons.mozilla.org/ko/firefox/addon/violentmonkey/)
   * Chrome - [Tampermonkey](http://tampermonkey.net/)
@@ -77,6 +77,8 @@
   *  DARK 테마 추가 (Test)
 * 2017-12-23 (v 1.44.0)
   *  Imgur album 의 경우 이미지 여러개 가져오기 / 업데이트 가능 여부 확인 / 스트리머 이름 입력 시 더 편한 자동완성 / Greasemonkey 4.0 호환성 확보 등
+* 2018-07-25 (v 1.45.0)
+  *  바뀐 채팅창에 대한 기능 일부 적용
 
 ## Future works (언제걸릴지 모름)
 * Twitch Clip 섬네일 미리보기
