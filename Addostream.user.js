@@ -2,8 +2,8 @@
 // @name        Addostream
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
-// @include     http://*.dostream.com/*
-// @version     1.44.6
+// @include     *.dostream.com/*
+// @version     1.45.0
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
@@ -23,6 +23,7 @@
 // @grant       GM.registerMenuCommand
 // @grant       GM_registerMenuCommand
 // @grant       unsafeWindow
+// @all_frames  true
 // @run-at      document-start
 // @updateURL   https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js
 // @downloadURL https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js
@@ -194,6 +195,7 @@ var streamerArray = [
     ['esther950','에쓰더'],
     ['pacific8815','쌍베'],
     ['dogswellfish','개복어'],
+    ['yeonchobom','연초봄'],
     ['DawNHS','던'],
     ['ssambahong','홍진영'],
     ['Twipkr','트윕KR'],
@@ -208,7 +210,16 @@ var streamerArray = [
     ['gaminu3','살인마협회장'],
     ['flurry1989','플러리'],
     ['hols7','홀스'],
-    ['hn950421','고말숙']
+    ['holsbro','홀스'],
+    ['hn950421','고말숙'],
+    ['hwkang2','캡틴잭'],
+    ['yunlovejoy','도여사'],
+    ['yatoring','야토링'],
+    ['lolluk4','루ㅋ4'],
+    ['rkdthdus930','강소연'],
+    ['seogui','서긔'],
+    ['pikra10','재슥짱'],
+    ['playoverwatch_kr','오버워치 이스포츠']
     ];// ['',''],
 
 var streamerArray_name = [];
@@ -261,7 +272,11 @@ var chatting_scroll_pause = null;   // 채팅 스크롤 일시정지 여부
 var max_iteration = 100;            // DOE 생성 체크 최대 횟수
 var iteration = 0;                  // DOE 생성 체크 현재 횟수
 var checked_box_no = 0;
+var ADD_MEMO_NICK = '';
 
+const C_MAIN = 0;
+const C_STREAM = 1;
+const C_UCHAT = 2;
 
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
@@ -989,6 +1004,22 @@ if(ADD_DEBUG_MODE === undefined){
 }
 ADD_DEBUG('DEBUG MODE ON');
 
+var statusText = 'UNKNOWN';
+switch(urltchecker2()){
+    case C_MAIN :
+        statusText = 'MAIN';
+        break;
+    case C_STREAM :
+        statusText = 'STREAM';
+        break;
+    case C_UCHAT :
+        statusText = 'U_CHAT';
+        break;
+    default :
+        statusText = 'UNKNOWN';
+}
+ADD_DEBUG('현재 스크립트가 호출된 곳: '+statusText);
+
 function ADD_DEBUG(msg1, msg2, msg3){
     if(ADD_DEBUG_MODE){
         var arg_no = arguments.length;
@@ -1163,8 +1194,10 @@ async function checkNewVersion() {
     return true;
 }
 
-checkNewVersion();
-await ADD_migration();
+if(urltchecker2() === C_UCHAT){
+    checkNewVersion();
+}
+//await ADD_migration();
 await ADD_config_var_read();
 
 
@@ -1460,10 +1493,10 @@ function Addostream_CSS(){
         .imgur_control_button{position:absolute;width:60px;height:20px;text-align:right;}
         .ADD_tr_10_10{top:10px;right:10px;}
         .ADD_br_10_10{bottom:10px;right:10px;}
-        .imgur_control_button span{font-size:20px; display:inline-block;opacity:0.5;cursor:pointer;}
+        .imgur_control_button span{font-size:15px; display:inline-block;opacity:0.5;cursor:pointer;text-align:center;background:white;border-radius:30px;padding:2px;height:18px;width:16px;line-height:100%;font-family: "Malgun Gothic","맑은고딕","맑은 고딕",Dotum,"Helvetica Neue",Helvetica,Arial,sans-serif;}
         .imgur_safe_button {opacity:1.0;color:rgba(0, 0, 0, 1.0);line-height:200%;margin:0 auto;text-align:center;vertical-align:middle;cursor:pointer;color:black;font-size:12px;font-family: "Malgun Gothic","맑은고딕","맑은 고딕",Dotum,"Helvetica Neue",Helvetica,Arial,sans-serif;}
         .imgur_image_in_chat {max-width:320px !important;max-height:1000px !important;padding:5px 0px;margin:0 auto;display:inline-block;}
-        .lightbox-opened img{max-width: 100%;box-shadow: 0 0 6px 3px #333; opacity:1.0;}
+        .lightbox-opened img{max-width: 100%;box-shadow: 0 0 6px 3px #333; opacity:1.0;margin-top:40px;}
         .lightbox-opened {z-index: 100000;background-color: rgba(51,51,51,0.8);cursor: pointer;height: 100%;left: 0;overflow-y: scroll;padding: 24px;position: fixed;text-align: center;top: 0;width: 100%;}
         .lightbox-opened:before {background-color: rgba(51,51,51,0.8);color: #eee;content: "x";font-family: sans-serif;padding: 6px 12px;position: fixed;text-transform: uppercase;}
         .no-scroll {overflow: hidden;}
@@ -1752,6 +1785,10 @@ function parse_data_from_list(flag)
         type: 'GET',
         dataType:'json',
       success:function(data) {
+          if(data === null){
+              ADD_DEBUG("파싱 리스트 존재하지 않음");
+              return;
+          }
         var getTimeResult = '?' + getTimeStamp('m');
 
         // 숨길 대상 스트리머 지우기
@@ -1797,7 +1834,7 @@ function parse_data_from_list(flag)
             var temp_api_cookie = JSON.parse($.cookie('twitch_api_cookie'));
             if(temp_api_cookie === undefined || temp_api_cookie === null || temp_api_cookie.length === 0){
                 ADD_DEBUG('DOE 생성 중 Twitch API cookie 확인 실패!');
-                if(ADD_DEBUG_MODE) console.log(temp_api_cookie);
+                ADD_DEBUG(temp_api_cookie);
             }
             else{
                 for( var i=0; i<temp_api_cookie.length ; i++ ){
@@ -2039,29 +2076,23 @@ function ADD_run(json,flag) {
 //////////////////////////////////////////////////////////////////////////////////
 // 설정으로 인해 on-off 되는 이벤트는 이곳에서 관리
 function ADD_event_binding(){
-    // 채팅 내 이미지 preview 설정 관련됨
-    if(ADD_config.imgur_preview.value !== undefined){
-        ADD_chatting_arrive();
-    }
-
     // 섬네일 마우스 오버 설정 관련됨
     if(ADD_config.thumbnail_mouse.value !== undefined){
         ADD_thumbnail_mouseover();
     }
 
+    // 채팅창 스크롤 관련됨
+    //if(ADD_config.chat_scroll.value !== undefined){
+    //    ADD_chat_scroll_pause();
+    //}
+}
     // 데스크탑 알림 권한 관련됨
     if(ADD_config.alarm_noti.value !== undefined && ADD_config.alarm_noti.value){
-        if(ADD_DEBUG_MODE) console.log('Notification.permission = ', Notification.permission);
+        ADD_DEBUG('Notification.permission = ', Notification.permission);
         if (Notification.permission !== "granted")
             Notification.requestPermission();
     }
 
-    // 채팅창 스크롤 관련됨
-    if(ADD_config.chat_scroll.value !== undefined){
-        ADD_chat_scroll_pause();
-    }
-}
-ADD_event_binding();
 
 //////////////////////////////////////////////////////////////////////////////////
 // 설정 창에 설정 값을 덮어씌우기 위한 함수
@@ -2261,7 +2292,7 @@ function ADD_status_cookie_add_data(_key)
 // 채팅창에 쓰기
 function ADD_status_noti()
 {
-    ADD_send_sys_msg('두스트림 애드온이 동작 중 입니다 (v'+version_str+')',0);
+    ADD_send_sys_msg('두스트림 애드온이 동작 중 입니다 (v'+version_str+')',0.0);
     ADD_status_cookie_read();
     ADD_text = '';
     if(Number(ADD_status.ad_remove) > 0 && ADD_config.chat_adb.value){
@@ -2274,7 +2305,7 @@ function ADD_status_noti()
         ADD_text += '\(+\) API 호출: '+ADD_status.api_call+ '회, ';
     }
     if(ADD_text !== ''){
-        ADD_send_sys_msg(ADD_text,0);
+        ADD_send_sys_msg(ADD_text,0.0);
     }
 }
 
@@ -2528,7 +2559,7 @@ function ADD_API_CALL_INTERVAL()
       clearInterval(ADD_API_SET_INTERVAL);
 
     ADD_API_SET_INTERVAL = setInterval(function() {
-        if(ADD_DEBUG_MODE) console.log('ADD_API_CALL_INTERVAL()');
+        ADD_DEBUG('ADD_API_CALL_INTERVAL()');
 
         // Write config form from cookie
         // ADD_config_var_write();
@@ -2550,8 +2581,8 @@ $.cookie('unique_window', unique_window, { expires : 30, path : '/' });
 setInterval(function() {
       unique_window_cookie = Number($.cookie('unique_window'));
           if((unique_window_check === true)&&(unique_window != unique_window_cookie)){
-              if(ADD_DEBUG_MODE) console.log('unique window = ',unique_window);
-              if(ADD_DEBUG_MODE) console.log('unique window cookie is ',unique_window_cookie);
+              ADD_DEBUG('unique window = ',unique_window);
+              ADD_DEBUG('unique window cookie is ',unique_window_cookie);
               unique_window_check = false;
               $('#notice_text').addClass('ADD_twitch_api_again').html('\(+\) 새 창에서 접속 감지 됨. Dostram+의 API 갱신 중지. 현재 창에서 다시 시작하려면 클릭.');
               $('#notice_text_elem').show();
@@ -2931,11 +2962,15 @@ function ADD_config_DOE()
                            <thead><tr><th>DEBUG MODE</th><th></th></tr></thead>\
                            <tbody>\
                               <tr class="active">\
+                                 <td>메모 초기화</td>\
+                                 <td><span id="ADD_debug_memo_init" style="cursor:pointer;font-weight:bold;">실행</span></td>\
+                              </tr>\
+                              <tr class="active">\
                                  <td>TEST1 - 채팅창에 imgur image 생성</td>\
                                  <td><span id="ADD_test_id_1" style="cursor:pointer;font-weight:bold;">TEST 1 실행</span></td>\
                               </tr>\
                               <tr class="active">\
-                                 <td>TEST2 - 광고 차단 테스트</td>\
+                                 <td>TEST2 - 시스템 메시지 테스트</td>\
                                  <td><span id="ADD_test_id_2" style="cursor:pointer;font-weight:bold;">TEST 2 실행</span></td>\
                               </tr>\
                               <tr class="active">\
@@ -3122,21 +3157,18 @@ $(document).on('click', 'li.tagit-choice', function(event) {
 
 //////////////////////////////////////////////////////////////////////////////////
 // test event
+$(document).on('click', '#ADD_debug_memo_init', function() {
+    ADD_memo_init();
+    ADD_DEBUG('메모 초기화 완료!');
+});
+
 $(document).on('click', '#ADD_test_id_1', function() {
-    var test_text = '\
-        <div class="user_conversation" title="테스트맨 - 2017-07-11 11:11:11"><span class="conversation_nick" nick="%uCF58%uC0D0%uC9F1%uC9F1%uB9E8">테스트맨</span><span style="vertical-align: middle;">&nbsp; </span><span class="cs_contents" style="">\
-         테스트 https://imgur.com/a/45ps1</span></div>';
-    $('.conversation_contents').append(test_text);
-    test_text = null;
+    ADD_send_sys_msg("https://imgur.com/a/45ps1", 0, 2);
 }); // http://imgur.com/a/cKXVX
 
 $(document).on('click', '#ADD_test_id_2', function() {
-    var test_text = '\
-        <div class="user_conversation" title="테스트맨 - 2017-07-11 11:11:11">\
-            <span style="color:blue">[광고] </span>\
-            <span class="cs_contents" style=""><a href="http://uchat.co.kr/uchat/click.php?id=92"> 광고문의 클릭 </a></span>\
-        </div>';
-    $('.conversation_contents').append(test_text);
+    ADD_send_sys_msg("시스템 메시지 보내기", 0);
+    ADD_send_sys_msg("<a href='http://www.dostream.com/#/stream/twitch/hanryang1125'>link</a>", 0, 2);
     test_text = null;
 });
 
@@ -3201,13 +3233,13 @@ function urltchecker2(){
     var keyword_stream = document_url.indexOf('#/stream/');
     var keyword_uchat = document_url.indexOf('uchat2.php');
     if(keyword_uchat !== -1){
-        return 2;
+        return C_UCHAT;
     }
     else if( keyword_stream == -1 ){
-            return 1;
+            return C_STREAM;
     }
     else{
-        return 0;
+        return C_MAIN;
         }
 }
 
@@ -3225,60 +3257,6 @@ function reloadMain(){
 }
 
 
-//////////////////////////////////////////////////////////////////////////////////
-// 좌표 보내기 버튼 DOE 생성하기 위한 함수
-function ADD_send_location_DOE()
-{
-    var ADD_chat_window_id = $('.conversation_contents'); //div.uchat_middle>div.input
-    var ADD_send_location_button_id = $('#ADD_send_location_button');
-    var ADD_send_location_button_elem;
-
-    // 채팅창 존재 여부 확인, 좌표 보내기 버튼 이미 존재하는지 확인
-    if( (ADD_chat_window_id.length !== 0) && (ADD_send_location_button_id.length === 0) )
-    {
-        // 채팅창 생성
-        ADD_send_location_button_elem = '\
-            <div id="ADD_send_location_container">\
-                <span id="ADD_send_location_notice"></span>\
-                <span aria-label="현재 주소를 채팅 입력란에 복사" data-microtip-position="top-left" role="tooltip">\
-                    <span id="ADD_send_location_button" class="glyphicon glyphicon-send"></span>\
-                </span>\
-            </div>';
-        ADD_chat_window_id.after(ADD_send_location_button_elem);
-    }
-
-    ADD_chat_window_id = null;
-    ADD_send_location_button_id = null;
-    ADD_send_location_button_elem = null;
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////
-// 좌표 보내기 버튼 동작 관련 함수
-function ADD_send_location()
-{
-    /*
-    if(chat_send_location)
-    {
-        chat_send_location = false;
-    }
-    else
-    {
-        // 한번 좌표 쏘면 5초 기다려야 하는 기능 추가 시 사용.
-    }
-    */
-    var ADD_send_location_notice_text = '';
-    if( urlchecker() )
-    {
-        ADD_send_location_notice_text = '메인에서는 좌표를 복사할 수 없습니다';
-    }
-    else
-    {
-        ADD_send_location_notice_text = '좌표가 복사되었습니다.';
-        $('input.conversation').val(location.href).focus(); //.trigger(jQuery.Event('keypress', {keyCode: 13}))
-    }
-    $('#ADD_send_location_notice').hide().html(ADD_send_location_notice_text).fadeIn('fast').delay(2000).fadeOut('fast');
-}
 
 //////////////////////////////////////////////////////////////////////////////////
 // 멀티트위치 관련 버튼 생성 함수
@@ -3289,8 +3267,8 @@ function ADD_multitwitch_DOE(){
     </div>');
     }
     else{
-        ADD_DEBUG('search',$('.search').length === 0);
-        ADD_DEBUG('main-streams',$('.main-streams').length !== 0);
+        //ADD_DEBUG('search',$('.search').length === 0);
+        ADD_DEBUG('main-streams 존재?: ',$('.main-streams').length !== 0);
         return;
     }
     // 멀티트위치 버튼
@@ -3411,6 +3389,7 @@ function getImgurData(Imgur_ID, Imgur_type) {
         {
             return false;
         }
+  
   $.ajax({
       url: imgur_api_call_url,
       async: false, // return 하기 위해 async 대신 sync를 false로 설정
@@ -3452,13 +3431,300 @@ function getImgurData(Imgur_ID, Imgur_type) {
           imgur_return_link = getImgurData(imgur_return_link, 1);
   }
 
+
   return imgur_return_link;
 }
+
+
 
 //getImgurData('Vvb64B4', 0);
 //getImgurData('Dvnw5', 1);
 //var testimg = getImgurData('Tqhhv', 2);
-//if(ADD_DEBUG_MODE) console.log('testimg = '+testimg);
+//ADD_DEBUG('testimg = '+testimg);
+
+async function chatElemControl(newElem, documentElem){
+    newElem.addClass('fired');
+    if(newElem.hasClass("system")){
+        ADD_DEBUG('SYSTEM ELEMENT 캐치됨 : ', newElem.text());
+        if( newElem.html().indexOf('서버 연결 끊김') != -1 ){
+            newElem.addClass('ADD_chat_again').prop('title', 'Dosteam+ System Message').css('cursor','pointer').html('\(+\) 채팅 중지 됨. 채팅을 다시 시작하려면 클릭');
+        }
+
+        if( newElem.html().indexOf('연결 시도') != -1 || newElem.html().indexOf('연결 완료') != -1 ){
+            newElem.remove();
+        }
+
+        return;
+    }
+
+    var ADD_chatting_nickname = newElem.find('.nick').attr('nick');
+    var ADD_chatting_cs_content_elem = newElem.find('.chatContent');
+    var ADD_chatting_content = ADD_chatting_cs_content_elem.text();
+
+    if(ADD_chatting_content === undefined || ADD_chatting_nickname === undefined){
+        ADD_DEBUG('닉네임 또는 채팅 내용 판독 불가');
+        return;
+    }
+
+    //ADD_DEBUG(ADD_chatting_nickname, ADD_chatting_content);
+
+    // 키워드 차단 (ADD_Blocked_Chat)
+    // ADD_Chat_block(Elem, Contents, Chat, Condition)
+    if(await ADD_Chat_block(newElem, '' + ADD_chatting_nickname + ' : ' + ADD_chatting_content, ADD_chatting_nickname, ADD_config.chat_block_nickname.value)) return false;
+    if(await ADD_Chat_block(newElem, '' + ADD_chatting_nickname + ' : ' + ADD_chatting_content, ADD_chatting_content, ADD_config.chat_block_contents.value)) return false;
+
+    if(ADD_config.chat_adb.value)
+    {
+        // if(ADD_chatting_content.indexOf('광고문의 클릭') !== -1 || ADD_chatting_content.indexOf('유챗2 스킨기능 오픈') !== -1)
+        /* 현재 광고가 없으므로 주석처리한다.
+        if( $('span:first', newElem).html().replace(/\s/g,'') == '[광고]' )
+        {
+            ADD_DEBUG('광고 메시지 감지됨!',ADD_chatting_content);
+            newElem.remove();
+            ADD_status_cookie_add_data('ad_remove');
+        }
+        */
+    }
+
+    // 메모 띄우기
+    var ADD_chat_memo = await ADD_GetVal("ADD_chat_memo");
+    if(ADD_chat_memo !== undefined){
+        ADD_chat_memo = JSON.parse(ADD_chat_memo);
+        if(ADD_chat_memo !== undefined && ADD_chatting_nickname in ADD_chat_memo){
+            newElem.find('span.nick').after('<span class="conversation_memo" style="color:red;font-weight:bold;"> ['+ADD_chat_memo[ADD_chatting_nickname]+']</span>');
+        }
+    }
+
+    // Imgur image preview 시
+    if(ADD_config.imgur_preview.value)
+    {
+        var ADD_imgur_id;
+        var ADD_imgur_type;
+        var ADD_imgur_match;
+        var ADD_imgur_link = [''];
+        var ADD_imgur_DOE_text;
+        var ADD_imgur_safe_screen_opacity;
+        var ADD_imgur_reg = /https?:\/\/(\w+\.)?imgur.com\/(a\/|gallery\/)?(\w*)+(\.[a-zA-Z]{3})?/;
+        var conversation_contents_elem;
+
+        // 정규표현식을 통해 imgur 링크 포함 여부 확인, global check 하지 않고 먼저 나온 하나만 확인함
+        // 대소문자 체크가 꼭 필요?
+        // r, gallery type에 대한 체크가 필요?
+        ADD_imgur_match = ADD_chatting_content.match(ADD_imgur_reg);
+
+        if(ADD_imgur_match !== null)
+        {
+            // 로컬 변수 선언
+            ADD_imgur_id = ADD_imgur_match[3];
+
+            // 이미지 type 체크
+            if(ADD_imgur_match[2] === undefined)
+            {
+                // a/ 에 대한 구문이 없는 경우 이미지임
+                ADD_imgur_type = 0;
+            }
+            else if( ADD_imgur_match[2] == 'a/' )
+            {
+                // a/ 에 대한 구문이 있는 경우 앨범임
+                ADD_imgur_type = 1;
+            }
+            else if( ADD_imgur_match[2] == 'gallery/' )
+            {
+                // 갤러리
+                ADD_imgur_type = 2;
+            }
+            else
+            {
+                ADD_imgur_type = 10;
+            }
+
+            // imgur api 호출
+            ADD_DEBUG('ADD_imgur_id = '+ADD_imgur_id+'  ADD_imgur_type = '+ADD_imgur_type);
+            ADD_imgur_link = getImgurData(ADD_imgur_id, ADD_imgur_type);
+            var ADD_imgur_link_length = ADD_imgur_link.length;
+            var left_image = '';
+            var more_images = '';
+            if(ADD_imgur_link_length != 1){
+                left_image = '<div class="imgur_more_images_button" style="text-align:center;cursor:pointer;margin:2px 0px">'+(ADD_imgur_link.length-1)+'개의 이미지를 클릭하여 바로 로드.</div>';
+                for(var i=1;i<ADD_imgur_link_length;i++){
+                    more_images += '<div imagehref="'+ADD_imgur_link[i]+'"></div>\
+</a>'
+                }
+                more_images = '<div class="imgur_more_images" style="display:none;">'+more_images+'</div>';
+            }
+
+            // imgur DOE 생성
+            if(ADD_config.imgur_preview_safe.value && ADD_imgur_link !== undefined && ADD_imgur_link !== null)
+            {
+                // 클릭시 이미지 활성화 체크 시
+                ADD_imgur_safe_screen_opacity = Number(ADD_config.imgur_preview_opacity.value);
+                if(ADD_imgur_safe_screen_opacity === undefined || ADD_imgur_safe_screen_opacity === null || !($.isNumeric(ADD_config.imgur_preview_opacity.value)))
+                    ADD_imgur_safe_screen_opacity = 0.93;
+                else if(ADD_imgur_safe_screen_opacity < 0 || ADD_imgur_safe_screen_opacity > 1)
+                    ADD_imgur_safe_screen_opacity = 0.93;
+
+
+                ADD_imgur_DOE_text = '\
+<div class="imgur_container">\
+<div class="imgur_safe_screen" style="opacity:' + ADD_imgur_safe_screen_opacity +';">\
+<span class="imgur_safe_button btn btn-default align-middle">Image show</span>\
+</div>\
+<div class="imgur_control_button ADD_tr_10_10">\
+<span class="imgur_control_hide glyphicon glyphicon-minus-sign">⊖</span>\
+<span class="imgur_control_remove glyphicon glyphicon-remove-sign">ⓧ</span>\
+</div>\
+<div class="imgur_control_button ADD_br_10_10">\
+<span class="imgur_control_hide glyphicon glyphicon-minus-sign">⊖</span>\
+<span class="imgur_control_remove glyphicon glyphicon-remove-sign">ⓧ</span>\
+</div>\
+<img src="'+ADD_imgur_link[0]+'" class="imgur_image_in_chat open-lightbox" />\
+'+more_images+'\
+'+left_image+'\
+</div>';
+            }
+            else
+            {
+                // 클릭시 이미지 활성화 체크 안 할 시
+                ADD_imgur_DOE_text = '\
+<div class="imgur_container">\
+<div class="imgur_control_button_container">\
+<div class="imgur_control_button ADD_tr_10_10">\
+<span class="imgur_control_remove glyphicon glyphicon-remove-sign">ⓧ</span>\
+</div>\
+<div class="imgur_control_button ADD_br_10_10">\
+<span class="imgur_control_remove glyphicon glyphicon-remove-sign">ⓧ</span>\
+</div>\
+</div>\
+<img src="'+ADD_imgur_link[0]+'" class="imgur_image_in_chat open-lightbox" />\
+'+more_images+'\
+'+left_image+'\
+</div>';
+            }
+
+            //ADD_chatting_cs_content_elem.after(ADD_imgur_DOE_text);
+            newElem.append(ADD_imgur_DOE_text).find('img').on('load',function(){
+                if( isChatScrollOn(documentElem.find('.latest_chat')) ){
+                    ADD_DEBUG("Imgur 이미지 로드 완료됨");
+                    goScrollDown(documentElem.find('.content'));
+                }
+            } );
+
+            // 스크롤 재확인
+            if( isChatScrollOn(documentElem.find('.latest_chat')) ){
+                goScrollDown(documentElem.find('.content'));
+            }
+            ADD_status_cookie_add_data('auto_image');
+        }
+
+        // GC
+        ADD_imgur_id = null;
+        ADD_imgur_type = null;
+        ADD_imgur_match = null;
+        ADD_imgur_link = null;
+        ADD_imgur_DOE_text = null;
+        ADD_imgur_safe_screen_opacity = null;
+        conversation_contents_elem = null;
+        ADD_imgur_reg = null;
+    } // ADD_config.imgur_preview 에 대한 if문 끝
+
+
+    // 채팅 두스트림 좌표 클릭 시
+    if(ADD_config.url_self.value)
+    {
+        var ADD_chatting_cs_content_a_elem;
+        var ADD_chatting_cs_content_a_elem_length;
+
+        ADD_chatting_cs_content_a_elem = ADD_chatting_cs_content_elem.find('a');
+        ADD_chatting_cs_content_a_elem_length = ADD_chatting_cs_content_a_elem.length;
+
+        // a 태그를 가지고 있는 경우
+        if(ADD_chatting_cs_content_a_elem_length !== 0)
+        {
+            for (var i=0;i<ADD_chatting_cs_content_a_elem_length;i++)
+            {
+                var ADD_chatting_cs_content_a_href = ADD_chatting_cs_content_a_elem[i].href;
+                if(ADD_chatting_cs_content_a_href.indexOf('#/stream/') !== -1){
+                    $(ADD_chatting_cs_content_a_elem[i]).addClass('topClick');
+                    // 본 블락에서는 클래스만 추가하고, 실제 동작은 ADD_chatting_arrive() 에 선언된 이벤트로 동작함
+                }
+
+                ADD_chatting_cs_content_a_href = null;
+            }
+        }
+
+        // GC
+        //ADD_chatting_cs_content_a_elem = null;
+        //ADD_chatting_cs_content_a_elem_length = null;
+    }
+
+    chatting_arrive_check = true;
+
+    // GC
+    //newElem = null;
+    //ADD_chatting_nickname = null;
+    //ADD_chatting_cs_content_elem = null;
+    //ADD_chatting_content = null;
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// 좌표 보내기 버튼 DOE 생성하기 위한 함수
+function ADD_send_location_DOE(iframeElem)
+{
+    var ADD_send_location_button_id = $('#ADD_send_location_button');
+    var ADD_send_location_button_elem;
+
+    // 채팅창 존재 여부 확인, 좌표 보내기 버튼 이미 존재하는지 확인
+    if( (iframeElem.length !== 0) && (ADD_send_location_button_id.length === 0) )
+    {
+        // 채팅창 생성
+        ADD_send_location_button_elem = '\
+            <div id="ADD_send_location_container" style="position: fixed;bottom: 55px;right: 14px;width: 20px;height: 20px;text-align:center;cursor:pointer;font-size:20px">\
+                <span id="ADD_send_location_notice"></span>\
+                <span aria-label="현재 주소를 채팅 입력란에 복사" data-microtip-position="top-left" role="tooltip">\
+                    <span id="ADD_send_location_button" class="glyphicon glyphicon-send">®</span>\
+                </span>\
+            </div>';
+        iframeElem.after(ADD_send_location_button_elem);
+        ADD_DEBUG('좌표보내기 버튼을 생성함');
+    }
+    else{
+        ADD_DEBUG('채팅창이 존재하지 않아 ADD_send_location_DOE 함수에서 좌표보내기 버튼을 생성하지 못함');
+    }
+
+    //ADD_chat_window_id = null;
+    //ADD_send_location_button_id = null;
+    //ADD_send_location_button_elem = null;
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// 좌표 보내기 버튼 동작 관련 함수
+function ADD_send_location()
+{
+    /*
+    if(chat_send_location)
+    {
+        chat_send_location = false;
+    }
+    else
+    {
+        // 한번 좌표 쏘면 5초 기다려야 하는 기능 추가 시 사용.
+    }
+    */
+    var ADD_send_location_notice_text = '';
+    if( urlchecker() )
+    {
+        ADD_send_location_notice_text = '메인에서는 좌표를 복사할 수 없습니다';
+    }
+    else
+    {
+        ADD_send_location_notice_text = '좌표가 복사되었습니다.';
+        $('input.conversation').val(location.href).focus(); //.trigger(jQuery.Event('keypress', {keyCode: 13}))
+    }
+    $('#ADD_send_location_notice').hide().html(ADD_send_location_notice_text).fadeIn('fast').delay(2000).fadeOut('fast');
+}
+
 
 //////////////////////////////////////////////////////////////////////////////////
 // 채팅창에서 문자열 탐지, 이벤트 bind, API 함수 호출 동작 실행
@@ -3492,12 +3758,121 @@ async function ADD_chatting_arrive(){
 
     // arrive bind 및 unbind
     if(chatting_arrive_check && ADD_config.chat_ctr.value){
+        //ADD_DEBUG('채팅창 이벤트 확인함');
+
+        $(document).arrive("u-chat > iframe", async iframeElems => {
+            iframeElem = $(iframeElems);
+            var $iframeDocument = iframeElem.contents().first();
+
+            // 채팅 라인 생성될 때 함수적용
+            $($iframeDocument).on('DOMNodeInserted', 'div.line', function () {
+                //parentWindow();
+                var newElem = $(this);
+                if(!(newElem.hasClass('fired'))){
+                    chatElemControl(newElem, $iframeDocument);
+
+                }
+            });
+
+            // 채팅창 생성될 때 노티하기
+            $($iframeDocument).one('DOMNodeInserted', 'div.content', function () {
+                if(ADD_config.sys_meg.value !== undefined && ADD_config.sys_meg.value){
+                    ADD_status_noti();
+                }
+                ADD_send_location_DOE($iframeDocument.find(".content"));
+            });
+
+            // 채팅창에 있는 두스 링크 클릭 시 이벤트
+            $($iframeDocument).on('click','.topClick',function(e){
+                e.preventDefault();
+                window.parent.location.href = this.href;
+            })
+
+            // 채팅창 닉네임 클릭 시 메모 DOE 생성하기
+            $($iframeDocument).on('click', 'span.nick', function () {
+                $($iframeDocument).find(".usermenu_popup").append('<div id="do_memo" class="floor">메모하기</div>');
+            });
+
+            //////////////////////////////////////////////////////////////////////////////////
+            // imgur click event
+            $($iframeDocument).on('click', '.imgur_safe_button', function() {
+                $(this).parent('.imgur_safe_screen').fadeOut(500);
+            });
+            $($iframeDocument).on('click', '.imgur_control_hide', function() {
+                ADD_DEBUG('Chatting 내 호출된 imgur 이미지 에서 - 버튼 클릭됨');
+                $(this).closest('.imgur_container').find('.imgur_safe_screen').fadeTo(500, 0.93);
+            });
+            $($iframeDocument).on('click', '.imgur_control_remove', function() {
+                ADD_DEBUG('Chatting 내 호출된 imgur 이미지 에서 x 버튼 클릭됨');
+                $(this).closest('.imgur_container').hide();
+            });
+
+            // 추가 이미지 로드
+            $($iframeDocument).on('click', '.imgur_more_images_button', function() {
+                ADD_DEBUG('imgur_more_images_button 클릭됨');
+                var prev_div = $(this).prev("div.imgur_more_images");
+                prev_div.find('div').each(function() {
+                    $(this).html('<img src="'+$(this).attr("imagehref")+'" class="imgur_image_in_chat open-lightbox" />').find('img').on('load',function(){
+                        if( isChatScrollOn($($iframeDocument).find('.latest_chat')) ){
+                            ADD_DEBUG("Imgur 이미지 추가 로드 완료됨");
+                            goScrollDown($($iframeDocument).find('.content'));
+                        };
+                    });
+                });
+                prev_div.show();
+                $(this).remove();
+            });
+
+
+            //ADD_DEBUG($iframeDocument.contents().first().find('div.line'));
+            //ADD_DEBUG($iframeDocument.contents().first().find('head').append('<script type="text/javascript">alert("test")</script>'));
+
+
+            setTimeout(function() {
+                //if($('#ADDbootstrapCSS').length === 0){
+                //    $iframeDocument.find('head').append('<link id="ADDbootstrapCSS" href="/js/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">');
+                //}
+                if($('#ADD_UCHATCSS').length === 0){
+                var ADD_UCHATCSS = '<style type="text/css" id="ADD_UCHATCSS">\
+                    .imgur_container {position:relative;text-align:center}\
+                       .imgur_safe_screen {display:inline-flex;align-items:center;position:absolute;top:0;left:0;text-align:center;vertical-align:middle;width:100%;height:100%;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAJElEQVQImWPo6ur6D8MMDAz/GZA5XV1dEAEYB8pGcLq6uv4DAKP8I1nj691jAAAAAElFTkSuQmCC) repeat;}\
+                           .imgur_control_button_container{position:relative;}\
+                           .imgur_control_button{position:absolute;width:60px;height:20px;text-align:right;}\
+                           .ADD_tr_10_10{top:10px;right:15px;}\
+                           .ADD_br_10_10{bottom:10px;right:15px;}\
+                           .imgur_control_button span{font-size:15px; display:inline-block;opacity:0.3;cursor:pointer;text-align:center;background:#fff;color:#333;border-radius:30px;padding:1px;margin-right:1.5px;height:18px;width:16px;line-height:100%;font-family: "Malgun Gothic","맑은고딕","맑은 고딕",Dotum,"Helvetica Neue",Helvetica,Arial,sans-serif;}\
+                           .imgur_safe_button {padding:2px 15px;background:white;border-radius:20px;border:1px solid #333;opacity:1.0;color:rgba(0, 0, 0, 1.0);line-height:200%;margin:0 auto;text-align:center;vertical-align:middle;cursor:pointer;color:black;font-size:12px;font-family: "Malgun Gothic","맑은고딕","맑은 고딕",Dotum,"Helvetica Neue",Helvetica,Arial,sans-serif;}\
+    .imgur_image_in_chat {cursor:pointer;max-width:340px !important;max-height:1000px !important;padding:5px 0px;margin:0 auto;display:inline-block;}\
+                </style>';
+                    $iframeDocument.find('head').append(ADD_UCHATCSS);
+                }
+            }, 1000);
+
+            //$('.user_menu').attr('id','user_menu_id');
+
+            // Memo event 관련
+            // display:none 감지
+            //var observer = new MutationObserver(function(mutations) {
+            //    mutations.forEach(function(mutationRecord) {
+            //        if( !$(mutations[0].target).is(':visible') )
+            //            if( $('#do_memo_container').length !== 0 ){
+            //                $('#do_memo_container').remove();
+            //            }
+            //    });
+            //});
+            // display:none 감지 할당
+            //var target = document.getElementById('user_menu_id');
+            //observer.observe(target, { attributes : true, attributeFilter : ['style'] });
+            // display:none 감지 끝
+        });
+
         // 설정이 변경되고 true 이면 false 에서 true로 바뀐 것이므로 bind 한다.
-        $(document).arrive('.system', async systemElems => {
+        /*
+        $(document).arrive('div.system', async systemElems => {
             var systemElem = $(systemElems);
             if(await ADD_Chat_block(systemElem, "SYSTEM : " + systemElem.html(), systemElem.html(), (ADD_config.chat_block_nickname.value || ADD_config.chat_block_contents.value))) return false;
-            if( systemElem.html().indexOf('새로운 창에서') != -1 ){
-                systemElem.addClass('ADD_chat_again').prop('title', 'Dosteam+ System Message').html('\(+\) 채팅 중지 됨. 채팅을 다시 시작하려면 클릭');
+            if( systemElem.html().indexOf('서버 연결 끊김') != -1 ){
+                systemElem.addClass('line').addClass('ADD_chat_again').prop('title', 'Dosteam+ System Message').html('\(+\) 채팅 중지 됨. 채팅을 다시 시작하려면 클릭');
             }
             if( ADD_config.hide_nick_change.value ){
                 if( systemElem.html().indexOf('로 변경') != -1 ){
@@ -3506,208 +3881,73 @@ async function ADD_chatting_arrive(){
             }
             systemElem = null;
         });
+        */
 
-        $(document).arrive('.user_conversation', async newElems => {
-            var newElem = $(newElems);
-            var ADD_chatting_nickname = newElem.find('.conversation_nick').html();
-            var ADD_chatting_cs_content_elem = newElem.find('.cs_contents');
-            var ADD_chatting_content = ADD_chatting_cs_content_elem.html();
-
-            // 키워드 차단 (ADD_Blocked_Chat)
-            if(await ADD_Chat_block(newElem, '' + newElem.attr('title') + ' : ' + ADD_chatting_content, ADD_chatting_nickname, ADD_config.chat_block_nickname.value)) return false;
-            if(await ADD_Chat_block(newElem, '' + newElem.attr('title') + ' : ' + ADD_chatting_content, ADD_chatting_content, ADD_config.chat_block_contents.value)) return false;
-
-            if(ADD_config.chat_adb.value)
-            {
-                // if(ADD_chatting_content.indexOf('광고문의 클릭') !== -1 || ADD_chatting_content.indexOf('유챗2 스킨기능 오픈') !== -1)
-                if( $('span:first', newElem).html().replace(/\s/g,'') == '[광고]' )
-                {
-                    if(ADD_DEBUG_MODE) console.log('광고 메시지 감지됨!',ADD_chatting_content);
-                    newElem.remove();
-                    ADD_status_cookie_add_data('ad_remove');
-                }
-            }
-
-            // 메모하기
-            // 메모용 쿠키 있는지 체크
-            if (!!$.cookie('ADD_chat_memo')){
-                // 메모용 쿠키 있으면 읽어옴
-                var ADD_chat_memo = JSON.parse($.cookie('ADD_chat_memo'));
-                if(ADD_chatting_nickname in ADD_chat_memo)
-                {
-                    newElem.find('.conversation_nick').after('<span class="conversation_memo" style="color:red;font-weight:bold;"> ['+ADD_chat_memo[ADD_chatting_nickname]+']</span>');
-                }
-            }
-
-            // Imgur image preview 시
-            if(ADD_config.imgur_preview.value)
-            {
-                var ADD_imgur_id;
-                var ADD_imgur_type;
-                var ADD_imgur_match;
-                var ADD_imgur_link = [''];
-                var ADD_imgur_DOE_text;
-                var ADD_imgur_safe_screen_opacity;
-                var ADD_imgur_reg = /https?:\/\/(\w+\.)?imgur.com\/(a\/|gallery\/)?(\w*)+(\.[a-zA-Z]{3})?/;
-                var conversation_contents_elem;
-
-                // 정규표현식을 통해 imgur 링크 포함 여부 확인, global check 하지 않고 먼저 나온 하나만 확인함
-                // 대소문자 체크가 꼭 필요?
-                // r, gallery type에 대한 체크가 필요?
-                ADD_imgur_match = ADD_chatting_content.match(ADD_imgur_reg);
-
-                if(ADD_imgur_match !== null)
-                {
-                    // 로컬 변수 선언
-                    ADD_imgur_id = ADD_imgur_match[3];
-
-                    // 이미지 type 체크
-                    if(ADD_imgur_match[2] === undefined)
-                    {
-                        // a/ 에 대한 구문이 없는 경우 이미지임
-                        ADD_imgur_type = 0;
-                    }
-                    else if( ADD_imgur_match[2] == 'a/' )
-                    {
-                        // a/ 에 대한 구문이 있는 경우 앨범임
-                        ADD_imgur_type = 1;
-                    }
-                    else if( ADD_imgur_match[2] == 'gallery/' )
-                    {
-                        // 갤러리
-                        ADD_imgur_type = 2;
-                    }
-                    else
-                    {
-                        ADD_imgur_type = 10;
-                    }
-
-                    // imgur api 호출
-                    if(ADD_DEBUG_MODE) console.log('ADD_imgur_id = '+ADD_imgur_id+'  ADD_imgur_type = '+ADD_imgur_type);
-                    ADD_imgur_link = getImgurData(ADD_imgur_id, ADD_imgur_type);
-                    var ADD_imgur_link_length = ADD_imgur_link.length;
-                    var left_image = '';
-                    var more_images = '';
-                    if(ADD_imgur_link_length != 1){
-                        left_image = '<div class="imgur_more_images_button" style="text-align:center;cursor:pointer;margin:2px 0px">'+(ADD_imgur_link.length-1)+'개의 이미지를 클릭하여 바로 로드.</div>';
-                        for(var i=1;i<ADD_imgur_link_length;i++){
-                            more_images += '<a href="'+ADD_imgur_link[i]+'" class="open-lightbox">\
-                            </a>'
-                        }
-                        more_images = '<div class="imgur_more_images" style="display:none;">'+more_images+'</div>';
-                    }
-
-                    // imgur DOE 생성
-                    if(ADD_config.imgur_preview_safe.value && ADD_imgur_link !== undefined && ADD_imgur_link !== null)
-                    {
-                        // 클릭시 이미지 활성화 체크 시
-                        ADD_imgur_safe_screen_opacity = Number(ADD_config.imgur_preview_opacity.value);
-                        if(ADD_imgur_safe_screen_opacity === undefined || ADD_imgur_safe_screen_opacity === null || !($.isNumeric(ADD_config.imgur_preview_opacity.value)))
-                            ADD_imgur_safe_screen_opacity = 0.93;
-                        else if(ADD_imgur_safe_screen_opacity < 0 || ADD_imgur_safe_screen_opacity > 1)
-                            ADD_imgur_safe_screen_opacity = 0.93;
-
-                        ADD_imgur_DOE_text = '\
-                        <div class="imgur_container">\
-                            <div class="imgur_safe_screen" style="opacity:' + ADD_imgur_safe_screen_opacity +';">\
-                                <span class="imgur_safe_button btn btn-default align-middle">Image show</span>\
-                            </div>\
-                            <div class="imgur_control_button ADD_tr_10_10">\
-                                <span class="imgur_control_hide glyphicon glyphicon-minus-sign"></span>\
-                                <span class="imgur_control_remove glyphicon glyphicon-remove-sign"></span>\
-                            </div>\
-                            <div class="imgur_control_button ADD_br_10_10">\
-                                <span class="imgur_control_hide glyphicon glyphicon-minus-sign"></span>\
-                                <span class="imgur_control_remove glyphicon glyphicon-remove-sign"></span>\
-                            </div>\
-                            <a href="'+ADD_imgur_link[0]+'" class="open-lightbox">\
-                                <img src="'+ADD_imgur_link[0]+'" class="imgur_image_in_chat" />\
-                            </a>\
-                            '+more_images+'\
-                            '+left_image+'\
-                        </div>';
-                    }
-                    else
-                    {
-                        // 클릭시 이미지 활성화 체크 안 할 시
-                        ADD_imgur_DOE_text = '\
-                        <div class="imgur_container">\
-                            <div class="imgur_control_button_container">\
-                                <div class="imgur_control_button ADD_tr_10_10">\
-                                    <span class="imgur_control_remove glyphicon glyphicon-remove-sign"></span>\
-                                </div>\
-                            <div class="imgur_control_button ADD_br_10_10">\
-                                <span class="imgur_control_remove glyphicon glyphicon-remove-sign"></span>\
-                            </div>\
-                            </div>\
-                            <a href="'+ADD_imgur_link[0]+'" class="open-lightbox">\
-                                <img src="'+ADD_imgur_link[0]+'" class="imgur_image_in_chat" />\
-                            </a>\
-                            '+more_images+'\
-                            '+left_image+'\
-                        </div>';
-                    }
-
-                    ADD_chatting_cs_content_elem.append(ADD_imgur_DOE_text);
-
-                    if( isChatScrollOn() ){
-                        goScrollDown();
-                    }
-                    ADD_status_cookie_add_data('auto_image');
-                }
-
-                // GC
-                ADD_imgur_id = null;
-                ADD_imgur_type = null;
-                ADD_imgur_match = null;
-                ADD_imgur_link = null;
-                ADD_imgur_DOE_text = null;
-                ADD_imgur_safe_screen_opacity = null;
-                conversation_contents_elem = null;
-                ADD_imgur_reg = null;
-            } // ADD_config.imgur_preview 에 대한 if문 끝
-
-
-            // 채팅 두스트림 좌표 클릭 시
-            if(ADD_config.url_self.value)
-            {
-                var ADD_chatting_cs_content_a_elem;
-                var ADD_chatting_cs_content_a_elem_length;
-
-                ADD_chatting_cs_content_a_elem = ADD_chatting_cs_content_elem.find('a');
-                ADD_chatting_cs_content_a_elem_length = ADD_chatting_cs_content_a_elem.length;
-
-                // a 태그를 가지고 있는 경우
-                if(ADD_chatting_cs_content_a_elem_length !== 0)
-                {
-                    for (var i=0;i<ADD_chatting_cs_content_a_elem_length;i++)
-                    {
-                        var ADD_chatting_cs_content_a_href = ADD_chatting_cs_content_a_elem[i].href;
-                        if(ADD_chatting_cs_content_a_href.indexOf('#/stream/') !== -1)
-                            ADD_chatting_cs_content_a_elem[i].removeAttribute('target');
-
-                        ADD_chatting_cs_content_a_href = null;
-                    }
-                }
-
-                // GC
-                ADD_chatting_cs_content_a_elem = null;
-                ADD_chatting_cs_content_a_elem_length = null;
-            }
-
-            chatting_arrive_check = true;
-
-            // GC
-            newElem = null;
-            ADD_chatting_nickname = null;
-            ADD_chatting_cs_content_elem = null;
-            ADD_chatting_content = null;
-        }); // chat 관련 arrive 끝
     } // else 끝
 }
 
+    /*
+    $(document).arrive('.onstream > iframe', async iframeElems => {
+        var iframeSrc = $(iframeElems).attr('src');
+        if(iframeSrc.indexOf('player.twitch.tv') !== -1 && iframeSrc.indexOf('!muted&') !== -1){
+            var newIframeSrc = iframeSrc.replace('!muted&','muted=false&').replace('volume=1','volume=100');
+            $('#stream').html('<iframe src="'+newIframeSrc+'" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen="allowfullscreen"></iframe>');
+        }
+        ADD_DEBUG('twitch iframe src',iframeSrc);
+    });
+    */
 
 
+// 외부에서 이벤트 생성
+    var BindMemoDoe = false;
+    var BindMemoCount = 0;
+    $(document).arrive('.chat-container > iframe', async iframeElems => {
+        chatDoeEvntFunc();
+    });
+
+    function chatDoeEvntFunc(){
+        if(!BindMemoDoe && BindMemoCount <= 10){
+            setTimeout(function() {
+                var elem = $('.chat-container > iframe').contents().first().find('u-chat > iframe').contents().first();
+                if(elem.length !== 0){
+                    $(elem).on('click', '#do_memo', function() {
+                        ADD_MEMO_NICK = $(this).siblings('.subject').attr('nick');
+                        ADD_memo_doe();
+                    });
+
+                    // Open Lightbox
+                     $(elem).on('click', '.open-lightbox', function(e) {
+                        e.preventDefault();
+                        var image = $(this).attr('src');
+                        $('html').addClass('no-scroll');
+                        $('body').append('<div class="lightbox-opened"><img src="' + image + '"></div>');
+                    });
+
+                    // Close Lightbox
+                     $(elem).on('click', '.lightbox-opened', function() {
+                        $('html').removeClass('no-scroll');
+                        $('.lightbox-opened').remove();
+                    });
+
+                    // 채팅 다시 시작
+                    $(elem).on('click', '.ADD_chat_again', function() {
+                        $('.chat-container').html('<iframe src="./uchat2.php" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>');
+                    });
+
+                    $(elem).on('click', '#ADD_send_location_button', function() {
+                        ADD_DEBUG('Send location', location.href);
+                        $(elem).find('div.chatInput').focus().html(location.href);
+                        //ADD_DEBUG($(elem).find('div.chatInput'));
+                    });
+
+                    BindMemoDoe = true;
+                }
+                BindMemoCount = BindMemoCount + 1;
+                ADD_DEBUG("이벤트 생성 카운트: ",BindMemoCount);
+                chatDoeEvntFunc();
+            }, 200);
+        }
+    }
 
 //////////////////////////////////////////////////////////////////////////////////
 // 애드온 공지
@@ -3733,23 +3973,53 @@ function ADD_notice(msg, delay){
 
 //////////////////////////////////////////////////////////////////////////////////
 // 채팅창 시스템 메시지
-function ADD_send_sys_msg(msg, delay){
+function ADD_send_sys_msg(msg, delay, type){
+    var divClass = "line fired system";
+    if(type !== undefined && type !== null){
+        if(type === 1){
+            divClass = "line fired system";
+        }
+        else if(type === 2){
+            divClass = "line";
+        }
+        else{
+            divClass = "line fired system";
+        }
+    }
     if(delay === 0)
     {
-        if( $('.conversation_contents').length !== 0 ){
-            var conversation_contents_elem = $('.conversation_contents');
-            var msg_text = '<div class="system" title="Dosteam+ System Message">'+msg+'</div>';
+        var iframeElem1 = $('.chat-container > iframe').contents().first().find('u-chat > iframe');
+        var iframeElem2 = $('u-chat > iframe');
+        var iframeElem;
+
+        if(iframeElem2 !== undefined && iframeElem2.length !== 0){
+            iframeElem = iframeElem2;
+        }
+        else if(iframeElem1 !== undefined && iframeElem1.length !== 0){
+            iframeElem = iframeElem1;
+        }
+        else{
+            ADD_DEBUG('채팅창이 없어서 다음의 메시지 출력하지 않음1 - ' + msg);
+            return;
+        }
+
+        if( iframeElem.length !== 0 ){
+            var $iframeDocument = iframeElem.contents().first();
+
+            var msg_text = '<div class="'+divClass+'" title="Dosteam+ System Message"><span class="nick" nick="system"></span><span class="chatContent">'+msg+'</span></div>';
+            var conversation_contents_elem = $iframeDocument.find("div.content");
+
             conversation_contents_elem.append(msg_text);
             // GC
             conversation_contents_elem = null;
             msg_text = null;
 
-            if( isChatScrollOn() ){
-                goScrollDown();
+            if( isChatScrollOn($iframeDocument.find('.latest_chat')) ){
+                goScrollDown($iframeDocument.find('.content'));
             }
         }
         else{
-            ADD_DEBUG('채팅창이 없어서 다음의 메시지 출력하지 않음 - ' + msg);
+            ADD_DEBUG('채팅창이 없어서 다음의 메시지 출력하지 않음2 - ' + msg);
         }
     }
     else{
@@ -3877,14 +4147,7 @@ $(document).on('click', '.open-lightbox', function(e) {
 });
 
 
-// 추가 이미지 로드
-$(document).on('click', '.imgur_more_images_button', function() {
-    ADD_DEBUG('imgur_more_images_button 클릭됨');
-    var prev_div = $(this).prev("div.imgur_more_images");
-    prev_div.find('a').each(function() { $(this).html('<img src="'+$(this).prop("href")+'" class="imgur_image_in_chat" />') });
-    prev_div.show();
-    $(this).remove();
-});
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // thumbnail image hover event
@@ -4020,29 +4283,35 @@ function ADD_memo_menu_doe(){
     save_style = null;
 }
 
+async function ADD_memo_init(){
+    var ADD_chat_memo_default = {'key' : 'value'};
+    await ADD_SetVal("ADD_chat_memo", JSON.stringify(ADD_chat_memo_default));
+}
+
 // 메모 입력 DOE 생성 함수
-function ADD_memo_doe(){
+async function ADD_memo_doe(){
     if(!ADD_config.chat_ctr.value)
         return;
 
-    var memo_nick = $('.user_nick > div').html();
+    var memo_nick = ADD_MEMO_NICK;//$('.user_nick > div').html();
     var memo_find = false;
     var memo_contents = '';
     var ADD_chat_memo;
     var memo_doe_text = '';
 
     // 메모용 쿠키 있는지 체크
-    if (!$.cookie('ADD_chat_memo')){
-        // 메모용 쿠키 없으면 메모용 쿠키 새로 생성
-        ADD_chat_memo = {'key' : 'value'};
-        $.cookie('ADD_chat_memo', JSON.stringify(ADD_chat_memo), { expires : 365*2, path : '/' });
-        if(ADD_DEBUG_MODE) console.log('메모 쿠키가 없어서 새로 생성');
+    var ADD_chat_memo_default = {'key' : 'value'};
+    var ADD_chat_memo = await ADD_GetVal("ADD_chat_memo");
+    if(ADD_chat_memo === undefined){
+        ADD_chat_memo = ADD_chat_memo_default;
+        await ADD_memo_init();
+        ADD_DEBUG('메모 쿠키가 없어서 새로 생성');
     }
     else
     {
         // 메모용 쿠키 있으면 읽어옴
-        ADD_chat_memo = JSON.parse($.cookie('ADD_chat_memo'));
-        if(ADD_DEBUG_MODE) console.log('메모 쿠키 있어서 읽어옴');
+        ADD_chat_memo = JSON.parse(ADD_chat_memo);
+        ADD_DEBUG('메모 쿠키 있어서 읽어옴');
     }
     // 메모용 쿠키에 아이디와 동일한 키값 있는지 검색함
     for(var key in ADD_chat_memo){
@@ -4064,7 +4333,7 @@ function ADD_memo_doe(){
         <div class="lightbox-opened">\
         <div class="memo_doe" style="position: absolute; top: 50%;left:50%; width: 400px; height:100px; margin-left:-200px; margin-top:-50px;">\
         <div style="width:400px;height:100px;cursor:default;" class="modal-content">\
-        <div style="padding:5px 0;"><span style="font-weight:bold;color:red;font-size:14px;">'+memo_nick+'</span> 에 대하여 메모를 입력합니다.</div>\
+        <div style="padding:5px 0;"><span style="font-weight:bold;color:red;font-size:14px;" id="memo_nick_id">'+memo_nick+'</span> 에 대하여 메모를 입력합니다.</div>\
         <input type="text" id="memo_textbox" style="width:80%;height:25px;font-size:13px;padding:1px 0 1px 3px;" class="" value="'+memo_contents+'"/>\
         <div style="padding:5px 0;"><span id="memo_ok" class="btn btn-default">SAVE</span></div>\
         </div>\
@@ -4083,24 +4352,19 @@ function ADD_memo_doe(){
     memo_doe_text = null;
 }
 
-function ADD_memo_save_event(){
-    var memo_nick = $('.user_nick > div').html();
+async function ADD_memo_save_event(){
+    var memo_nick = $('#memo_nick_id').text();
     var memo_find = false;
     var memo_contents = '';
-    var ADD_chat_memo;
     var memo_blank = false;
 
-    // 메모용 쿠키 있는지 체크
-    if (!$.cookie('ADD_chat_memo')){
-        // 메모용 쿠키 없으면 메모용 쿠키 새로 생성
-        ADD_chat_memo = {'key' : 'value'};
-        $.cookie('ADD_chat_memo', JSON.stringify(ADD_chat_memo), { expires : 365*2, path : '/' });
-    }
-    else
-    {
-        // 메모용 쿠키 있으면 읽어옴
-        ADD_chat_memo = JSON.parse($.cookie('ADD_chat_memo'));
-    }
+    var ADD_chat_memo_default = {'key' : 'value'};
+    var ADD_chat_memo = await ADD_GetVal("ADD_chat_memo");
+    if(ADD_chat_memo === undefined){
+        ADD_chat_memo = ADD_chat_memo_default;
+        await ADD_memo_init();
+    };
+    ADD_chat_memo = JSON.parse(ADD_chat_memo);
 
     memo_contents = $('#memo_textbox').val();
     if(memo_contents === '' || memo_contents === null){
@@ -4114,8 +4378,8 @@ function ADD_memo_save_event(){
         delete ADD_chat_memo[memo_nick];
     }
 
-    // 메모 쿠키 저장
-    $.cookie('ADD_chat_memo', JSON.stringify(ADD_chat_memo), { expires : 365*2, path : '/' });
+    // 메모 저장
+    await ADD_SetVal("ADD_chat_memo", JSON.stringify(ADD_chat_memo));
 
     $('#memo_text').fadeOut(200);
     setTimeout(function() {
@@ -4147,7 +4411,7 @@ function ADD_forced_dancha(){
     } else {
         ADD_ignores = JSON.parse(ADD_ignores);
     }
-    console.log(ADD_ignores);
+    ADD_DEBUG(ADD_ignores);
     var forced_dancha_nick = $('.user_nick > div').html();
     if(forced_dancha_nick !== null || forced_dancha_nick !== undefined){
         (ADD_ignores).push(forced_dancha_nick);
@@ -4189,12 +4453,10 @@ $(document).on('click', '#memo_ok', function() {
 //////////////////////////////////////////////////////////////////////////////////
 // Call Twitch api
 if(urltchecker2() !== 2){
-twitch_api();
-ADD_API_CALL_INTERVAL();
+    twitch_api();
+    ADD_API_CALL_INTERVAL();
 
-
-//////////////////////////////////////////////////////////////////////////////////
-// Multiwindows checker
+    // Multiwindows checker
     ADD_multiwindow_prevent();
 }
 
@@ -4246,7 +4508,7 @@ $(document).ready(function()
                         break;
                 }
             }
-            console.log(unsafeWindow);
+            ADD_DEBUG(unsafeWindow);
             unsafeWindow.dostream = exportFunction (newdostream, unsafeWindow);
 
             $(document).on('click', 'header .nav-brand, header .nav-brand_mod', function(e) {
@@ -4289,40 +4551,10 @@ $(document).ready(function()
             }
         }, 100);
     }
-
-
-//////////////////////////////////////////////////////////////////////////////////
-    // Arrive event 관련
-    // 채팅창 생길 때 send 위한 DOE 생성, 무조건 실행됨
-    $('.chat').arrive('.uchat_middle', function() { //{onceOnly:true},
-        if(ADD_config.sys_meg.value !== undefined && ADD_config.sys_meg.value){
-            ADD_status_noti();
-        }
-        ADD_send_location_DOE();
-        $('.user_menu').attr('id','user_menu_id');
-
-
-//////////////////////////////////////////////////////////////////////////////////
-    // Memo event 관련
-        // display:none 감지
-        var observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutationRecord) {
-                if( !$(mutations[0].target).is(':visible') )
-                    if( $('#do_memo_container').length !== 0 ){
-                        $('#do_memo_container').remove();
-                    }
-            });
-        });
-        // display:none 감지 할당
-        var target = document.getElementById('user_menu_id');
-        observer.observe(target, { attributes : true, attributeFilter : ['style'] });
-        // display:none 감지 끝
-
-    });
-
-    $(document).arrive('.user_nick', function() {
-        ADD_memo_menu_doe();
-    });
+    else{
+        ADD_chatting_arrive();
+    }
+    ADD_event_binding();
 
     // Apply theme
     if(ADD_config.theme.value !== 'Default' && ADD_config.theme.value !== undefined){
@@ -4728,49 +4960,36 @@ for(var i=0;i<ADD_config_enable_init.length;i++)
 }
 
 
-//////////////////////////////////////////////////////////////////////////////////
-// imgur click event
-$(document).on('click', '.imgur_safe_button', function() {
-    $(this).parent('.imgur_safe_screen').fadeOut(500);
-});
-$(document).on('click', '.imgur_control_hide', function() {
-    ADD_DEBUG('Chatting 내 호출된 imgur 이미지 에서 - 버튼 클릭됨');
-    $(this).closest('.imgur_container').find('.imgur_safe_screen').fadeTo(500, 0.93);
-});
-$(document).on('click', '.imgur_control_remove', function() {
-    ADD_DEBUG('Chatting 내 호출된 imgur 이미지 에서 x 버튼 클릭됨');
-    $(this).closest('.imgur_container').hide();
-});
 
 // scroll lock click event
 $(document).on('click', '.uchat_scroll', function() {
     $(this).toggleClass('uchat_scroll_clicked');
 });
 
-function isChatScrollOn(){
-    if( $('.uchat_scroll').length !== 0 && !($('.uchat_scroll').hasClass('uchat_scroll_clicked')) ){
+function isChatScrollOn(elem){
+    if(elem.length !== 0 && elem.is(':visible')){
+        ADD_DEBUG('현재 스크롤은 정지 상태 입니다');
+        return false;
+    }
+    else if(elem.length !== 0 && !elem.is(':visible')){
+        ADD_DEBUG('현재 스크롤은 Free 상태 입니다');
         return true;
     }
     else{
-        return false;
+        ADD_DEBUG('현재 스크롤은 알 수 없음 상태이므로 Free 상태로 가정합니다');
+        return true;
     }
 }
 
-function goScrollDown(){
-    if( $('.conversation_contents').length !== 0 ){
-        $('.conversation_contents').animate({ scrollTop: 1000000 }, 'fast');
+function goScrollDown(scrollelem){
+    if( scrollelem.length !== 0 ){
+        ADD_DEBUG('스크롤 다운을 실행하였습니다.');
+        scrollelem.animate({ scrollTop: 1000000 }, 'fast');
+    }
+    else{
+        ADD_DEBUG('스크롤 다운을 시도하였으나 채팅창 엘리먼트가 존재하지 않습니다.', scrollelem);
     }
 }
-
-
-
-
-
-// send location click event
-$(document).on('click', '#ADD_send_location_button', function() {
-    ADD_send_location();
-});
-
 
 //////////////////////////////////////////////////////////////////////////////////
 // dev on click event
@@ -4790,13 +5009,6 @@ $(document).on('click', '#ADD_config_dev_on', function() {
 
 $(document).on('click', '#at', function() {
     SIGONGJOA();
-});
-
-
-//////////////////////////////////////////////////////////////////////////////////
-// chat again event
-$(document).on('click', '.ADD_chat_again', function() {
-    reloadUchat();
 });
 
 
