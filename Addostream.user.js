@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.45.1
+// @version     1.45.2
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
@@ -3832,25 +3832,11 @@ async function ADD_chatting_arrive(){
             //ADD_DEBUG($iframeDocument.contents().first().find('head').append('<script type="text/javascript">alert("test")</script>'));
 
 
-            setTimeout(function() {
+            //setTimeout(function() {
                 //if($('#ADDbootstrapCSS').length === 0){
                 //    $iframeDocument.find('head').append('<link id="ADDbootstrapCSS" href="/js/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">');
                 //}
-                if($('#ADD_UCHATCSS').length === 0){
-                var ADD_UCHATCSS = '<style type="text/css" id="ADD_UCHATCSS">\
-                    .imgur_container {position:relative;text-align:center}\
-                       .imgur_safe_screen {display:inline-flex;align-items:center;position:absolute;top:0;left:0;text-align:center;vertical-align:middle;width:100%;height:100%;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAJElEQVQImWPo6ur6D8MMDAz/GZA5XV1dEAEYB8pGcLq6uv4DAKP8I1nj691jAAAAAElFTkSuQmCC) repeat;}\
-                           .imgur_control_button_container{position:relative;}\
-                           .imgur_control_button{position:absolute;width:60px;height:20px;text-align:right;}\
-                           .ADD_tr_10_10{top:10px;right:15px;}\
-                           .ADD_br_10_10{bottom:10px;right:15px;}\
-                           .imgur_control_button span{font-size:15px; display:inline-block;opacity:0.3;cursor:pointer;text-align:center;background:#fff;color:#333;border-radius:30px;padding:1px;margin-right:1.5px;height:18px;width:16px;line-height:100%;font-family: "Malgun Gothic","맑은고딕","맑은 고딕",Dotum,"Helvetica Neue",Helvetica,Arial,sans-serif;}\
-                           .imgur_safe_button {padding:2px 15px;background:white;border-radius:20px;border:1px solid #333;opacity:1.0;color:rgba(0, 0, 0, 1.0);line-height:200%;margin:0 auto;text-align:center;vertical-align:middle;cursor:pointer;color:black;font-size:12px;font-family: "Malgun Gothic","맑은고딕","맑은 고딕",Dotum,"Helvetica Neue",Helvetica,Arial,sans-serif;}\
-    .imgur_image_in_chat {cursor:pointer;max-width:340px !important;max-height:1000px !important;padding:5px 0px;margin:0 auto;display:inline-block;}\
-                </style>';
-                    $iframeDocument.find('head').append(ADD_UCHATCSS);
-                }
-            }, 1000);
+            //}, 1000);
 
             //$('.user_menu').attr('id','user_menu_id');
 
@@ -3918,7 +3904,9 @@ async function ADD_chatting_arrive(){
         if(!BindMemoDoe && BindMemoCount <= 10){
             setTimeout(function() {
                 var elem = $('.chat-container > iframe').contents().first().find('u-chat > iframe').contents().first();
-                if(elem.length !== 0){
+                var elemHead = $(elem).find('head');
+                var elemContent = $(elem).find('div.content');
+                if(elemHead.length !== 0 && elemContent.length !== 0){
                     $(elem).on('click', '#do_memo', function() {
                         ADD_MEMO_NICK = $(this).siblings('.subject').attr('nick');
                         ADD_memo_doe();
@@ -3950,6 +3938,30 @@ async function ADD_chatting_arrive(){
                         $(elem).find('div.chatInput').focus().html(location.href);
                         //ADD_DEBUG($(elem).find('div.chatInput'));
                     });
+
+                if(elemHead.find('#ADD_UCHATCSS').length === 0){
+                var ADD_UCHATCSS = '<style type="text/css" id="ADD_UCHATCSS">\
+                    .imgur_container {position:relative;text-align:center}\
+                       .imgur_safe_screen {display:inline-flex;align-items:center;position:absolute;top:0;left:0;text-align:center;vertical-align:middle;width:100%;height:100%;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAJElEQVQImWPo6ur6D8MMDAz/GZA5XV1dEAEYB8pGcLq6uv4DAKP8I1nj691jAAAAAElFTkSuQmCC) repeat;}\
+                           .imgur_control_button_container{position:relative;}\
+                           .imgur_control_button{position:absolute;width:60px;height:20px;text-align:right;}\
+                           .ADD_tr_10_10{top:10px;right:15px;}\
+                           .ADD_br_10_10{bottom:10px;right:15px;}\
+                           .imgur_control_button span{font-size:15px; display:inline-block;opacity:0.3;cursor:pointer;text-align:center;background:#fff;color:#333;border-radius:30px;padding:1px;margin-right:1.5px;height:18px;width:16px;line-height:100%;font-family: "Malgun Gothic","맑은고딕","맑은 고딕",Dotum,"Helvetica Neue",Helvetica,Arial,sans-serif;}\
+                           .imgur_safe_button {padding:2px 15px;background:white;border-radius:20px;border:1px solid #333;opacity:1.0;color:rgba(0, 0, 0, 1.0);line-height:200%;margin:0 auto;text-align:center;vertical-align:middle;cursor:pointer;color:black;font-size:12px;font-family: "Malgun Gothic","맑은고딕","맑은 고딕",Dotum,"Helvetica Neue",Helvetica,Arial,sans-serif;}\
+    .imgur_image_in_chat {cursor:pointer;max-width:340px !important;max-height:1000px !important;padding:5px 0px;margin:0 auto;display:inline-block;}\
+                </style>';
+                    if(elemHead.length !== 0){
+                        ADD_DEBUG('Iframe 내 css를 성공적으로 추가했습니다.');
+                        elemHead.append(ADD_UCHATCSS);
+                    }
+                    else{
+                        ADD_DEBUG('Iframe 내 head 를 찾을 수 없습니다',elemHead);
+                    }
+                }
+                    else{
+                        ADD_DEBUG('Iframe 내 css가 이미 존재하므로 추가하지 않습니다');
+                    }
 
                     BindMemoDoe = true;
                 }
