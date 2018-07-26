@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.45.0
+// @version     1.45.1
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
@@ -2081,6 +2081,10 @@ function ADD_event_binding(){
         ADD_thumbnail_mouseover();
     }
 
+    if(urltchecker2() === C_UCHAT){
+        ADD_chatting_arrive();
+    }
+
     // 채팅창 스크롤 관련됨
     //if(ADD_config.chat_scroll.value !== undefined){
     //    ADD_chat_scroll_pause();
@@ -3389,7 +3393,7 @@ function getImgurData(Imgur_ID, Imgur_type) {
         {
             return false;
         }
-  
+
   $.ajax({
       url: imgur_api_call_url,
       async: false, // return 하기 위해 async 대신 sync를 false로 설정
@@ -3902,9 +3906,14 @@ async function ADD_chatting_arrive(){
     var BindMemoDoe = false;
     var BindMemoCount = 0;
     $(document).arrive('.chat-container > iframe', async iframeElems => {
+        chatDoeEvntFuncInit();
         chatDoeEvntFunc();
     });
 
+    function chatDoeEvntFuncInit(){
+        BindMemoDoe = false;
+        BindMemoCount = 0;
+    }
     function chatDoeEvntFunc(){
         if(!BindMemoDoe && BindMemoCount <= 10){
             setTimeout(function() {
@@ -3932,6 +3941,8 @@ async function ADD_chatting_arrive(){
                     // 채팅 다시 시작
                     $(elem).on('click', '.ADD_chat_again', function() {
                         $('.chat-container').html('<iframe src="./uchat2.php" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>');
+                        chatDoeEvntFuncInit();
+                        chatDoeEvntFunc();
                     });
 
                     $(elem).on('click', '#ADD_send_location_button', function() {
@@ -4423,10 +4434,6 @@ function ADD_forced_dancha(){
 }
 
 // 메모 DOE 생성 이벤트
-$(document).on('click', '#do_memo', function() {
-    ADD_memo_doe();
-});
-
 $(document).on('click', '#do_forced_dancha', function() {
     ADD_forced_dancha();
 });
@@ -4552,7 +4559,7 @@ $(document).ready(function()
         }, 100);
     }
     else{
-        ADD_chatting_arrive();
+        //
     }
     ADD_event_binding();
 
