@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.45.2
+// @version     1.45.3
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
@@ -3496,6 +3496,9 @@ async function chatElemControl(newElem, documentElem){
         ADD_chat_memo = JSON.parse(ADD_chat_memo);
         if(ADD_chat_memo !== undefined && ADD_chatting_nickname in ADD_chat_memo){
             newElem.find('span.nick').after('<span class="conversation_memo" style="color:red;font-weight:bold;"> ['+ADD_chat_memo[ADD_chatting_nickname]+']</span>');
+            if( isChatScrollOn(documentElem.find('.latest_chat')) ){
+                goScrollDown(documentElem.find('.content'));
+            }
         }
     }
 
