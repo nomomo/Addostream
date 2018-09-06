@@ -4391,7 +4391,7 @@ async function ADD_memo_doe(){
         <input type="text" id="memo_textbox" style="width:80%;height:25px;font-size:13px;padding:1px 0 1px 3px;" class="" value="'+memo_contents+'"/>\
         <div style="padding:5px 0;"><span id="memo_ok" class="btn btn-default">SAVE</span></div>\
         </div>\
-        <div id="memo_text_container" style="position:relative;top:10px;left:0px; width:400px;height:30px;font-size:12px;cursor:pointer;"><span id="memo_text" style="color:#fff">메모를 삭제하려면 모든 내용을 지우고 저장하세요.<br />저장하지 않고 나가려면 배경화면을 누르세요.<br />캠페인: 채팅창에서 메모 기능을 언급하지 말고, 혼자 조용히 사용해주세요.</span></div>\
+        <div id="memo_text_container" style="position:relative;top:10px;left:0px; width:430px;height:30px;font-size:12px;cursor:pointer;"><span id="memo_text" style="color:#fff">메모를 삭제하려면 모든 내용을 지우고 저장하세요.<br />저장하지 않고 나가려면 배경화면을 누르세요.<br />캠페인: 채팅창에서 메모 기능을 언급하지 말고 혼자 조용히 사용해주세요.</span></div>\
         </div>\
         </div>\
         ';
