@@ -4385,8 +4385,8 @@ async function ADD_memo_doe(){
     $('html').addClass('no-scroll');
     memo_doe_text = '\
         <div class="lightbox-opened">\
-        <div class="memo_doe" style="position: absolute; top: 50%;left:50%; width: 400px; height:100px; margin-left:-200px; margin-top:-50px;">\
-        <div style="width:400px;height:100px;cursor:default;" class="modal-content">\
+        <div class="memo_doe" style="position: absolute; top: 50%;left:50%; width: 430px; height:100px; margin-left:-215px; margin-top:-50px;">\
+        <div style="width:430px;height:100px;cursor:default;" class="modal-content">\
         <div style="padding:5px 0;"><span style="font-weight:bold;color:red;font-size:14px;" id="memo_nick_id">'+memo_nick+'</span> 에 대하여 메모를 입력합니다.</div>\
         <input type="text" id="memo_textbox" style="width:80%;height:25px;font-size:13px;padding:1px 0 1px 3px;" class="" value="'+memo_contents+'"/>\
         <div style="padding:5px 0;"><span id="memo_ok" class="btn btn-default">SAVE</span></div>\
