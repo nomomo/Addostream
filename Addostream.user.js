@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.46.0
+// @version     1.46.1
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
@@ -1483,7 +1483,7 @@ function Addostream_CSS(){
         #notice_text_elem{display:none;font-size:10px;color:#666;position:absolute;top:0px;left:150px;max-width:600px;height:63px;text-align:left; margin-right:150px; vertical-align:middle;overflow: hidden;text-overflow: ellipsis;}
         .onstream #notice_text_elem {height:45px;}
         #notice_text_elem:before{content: "";display:inline-block;vertical-align: middle;height: 100%;}
-        #notice_text{display:inline-block;vertical-align:middle;line-height:150%;}
+        #notice_text, #notice_text2{display:inline-block;vertical-align:middle;line-height:150%;}
         #at {cursor:pointer;display:inline-block;margin:4px 2px 0 2px;height:24px;animation-name: at_spin;animation-duration: 18s;animation-iteration-count: infinite;animation-timing-function: linear;}
         @keyframes at_spin{0%{transform:rotate(0)}25%{transform:rotate(90deg);text-shadow:0 0 3px #F0F8FF}50%{transform:rotate(180deg);text-shadow:0 0 8px #B0E0E6}100%{transform:rotate(359deg)}}
         .ADD_under_dev {display:none;}
@@ -1521,7 +1521,7 @@ function Addostream_CSS(){
         }
         #view_additional_message_container {position:absolute;bottom:46px;left:0px;z-index:15;width:100%; height:30px;cursor:pointer;}
         #view_additional_message {position:relative;padding:5px 0;background-color:rgba(0,0,0,0.6);text-align:center;color:#fff;font-size:12px;}
-        .ADD_chat_again, .ADD_twitch_api_again{cursor:pointer;}
+        .ADD_chat_again, .ADD_twitch_api_again, .ADD_twitch_api_again_with_chat{cursor:pointer;}
         .modal-body tbody tr:hover {background-color:#E6E6E6;}
         .lightbox-opened-blocked-chat {background-color:#fff; max-width:600px; margin:0 auto; text-align:left;padding:15px;font-size:12px}
         .modal-body tbody .btn-xxs {padding: 1px 2px;font-size: 9px;line-height: 1.0;border-radius: 3px;margin:0 2px 2px 0;cursor:pointer;}
@@ -1531,6 +1531,11 @@ function Addostream_CSS(){
         .modal-body tbody .btn-xxs.disable {opacity: 0.3;cursor:not-allowed;}
         #popup_ADD_config .modal-body tbody input[type="checkbox"]{display:none;}
         #new_version_available_text a{color:#E3242B}
+        #btnOpenHrm_ADD{margin-left: -80px;margin-top: 22.5px;height:22.5px;}
+        #Hrm_DOE{display: none;background: rgba(255, 255, 255, 0.93);z-index: 1001;border: 0;position: absolute;top: 45px;bottom: 50%;width: 100%;overflow-y: scroll;}
+        #Hrm_DOE ul{list-style:none;margin:0;padding:5px 0 0 0;}
+        #Hrm_DOE li{color:#000;padding:5px 10px;word-break: break-all;font-size:13px;}
+}
     `);
 
     /*
@@ -2588,23 +2593,34 @@ setInterval(function() {
               ADD_DEBUG('unique window = ',unique_window);
               ADD_DEBUG('unique window cookie is ',unique_window_cookie);
               unique_window_check = false;
-              $('#notice_text').addClass('ADD_twitch_api_again').html('\(+\) 새 창에서 접속 감지 됨. Dostram+의 API 갱신 중지. 현재 창에서 다시 시작하려면 클릭.');
+              $('#notice_text').show().addClass('ADD_twitch_api_again').html('\(+\) 새 창에서 접속 감지 됨. 현재 창에서 다시 시작하려면 클릭.');
+              $('#notice_text2').show().addClass('ADD_twitch_api_again_with_chat').html('　\[채팅까지 다시시작\]');
               $('#notice_text_elem').show();
               clearInterval(ADD_API_SET_INTERVAL);
             }
 }, 1000);
 
 }
+const ONLY_STREAM = 1;
+const WITH_CHAT = 2;
 
-function ADD_twitch_api_again(){
+function ADD_twitch_api_again(TYPE){
     if( $('.ADD_twitch_api_again').length !== 0 ){
+        $('#notice_text2').hide().removeClass('ADD_twitch_api_again_with_chat').html('');
         $('.ADD_twitch_api_again').removeClass('ADD_twitch_api_again');
-        $('#notice_text').html('\(+\) Dostram+의 API 갱신 재시작^^7');
+        $('#notice_text').html('\(+\) Dostram+의 API 갱신 재시작^^7').delay(2000).fadeOut('fast');
+        $('#notice_text_elem').delay(2000).fadeOut('fast');
         unique_window = new Date();
         unique_window = Number(unique_window.getTime());
         $.cookie('unique_window', unique_window, { expires : 30, path : '/' });
         unique_window_check = true;
         ADD_API_CALL_INTERVAL();
+
+        if(TYPE == WITH_CHAT){
+          $('.chat-container').html('<iframe src="./uchat2.php" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>');
+          chatDoeEvntFuncInit();
+          chatDoeEvntFunc();
+        }
     }
 }
 
@@ -2633,7 +2649,7 @@ function ADD_config_DOE()
       // 설정 버튼 및 팝업 생성
       $('header .container').append('\
           <div style="position:relative;">\
-          <div id="notice_text_elem" title="Dosteam+ System Message")><span id="notice_text">문어문어문어문어<br />블러드트레일 블러드트레일</span></div>\
+          <div id="notice_text_elem" title="Dosteam+ System Message")><span id="notice_text">문어문어문어문어<br />블러드트레일 블러드트레일</span><span id="notice_text2"></span></div>\
               <div class="AD_title">\
                  <span id="ADD_change_multi" class="btn btn-default btn_closed" aria-label="멀티트위치↔트위치 전환" data-microtip-position="left" role="tooltip">\
                     <span class="glyphicon glyphicon-resize-horizontal">\
@@ -3313,6 +3329,122 @@ async function addHideStreamer_run()
         $('#addHideStreamer').hide();
     }
 }
+
+//////////////////////////////////////////////////////////////////////////////////
+// 편한 좌표보기 관련 함수
+async function parse_insagirl(page){
+    ADD_DEBUG('RUNNING - parse_insagirl');
+    GM_xmlhttpRequest({
+        url: "http://insagirl-hrm.appspot.com/json2/2/1/"+page+"/",
+        method: "GET",
+        headers: {
+            "Content-Type": "application/javascript"
+        },
+        onload: async function(response) {
+            if($('#Hrm_DOE').length === 0){
+                ADD_DEBUG('Hrm_DOE가 없다');
+                return;
+            }
+            var expUrl = /(((http(s)?:\/\/)\S+(\.[^(\n|\t|\s,)]+)+)|((http(s)?:\/\/)?(([a-zA-z\-_]+[0-9]*)|([0-9]*[a-zA-z\-_]+)){2,}(\.[^(\n|\t|\s,)]+)+))+/gi;
+            var data = response.responseText;
+            var Hrm_DOE_HTML = '';
+            data = JSON.parse(data);
+            data = data.v;
+            for(var z=0; z<data.length; z++){
+                data[z] = data[z].split('|');
+                var a = (new Date).getTime();
+                var e = data[z][0];
+                var i = Math.floor((a - e) / 1e3),
+                    r = parseInt(i / 3600),
+                    s = parseInt(i / 60) % 60,
+                    u = i % 60,
+                    l = "(" + (r > -1 && 10 > r ? "0" + r : r) + ":" + (s > -1 && 10 > s ? "0" + s : s) + ":" + (u > -1 && 10 > u ? "0" + u : u) + ")";
+                var cont = data[z][2].replace(expUrl, '<a href="$&" target="_blank">$&</a>');
+                if(cont.indexOf('#/stream/') !== -1){
+                    cont = cont.replace('target=\"_blank\"','');
+                }
+                Hrm_DOE_HTML = Hrm_DOE_HTML + '<li>' + l + data[z][1] + ': ' + cont + '</li>';
+            }
+            $('#Hrm_DOE ul:first').append(Hrm_DOE_HTML);
+        }, onerror: async function(){
+            ADD_DEBUG('좌표 파싱 중 에러 발생');
+            await ADD_SetVal('Cross_Origin_Hrm', false);
+        }
+    });
+}
+
+function Hrm_DOE(){
+    if($('#btnOpenHrm').length !== 0 && $('#btnOpenHrm_ADD').length == 0){
+        ADD_DEBUG('좌표 버튼 기능 변경');
+        $('#btnOpenHrm').before('<button class="btn-blue" style="margin-right:-80px;background-color:#446cb3;margin-bottom:-45px;"></button>')
+            .after('<button id="btnOpenHrm_ADD" class="btn-blue" style="height:0px;display:none">▼</button>').css('transition','width 1s, height 1s, transform 1s').css('height','22.5px');
+        $('#btnOpenHrm_ADD').css('transition','width 2s, height 2s, transform 2s').css('height','22px').delay('700').fadeIn('300');
+        $('.chat-ignore').after('<div id="Hrm_DOE"><ul><li style="font-weight:bold;text-align:center;">본 기능은 테스트 중인 기능입니다.<br />두스트림 좌표는 현재 창으로 열립니다.</li></ul><div style="padding:5px;"><button id="hrmbodyexpand" type="button" class="btn btn-primary btn-block">더 보기</button></div></div>');
+    }
+    else{
+        ADD_DEBUG('좌표 버튼을 찾지 못함');
+    }
+}
+
+$(document).on('click','#btnOpenHrm_ADD',async function() {
+    if($('#Hrm_DOE').is(':hidden')){
+        if(await checkCrossAccess('http://insagirl-hrm.appspot.com/json2/2/1/1/','Cross_Origin_Hrm', function(){$('#btnOpenHrm_ADD').trigger('click')})){
+            await parse_insagirl(1);
+
+            $(this).html('▲');
+            $('#Hrm_DOE').show();
+            $('#hrmbodyexpand').show();
+            $('.chat-container').css('top','50%');
+        }
+    }
+    else{
+        $(this).html('▼');
+        $('#Hrm_DOE').hide();
+        $('#Hrm_DOE ul:first').html('<li style="font-weight:bold;text-align:center;">본 기능은 테스트 중인 기능입니다.<br />두스트림 좌표는 현재 창으로 열립니다.</li>');
+        $('.chat-container').css('top','45px');
+    }
+});
+
+async function checkCrossAccess(url, varname, callback){
+    var checkVal = false;
+    checkVal = await ADD_GetVal(varname);
+    if(checkVal === undefined){
+        checkVal = false;
+        await ADD_SetVal(varname, checkVal);
+    }
+
+    if(checkVal === false){
+        $('html').addClass('no-scroll');
+        $('body').append('<div class="lightbox-opened"><img src="https://raw.githubusercontent.com/nomomo/Addostream/master/images/cross_origin.jpg" /></div>');
+
+        $(document).one('click','.lightbox-opened',async function(){
+            GM_xmlhttpRequest({
+                url: url,
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/javascript"
+                },
+                onload: async function(response) {
+                    ADD_DEBUG('엑세스 성공');
+                    await ADD_SetVal(varname, true);
+                    callback();
+                }, onerror: async function(){
+                    ADD_DEBUG('엑세스 실패');
+                    await ADD_SetVal(varname, false);
+                }
+            });
+        })
+        return false;
+    }
+    else{
+        return true;
+    }
+}
+
+$(document).on('click','#hrmbodyexpand',async function() {
+    await parse_insagirl(2);
+    $('#hrmbodyexpand').hide();
+});
 
 //////////////////////////////////////////////////////////////////////////////////
 // 체크박스 클릭 시 이벤트
@@ -4385,7 +4517,7 @@ async function ADD_memo_doe(){
     $('html').addClass('no-scroll');
     memo_doe_text = '\
         <div class="lightbox-opened">\
-        <div class="memo_doe" style="position: absolute; top: 50%;left:50%; width: 430px; height:100px; margin-left:-215px; margin-top:-50px;">\
+        <div class="memo_doe" style="position: absolute; top: 50%;left:50%; width: 430px; height:100px; margin-left:-200px; margin-top:-50px;">\
         <div style="width:430px;height:100px;cursor:default;" class="modal-content">\
         <div style="padding:5px 0;"><span style="font-weight:bold;color:red;font-size:14px;" id="memo_nick_id">'+memo_nick+'</span> 에 대하여 메모를 입력합니다.</div>\
         <input type="text" id="memo_textbox" style="width:80%;height:25px;font-size:13px;padding:1px 0 1px 3px;" class="" value="'+memo_contents+'"/>\
@@ -4533,6 +4665,7 @@ $(document).ready(function()
                 };
                 $('.loader_container').fadeOut(200);
                 ADD_multitwitch_DOE();
+                Hrm_DOE();
             };
             unsafeWindow.dsStream = exportFunction (newdsStream, unsafeWindow);
 
@@ -4566,6 +4699,7 @@ $(document).ready(function()
                     page = new newdsStream();
                     page.reload();
                     ADD_multitwitch_DOE();
+                    Hrm_DOE();
                 }
             });
         }
@@ -4582,6 +4716,7 @@ $(document).ready(function()
                 };
                 $('.loader_container').fadeOut(200);
                 ADD_multitwitch_DOE();
+                Hrm_DOE();
             };
 
             $(document).on('click', 'header .nav-brand, header .nav-brand_mod', function(e) {
@@ -4589,6 +4724,7 @@ $(document).ready(function()
                     page = new dsStream();
                     page.reload();
                     ADD_multitwitch_DOE();
+                    Hrm_DOE();
                 }
             });
         }
@@ -4617,6 +4753,9 @@ $(document).ready(function()
 ////////////////////////////////// $(document).load /////////////////////////////
 window.addEventListener ("load", function()
 {
+    // Change Hrm button
+    Hrm_DOE();
+
     // Create Config DOE
     ADD_config_DOE();
 
@@ -5065,8 +5204,13 @@ $(document).on('click', '#at', function() {
 //////////////////////////////////////////////////////////////////////////////////
 // api again event
 $(document).on('click', '.ADD_twitch_api_again', function() {
-    ADD_twitch_api_again();
+    ADD_twitch_api_again(ONLY_STREAM);
 });
+
+$(document).on('click', '.ADD_twitch_api_again_with_chat', function() {
+    ADD_twitch_api_again(WITH_CHAT);
+});
+
 
 
 //////////////////////////////////////////////////////////////////////////////////
