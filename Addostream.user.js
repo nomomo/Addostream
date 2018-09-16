@@ -3379,7 +3379,7 @@ function Hrm_DOE(){
         $('#btnOpenHrm').before('<button class="btn-blue" style="margin-right:-80px;background-color:#446cb3;margin-bottom:-45px;"></button>')
             .after('<button id="btnOpenHrm_ADD" class="btn-blue" style="height:0px;display:none">▼</button>').css('transition','width 1s, height 1s, transform 1s').css('height','22.5px');
         $('#btnOpenHrm_ADD').css('transition','width 2s, height 2s, transform 2s').css('height','22px').delay('700').fadeIn('300');
-        $('.chat-ignore').after('<div id="Hrm_DOE"><ul><li style="font-weight:bold;text-align:center;">본 기능은 테스트 중인 기능입니다.<br />두스트림 좌표는 현재 창으로 열립니다.</li></ul><div style="padding:5px;"><button id="hrmbodyexpand" type="button" class="btn btn-primary btn-block">더 보기</button></div></div>');
+        $('.chat-ignore').after('<div id="Hrm_DOE"><ul><li style="font-weight:bold;text-align:center;">(테스트 중) 두스트림 좌표는 현재 창으로 열립니다</li></ul><div style="padding:5px;"><button id="hrmbodyexpand" type="button" class="btn btn-primary btn-block">더 보기</button></div></div>');
     }
     else{
         ADD_DEBUG('좌표 버튼을 찾지 못함');
@@ -3400,7 +3400,7 @@ $(document).on('click','#btnOpenHrm_ADD',async function() {
     else{
         $(this).html('▼');
         $('#Hrm_DOE').hide();
-        $('#Hrm_DOE ul:first').html('<li style="font-weight:bold;text-align:center;">본 기능은 테스트 중인 기능입니다.<br />두스트림 좌표는 현재 창으로 열립니다.</li>');
+        $('#Hrm_DOE ul:first').html('<li style="font-weight:bold;text-align:center;">(테스트 중) 두스트림 좌표는 현재 창으로 열립니다</li>');
         $('.chat-container').css('top','45px');
     }
 });
