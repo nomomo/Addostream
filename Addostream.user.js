@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.46.2
+// @version     1.46.3
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
@@ -3926,7 +3926,7 @@ async function ADD_chatting_arrive(){
             // 채팅창에 있는 두스 링크 클릭 시 이벤트
             $($iframeDocument).on('click','.topClick',function(e){
                 e.preventDefault();
-                window.parent.location.href = this.href;
+                parent.window.location.href = this.href;
             })
 
             // 채팅창 닉네임 클릭 시 메모 DOE 생성하기
@@ -4006,11 +4006,10 @@ async function ADD_chatting_arrive(){
                     });
 
                     // Open Lightbox
-			/*
                      $(elem).on('click', '.open-lightbox', function(e) {
                         e.preventDefault();
                         var image = $(this).attr('src');
-                        $('html').addClass('no-scroll');
+                        parent.$('html').addClass('no-scroll');
                          var img_video_text = '';
                          if(checkVideo(image)){
                              img_video_text = '<video loop controls muted autoplay src="'+image+'"></video>'
@@ -4018,15 +4017,14 @@ async function ADD_chatting_arrive(){
                          else{
                              img_video_text = '<img src="'+image+'" />'
                          }
-                        $('body').append('<div class="lightbox-opened">'+img_video_text+'</div>');
+                        parent.$('body').append('<div class="lightbox-opened">'+img_video_text+'</div>');
                     });
 
                     // Close Lightbox
-                     $(elem).on('click', '.lightbox-opened', function() {
-                        $('html').removeClass('no-scroll');
-                        $('.lightbox-opened').remove();
-                    });
-		    */
+                    //$(elem).on('click', '.lightbox-opened', function() {
+                    //    $('html').removeClass('no-scroll');
+                    //    $('.lightbox-opened').remove();
+                    //});
 
                     // 채팅 다시 시작
                     $(elem).on('click', '.ADD_chat_again', function() {
@@ -4039,7 +4037,6 @@ async function ADD_chatting_arrive(){
                     $(elem).on('click', '#ADD_send_location_button', function() {
                         ADD_DEBUG('Send location', location.href);
                         $(elem).find('div.chatInput').focus().html(parent.window.location.href);
-                        //ADD_DEBUG($(elem).find('div.chatInput'));
                     });
 
                 if(elemHead.find('#ADD_UCHATCSS').length === 0){
