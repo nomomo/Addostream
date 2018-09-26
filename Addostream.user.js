@@ -4006,6 +4006,7 @@ async function ADD_chatting_arrive(){
                     });
 
                     // Open Lightbox
+			/*
                      $(elem).on('click', '.open-lightbox', function(e) {
                         e.preventDefault();
                         var image = $(this).attr('src');
@@ -4025,6 +4026,7 @@ async function ADD_chatting_arrive(){
                         $('html').removeClass('no-scroll');
                         $('.lightbox-opened').remove();
                     });
+		    */
 
                     // 채팅 다시 시작
                     $(elem).on('click', '.ADD_chat_again', function() {
