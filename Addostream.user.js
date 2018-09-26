@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.46.1
+// @version     1.46.2
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
@@ -219,9 +219,11 @@ var streamerArray = [
     ['rkdthdus930','강소연'],
     ['seogui','서긔'],
     ['pikra10','재슥짱'],
-    ['playoverwatch_kr','오버워치 이스포츠']
+    ['playoverwatch_kr','오버워치 이스포츠'],
+    ['maxim_korea_official','남자매거진맥심']
     ];// ['',''],
-
+//DoFLIX 23592060
+//DosLive 23612163
 var streamerArray_name = [];
 var streamerArray_display_name = [];
 var streamerArray_AutoComplete = [];
@@ -1532,7 +1534,7 @@ function Addostream_CSS(){
         #popup_ADD_config .modal-body tbody input[type="checkbox"]{display:none;}
         #new_version_available_text a{color:#E3242B}
         #btnOpenHrm_ADD{margin-left: -80px;margin-top: 22.5px;height:22.5px;}
-        #Hrm_DOE{display: none;background: rgba(255, 255, 255, 0.93);z-index: 1001;border: 0;position: absolute;top: 45px;bottom: 50%;width: 100%;overflow-y: scroll;}
+        #Hrm_DOE{display: none;background: rgba(255, 255, 255, 0.93);z-index: 1001;position: absolute;top: 45px;bottom: 50%;width: 100%;overflow-y: scroll;border-left: 1px solid #bdc3c7;}
         #Hrm_DOE ul{list-style:none;margin:0;padding:5px 0 0 0;}
         #Hrm_DOE li{color:#000;padding:5px 10px;word-break: break-all;font-size:13px;}
 }
@@ -1815,15 +1817,6 @@ function parse_data_from_list(flag)
                 data.splice(h_index_ary[i],1);
             }
         }
-
-        // 17-09-19 : 아프리카를 메인에서 숨긴다.
-        // for( var i=data.length - 1; i>0 ; i-- )
-        // {
-        //     if( data[i].from == 'afreeca' )
-        //     {
-        //         data.splice(i,1);
-        //     }
-        // }
 
         // 새로 추가한 항목 초기화
         for( var i=0; i<data.length ; i++ ){
@@ -2618,8 +2611,8 @@ function ADD_twitch_api_again(TYPE){
 
         if(TYPE == WITH_CHAT){
           $('.chat-container').html('<iframe src="./uchat2.php" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>');
-          chatDoeEvntFuncInit();
-          chatDoeEvntFunc();
+          //chatDoeEvntFuncInit();
+          //chatDoeEvntFunc();
         }
     }
 }
@@ -3602,6 +3595,12 @@ async function chatElemControl(newElem, documentElem){
     var ADD_chatting_cs_content_elem = newElem.find('.chatContent');
     var ADD_chatting_content = ADD_chatting_cs_content_elem.text();
 
+    var scroll_height_check = documentElem.find('.content').prop('scrollHeight') - (documentElem.find('.content').scrollTop()+documentElem.find('.content').height());
+    if(scroll_height_check < 100){
+        // 100픽셀보다 덜 차이날 경우 스크롤을 강제로 내린다;
+        goScrollDown(documentElem.find('.content'));
+    };
+
     if(ADD_chatting_content === undefined || ADD_chatting_nickname === undefined){
         ADD_DEBUG('닉네임 또는 채팅 내용 판독 불가');
         return;
@@ -3721,11 +3720,11 @@ async function chatElemControl(newElem, documentElem){
 <span class="imgur_safe_button btn btn-default align-middle">Image show</span>\
 </div>\
 <div class="imgur_control_button ADD_tr_10_10">\
-<span class="imgur_control_hide glyphicon glyphicon-minus-sign">⊖</span>\
+<span class="imgur_control_hide glyphicon glyphicon-minus-sign">?</span>\
 <span class="imgur_control_remove glyphicon glyphicon-remove-sign">ⓧ</span>\
 </div>\
 <div class="imgur_control_button ADD_br_10_10">\
-<span class="imgur_control_hide glyphicon glyphicon-minus-sign">⊖</span>\
+<span class="imgur_control_hide glyphicon glyphicon-minus-sign">?</span>\
 <span class="imgur_control_remove glyphicon glyphicon-remove-sign">ⓧ</span>\
 </div>\
 '+img_video_text+'\
@@ -3801,18 +3800,10 @@ async function chatElemControl(newElem, documentElem){
             }
         }
 
-        // GC
-        //ADD_chatting_cs_content_a_elem = null;
-        //ADD_chatting_cs_content_a_elem_length = null;
     }
 
     chatting_arrive_check = true;
 
-    // GC
-    //newElem = null;
-    //ADD_chatting_nickname = null;
-    //ADD_chatting_cs_content_elem = null;
-    //ADD_chatting_content = null;
 }
 
 
@@ -3841,9 +3832,6 @@ function ADD_send_location_DOE(iframeElem)
         ADD_DEBUG('채팅창이 존재하지 않아 ADD_send_location_DOE 함수에서 좌표보내기 버튼을 생성하지 못함');
     }
 
-    //ADD_chat_window_id = null;
-    //ADD_send_location_button_id = null;
-    //ADD_send_location_button_elem = null;
 }
 
 
@@ -3877,6 +3865,7 @@ function ADD_send_location()
 
 //////////////////////////////////////////////////////////////////////////////////
 // 채팅창에서 문자열 탐지, 이벤트 bind, API 함수 호출 동작 실행
+var GLOBAL_CHAT_ELEM = undefined;
 async function ADD_chatting_arrive(){
    // 기존에 꺼져있는 경우
     if(!chatting_arrive_check || chatting_arrive_check === null){
@@ -3913,6 +3902,8 @@ async function ADD_chatting_arrive(){
             iframeElem = $(iframeElems);
             var $iframeDocument = iframeElem.contents().first();
 
+            chatDoeEvntFunc($iframeDocument);
+
             // 채팅 라인 생성될 때 함수적용
             $($iframeDocument).on('DOMNodeInserted', 'div.line', function () {
                 //parentWindow();
@@ -3925,6 +3916,7 @@ async function ADD_chatting_arrive(){
 
             // 채팅창 생성될 때 노티하기
             $($iframeDocument).one('DOMNodeInserted', 'div.content', function () {
+                GLOBAL_CHAT_ELEM = $(this);
                 if(ADD_config.sys_meg.value !== undefined && ADD_config.sys_meg.value){
                     ADD_status_noti();
                 }
@@ -3983,83 +3975,28 @@ async function ADD_chatting_arrive(){
                 $(this).remove();
             });
 
-
-            //ADD_DEBUG($iframeDocument.contents().first().find('div.line'));
-            //ADD_DEBUG($iframeDocument.contents().first().find('head').append('<script type="text/javascript">alert("test")</script>'));
-
-
-            //setTimeout(function() {
-                //if($('#ADDbootstrapCSS').length === 0){
-                //    $iframeDocument.find('head').append('<link id="ADDbootstrapCSS" href="/js/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">');
-                //}
-            //}, 1000);
-
-            //$('.user_menu').attr('id','user_menu_id');
-
-            // Memo event 관련
-            // display:none 감지
-            //var observer = new MutationObserver(function(mutations) {
-            //    mutations.forEach(function(mutationRecord) {
-            //        if( !$(mutations[0].target).is(':visible') )
-            //            if( $('#do_memo_container').length !== 0 ){
-            //                $('#do_memo_container').remove();
-            //            }
-            //    });
-            //});
-            // display:none 감지 할당
-            //var target = document.getElementById('user_menu_id');
-            //observer.observe(target, { attributes : true, attributeFilter : ['style'] });
-            // display:none 감지 끝
         });
 
-        // 설정이 변경되고 true 이면 false 에서 true로 바뀐 것이므로 bind 한다.
-        /*
-        $(document).arrive('div.system', async systemElems => {
-            var systemElem = $(systemElems);
-            if(await ADD_Chat_block(systemElem, "SYSTEM : " + systemElem.html(), systemElem.html(), (ADD_config.chat_block_nickname.value || ADD_config.chat_block_contents.value))) return false;
-            if( systemElem.html().indexOf('서버 연결 끊김') != -1 ){
-                systemElem.addClass('line').addClass('ADD_chat_again').prop('title', 'Dosteam+ System Message').html('\(+\) 채팅 중지 됨. 채팅을 다시 시작하려면 클릭');
-            }
-            if( ADD_config.hide_nick_change.value ){
-                if( systemElem.html().indexOf('로 변경') != -1 ){
-                    systemElem.remove();
-                }
-            }
-            systemElem = null;
-        });
-        */
 
     } // else 끝
 }
 
-    /*
-    $(document).arrive('.onstream > iframe', async iframeElems => {
-        var iframeSrc = $(iframeElems).attr('src');
-        if(iframeSrc.indexOf('player.twitch.tv') !== -1 && iframeSrc.indexOf('!muted&') !== -1){
-            var newIframeSrc = iframeSrc.replace('!muted&','muted=false&').replace('volume=1','volume=100');
-            $('#stream').html('<iframe src="'+newIframeSrc+'" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen="allowfullscreen"></iframe>');
-        }
-        ADD_DEBUG('twitch iframe src',iframeSrc);
-    });
-    */
-
-
-// 외부에서 이벤트 생성
     var BindMemoDoe = false;
     var BindMemoCount = 0;
-    $(document).arrive('.chat-container > iframe', async iframeElems => {
-        chatDoeEvntFuncInit();
-        chatDoeEvntFunc();
-    });
+    //$(document).arrive('.chat-container > iframe', async iframeElems => {
+    //    chatDoeEvntFuncInit();
+    //    chatDoeEvntFunc();
+    //});
 
     function chatDoeEvntFuncInit(){
         BindMemoDoe = false;
         BindMemoCount = 0;
     }
-    function chatDoeEvntFunc(){
+    function chatDoeEvntFunc(elem){
         if(!BindMemoDoe && BindMemoCount <= 10){
             setTimeout(function() {
-                var elem = $('.chat-container > iframe').contents().first().find('u-chat > iframe').contents().first();
+                //var elem = $('.chat-container > iframe').contents().first().find('u-chat > iframe').contents().first();
+                //var elem = $('u-chat > iframe').contents().first();
                 var elemHead = $(elem).find('head');
                 var elemContent = $(elem).find('div.content');
                 if(elemHead.length !== 0 && elemContent.length !== 0){
@@ -4091,18 +4028,20 @@ async function ADD_chatting_arrive(){
 
                     // 채팅 다시 시작
                     $(elem).on('click', '.ADD_chat_again', function() {
-                        $('.chat-container').html('<iframe src="./uchat2.php" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>');
-                        chatDoeEvntFuncInit();
-                        chatDoeEvntFunc();
+                        //$('.chat-container').html('<iframe src="./uchat2.php" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>');
+                        //chatDoeEvntFuncInit();
+                        //chatDoeEvntFunc();
+                        location.reload();
                     });
 
                     $(elem).on('click', '#ADD_send_location_button', function() {
                         ADD_DEBUG('Send location', location.href);
-                        $(elem).find('div.chatInput').focus().html(location.href);
+                        $(elem).find('div.chatInput').focus().html(parent.window.location.href);
                         //ADD_DEBUG($(elem).find('div.chatInput'));
                     });
 
                 if(elemHead.find('#ADD_UCHATCSS').length === 0){
+                    ADD_DEBUG('Iframe에 접근합니다.');
                 var ADD_UCHATCSS = '<style type="text/css" id="ADD_UCHATCSS">\
                     .imgur_container {position:relative;text-align:center}\
                        .imgur_safe_screen {display:inline-flex;z-index:1000;align-items:center;position:absolute;top:0;left:0;text-align:center;vertical-align:middle;width:100%;height:100%;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAJElEQVQImWPo6ur6D8MMDAz/GZA5XV1dEAEYB8pGcLq6uv4DAKP8I1nj691jAAAAAElFTkSuQmCC) repeat;}\
@@ -4131,7 +4070,7 @@ async function ADD_chatting_arrive(){
                 BindMemoCount = BindMemoCount + 1;
                 ADD_DEBUG("이벤트 생성 카운트: ",BindMemoCount);
                 chatDoeEvntFunc();
-            }, 200);
+            }, 2000);
         }
     }
 
@@ -4174,34 +4113,38 @@ function ADD_send_sys_msg(msg, delay, type){
     }
     if(delay === 0)
     {
-        var iframeElem1 = $('.chat-container > iframe').contents().first().find('u-chat > iframe');
-        var iframeElem2 = $('u-chat > iframe');
+        //var iframeElem1 = $('.chat-container > iframe').contents().first().find('u-chat > iframe');
+        //var iframeElem2 = $('u-chat > iframe');
+        var iframeElem2 = GLOBAL_CHAT_ELEM;
         var iframeElem;
 
         if(iframeElem2 !== undefined && iframeElem2.length !== 0){
             iframeElem = iframeElem2;
         }
-        else if(iframeElem1 !== undefined && iframeElem1.length !== 0){
-            iframeElem = iframeElem1;
-        }
+        //else if(iframeElem1 !== undefined && iframeElem1.length !== 0){
+        //    ADD_DEBUG('cross origin 에러 발생');
+        //    return;
+            //iframeElem = iframeElem1;
+        //}
         else{
             ADD_DEBUG('채팅창이 없어서 다음의 메시지 출력하지 않음1 - ' + msg);
             return;
         }
 
         if( iframeElem.length !== 0 ){
-            var $iframeDocument = iframeElem.contents().first();
+            ADD_DEBUG('채팅창이 존재합니다.', GLOBAL_CHAT_ELEM);
+            //var $iframeDocument = iframeElem;//.contents().first();
 
             var msg_text = '<div class="'+divClass+'" title="Dosteam+ System Message"><span class="nick" nick="system"></span><span class="chatContent">'+msg+'</span></div>';
-            var conversation_contents_elem = $iframeDocument.find("div.content");
+            var conversation_contents_elem = iframeElem;//$iframeDocument.find("div.content");
 
             conversation_contents_elem.append(msg_text);
             // GC
             conversation_contents_elem = null;
             msg_text = null;
 
-            if( isChatScrollOn($iframeDocument.find('.latest_chat')) ){
-                goScrollDown($iframeDocument.find('.content'));
+            if( isChatScrollOn(iframeElem.parent('div.warp').find('.latest_chat')) ){
+                goScrollDown(iframeElem);
             }
         }
         else{
@@ -4517,13 +4460,13 @@ async function ADD_memo_doe(){
     $('html').addClass('no-scroll');
     memo_doe_text = '\
         <div class="lightbox-opened">\
-        <div class="memo_doe" style="position: absolute; top: 50%;left:50%; width: 430px; height:100px; margin-left:-200px; margin-top:-50px;">\
-        <div style="width:430px;height:100px;cursor:default;" class="modal-content">\
-        <div style="padding:5px 0;"><span style="font-weight:bold;color:red;font-size:14px;" id="memo_nick_id">'+memo_nick+'</span> 에 대하여 메모를 입력합니다.</div>\
+        <div class="memo_doe" style="position: absolute; bottom: 50%;left:50%; width: 96%; height:200px; margin-left:-48%; margin-bottom:-35%;">\
+        <div style="width:90%;max-height:150px;cursor:default;" class="modal-content">\
+        <div style="padding:5px 0;"><span style="font-weight:bold;color:red;font-size:14px;display:inline;" id="memo_nick_id">'+memo_nick+'</span><span style="display:inline;font-size:14px;">에 메모 입력</span></div>\
         <input type="text" id="memo_textbox" style="width:80%;height:25px;font-size:13px;padding:1px 0 1px 3px;" class="" value="'+memo_contents+'"/>\
-        <div style="padding:5px 0;"><span id="memo_ok" class="btn btn-default">SAVE</span></div>\
+        <div style="padding:5px 0;"><span id="memo_ok" class="btn btn-default" style="cursor:pointer;border:1px solid #999;border-radius:5px;padding:2px 5px;margin:5px; 0px">SAVE</span></div>\
         </div>\
-        <div id="memo_text_container" style="position:relative;top:10px;left:0px; width:430px;height:30px;font-size:12px;cursor:pointer;"><span id="memo_text" style="color:#fff">메모를 삭제하려면 모든 내용을 지우고 저장하세요.<br />저장하지 않고 나가려면 배경화면을 누르세요.<br />캠페인: 채팅창에서 메모 기능을 언급하지 말고 혼자 조용히 사용해주세요.</span></div>\
+        <div id="memo_text_container" style="position:relative;top:10px;left:0px; width:90%;max-height:50px;font-size:13px;cursor:pointer;"><span id="memo_text" style="color:#fff;">메모를 삭제하려면 모든 내용을 지우고 저장하세요.<br />저장하지 않고 나가려면 배경화면을 누르세요.<br />캠페인: 채팅창에서 메모 기능을 언급하지 말고<br />혼자 조용히 사용해주세요.</span></div>\
         </div>\
         </div>\
         ';
@@ -5161,7 +5104,7 @@ function isChatScrollOn(elem){
         return false;
     }
     else if(elem.length !== 0 && !elem.is(':visible')){
-        ADD_DEBUG('현재 스크롤은 Free 상태 입니다');
+        //ADD_DEBUG('현재 스크롤은 Free 상태 입니다');
         return true;
     }
     else{
@@ -5172,7 +5115,7 @@ function isChatScrollOn(elem){
 
 function goScrollDown(scrollelem){
     if( scrollelem.length !== 0 ){
-        ADD_DEBUG('스크롤 다운을 실행하였습니다.');
+        //ADD_DEBUG('스크롤 다운을 실행하였습니다.');
         scrollelem.animate({ scrollTop: 1000000 }, 'fast');
     }
     else{
