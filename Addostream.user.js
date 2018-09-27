@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.46.4
+// @version     1.46.5
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
@@ -2082,6 +2082,12 @@ function ADD_event_binding(){
     if(urltchecker2() === C_UCHAT){
         ADD_chatting_arrive();
     }
+    else {
+        $(document).arrive("#uha_chat", {onlyOnce: true, existing: true}, function() {
+            ADD_DEBUG('FIRED');
+            ADD_chatting_arrive_for_UHAHA();
+        });
+    }
 
     // 채팅창 스크롤 관련됨
     //if(ADD_config.chat_scroll.value !== undefined){
@@ -3862,6 +3868,161 @@ function ADD_send_location()
     $('#ADD_send_location_notice').hide().html(ADD_send_location_notice_text).fadeIn('fast').delay(2000).fadeOut('fast');
 }
 
+
+async function ADD_chatting_arrive_for_UHAHA(){
+   // 기존에 꺼져있는 경우
+    if(!chatting_arrive_check || chatting_arrive_check === null){
+        // True 이면 켠다.
+        if (ADD_config.chat_ctr.value){
+            chatting_arrive_check = true;
+            // 오로지 이 경우만 return 하지 않는다.
+        }
+        // 그 외의 경우 그냥 나간다.
+        else{
+            return;
+        }
+    }
+    // 기존에 켜져있는 경우
+    else{
+        // False 이면 끈다.
+        if(!ADD_config.chat_ctr.value){
+            $(document).unbindArrive('.user_conversation');
+            $(document).unbindArrive('.system');
+            chatting_arrive_check = false;
+            return;
+        }
+        // 그 외의 경우 그냥 나간다.
+        else{
+            return;
+        }
+    }
+
+    // arrive bind 및 unbind
+    if(chatting_arrive_check && ADD_config.chat_ctr.value){
+
+
+        $(document).arrive("li.is_notme", async elems => {
+            var elem = $(elems);
+
+            var nick = elem.find('span.name').text();
+            var cont = elem.find('span.text').text();
+
+            // 강제단차 이벤트
+            var ADD_ignores = $.cookie('ignores');
+            if(ADD_ignores === null || ADD_ignores === undefined) {
+                ADD_ignores = [];
+            } else {
+                ADD_ignores = JSON.parse(ADD_ignores);
+            }
+
+            if($.inArray(nick, ADD_ignores) !== -1){
+                ADD_DEBUG('강제단차 닉 차단', nick, cont);
+                elem.remove();
+                return;
+            };
+
+            // 키워드 차단
+            if(await ADD_Chat_block(elem, '' + nick + ' : ' + cont, nick, ADD_config.chat_block_nickname.value)) return false;
+            if(await ADD_Chat_block(elem, '' + nick + ' : ' + cont, cont, ADD_config.chat_block_contents.value)) return false;
+
+
+        });
+
+        //$(document).arrive("ul#uha_chat_msgs", async iframeElems => {
+            var $iframeDocument = $('ul#uha_chat_msgs');
+            // 채팅창 생성될 때 노티하기
+            GLOBAL_CHAT_ELEM = $(this);
+            if(ADD_config.sys_meg.value !== undefined && ADD_config.sys_meg.value){
+                setTimeout(function(){
+                    ADD_DEBUG('채팅창에서 애드온 동작');
+                    $iframeDocument.append('<li class="uha_info"><span class="name">안내</span>두스트림 애드온이 임시 동작중입니다(우하하).<br />현재는 강제단차 및 키워드 차단 기능만 제공합니다.</li>');
+                },3000);
+            }
+            //ADD_send_location_DOE($iframeDocument);
+
+
+            // 채팅창에 있는 두스 링크 클릭 시 이벤트
+            //$(document).on('click','.topClick',function(e){
+            //    e.preventDefault();
+            //    window.parent.location.href = this.href;
+            //})
+
+            // 채팅창 닉네임 클릭 시 강제단차 DOE 생성하기
+            $(document).on('click', 'span.name', function () {
+                $(document).find("#uha_chat_contextmenu_close").before('<span id="uhaha_forced_dancha" style="cursor:pointer;color:red;">강제단차</span><br />');
+            });
+
+            // 강제단차 등록 이벤트
+            $(document).on('click', '#uhaha_forced_dancha', function() {
+                ADD_DEBUG('강제단차 등록 이벤트 실행');
+                var forced_dancha_nick = $('#uha_chat_targetname').html();
+
+                var ADD_ignores = $.cookie('ignores');
+                if(ADD_ignores === null || ADD_ignores === undefined) {
+                    ADD_ignores = [];
+                } else {
+                    ADD_ignores = JSON.parse(ADD_ignores);
+                }
+                if(forced_dancha_nick !== null || forced_dancha_nick !== undefined){
+                    (ADD_ignores).push(forced_dancha_nick);
+                    $.cookie('ignores', JSON.stringify(ADD_ignores), { expires : 365, path : '/' });
+                    if(ignores !== null && ignores !== undefined){
+                        ignores = ADD_ignores;
+                    }
+                }
+                ADD_DEBUG(ADD_ignores);
+                $(document).find("#uha_chat_contextmenu").hide();
+            });
+
+            return;
+
+            //////////////////////////////////////////////////////////////////////////////////
+            // imgur click event
+            /*
+            $(document).on('click', '.imgur_safe_button', function() {
+                $(this).parent('.imgur_safe_screen').fadeOut(500);
+            });
+            $(document).on('click', '.imgur_control_hide', function() {
+                ADD_DEBUG('Chatting 내 호출된 imgur 이미지 에서 - 버튼 클릭됨');
+                $(this).closest('.imgur_container').find('.imgur_safe_screen').fadeTo(500, 0.93);
+            });
+            $(document).on('click', '.imgur_control_remove', function() {
+                ADD_DEBUG('Chatting 내 호출된 imgur 이미지 에서 x 버튼 클릭됨');
+                $(this).closest('.imgur_container').hide();
+            });
+
+            // 추가 이미지 로드
+            $(document).on('click', '.imgur_more_images_button', function() {
+                ADD_DEBUG('imgur_more_images_button 클릭됨');
+                var prev_div = $(this).prev("div.imgur_more_images");
+                prev_div.find('div').each(function() {
+                    var video_img_url = $(this).attr("imagehref");
+                    // video 인지 image 인지 체크
+                    if(checkVideo(video_img_url)){
+                        $(this).html('<video loop controls autoplay muted src="'+$(this).attr("imagehref")+'" class="imgur_image_in_chat open-lightbox"></video>').find('video').on('load',function(){
+                            if( isChatScrollOn($($iframeDocument).find('.latest_chat')) ){
+                                ADD_DEBUG("Imgur 비디오 추가 로드 완료됨");
+                                goScrollDown($($iframeDocument).find('.content'));
+                            };
+                        });
+                    } else{
+                        $(this).html('<img src="'+$(this).attr("imagehref")+'" class="imgur_image_in_chat open-lightbox" />').find('img').on('load',function(){
+                            if( isChatScrollOn($($iframeDocument).find('.latest_chat')) ){
+                                ADD_DEBUG("Imgur 이미지 추가 로드 완료됨");
+                                goScrollDown($($iframeDocument).find('.content'));
+                            };
+                        });
+                    }
+                });
+                prev_div.show();
+                $(this).remove();
+            });
+            */
+        //});
+
+
+    } // else 끝
+}
 
 //////////////////////////////////////////////////////////////////////////////////
 // 채팅창에서 문자열 탐지, 이벤트 bind, API 함수 호출 동작 실행
