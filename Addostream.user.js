@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.46.3
+// @version     1.46.4
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
@@ -3338,7 +3338,7 @@ async function parse_insagirl(page){
                 ADD_DEBUG('Hrm_DOE가 없다');
                 return;
             }
-            var expUrl = /(((http(s)?:\/\/)\S+(\.[^(\n|\t|\s,)]+)+)|((http(s)?:\/\/)?(([a-zA-z\-_]+[0-9]*)|([0-9]*[a-zA-z\-_]+)){2,}(\.[^(\n|\t|\s,)]+)+))+/gi;
+            var expUrl = /(\b(https?|ftp|file):\/\/([-A-Z0-9+&@#%?=~_|!:,.;]*)([-A-Z0-9+&@#%?\/=~_|!:,.;]*)[-A-Z0-9+&@#\/%=~_|])/ig;
             var data = response.responseText;
             var Hrm_DOE_HTML = '';
             data = JSON.parse(data);
