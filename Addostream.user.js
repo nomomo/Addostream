@@ -6238,7 +6238,7 @@ $('head').append('\
 			<source src="http://media.blizzard.com/heroes/media/promo/summer-event/summer_web_Loop_v3.mp4"\
 					type="video/mp4">\
 		</video>-->\
-        <iframe class="iframeclass" src="https://www.youtube.com/embed/D5g8bGm-y6Q?rel=0&autoplay=1" frameborder="0" allowfullscreen></iframe>\
+                <iframe class="iframeclass" src="https://www.youtube.com/embed/aKLb7Cc5NvY?rel=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>\
         </div>\
         ');
         $('.hos').fadeOut(1000);
