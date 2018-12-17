@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.46.5
+// @version     1.47.0
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
@@ -220,7 +220,16 @@ var streamerArray = [
     ['seogui','서긔'],
     ['pikra10','재슥짱'],
     ['playoverwatch_kr','오버워치 이스포츠'],
-    ['maxim_korea_official','남자매거진맥심']
+    ['maxim_korea_official','남자매거진맥심'],
+    ['hanururu','하느르'],
+    ['obm1025','오킹'],
+    ['acro_land','아크로'],
+    ['choerakjo','최락조'],
+    ['megthomatho','맥또마또'],
+    ['s1032204','삐부'],
+    ['rkdwl12','강지'],
+    ['jaewon4915','김재원'],
+    ['zennyrtlove','신재은']
     ];// ['',''],
 //DoFLIX 23592060
 //DosLive 23612163
@@ -965,7 +974,10 @@ const ADD_config_init = {
     chat_block_nickname : { enable:null, type: 'checkbox', value: false },
     chat_block_contents : { enable:null, type: 'checkbox', value: false },
     chat_block_tag : { enable:null, type: 'tag', value: ['네다통','통구이','민주화','ㅁㅈㅎ','느금마','니애미','니어미','니엄마','니애비','느그애비','느그애미','애미터','애미뒤','앰뒤','앰창'] },
-    theme : { enable:null, type: 'text', value: 'default' }
+    theme : { enable:null, type: 'text', value: 'default' },
+    history : { enable:null, type: 'checkbox', value: true },
+    max_history : { enable:null, type: 'text', value: 20 },
+    insagirl_button : { enable:null, type: 'checkbox', value: true }
 };
 
 async function ADD_config_var_write(){
@@ -1023,6 +1035,9 @@ switch(urltchecker2()){
 ADD_DEBUG('현재 스크립트가 호출된 곳: '+statusText);
 
 function ADD_DEBUG(msg1, msg2, msg3){
+    if(urltchecker2() === C_UCHAT){
+       return false;
+    }
     if(ADD_DEBUG_MODE){
         var arg_no = arguments.length;
         if(arg_no === 1){
@@ -1413,7 +1428,7 @@ function Addostream_CSS(){
         .nav-brand, .nav-brand_mod{color:#fff;overflow:visible;margin-left:24.5px;background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFsAAAANCAYAAADG4RJzAAAACXBIWXMAAAsTAAALEwEAmpwYAAA752lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxMzggNzkuMTU5ODI0LCAyMDE2LzA5LzE0LTAxOjA5OjAxICAgICAgICAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgICAgICAgICB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIgogICAgICAgICAgICB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIKICAgICAgICAgICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIj4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNyAoV2luZG93cyk8L3htcDpDcmVhdG9yVG9vbD4KICAgICAgICAgPHhtcDpDcmVhdGVEYXRlPjIwMTctMDctMjlUMDI6MTE6MTArMDk6MDA8L3htcDpDcmVhdGVEYXRlPgogICAgICAgICA8eG1wOk1ldGFkYXRhRGF0ZT4yMDE3LTA3LTI5VDAyOjExOjEwKzA5OjAwPC94bXA6TWV0YWRhdGFEYXRlPgogICAgICAgICA8eG1wOk1vZGlmeURhdGU+MjAxNy0wNy0yOVQwMjoxMToxMCswOTowMDwveG1wOk1vZGlmeURhdGU+CiAgICAgICAgIDx4bXBNTTpJbnN0YW5jZUlEPnhtcC5paWQ6ZDZlNmM5ZDctYTQ5NS0yYjQ4LWFkNTQtODk4Y2YxOGYxNmNiPC94bXBNTTpJbnN0YW5jZUlEPgogICAgICAgICA8eG1wTU06RG9jdW1lbnRJRD5hZG9iZTpkb2NpZDpwaG90b3Nob3A6YjljODIzOTYtNzNiNy0xMWU3LTgxMzItZWJiZTQwMzI0ZjNkPC94bXBNTTpEb2N1bWVudElEPgogICAgICAgICA8eG1wTU06T3JpZ2luYWxEb2N1bWVudElEPnhtcC5kaWQ6Y2MwYjBiN2MtYTYwYi1hMzQ3LWE3MWItZGUxZWU1MzYyZGQ1PC94bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ+CiAgICAgICAgIDx4bXBNTTpIaXN0b3J5PgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+Y3JlYXRlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOmNjMGIwYjdjLWE2MGItYTM0Ny1hNzFiLWRlMWVlNTM2MmRkNTwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxNy0wNy0yOVQwMjoxMToxMCswOTowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDpkNmU2YzlkNy1hNDk1LTJiNDgtYWQ1NC04OThjZjE4ZjE2Y2I8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTctMDctMjlUMDI6MTE6MTArMDk6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE3IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC94bXBNTTpIaXN0b3J5PgogICAgICAgICA8cGhvdG9zaG9wOlRleHRMYXllcnM+CiAgICAgICAgICAgIDxyZGY6QmFnPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHBob3Rvc2hvcDpMYXllck5hbWU+KzwvcGhvdG9zaG9wOkxheWVyTmFtZT4KICAgICAgICAgICAgICAgICAgPHBob3Rvc2hvcDpMYXllclRleHQ+KzwvcGhvdG9zaG9wOkxheWVyVGV4dD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOkJhZz4KICAgICAgICAgPC9waG90b3Nob3A6VGV4dExheWVycz4KICAgICAgICAgPHBob3Rvc2hvcDpEb2N1bWVudEFuY2VzdG9ycz4KICAgICAgICAgICAgPHJkZjpCYWc+CiAgICAgICAgICAgICAgIDxyZGY6bGk+eG1wLmRpZDpDRDkwODM0Mjk1NTIxMUUzODk3REU5MTEyMTdENDYzOTwvcmRmOmxpPgogICAgICAgICAgICA8L3JkZjpCYWc+CiAgICAgICAgIDwvcGhvdG9zaG9wOkRvY3VtZW50QW5jZXN0b3JzPgogICAgICAgICA8cGhvdG9zaG9wOkNvbG9yTW9kZT4zPC9waG90b3Nob3A6Q29sb3JNb2RlPgogICAgICAgICA8ZGM6Zm9ybWF0PmltYWdlL3BuZzwvZGM6Zm9ybWF0PgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICAgICA8dGlmZjpYUmVzb2x1dGlvbj43MjAwMDAvMTAwMDA8L3RpZmY6WFJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOllSZXNvbHV0aW9uPjcyMDAwMC8xMDAwMDwvdGlmZjpZUmVzb2x1dGlvbj4KICAgICAgICAgPHRpZmY6UmVzb2x1dGlvblVuaXQ+MjwvdGlmZjpSZXNvbHV0aW9uVW5pdD4KICAgICAgICAgPGV4aWY6Q29sb3JTcGFjZT42NTUzNTwvZXhpZjpDb2xvclNwYWNlPgogICAgICAgICA8ZXhpZjpQaXhlbFhEaW1lbnNpb24+OTE8L2V4aWY6UGl4ZWxYRGltZW5zaW9uPgogICAgICAgICA8ZXhpZjpQaXhlbFlEaW1lbnNpb24+MTM8L2V4aWY6UGl4ZWxZRGltZW5zaW9uPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAKPD94cGFja2V0IGVuZD0idyI/Pvkq298AAAAgY0hSTQAAeiUAAICDAAD5/wAAgOkAAHUwAADqYAAAOpgAABdvkl/FRgAAA9FJREFUeNrsWD2u2zgQ/rTIBbJQ8zphF3idKrHhBQw3OoCqwI0rqfIBBPdW5e41Qir1VmP4AmxYWd0DduHuFRaQI0wKkhb1Q8kIEiywCAEWIoczw/n5ZkSPiAAATcFoU8E5eH7GMfY9/B4/Poiom9cDRVFKpztRb/1+ojSKKIoOdKXB3k+c91NK0eH6y/j/1/MP2/Dt7QYgQOAPPOLH3vGcg6PCpmh+jdfbmvZ7gWQV/i+CmDEmGWOf7bWesT/ehfu0H3vbBEB1QQNQb68piDFmzYJGNG1NWY+GEctqatFSnTFi6z0EgGrDYPNoCkOfUd3a3wMZQ/5FQ8MrdGfVzOqaCot2KKt/L71m9NXrRQNyWCwC8NkBI3c6pRFF6YnuDqi4n9IRzFwP0WBN87EhR8OQQgjrnAUZivc0TKm9iCLN435Ke3qO9LoeHrRLOkUDvWxZDxmaNk1tOfP20jz+csDIB94FgCCAD8wUQoH3jy6iNxVHfj4i9s0Z34tzBTlvdauCTlwgkGAOIeayyuwlpcQuHOjWFLTeC/A873R4eQXv0XzFXnDk5x1Cczc/9vKcA+B4fZnQIykhj7Fn20KIAKW07zoJHcQYM9H+j/39adR12JKn+xKtXEv1WwXwHNx/BsUqXJodQm3wcCc92WEA3W4A+Cte3O0QvoQG0Y6ejLUdLxUBCbaxb9l2D4EE2/AZPe0aZfTIcd6FtgcgACSl5SwTnEkXnFJKZhmeAPwtpfx3jNntDbcFcymvG+WUML7iC5kA+PEWyQOPDfb1OM9klTbA5F5DlwpAslJG0Birss0Yxs3bmU0DWtU49DPg+eCcKpDae0HgClN9MRN9TzinG6G3k9KTskQCgf2aYaqAOVwMJ8IYHaqNKqoboJQSUh69R6prmrFRprJJB9CkAQdd2vL9v+k5Nvac91Sxf0MFINnGi5GsMJpjNcpbZfRzzoHqDY8IdxpkYc/64ZJSelLuvHBBt9kodhhwMgMWglNK+aeUctrYfYiY7oGRlF2B8gMEAMSjWnYRIy4C4CuFkU2hW7wOOvwgeF7xuT2nDsujKdbYD6N4UtZcPXEH5wyMuBk2he6BkxJyF3p2lK4UEMPuNdUlOPJcZYDKmL4zVMFajQrW7dYuFOUxPCkdrCwB0NZZ1//6HCsOiIuAcrjqk83TxNiJQ1nTmO/8AZwZHl0PxOYfRXA+uqFj9KYyoG/rjNZ7scCzpTpTkWZGUkqsLgx91RKU0u4Ips8CCfLzF8S+fstpa8r0T9PjnYcLmDWen7F9X/dlmeDqnTXyW9gyJ1vSifF9AJJYNd1acLVBAAAAAElFTkSuQmCC")}
         .nav-brand:hover, .nav-brand:visited, .nav-brand:active, .nav-brand_mod:hover, .nav-brand_mod:visited, .nav-brand_mod:active {text-decoration:none;color:#fff;}
         .onstream .AD_title{height:45px;padding:7px 0}
-        .AD_title {position:absolute; top:0; right:10px; height:63px; padding:16px 0; font-size:11px; font-style:italic; color:#999}
+        .AD_title {position:absolute; top:0; right:10px; height:63px; padding:16px 0; font-size:11px; font-style:italic; color:#999; z-index:1500;}
         .icon_star{position:absolute !important;top:10px; right:25px; z-index:10;}
         .icon_pushpin{position:absolute !important;top:10px; right:10px; z-index:50;}
         #ADD_config {cursor:pointer; padding-right:10px;}
@@ -1482,10 +1497,17 @@ function Addostream_CSS(){
         @keyframes glow2 {to {text-shadow: 0 0 10px white;box-shadow: 0 0 10px #6441A4;}}
         .fixed_streamer{background-color:#f5f5f5;}
         .td_strong{font-weight:bold;}
-        #notice_text_elem{display:none;font-size:10px;color:#666;position:absolute;top:0px;left:150px;max-width:600px;height:63px;text-align:left; margin-right:150px; vertical-align:middle;overflow: hidden;text-overflow: ellipsis;}
+
+        #history_elem{font-size:10px;color:#666;position:relative;top:0px;left:0px;height:63px;text-align:left; margin-right:170px; vertical-align:middle;overflow: hidden;text-overflow: ellipsis;z-index:800;white-space: nowrap;}
+        .onstream #history_elem {height:45px;}
+        #history_elem:before{content: "";display:inline-block;vertical-align: middle;height: 100%;}
+        #history_elem a{color:#555}
+
+        #notice_text_elem{display:none;font-size:10px;color:#666;position:absolute;top:0px;left:0px;width:100%;height:63px;text-align:left;padding-right:170px; vertical-align:middle;overflow: hidden;text-overflow: ellipsis;z-index:1000; background:white;white-space: nowrap;}
         .onstream #notice_text_elem {height:45px;}
-        #notice_text_elem:before{content: "";display:inline-block;vertical-align: middle;height: 100%;}
+        #notice_text_elem:before{content: "";display:inline-block;vertical-align: middle;height: 100%;background:white;}
         #notice_text, #notice_text2{display:inline-block;vertical-align:middle;line-height:150%;}
+
         #at {cursor:pointer;display:inline-block;margin:4px 2px 0 2px;height:24px;animation-name: at_spin;animation-duration: 18s;animation-iteration-count: infinite;animation-timing-function: linear;}
         @keyframes at_spin{0%{transform:rotate(0)}25%{transform:rotate(90deg);text-shadow:0 0 3px #F0F8FF}50%{transform:rotate(180deg);text-shadow:0 0 8px #B0E0E6}100%{transform:rotate(359deg)}}
         .ADD_under_dev {display:none;}
@@ -2093,6 +2115,12 @@ function ADD_event_binding(){
     //if(ADD_config.chat_scroll.value !== undefined){
     //    ADD_chat_scroll_pause();
     //}
+
+    // history 기능 관련됨
+    ADD_Channel_History_Run();
+
+    // 좌표 버튼 생성 관련됨
+    Hrm_DOE();
 }
     // 데스크탑 알림 권한 관련됨
     if(ADD_config.alarm_noti.value !== undefined && ADD_config.alarm_noti.value){
@@ -2647,8 +2675,9 @@ function ADD_config_DOE()
 {
       // 설정 버튼 및 팝업 생성
       $('header .container').append('\
-          <div style="position:relative;">\
-          <div id="notice_text_elem" title="Dosteam+ System Message")><span id="notice_text">문어문어문어문어<br />블러드트레일 블러드트레일</span><span id="notice_text2"></span></div>\
+          <div style="position:relative;margin-left:170px;">\
+          <div id="notice_text_elem" title="Dosteam+ System Message"><span id="notice_text">문어문어문어문어<br />블러드트레일 블러드트레일</span><span id="notice_text2"></span></div>\
+          <div id="history_elem"></div>\
               <div class="AD_title">\
                  <span id="ADD_change_multi" class="btn btn-default btn_closed" aria-label="멀티트위치↔트위치 전환" data-microtip-position="left" role="tooltip">\
                     <span class="glyphicon glyphicon-resize-horizontal">\
@@ -2937,7 +2966,26 @@ function ADD_config_DOE()
                                  <td><input type="checkbox" id="ADD_config_dev_on" onfocus="this.blur()" class="form_enabled" /></td>\
                               </tr>\
                               <tr>\
-                                 <td class="td_strong">테마 (테스트 중)</td>\
+                                 <td class="td_strong">\
+                                     기타 기능 On-Off\
+                                 </td>\
+                                 <td>\
+                                     <span style="margin-left:0px;">\
+                                     <label class="btn btn-default btn-xxs">\
+                                         <input type="checkbox" id="ADD_config_history" class="" onfocus="this.blur()"  />\
+                                         <span class="glyphicon glyphicon-ok"></span>\
+                                     </label> 시청 기록 표시\
+                                     </span>\
+                                     <span style="margin-left:10px;">\
+                                     <label class="btn btn-default btn-xxs">\
+                                         <input type="checkbox" id="ADD_config_insagirl_button" class="" onfocus="this.blur()"  />\
+                                         <span class="glyphicon glyphicon-ok"></span>\
+                                     </label> 빠른 좌표 보기\
+                                     </span>\
+                                 </td>\
+                              </tr>\
+                              <tr>\
+                                 <td class="td_strong">테마 (현재 사용 불가)</td>\
                                  <td>\
                                      <span aria-label="설정 저장해야 재접속 시 유지됨." data-microtip-position="top-right" role="tooltip">\
                                      <select id="ADD_config_theme_select">\
@@ -3099,6 +3147,200 @@ $(document).on('change', '#ADD_config_theme_select', function() {
 });
 
 ////////////////////////////////////////////////////////////////
+// 주소 체크
+function check_stream_and_chennel_from_location(){
+    if(urltchecker2() === C_STREAM){
+        var document_url = location.href;
+        document_url = document_url.toLowerCase();
+        if(document_url !== null && document_url.indexOf('#/stream/') !== -1){
+            var keyword_stream = (document_url.split('#/stream/'));
+            keyword_stream = keyword_stream[1];
+            var keyword_channel = keyword_stream.split('/');
+            if(keyword_channel.length !== 2){
+                ADD_DEBUG('check_stream_and_chennel_from_location 에서 / 개수로 인한 에러 발생');
+                return null;
+            }
+            else{
+                var return_array = [];
+                return_array[0] = keyword_channel[1];
+                return_array[1] = keyword_channel[1];
+                return_array[2] = keyword_channel[0];
+                return return_array;
+            }
+        }
+        else{
+            ADD_DEBUG('채널 히스토리 등록 중 #/stream/ 을 찾지 못함');
+            return null;
+        }
+    }
+}
+
+// 쿠키 작성 동작
+function ADD_Channel_history_cookie(rw_array){
+    // rw_array[0]:channel_id, rw_array[1]:channel_nick, rw_array[2]:platform
+    // 쿠키 읽어서 변수에 담는다
+
+    var ADD_MAX_HISTORY = ADD_config.max_history.value;
+
+    var ADD_h_cookie = $.cookie('ADD_h_cookie');
+    if(ADD_h_cookie === null || ADD_h_cookie === undefined) {
+        ADD_h_cookie = [];
+    } else {
+        ADD_h_cookie = JSON.parse(ADD_h_cookie);
+    }
+
+    // read
+    if(rw_array === undefined || rw_array === null || rw_array === 0){
+        // 읽기만 하는 경우에는 그냥 리턴
+        // ADD_DEBUG('히스토리 변경 없음');
+    }
+    // write
+    else{
+        for(var j=0;j<streamerArray.length;j++){
+            if(rw_array[0] === streamerArray[j][0]){
+                rw_array[1] = streamerArray[j][1];
+                break;
+            }
+        }
+
+        var finded_h = false;
+        for(var i=0;i<ADD_h_cookie.length;i++){
+            if(ADD_h_cookie[i][0] !== undefined && rw_array[0] === ADD_h_cookie[i][0]){
+                ADD_h_cookie.splice(i,1);
+                // unshift : 맨앞추가, pust : 맨뒤추가
+                ADD_h_cookie.unshift(rw_array);
+                finded_h = true;
+                break;
+            }
+        }
+        if(!finded_h){
+            ADD_h_cookie.unshift(rw_array);
+        }
+    }
+
+    // 쿠키 쓰기
+    if(ADD_h_cookie.length > ADD_MAX_HISTORY){
+        ADD_h_cookie = ADD_h_cookie.slice(0,ADD_MAX_HISTORY-1);
+    }
+
+    //ADD_DEBUG('히스토리 쓰기: ',rw_array, ADD_h_cookie);
+    $.cookie('ADD_h_cookie', JSON.stringify(ADD_h_cookie), { expires : 365, path : '/' });
+
+    return ADD_h_cookie;
+
+}
+
+function ADD_Channel_History_DOE(ADD_h_cookie){
+    if($('#history_elem').length === -1){
+        ADD_DEBUG('#history_elem 을 찾을 수 없습니다');
+        return false;
+    }
+
+    var ADD_MAX_HISTORY = ADD_config.max_history.value;
+
+    var ch_streamer_id = '';
+    var ch_streamer_nick = '';
+    var ch_stream = '';
+    var ch_text = '';
+    var h_text = '';
+    var from2 = '';
+
+    if(ADD_h_cookie !== null){
+        h_text = '<span style="vertical-align:middle;display:inline-block;">'
+
+        for(var i=0;i<ADD_h_cookie.length;i++){
+            if(ADD_MAX_HISTORY === i)
+               break;
+
+            if(ADD_h_cookie[i][2] === 'twitch'){
+                ch_streamer_id = ADD_h_cookie[i][0];
+                ch_streamer_nick = ADD_h_cookie[i][1];
+                ch_stream = ADD_h_cookie[i][2];
+                if(ch_streamer_id === ch_streamer_nick){
+                    ch_text = ch_streamer_id;
+                }
+                else{
+                    ch_text = ch_streamer_nick;
+                }
+            }
+            else {
+                ch_streamer_id = ADD_h_cookie[i][0];
+                ch_streamer_nick = ADD_h_cookie[i][0];
+                ch_stream = ADD_h_cookie[i][2];
+
+                if(ch_stream === 'kakao'){
+                    ch_text = ch_streamer_id + '(카카오)';
+                }
+                else if(ch_stream === 'youtube'){
+                    ch_text = ch_streamer_id + '(유투브)';
+                }
+                else{
+                    ch_text = ch_streamer_id + '(' + ch_stream + ')';
+                }
+            }
+
+            if(i == 0){
+                from2 = '';
+            }
+            else{
+                from2 = ' 〉 ';
+            }
+            h_text = h_text + '<span style="font-size:12px;">' + from2 + '<a href="' + 'http://www.dostream.com/#/stream/' + ch_stream + '/' + ch_streamer_id + '">' + ch_text + '</a></span>';
+        }
+        h_text = h_text + '</span>';
+        $('#history_elem').html(h_text);
+    }
+    else{
+        ADD_DEBUG('ADD_Channel_History_DOE 에서 배열 크기가 null 입니다');
+    }
+}
+
+
+// DOE 및 이벤트 생성
+function ADD_Channel_History_Run(){
+    if(urlcheck === C_UCHAT){
+        return false;
+    }
+
+    var ADD_history = ADD_config.history.value;
+    if(!ADD_history){
+        if($('#history_elem').length !== -1){
+            $('#history_elem').html('');
+        }
+        $(window).off('hashchange.history');
+        return false;
+    }
+
+    var urlcheck = urltchecker2();
+    var current_info = [];
+    var total_history = [];
+
+    if(urlcheck === C_MAIN){
+        total_history = ADD_Channel_history_cookie();
+        //ADD_DEBUG('total_history 1',total_history);
+    }
+    else if(urlcheck === C_STREAM){
+        // 스트림 주소로 직접 접속하는 경우
+        current_info = check_stream_and_chennel_from_location();
+        total_history = ADD_Channel_history_cookie(current_info);
+        //ADD_DEBUG('total_history 2',total_history);
+    }
+
+    // 이벤트로 인해 접속하는 경우
+    $(window).on('hashchange.history', function() {
+    //window.addEventListener('hashchange', function() {
+        current_info = check_stream_and_chennel_from_location();
+        total_history = ADD_Channel_history_cookie(current_info);
+        //ADD_DEBUG('total_history 3',total_history);
+
+        ADD_Channel_History_DOE(total_history);
+    });
+
+    // DOE 지우고 새로쓰기
+    ADD_Channel_History_DOE(total_history);
+}
+
+////////////////////////////////////////////////////////////////
 // blocked chat
 $(document).on('click', '#show_block_contents_on', function() {
     $('#block_contents_tr').slideDown('fast');
@@ -3254,7 +3496,7 @@ function urltchecker2(){
     if(keyword_uchat !== -1){
         return C_UCHAT;
     }
-    else if( keyword_stream == -1 ){
+    else if( keyword_stream !== -1 ){
             return C_STREAM;
     }
     else{
@@ -3373,7 +3615,22 @@ async function parse_insagirl(page){
 }
 
 function Hrm_DOE(){
-    if($('#btnOpenHrm').length !== 0 && $('#btnOpenHrm_ADD').length == 0){
+    if(urltchecker2() === C_UCHAT){
+       return false;
+    }
+
+    var ADD_insagirl_button = ADD_config.insagirl_button.value;
+    if(!ADD_insagirl_button && $('#btnOpenHrm').length !== 0 && $('#btnOpenHrm_ADD').length !== 0){
+        $('#btnOpenHrm_ADD').fadeOut('300').delay('700').remove();
+        $('#btnOpenHrm').css('transition','width 1s, height 1s, transform 1s').css('height','45px');
+        $('#Hrm_DOE').fadeOut('300').delay('700').remove();
+        $('.chat-container').css('top','45px');
+        return false;
+    }
+    else if(!ADD_insagirl_button && $('#btnOpenHrm').length !== 0 && $('#btnOpenHrm_ADD').length === 0){
+        return false;
+    }
+    else if($('#btnOpenHrm').length !== 0 && $('#btnOpenHrm_ADD').length == 0){
         ADD_DEBUG('좌표 버튼 기능 변경');
         $('#btnOpenHrm').before('<button class="btn-blue" style="margin-right:-80px;background-color:#446cb3;margin-bottom:-45px;"></button>')
             .after('<button id="btnOpenHrm_ADD" class="btn-blue" style="height:0px;display:none">▼</button>').css('transition','width 1s, height 1s, transform 1s').css('height','22.5px');
@@ -3381,7 +3638,7 @@ function Hrm_DOE(){
         $('.chat-ignore').after('<div id="Hrm_DOE"><ul><li style="font-weight:bold;text-align:center;">(테스트 중) 두스트림 좌표는 현재 창으로 열립니다</li></ul><div style="padding:5px;"><button id="hrmbodyexpand" type="button" class="btn btn-primary btn-block">더 보기</button></div></div>');
     }
     else{
-        ADD_DEBUG('좌표 버튼을 찾지 못함');
+        ADD_DEBUG('좌표 버튼이 이미 존재 or 좌표 버튼을 찾지 못함');
     }
 }
 
@@ -3704,10 +3961,10 @@ async function chatElemControl(newElem, documentElem){
 
             var img_video_text = '';
             if(checkVideo(ADD_imgur_link[0])){
-                img_video_text = '<video loop controls muted autoplay src="'+ADD_imgur_link[0]+'" class="imgur_image_in_chat open-lightbox" style="z-index:100;"></video>'
+                img_video_text = '<video loop controls muted autoplay src="'+ADD_imgur_link[0]+'" class="imgur_image_in_chat open-lightbox" style="z-index:100;cursor:pointer;max-width:330px !important;max-height:1000px !important;padding:5px 0px;margin:0 auto;display:inline-block;"></video>'
             }
             else{
-                img_video_text = '<img src="'+ADD_imgur_link[0]+'" class="imgur_image_in_chat open-lightbox" />'
+                img_video_text = '<img src="'+ADD_imgur_link[0]+'" class="imgur_image_in_chat open-lightbox" style="cursor:pointer;max-width:330px !important;max-height:1000px !important;padding:5px 0px;margin:0 auto;display:inline-block;" />'
             }
 
             // imgur DOE 생성
@@ -3721,17 +3978,17 @@ async function chatElemControl(newElem, documentElem){
                     ADD_imgur_safe_screen_opacity = 0.93;
 
                 ADD_imgur_DOE_text = '\
-<div class="imgur_container">\
-<div class="imgur_safe_screen" style="opacity:' + ADD_imgur_safe_screen_opacity +';">\
-<span class="imgur_safe_button btn btn-default align-middle">Image show</span>\
+<div class="imgur_container" style="position:relative;text-align:center">\
+<div class="imgur_safe_screen" style="opacity:' + ADD_imgur_safe_screen_opacity +';display:inline-flex;z-index:1000;align-items:center;position:absolute;top:0;left:0;text-align:center;vertical-align:middle;width:100%;height:100%;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAJElEQVQImWPo6ur6D8MMDAz/GZA5XV1dEAEYB8pGcLq6uv4DAKP8I1nj691jAAAAAElFTkSuQmCC) repeat;">\
+<span class="imgur_safe_button btn btn-default align-middle" style="padding:2px 15px;background:white;border-radius:20px;border:1px solid #333;opacity:1.0;color:rgba(0, 0, 0, 1.0);line-height:200%;margin:0 auto;text-align:center;vertical-align:middle;cursor:pointer;color:black;font-size:12px;font-family: "Malgun Gothic","맑은고딕","맑은 고딕",Dotum,"Helvetica Neue",Helvetica,Arial,sans-serif;">Image show</span>\
 </div>\
-<div class="imgur_control_button ADD_tr_10_10">\
-<span class="imgur_control_hide glyphicon glyphicon-minus-sign">?</span>\
-<span class="imgur_control_remove glyphicon glyphicon-remove-sign">ⓧ</span>\
+<div class="imgur_control_button ADD_tr_10_10" style="top:10px;right:15px;position:absolute;width:60px;height:20px;text-align:right;z-index:999;">\
+<span class="imgur_control_hide glyphicon glyphicon-minus-sign" style="font-size:15px; display:inline-block;opacity:0.3;cursor:pointer;text-align:center;background:#fff;color:#333;border-radius:30px;padding:1px;margin-right:1.5px;height:18px;width:16px;line-height:100%;font-family: "Malgun Gothic","맑은고딕","맑은 고딕",Dotum,"Helvetica Neue",Helvetica,Arial,sans-serif;">?</span>\
+<span class="imgur_control_remove glyphicon glyphicon-remove-sign" style="font-size:15px; display:inline-block;opacity:0.3;cursor:pointer;text-align:center;background:#fff;color:#333;border-radius:30px;padding:1px;margin-right:1.5px;height:18px;width:16px;line-height:100%;font-family: "Malgun Gothic","맑은고딕","맑은 고딕",Dotum,"Helvetica Neue",Helvetica,Arial,sans-serif;">ⓧ</span>\
 </div>\
-<div class="imgur_control_button ADD_br_10_10">\
-<span class="imgur_control_hide glyphicon glyphicon-minus-sign">?</span>\
-<span class="imgur_control_remove glyphicon glyphicon-remove-sign">ⓧ</span>\
+<div class="imgur_control_button ADD_br_10_10" style="bottom:20px;right:15px;position:absolute;width:60px;height:20px;text-align:right;z-index:999;">\
+<span class="imgur_control_hide glyphicon glyphicon-minus-sign" style="font-size:15px; display:inline-block;opacity:0.3;cursor:pointer;text-align:center;background:#fff;color:#333;border-radius:30px;padding:1px;margin-right:1.5px;height:18px;width:16px;line-height:100%;font-family: "Malgun Gothic","맑은고딕","맑은 고딕",Dotum,"Helvetica Neue",Helvetica,Arial,sans-serif;">?</span>\
+<span class="imgur_control_remove glyphicon glyphicon-remove-sign" style="font-size:15px; display:inline-block;opacity:0.3;cursor:pointer;text-align:center;background:#fff;color:#333;border-radius:30px;padding:1px;margin-right:1.5px;height:18px;width:16px;line-height:100%;font-family: "Malgun Gothic","맑은고딕","맑은 고딕",Dotum,"Helvetica Neue",Helvetica,Arial,sans-serif;">ⓧ</span>\
 </div>\
 '+img_video_text+'\
 '+more_images+'\
@@ -3742,12 +3999,12 @@ async function chatElemControl(newElem, documentElem){
             {
                 // 클릭시 이미지 활성화 체크 안 할 시
                 ADD_imgur_DOE_text = '\
-<div class="imgur_container">\
-<div class="imgur_control_button ADD_tr_10_10">\
-<span class="imgur_control_remove glyphicon glyphicon-remove-sign">ⓧ</span>\
+<div class="imgur_container" style="position:relative;text-align:center">\
+<div class="imgur_control_button ADD_tr_10_10" style="top:10px;right:15px;position:absolute;width:60px;height:20px;text-align:right;z-index:999;">\
+<span class="imgur_control_remove glyphicon glyphicon-remove-sign" style="font-size:15px; display:inline-block;opacity:0.3;cursor:pointer;text-align:center;background:#fff;color:#333;border-radius:30px;padding:1px;margin-right:1.5px;height:18px;width:16px;line-height:100%;font-family: "Malgun Gothic","맑은고딕","맑은 고딕",Dotum,"Helvetica Neue",Helvetica,Arial,sans-serif;">ⓧ</span>\
 </div>\
-<div class="imgur_control_button ADD_br_10_10">\
-<span class="imgur_control_remove glyphicon glyphicon-remove-sign">ⓧ</span>\
+<div class="imgur_control_button ADD_br_10_10" style="bottom:20px;right:15px;position:absolute;width:60px;height:20px;text-align:right;z-index:999;">\
+<span class="imgur_control_remove glyphicon glyphicon-remove-sign" style="font-size:15px; display:inline-block;opacity:0.3;cursor:pointer;text-align:center;background:#fff;color:#333;border-radius:30px;padding:1px;margin-right:1.5px;height:18px;width:16px;line-height:100%;font-family: "Malgun Gothic","맑은고딕","맑은 고딕",Dotum,"Helvetica Neue",Helvetica,Arial,sans-serif;">ⓧ</span>\
 </div>\
 '+img_video_text+'\
 '+more_images+'\
@@ -4195,6 +4452,7 @@ async function ADD_chatting_arrive(){
                         location.reload();
                     });
 
+                    // 좌표 보내기 버튼 동작 2
                     $(elem).on('click', '#ADD_send_location_button', function() {
                         ADD_DEBUG('Send location', location.href);
                         $(elem).find('div.chatInput').focus().html(parent.window.location.href);
@@ -4211,7 +4469,7 @@ async function ADD_chatting_arrive(){
                            .ADD_br_10_10{bottom:20px;right:15px;}\
                            .imgur_control_button span{font-size:15px; display:inline-block;opacity:0.3;cursor:pointer;text-align:center;background:#fff;color:#333;border-radius:30px;padding:1px;margin-right:1.5px;height:18px;width:16px;line-height:100%;font-family: "Malgun Gothic","맑은고딕","맑은 고딕",Dotum,"Helvetica Neue",Helvetica,Arial,sans-serif;}\
                            .imgur_safe_button {padding:2px 15px;background:white;border-radius:20px;border:1px solid #333;opacity:1.0;color:rgba(0, 0, 0, 1.0);line-height:200%;margin:0 auto;text-align:center;vertical-align:middle;cursor:pointer;color:black;font-size:12px;font-family: "Malgun Gothic","맑은고딕","맑은 고딕",Dotum,"Helvetica Neue",Helvetica,Arial,sans-serif;}\
-    .imgur_image_in_chat {cursor:pointer;max-width:340px !important;max-height:1000px !important;padding:5px 0px;margin:0 auto;display:inline-block;}\
+    .imgur_image_in_chat {cursor:pointer;max-width:330px !important;max-height:1000px !important;padding:5px 0px;margin:0 auto;display:inline-block;}\
                 </style>';
                     if(elemHead.length !== 0){
                         ADD_DEBUG('Iframe 내 css를 성공적으로 추가했습니다.');
@@ -4422,12 +4680,15 @@ $(document).on('click', '#view_additional_message_container', function() {
 
 //////////////////////////////////////////////////////////////////////////////////
 // Open Lightbox
+/*
+// Lightbox 를 여는 동작을 iframe 내에서 호출된 스크립트에서 하므로 주석처리 한다.
 $(document).on('click', '.open-lightbox', function(e) {
   e.preventDefault();
   var image = $(this).attr('href');
   $('html').addClass('no-scroll');
   $('body').append('<div class="lightbox-opened"><img src="' + image + '"></div>');
 });
+*/
 
 // Close Lightbox
   $(document).on('click', '.lightbox-opened', function() {
@@ -4874,6 +5135,9 @@ window.addEventListener ("load", function()
     // Create Loading DOE
     $('.nav-brand_mod').empty().append('<div class="loader_container" style="display:none;"><div class="loader"></div></div>');
 
+    // History DOE
+    ADD_Channel_History_Run();
+
 });
 
 
@@ -5271,7 +5535,43 @@ function isChatScrollOn(elem){
         ADD_DEBUG('현재 스크롤은 알 수 없음 상태이므로 Free 상태로 가정합니다');
         return true;
     }
+
+    if($(elem).find('.menubar-scroll').length !== -1){
+        var bpx = $(elem).find('.menubar-scroll').css('backgroundPosition').split(' ')[0];
+        if(bpx == '100%'){
+            // scroll locked
+            ADD_DEBUG('scroll locked');
+
+            // 강제로 lock 된 경우 다시 푼다.
+            $(elem).find('.menubar-scroll').trigger('click');
+
+        } else if(bpx == '0px'){
+            // scroll free
+            ADD_DEBUG('scroll free');
+            // free 상태인 경우 별도로 할 것은 없다.
+        }
+    }
 }
+
+
+// 가끔 뜬금없이 멈추는 증상을 해결하자.
+
+// 기존 lock/free 버튼은 hide 해버리고 새로 버튼을 만든다(우측 상단 보이는 자리에)
+    // 해당 버튼은 dom 속성 변경 감지하여 따라간다.
+
+// 스크롤이 lock 되면
+// 강제 스크롤 락 변수가 true 인 경우 free 로 하지 않는다. 이후 해당 변수를 false 로 바꾼다.
+    // 마지막 챗을 show 하고 내용 바꿈
+// 강제 스크롤 락 변수가 false 인 경우 free 로 한다.
+
+// 스크롤을 위로 휠한 경우
+    // 강제 스크롤 락 변수를 true 로 바꾼다.
+    // 스크롤을 lock 한다. (이미 lock 상태인 경우 하지 않는다.)
+
+// 새 버튼을 클릭한 경우
+    // 현재 스크롤 상태 체크한다.
+    // 현재 lock 이면 free 로 하고 맨 밑으로 내린다.
+    // 현재 free 이면 강제 스크롤 락 변수를 true 로 하고 lock 한다.
 
 function goScrollDown(scrollelem){
     if( scrollelem.length !== 0 ){
