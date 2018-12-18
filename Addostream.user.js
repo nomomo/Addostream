@@ -6238,7 +6238,7 @@ $('head').append('\
 			<source src="http://media.blizzard.com/heroes/media/promo/summer-event/summer_web_Loop_v3.mp4"\
 					type="video/mp4">\
 		</video>-->\
-                <iframe class="iframeclass" src="https://www.youtube.com/embed/aKLb7Cc5NvY?rel=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>\
+        <iframe class="iframeclass" src="https://www.youtube.com/embed/aKLb7Cc5NvY?rel=0&autoplay=1&start=0&end=8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>\
         </div>\
         ');
         $('.hos').fadeOut(1000);
@@ -6250,7 +6250,7 @@ $('head').append('\
             },
             1000);
         },
-        30000);
+        27000);
 }
 
 })();
