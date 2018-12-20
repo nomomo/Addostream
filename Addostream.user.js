@@ -238,7 +238,8 @@ var streamerArray = [
     ['sunbaking','선바'],
     ['rockid1818','모모88'],
     ['moogrr1211','무굴'],
-    ['twitchkr','TwitchKR']
+    ['twitchkr','TwitchKR'],
+    ['tlfjaos','시러맨']
     ];//['',''],
 //DoFLIX 23592060
 //DosLive 23612163
@@ -3184,7 +3185,11 @@ $(document).on('change', '#ADD_config_theme_select', function() {
 function check_stream_and_chennel_from_location(){
     if(urltchecker2() === C_STREAM){
         var document_url = location.href;
-        document_url = document_url.toLowerCase();
+        // 유투브의 경우에만 대소문자 구분함
+        if(document_url !== null && document_url.indexOf('#/stream/youtube/') === -1){
+            document_url = document_url.toLowerCase();
+        }
+
         if(document_url !== null && document_url.indexOf('#/stream/') !== -1){
             var keyword_stream = (document_url.split('#/stream/'));
             keyword_stream = keyword_stream[1];
