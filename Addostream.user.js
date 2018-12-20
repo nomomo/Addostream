@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.47.1
+// @version     1.47.2
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
@@ -1846,8 +1846,9 @@ function parse_data_from_list(flag)
         dataType:'json',
       success:function(data) {
           if(data === null){
-              ADD_DEBUG("파싱 리스트 존재하지 않음");
-              return;
+              ADD_DEBUG("기본 파싱 리스트 존재하지 않음");
+              data = [];
+              // return;
           }
         var getTimeResult = '?' + getTimeStamp('m');
 
