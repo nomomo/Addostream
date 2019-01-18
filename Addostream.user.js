@@ -2277,11 +2277,11 @@
                                     <tr>
                                         <td class="no_border"></td>
                                         <td>
-                                            <span aria-label="채팅창의 자동스크롤이 뜬금없이 끊기는 것을 방지,\n마우스 휠을 위로 돌렸을 때 더 잘 멈추도록 함" data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">
+                                            <span aria-label="채팅창의 자동스크롤이 뜬금없이 끊기는 것을 방지\n마우스 휠을 위로 돌렸을 때 더 잘 멈추도록 함\n채팅 정지 시 더 이상 마지막 채팅을 보여주지 않음" data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">
                                                 <label class="btn btn-default btn-xxs">
                                                     <input type="checkbox" id="ADD_config_chat_scroll" onfocus="this.blur()" class="ADD_config_chat_ctr_form form_enabled" />
                                                     <span class="glyphicon glyphicon-ok"></span>
-                                                </label> 향상된 자동스크롤
+                                                </label> 자동스크롤 변경(TEST)
                                             </span>
                                             <span style="margin-left:10px;">
                                                 <span aria-label="채팅 내 좌표 링크 클릭 시 현재 창에서 열림.\nctrl 또는 shift 키를 누른 채로 클릭 시\n기존처럼 새 탭으로 열 수 있음." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">
@@ -4753,7 +4753,7 @@
                         <div style="padding:2px 0 5px 5px;font-family:'Noto Sans KR', '맑은 고딕', 'malgun gothic', dotum, serif;">
                             <span style="font-weight:900;font-size:14px;">메모 관리</span><br />
                             두스트림 창이 여러개 열려 있고, 다른 창에서 메모 기록을 수정하는 경우 데이터가 이상해질 수 있습니다.<br />
-                            본 기능은 언제든 갑작스럽게 사라지거나 동작하지 않을 수 있습니다 (테스트 중).
+                            본 기능은 언제든 갑작스럽게 사라지거나 동작하지 않을 수 있습니다 (테스트 중).<br />
                             캠페인: 채팅창에서 메모 내용을 언급하지 말고 혼자 조용히 사용해주세요.
                         </div>
                         <table class="table table-condensed table-striped table-bordered" style="margin-bottom:5px;font-family:'Noto Sans KR'">
