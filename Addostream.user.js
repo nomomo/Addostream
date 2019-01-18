@@ -2115,7 +2115,7 @@
                     <div class="modal-content">
                         <div class="modal-body">
                             <div class="quick_list_title">Quick list</div>
-                            <ul></ul>
+                            <ul class="stream_list"></ul>
                         </div>
                     </div>
                 </div>
@@ -4874,7 +4874,8 @@
 
         $td.each(function(){
             var $that = $(this);
-            var temp_class = $that.attr("class");
+            var temp_class = $that.attr("class").replace("ADD_under_dev","").replace(/\s/g,"");
+            ADD_DEBUG("temp_class", temp_class);
             if($that.hasClass("detail_content")){
                 $that.html(`
                     <textarea style="width:230px;height:60px;margin:0;">`+temp_obj[temp_class]+`</textarea>
@@ -4947,7 +4948,7 @@
         temp_obj.modified_date = new Date();
         $td.each(function(){
             var $that = $(this);
-            var temp_class = $that.attr("class");
+            var temp_class = $that.attr("class").replace("ADD_under_dev","").replace(/\s/g,"");
             if($that.hasClass("detail_content")){
                 temp_obj[temp_class] = $that.find("textarea").val();
             }
@@ -5735,7 +5736,7 @@
 
 
     //////////////////////////////////////////////////////////////////////////////////
-    // 퀵 리스트 온오프 이벤트
+    // 퀵리스트 온오프 이벤트
     $(document).on("click", "#ADD_quick_list", function(e){
         e.stopPropagation();
         if (!$("#ADD_quick_list").hasClass("btn_opend")){
@@ -5796,7 +5797,7 @@
 
     // 바깥 부분 클릭 했을 때 창 닫기
     //$(document).on("click", "a.nav-brand, a.nav-brand_mod, #stream, div.footer", function(){
-    $(document).on("click", function(){
+    $(document).on("click", "html, ul.stream_list", function(){
         // 퀵 리스트 창
         if ($("#ADD_quick_list").hasClass("btn_opend")){
             $("#popup_ADD_quick").stop(true,true).fadeOut(300);
