@@ -14,7 +14,7 @@
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
-// @require     https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.libs.js?20190117
+// @require     https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.libs.js?20190115
 // @grant       GM.addStyle
 // @grant       GM_addStyle
 // @grant       GM.getValue
@@ -4169,6 +4169,7 @@
                                 if( temp_isChatScrollOn ){
                                     ADD_DEBUG("Imgur 비디오 추가 로드 완료됨");
                                     goScrollDown(iframeElems);
+                                    GLOBAL_CHAT_ELEM.stop("true","true").animate({ scrollTop: 1000000 }, "0");
                                 }
                             });
                         } else{
@@ -4176,6 +4177,7 @@
                                 if( temp_isChatScrollOn ){
                                     ADD_DEBUG("Imgur 이미지 추가 로드 완료됨");
                                     goScrollDown(iframeElems);
+                                    GLOBAL_CHAT_ELEM.stop("true","true").animate({ scrollTop: 1000000 }, "0");
                                 }
                             });
                         }
