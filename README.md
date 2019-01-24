@@ -3,7 +3,7 @@
 * 두스트림에 새로운 기능을 추가하는 브라우저 확장 Userscript
 * Chrome 지원 (2019-01-18 v1.48 기준), Firefox 에서는 정상 동작 확인하지 않음
 * Userscript 확장 기능 필요
-  * Chrome - [Tampermonkey](http://tampermonkey.net/)
+  * Chrome - [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ko)
   * Firefox - [Violentmonkey](https://addons.mozilla.org/ko/firefox/addon/violentmonkey/)
 * 버그 많음 버그리포트 바랍니다 (__) nomotg@gmail.com
 * 문제 생길 시 채팅 관련 기능 끄고 새로고침 또는 재설치 하십시오.
@@ -20,13 +20,16 @@
 ![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/ADD_CONFIG.png)
 
 ## Install
-1. 브라우저 유저스크립트 확장기능 설치
+1. 자신의 브라우저에 맞는 유저스크립트 확장기능 설치 - 아래의 링크를 클릭하여 이동
    * Firefox - [Violentmonkey](https://addons.mozilla.org/ko/firefox/addon/violentmonkey/)
-   * Chrome - [Tampermonkey](http://tampermonkey.net/)
+   * Chrome - [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ko)
   
-2. 확장 기능 설치 이후 아래의 링크로 이동한 뒤 설치 버튼을 누름
+2. 확장 기능 설치 이후 아래의 링크를 클릭하여 이동, 설치 버튼 누르기
    * [https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js](https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js)
    * 주의: 본 스크립트를 설치 및 사용하며 브라우저 과부하로 인한 응답 없음/뻗음 등 으로 인한 데이터 손실 등 문제 발생 시 개발자는 책임지지 않음(보고된 문제는 없음)
+
+## FAQ
+* Q: 설치한 후에 채팅창에서 닉네임을 눌러도 바뀌는게 없어요<br />A: 설정에서 채팅 컨트롤 옵션을 체크한 후 새로고침 하세요
 
 ## History
 * 2019-01-18 (v 1.48.0)
