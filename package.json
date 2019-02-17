@@ -1,6 +1,6 @@
 {
   "name": "Addostream",
-  "version": "1.48.0",
-  "update": "기존 두스 차단 기능과 분리된 별도의 유저 차단 기능 추가 등",
+  "version": "1.48.1",
+  "update": "Gfycat 불러오기 추가, 수리 중 임시 작동",
   "description": ""
 }
