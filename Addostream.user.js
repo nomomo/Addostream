@@ -4545,11 +4545,23 @@
                             // 세로 스크롤바가 있을 경우 처리
                             if( $(this).get(0).scrollHeight > $(this).innerHeight() ){  //find("div.content").first(). find("div.content").
                                 // UCHAT의 설정을 직접 변경한다.
+                                var roomid = "";
                                 if(iframeElems.contentWindow !== undefined && 
-                                    iframeElems.contentWindow.rooms !== undefined &&
-                                    iframeElems.contentWindow.rooms["dostest"] !== undefined){
-                                    iframeElems.contentWindow.rooms["dostest"].room.setting.data["option.autoScroll"] = 0;
-                                    iframeElems.contentWindow.rooms["dostest"].room.log.temp_scroll_stop = 0;
+                                    iframeElems.contentWindow.rooms !== undefined){
+                                    if(iframeElems.contentWindow.rooms["dostest"] !== undefined){
+                                        roomid = "dostest";
+                                    }
+                                    else if(iframeElems.contentWindow.rooms["dostream"] !== undefined){
+                                        roomid = "dostream";
+                                    }
+                                    else{
+                                        roomid = Object.keys(iframeElems.contentWindow.rooms)[0];
+                                    }
+                                }
+
+                                if(roomid !== undefined && roomid !== "" && roomid !== null){
+                                    iframeElems.contentWindow.rooms[roomid].room.setting.data["option.autoScroll"] = 0;
+                                    iframeElems.contentWindow.rooms[roomid].room.log.temp_scroll_stop = 0;
 
                                     // 대체 latest_chat 생성
                                     if($iframeDocument.find(".latest_chat_new_container").length === 0){
@@ -6473,13 +6485,25 @@
 
     var isGoScrollDown = true;
     function goScrollDown(iframeElems){
-        if(isGoScrollDown && iframeElems.contentWindow !== undefined && 
-            iframeElems.contentWindow.rooms !== undefined &&
-            iframeElems.contentWindow.rooms["dostest"] !== undefined && 
+        var roomid = "";
+        if(iframeElems.contentWindow !== undefined && 
+            iframeElems.contentWindow.rooms !== undefined){
+            if(iframeElems.contentWindow.rooms["dostest"] !== undefined){
+                roomid = "dostest";
+            }
+            else if(iframeElems.contentWindow.rooms["dostream"] !== undefined){
+                roomid = "dostream";
+            }
+            else{
+                roomid = Object.keys(iframeElems.contentWindow.rooms)[0];
+            }
+        }
+
+        if(isGoScrollDown && roomid !== undefined && roomid !== "" && roomid !== null &&
             GLOBAL_CHAT_ELEM !== undefined &&
             GLOBAL_CHAT_ELEM.length !== 0){
-            iframeElems.contentWindow.rooms["dostest"].room.setting.data["option.autoScroll"] = 1;
-            iframeElems.contentWindow.rooms["dostest"].room.log.temp_scroll_stop = 0;
+            iframeElems.contentWindow.rooms[roomid].room.setting.data["option.autoScroll"] = 1;
+            iframeElems.contentWindow.rooms[roomid].room.log.temp_scroll_stop = 0;
             //GLOBAL_CHAT_ELEM.stop("true","true").animate({ scrollTop: 1000000 }, "0");
         }
         else{
