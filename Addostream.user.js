@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.48.1
+// @version     1.48.2
 // @icon        url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADIBAMAAABfdrOtAAAAD1BMVEU0SV5reommr7jj5ej////e05EyAAADM0lEQVR42u1ZwbGrMAwE7AJycAEcKIADBUDi/mt6h+SR2JbEGpz3Z/7s3pI4rC2tZEl0HUEQBEEQBEEQBEEQxNfh40oSkpCEJI0QP/GPSWKJ+1+QxBjjrbG5+ks0qOMVlrWtuqZk70MtC0bic5vWsZwk6cLzm7E5SaLcUBFfNSTpygU32HmSHj9KDcl8zHyFJIjRBx+lJk4QI14gWUSSp1ceTRP2XeG+tSTZutP2QjAoDxta2ktUcJW+YJJRU10bewVtw15x1hksNsmjnbgeqiLiNxW8J8nxiwre5dXC8+4vSLxuk6W22KtX8F7GNCCZ9AeFZiRGMPi2JJtFclPOuLZQ8C/JqHyPn9Edk8x6LX9dwQrJa1NDhbyDccl6KRr35QPuF0PBIsnyPpqHDWalc4EkfEoRPoqVOUoSl2x+Ar3SWzmwJEk/ovZyAMmsPXWAa0ylVJFI+jw5gDWAt8rEPOJDHlJgQFoKzru6vlgLkpjZIW2LnwcrggaoAcy7L7u0ygS0GA4FFfy6fmPioXIX6yUFd2mqnZT2db2k4C6dGglLa0hu5tBlU631JNkuKXhIssokSASryE0Fu4RE8l4Fyb0DAt5pl+QhSW+uSioiySUdVMbaCk5icREutx4iQRS86ZYZKkhGk2TVn+cgEkTBs74d2xCQghO/i7W/hzoxs/MMn7+K3WtABiO2gstQvKN9M+y4PrngxZVQC+6BUsUQaw8FvOm4xCViUmmg4MQlFxRsOa5Piggxc03Q1O242H50R+kxXsnB6fRZikXM71Z+y4bPEomrSI8r8lsQDOshl1gKzprrIAQ8FO+WOlxmb4EEu7GsreQR5EsSLEoMBReS8KWQAmQtQ4JFKhBIMGvpCi7FWZI4bHSoK7i8PAb5hdTxpFVVsHThFY8EJ4daDvZqQVpY63Qn58SbNmRrsfZHezXmja/H9M/A7Fsekk/asE6YRQBTaWmK+WoWpDhO5yjo6CYWs7996jdrsaN5yLbWe214z/z0vLxJs6JDt0uwirR5/+9YcY6Kd/2/qvVQ9jU4VsCL6OsOX2OnkqXZG04jcXcEQRAEQRAEQRAEQRAEQRAE8R/iB+f58fTfPvCwAAAAAElFTkSuQmCC)
 // @homepageURL https://nomomo.github.io/Addostream/
 // @supportURL  https://github.com/nomomo/Addostream/issues
@@ -439,6 +439,12 @@
 
     async function ADD_config_var_read(){
         var ADD_config_temp = await ADD_GetVal("ADD_config");
+        if(ADD_config_temp === undefined || ADD_config_temp === null){
+            // ADD_config 가 존재하지 않는 경우: 첫 설치
+            ADD_config_var_init(true);
+            return;
+        }
+
         ADD_config_var_init(false);
 
         for(var key in ADD_config_init){
@@ -1442,7 +1448,7 @@
                         //temp_one2.title = "스트림이 오프라인 상태이거나, 메인 추가 목록에 추가되지 않아 상태를 확인할 수 없습니다.";
                         temp_one2.title = "스트림이 오프라인 상태입니다.";
                     }
-                    else if(ADD_config.alarm){ //  && (!!$.cookie("twitch_api_cookie")
+                    else{// if(ADD_config.alarm){ //  && (!!$.cookie("twitch_api_cookie")
                         temp_one2.title = "스트림이 오프라인 상태입니다.";
                     }
 
@@ -5825,7 +5831,7 @@
     ////////////////////////////////// $(document).ready //////////////////////////////
     $(document).ready(function(){
         ADD_DEBUG("DOCUMENT_READY");
-        if($("#stream").text().indexOf("수리 중") !== -1){
+        if($("#stream").text().indexOf("수리 중") !== -1 && $("#stream").find("ul").length === 0){
             ADD_DEBUG("두스트림은 수리 중. dostream_fix, true");
             dostream_fix = true;
         }
@@ -6321,6 +6327,9 @@
 
         var backup_text = "<<<ADD_chat_memo>>>"+temp_ADD_chat_memo+"<<<ADD_config>>>"+temp_ADD_config+"<<<END>>>";
         var MD5_key = MD5(backup_text);
+        ADD_DEBUG("backup_text",backup_text);
+        ADD_DEBUG("MD5_key",MD5_key);
+
         backup_text = "<VERIFICATION_KEY:"+MD5_key+">"+backup_text;
         $("html").addClass("no-scroll");
         var backup_doe_text = `
@@ -6377,7 +6386,6 @@
             }
             else{
                 var restore_chat_config = restore_text.substr(51,restore_text.length - 51);
-                ADD_DEBUG("restore_chat_config :", restore_chat_config);
                 var validation_key = restore_text.substr(18,32);
                 var restore_MD5_key = MD5(restore_chat_config);
                 ADD_DEBUG("validation_key: ",validation_key);
