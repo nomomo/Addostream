@@ -1668,7 +1668,7 @@
     //////////////////////////////////////////////////////////////////////////////////
     // 설정 창에 설정 값을 덮어씌우기 위한 함수
     function ADD_var_to_config_form(){
-        ADD_config_var_read();
+        //ADD_config_var_read();
         for(var key in ADD_config){
             var ADD_ct = ADD_config[key];
             var ADD_config_ID_text;
@@ -1698,6 +1698,9 @@
                 ADD_config_ID.prop("checked", ADD_ct);
                 if(ADD_ct){
                     ADD_config_ID.parent("label.btn").removeClass("active").addClass("active");
+                }
+                else{
+                    ADD_config_ID.parent("label.btn").removeClass("active");
                 }
             }
             else if (ADD_config_type == "radio"){
@@ -6181,9 +6184,10 @@
     });
 
     // 설정 창 온오프 이벤트
-    $(document).on("click", "#ADD_config", function(e){
+    $(document).on("click", "#ADD_config", async function(e){
         e.stopPropagation();
         if (!$("#ADD_config").hasClass("btn_opend")){
+            await ADD_config_var_read();
             ADD_var_to_config_form();
             $("#popup_ADD_config").stop(true,true).fadeIn(300);
             $("#ADD_config").toggleClass("btn_opend");
@@ -6427,6 +6431,7 @@
     //////////////////////////////////////////////////////////////////////////////////
     // config form click event
     function ADD_config_enable(){   // function ADD_config_enable(id){
+        ADD_DEBUG("ADD_config",ADD_config);
         var i,
             $id_elem = [],
             form_class = [],
