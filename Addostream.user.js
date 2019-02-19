@@ -441,7 +441,7 @@
         var ADD_config_temp = await ADD_GetVal("ADD_config");
         if(ADD_config_temp === undefined || ADD_config_temp === null){
             // ADD_config 가 존재하지 않는 경우: 첫 설치
-            ADD_config_var_init(true);
+            await ADD_config_var_init(true);
             return;
         }
 
@@ -6288,7 +6288,7 @@
     $(document).on("click", "#Cookie_reset", async () => {
         var r = confirm("모든 설정을 초기화 하려면 확인(OK) 버튼을 누르세요.");
         if (r == true){
-            ADD_config_var_init(true);
+            await ADD_config_var_init(true);
             ADD_var_to_config_form();
             ADD_status_cookie_remove();
 
