@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.48.2
+// @version     1.48.3
 // @icon        url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADIBAMAAABfdrOtAAAAD1BMVEU0SV5reommr7jj5ej////e05EyAAADM0lEQVR42u1ZwbGrMAwE7AJycAEcKIADBUDi/mt6h+SR2JbEGpz3Z/7s3pI4rC2tZEl0HUEQBEEQBEEQBEEQxNfh40oSkpCEJI0QP/GPSWKJ+1+QxBjjrbG5+ks0qOMVlrWtuqZk70MtC0bic5vWsZwk6cLzm7E5SaLcUBFfNSTpygU32HmSHj9KDcl8zHyFJIjRBx+lJk4QI14gWUSSp1ceTRP2XeG+tSTZutP2QjAoDxta2ktUcJW+YJJRU10bewVtw15x1hksNsmjnbgeqiLiNxW8J8nxiwre5dXC8+4vSLxuk6W22KtX8F7GNCCZ9AeFZiRGMPi2JJtFclPOuLZQ8C/JqHyPn9Edk8x6LX9dwQrJa1NDhbyDccl6KRr35QPuF0PBIsnyPpqHDWalc4EkfEoRPoqVOUoSl2x+Ar3SWzmwJEk/ovZyAMmsPXWAa0ylVJFI+jw5gDWAt8rEPOJDHlJgQFoKzru6vlgLkpjZIW2LnwcrggaoAcy7L7u0ygS0GA4FFfy6fmPioXIX6yUFd2mqnZT2db2k4C6dGglLa0hu5tBlU631JNkuKXhIssokSASryE0Fu4RE8l4Fyb0DAt5pl+QhSW+uSioiySUdVMbaCk5icREutx4iQRS86ZYZKkhGk2TVn+cgEkTBs74d2xCQghO/i7W/hzoxs/MMn7+K3WtABiO2gstQvKN9M+y4PrngxZVQC+6BUsUQaw8FvOm4xCViUmmg4MQlFxRsOa5Piggxc03Q1O242H50R+kxXsnB6fRZikXM71Z+y4bPEomrSI8r8lsQDOshl1gKzprrIAQ8FO+WOlxmb4EEu7GsreQR5EsSLEoMBReS8KWQAmQtQ4JFKhBIMGvpCi7FWZI4bHSoK7i8PAb5hdTxpFVVsHThFY8EJ4daDvZqQVpY63Qn58SbNmRrsfZHezXmja/H9M/A7Fsekk/asE6YRQBTaWmK+WoWpDhO5yjo6CYWs7996jdrsaN5yLbWe214z/z0vLxJs6JDt0uwirR5/+9YcY6Kd/2/qvVQ9jU4VsCL6OsOX2OnkqXZG04jcXcEQRAEQRAEQRAEQRAEQRAE8R/iB+f58fTfPvCwAAAAAElFTkSuQmCC)
 // @homepageURL https://nomomo.github.io/Addostream/
 // @supportURL  https://github.com/nomomo/Addostream/issues
@@ -376,6 +376,7 @@
         alarm_gap : { category:"list", depth:3, type: "text", value: 5, title:"조회 간격", desc:"분 단위로 입력, 최소 5분" },
         top_alarm_ID : { category:"list", depth:3, type: "tag", value: ["hanryang1125"], title:"등록할 스트리머 ID", desc:"콤마로 구분" },
         alarm_noti : { category:"list", depth:3, type: "checkbox", value: false, title:"온라인 시 알림", desc:"위 목록에 등록된 스트리머가\n온라인이 되면 알림" },
+        alarm_sort_by_viewer : { category:"list", depth:3, type: "checkbox", value: false, title:"시청자 수로 정렬", desc:"시청자가 가장 많은 스트리머가 위로 오도록 정렬한다." },
         thumbnail_mouse : { category:"list", depth:2, type: "checkbox", value: false, title:"섬네일에 마우스 올렸을 시 확대", desc:"두스 메인 리스트의 섬네일에\n마우스를 올렸을 때\n확대한 팝업을 띄움" },
         thumbnail_size : { category:"list", depth:3, type: "radio", value: 1, title:"섬네일 사이즈", desc:"" },
         streamer_hide : { category:"list", depth:2, type: "checkbox", value: false, title:" 특정 스트리머 숨기기", desc:"기본 두스트림에 메인에 노출하고 싶지 않은\nTwitch 스트리머를\n메인 리스트에서 제거" },                 // 메인에 스트리머 숨기기 사용 여부
@@ -1203,9 +1204,9 @@
             $("#stream").html("");
             break;
         default:
-            $("header").removeClass("onstream");
-            $("#stream").removeClass("onstream");
-            $(".footer").show();
+            // $("header").removeClass("onstream");
+            // $("#stream").removeClass("onstream");
+            // $(".footer").show();
             // $("#stream").load("/main2.php",function(){
             //     page = new newdsStream();
             //     page.reload();
@@ -1228,6 +1229,9 @@
                                 ADD_DEBUG("/index.php 에서 내용 가져오기");
                                 var $tempdata = $(data);
                                 var $tempstream = $tempdata.find("#stream");
+                                $("header").removeClass("onstream");
+                                $("#stream").removeClass("onstream");
+                                $(".footer").show();
                                 $("#stream").html($tempstream);
                                 page = new newdsStream();
                                 page.reload();
@@ -1238,7 +1242,6 @@
                         });
                     }
                 }
-            
             });
             break;
         }
@@ -1337,6 +1340,9 @@
                     data = [];
                     // return;
                 }
+                else{
+                    ADD_DEBUG("기본 파싱 리스트 콜 성공");
+                }
 
                 // 숨길 대상 스트리머 지우기
                 if(ADD_config.streamer_hide){
@@ -1393,6 +1399,13 @@
                 ADD_DEBUG("temp_api_cookie", temp_api_cookie);
             }
             else{
+                // 정렬하기
+                if(ADD_config.alarm_sort_by_viewer){
+                    temp_api_cookie.sort(function(a, b) {
+                        return b.viewers > a.viewers ? -1 : b.viewers < a.viewers ? 1 : 0;
+                    });
+                }
+
                 for(i=0; i<temp_api_cookie.length ; i++ ){
                     var t_index = data.map(function(o){ return o.streamer; }).indexOf(temp_api_cookie[i].name);
                     if(t_index !== -1){
@@ -1428,13 +1441,14 @@
             temp_api_cookie = null;
         }
 
-
+        
         // 고정 시킬 스트리머 순서 맨 위로 올리기
         if(ADD_config.top_fix){
             var fixed_streamer = ADD_config.top_fix_ID;
             var alarm_streamer = ADD_config.top_alarm_ID;
             for(i=fixed_streamer.length-1; i>=0; i--){
-                var f_index = data.map(function(o){ return o.streamer; }).indexOf(fixed_streamer[i]);
+                var fixed_streamer_id = fixed_streamer[i].toLowerCase();
+                var f_index = data.map(function(o){ return o.streamer; }).indexOf(fixed_streamer_id);
                 // 이미 목록에 있는 경우
                 if(f_index !== -1){
                     data[f_index].main_fixed = true;
@@ -1444,7 +1458,7 @@
                 else if(ADD_config.top_off_fix){
                     var temp_one2 = {};
 
-                    if( ADD_config.alarm && ($.inArray(fixed_streamer[i],alarm_streamer) !== -1) ){
+                    if( ADD_config.alarm && ($.inArray(fixed_streamer_id, alarm_streamer) !== -1) ){
                         //temp_one2.title = "스트림이 오프라인 상태이거나, 메인 추가 목록에 추가되지 않아 상태를 확인할 수 없습니다.";
                         temp_one2.title = "스트림이 오프라인 상태입니다.";
                     }
@@ -1453,9 +1467,9 @@
                     }
 
                     temp_one2.from = "twitch";
-                    temp_one2.url = "/twitch/"+fixed_streamer[i];
-                    temp_one2.image = "http://static-cdn.jtvnw.net/previews-ttv/live_user_"+fixed_streamer[i].name+"-240x180.jpg";
-                    temp_one2.streamer = fixed_streamer[i];
+                    temp_one2.url = "/twitch/"+fixed_streamer_id;
+                    temp_one2.image = "http://static-cdn.jtvnw.net/previews-ttv/live_user_"+fixed_streamer_id+"-240x180.jpg";
+                    temp_one2.streamer = fixed_streamer_id;
                     temp_one2.viewers = 0;
                     temp_one2.display_name = "";
                     temp_one2.main_fixed = true;
@@ -1788,7 +1802,12 @@
             }
             else if (ADD_config_type == "tag"){
                 // 4. 설정창 타입이 tag 인 경우
-                ADD_config[key] = ADD_config_ID.val().replace(/\s/g,"").toLowerCase().split(",");
+                if(key === "top_fix_ID" || key === "top_alarm_ID" || key === "streamer_hide_ID"){
+                    ADD_config[key] = ADD_config_ID.val().replace(/\s/g,"").toLowerCase().split(",");
+                }
+                else{
+                    ADD_config[key] = ADD_config_ID.val().replace(/\s/g,"").split(",");
+                }
             }
 
             // GC
@@ -1937,7 +1956,7 @@
             if (($.cookie("api_check_pre_time"))){
                 // 로컬 변수 선언
                 var possibleChannels = ADD_config.top_alarm_ID;
-                var possibleChannelsString = possibleChannels.join(",").replace(" ", "");
+                var possibleChannelsString = possibleChannels.join(",").replace(" ", "").toLowerCase();
                 var possibleChannelsNo = possibleChannels.length;
 
                 if(possibleChannelsNo > 0){
@@ -2713,11 +2732,43 @@
             //addEvent('onTagExists: ' + eventTags.tagit('tagLabel', ui.existingTag));
         };
 
+        var sortable_options = {
+            placeholder: "sortable-placeholder",
+            start: function(event, ui) {
+                ui.placeholder.addClass("tagit-choice ui-widget-content ui-state-default ui-corner-all tagit-choice-editable").css("background-color","yellow");
+                ui.placeholder.html(ui.item.html());
+            },
+            cursor: "move",
+            distance: 5,
+            opacity: 0.5,
+            revert: 100,
+            out: function( event, ui ) {
+                ADD_DEBUG("sortable change", event, ui);
+                var input_vars = [];
+                $(this).find("span.tagit-label").each(function(){
+                    input_vars.push($(this).text());
+                });
+                var input_text = input_vars.join(",");
+                var input_id = $(this).attr("id").replace("_Tags","");
+                $("#"+input_id).val(input_text);
+            }
+        };
         $("#myTags").tagit({singleField: true,singleFieldNode: $("#my")});
         $("#ADD_config_top_fix_ID_Tags").tagit({autocomplete: {delay: 0},onTagExists:TagExist,preprocessTag:preprocessingTag,availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $("#ADD_config_top_fix_ID")});
+        $("#ADD_config_top_fix_ID_Tags").sortable(sortable_options);
+        $("#ADD_config_top_fix_ID_Tags").disableSelection();
+
         $("#ADD_config_top_alarm_ID_Tags").tagit({autocomplete: {delay: 0},onTagExists:TagExist,preprocessTag:preprocessingTag,availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $("#ADD_config_top_alarm_ID")});
+        $("#ADD_config_top_alarm_ID_Tags").sortable(sortable_options);
+        $("#ADD_config_top_alarm_ID_Tags").disableSelection();
+
         $("#ADD_config_streamer_hide_ID_Tags").tagit({autocomplete: {delay: 0},onTagExists:TagExist,preprocessTag:preprocessingTag,availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $("#ADD_config_streamer_hide_ID")});
+        $("#ADD_config_streamer_hide_ID_Tags").sortable(sortable_options);
+        $("#ADD_config_streamer_hide_ID_Tags").disableSelection();
+        
         $("#ADD_config_chat_block_tag_Tags").tagit({autocomplete: {delay: 0},singleField: true,singleFieldNode: $("#ADD_config_chat_block_tag")});
+        $("#ADD_config_chat_block_tag_Tags").sortable(sortable_options);
+        $("#ADD_config_chat_block_tag_Tags").disableSelection();
 
         $("li.tagit-new").each(function(){ $(this).hide(); });
         $("input:text .ui-autocomplete-input").each(function(){ $(this).attr("spellcheck", false); });
@@ -5117,7 +5168,7 @@
                                     <th style="width:140px;" class="ADD_under_dev">표시 색상</th>
                                     <th style="width:100px;">채팅 차단</th>
                                     <th style="width:80px;">차단 시 표시</th>
-                                    <th style="width:120px;">수정한 날짜</th>
+                                    <th style="width:180px;">수정한 날짜</th>
                                     <th style="width:70px;" class="th_mod">수정</th>
                                     <th style="width:40px;">삭제</th>
                                 </tr>
@@ -5147,7 +5198,7 @@
             var color = chat_manager_data[i].color;
             var display_name = chat_manager_data[i].display_name;
             var detail_content = chat_manager_data[i].detail_content;
-            var modified_date = getTimeStampWithText(new Date(chat_manager_data[i].modified_date.replace(/"/g,"")), "s").replace("일 ","일 <br />");
+            var modified_date = getTimeStampWithText(new Date(chat_manager_data[i].modified_date.replace(/"/g,"")), "s");//.replace("일 ","일 <br />");
             var isBlock = chat_manager_data[i].isBlock;
             var isShowDelMsg = chat_manager_data[i].isShowDelMsg;
             $tbody.append(`
@@ -5159,7 +5210,7 @@
                     <td class="color ADD_under_dev">`+color+`</td>
                     <td class="isBlock">`+isBlock+`</td>
                     <td class="isShowDelMsg">`+isShowDelMsg+`</td>
-                    <td class="modified_date">`+modified_date+`</td>
+                    <td class="modified_date" style="font-size:9px;">`+modified_date+`</td>
                     <td class="fix">
                         <span memo_index="`+i+`" class="mod" style="cursor:pointer;text-decoration:underline;">수정</span>
                         <span memo_index="`+i+`" class="save" style="cursor:pointer;text-decoration:underline;display:none;">저장</span>
@@ -5178,7 +5229,7 @@
                     <td class="color ADD_under_dev"></td>
                     <td class="isBlock"></td>
                     <td class="isShowDelMsg"></td>
-                    <td class="modified_date"></td>
+                    <td class="modified_date" style="font-size:9px;"></td>
                     <td class="fix">
                         <span memo_index="`+(chat_manager_data.length+1)+`" class="mod new" style="cursor:pointer;text-decoration:underline;">새 메모</span>
                         <span memo_index="`+(chat_manager_data.length+1)+`" class="save new" style="cursor:pointer;text-decoration:underline;display:none;">저장</span>
