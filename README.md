@@ -4,7 +4,7 @@
 * Chrome 지원 (2019-01-18 v1.48 기준), Firefox 에서는 정상 동작 확인하지 않음
 * Userscript 확장 기능 필요
   * Chrome - [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ko)
-  * Firefox - [Violentmonkey](https://addons.mozilla.org/ko/firefox/addon/violentmonkey/)
+  * Firefox - [Tampermonkey](https://addons.mozilla.org/ko/firefox/addon/tampermonkey/)
 * 버그 많음 버그리포트 바랍니다 (__) nomotg@gmail.com
   * 버그 제보 시 아래의 내용을 함께 보내주시면 더 빨리 수정 가능합니다.
     - 구체적인 증상
@@ -27,7 +27,7 @@
 
 ## Install
 1. 자신의 브라우저에 맞는 유저스크립트 확장기능 설치 - 아래의 링크를 클릭하여 이동
-   * Firefox - [Violentmonkey](https://addons.mozilla.org/ko/firefox/addon/violentmonkey/)
+   * Firefox - [Tampermonkey](https://addons.mozilla.org/ko/firefox/addon/tampermonkey/)
    * Chrome - [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ko)
   
 2. 확장 기능 설치 이후 아래의 링크를 클릭하여 이동, 설치 버튼 누르기
