@@ -134,6 +134,7 @@
         isGoScrollDown = true;                    // 스크롤 내림 여부 기억
     
     var is_send_location = true;                  // 좌표 보내기 이벤트
+    var getTimeStampRes = "";
 
     var checkedStreamerFromList = [],
         twitch_api_cookie = [],
@@ -277,10 +278,13 @@
             top_alarm_ID : { category:"list", depth:3, type: "tag", value: ["hanryang1125"], valid:"array_string", title:"등록할 스트리머 ID", desc:"스트리머 ID를 콤마(,)로 구분하여 입력<br />영문, 숫자, 언더바(_) 만 입력 가능" },
             alarm_gap : { category:"list", depth:3, type: "text", value: 5, valid:"number", min_value:1, title:"조회 간격", desc:"분 단위로 입력, 최소 1분(기본값: 5)" },
             alarm_noti : { category:"list", depth:3, type: "checkbox", value: false, title:"온라인 시 알림", desc:"위 목록에 등록된 스트리머가 온라인이 될 때<br />데스크톱 메시지로 알림" },
+            alarm_main_reload : { under_dev:true, category:"list", depth:3, type: "checkbox", value: true, title:"스트림 정보 갱신 시 리스트 새로고침", desc:"두스트림 메인 화면인 경우<br />스트림 정보 갱신 시 두스 메인 리스트를<br />자동으로 새로고침 함" },
             alarm_show_game_name : { under_dev:true, category:"list", depth:3, type: "checkbox", value: false, title:"[실험실] 게임 이름 표시", desc:"게임 이름을 표시할 수 있는 경우 리스트에 표시" },
             alarm_sort_by_viewer : { under_dev:true, category:"list", depth:3, type: "checkbox", value: false, title:"[실험실] 시청자 수로 정렬", desc:"입력한 순서로 정렬하는 대신<br />시청자 수가 많은 스트리머가 위로 오도록 정렬" },
             thumbnail_mouse : { category:"list", depth:2, type: "checkbox", value: false, title:"섬네일에 마우스 올렸을 시 확대", desc:"두스 메인 리스트의 섬네일에 마우스를 올렸을 때 확대한 팝업을 띄움" },
             thumbnail_size : { category:"list", depth:3, type: "radio", value: 1, title:"섬네일 사이즈", desc:"", radio: {small: {title: "작음", value:1}, medium: {title: "보통", value:2}, large:{title: "큼", value:3} } },
+            thumbnail_refresh : { under_dev:true, category:"list", depth:2, type: "checkbox", value: true, title:"리스트 섬네일 자동 갱신", desc:"- 리스트 섬네일을 자동으로 갱신<br />- 체크 해제 시 새로고침 이전까지 초기 접속 시 섬네일 유지됨" },
+            thumbnail_refresh_gap : { under_dev:true, category:"list", depth:3, type: "text", value: 5, valid:"number", min_value:1, title:"갱신 간격", desc:"분 단위로 입력, 최소 1분(기본값: 5)" },
             streamer_hide : { category:"list", depth:2, type: "checkbox", value: false, title:" 특정 스트리머 숨기기", desc:"기본 두스트림에 메인에 노출하고 싶지 않은<br />Twitch 스트리머를 메인 리스트에서 제거" },                 // 메인에 스트리머 숨기기 사용 여부
             streamer_hide_ID : { category:"list", depth:3, type: "tag", value: ["nalcs1", "nalcs2"], valid:"array_string", title:"등록할 스트리머 ID", desc:"스트리머 ID를 콤마(,)로 구분하여 입력<br />영문, 숫자, 언더바(_) 만 입력 가능" },
             remember_platform : { category:"list", depth:2, type: "checkbox", value: false, title:"특정 플랫폼 숨기기", desc:"기본 두스트림에 메인에 노출하고 싶지 않은<br />플랫폼에 해당되는 항목을 메인 리스트에서 제거" },
@@ -1012,7 +1016,7 @@
         ADD_DEBUG(name, (currentDate - cachedDate)/1000, ">", time_ms/1000 , "?", is);
         if(is){
             ADD_DEBUG(name, "캐시 갱신됨");
-            if(readonly !== undefined && !readonly){
+            if(readonly === undefined || !readonly){
                 await GM.setValue(name, currentDate);
             }
             return true;
@@ -1975,7 +1979,7 @@
 
     //////////////////////////////////////////////////////////////////////////////////
     // 파싱 데이터 이용하여 DOE 생성
-    function ADD_run(data,flag){
+    async function ADD_run(data,flag){
         var append = "";
         var $ul;
         if(!ADD_config.list){
@@ -2143,15 +2147,28 @@
             }
         }
 
+        if(ADD_config.thumbnail_refresh){
+            var thumbRefreshGap = ADD_config.thumbnail_refresh_gap;
+            if(!$.isNumeric(thumbRefreshGap) || Number(thumbRefreshGap) < 1){
+                thumbRefreshGap = 1;
+            }
+            var isThumbRefresh = await GM_cache("thumbnail_refresh",Number(thumbRefreshGap)*60*1000);
+            
+            if(isThumbRefresh){
+                getTimeStampRes = "?" + getTimeStamp("m");
+            }
+        }
 
         // display_name 채우기, 섬네일 수정하기
-        var getTimeStampRes = getTimeStamp("m");
         for(i=0; i<data.length ; i++ ){
             if(data[i].streamer == "togom"){
                 data[i].viewers = data[i].viewers * 100;
             }
 
-            data[i].image += "?" + getTimeStampRes;
+            if(ADD_config.thumbnail_refresh){
+                data[i].image += getTimeStampRes;
+            }
+            
             if(data[i].main_favorite === true)
                 continue;
 
@@ -2705,7 +2722,9 @@
 
                         // 메인일 경우 리로드
                         ADD_DEBUG("Twitch API - API 호출에 의하여 메인 리로드 됨");
-                        reloadMain();
+                        if(ADD_config.alarm_main_reload){
+                            reloadMain();
+                        }
 
                         // 채팅에 메시지 띄움
                         /*
@@ -2731,6 +2750,11 @@
             if ( $.cookie("twitch_api_cookie") ){
                 // 쿠키 존재 시 변수로 쓴다.
                 twitch_api_cookie = JSON.parse($.cookie("twitch_api_cookie"));
+            }
+            // 메인일 경우 리로드
+            ADD_DEBUG("Twitch API - API 호출 없이 메인 리로드 됨");
+            if(ADD_config.alarm_main_reload){
+                reloadMain();
             }
         }
     }
@@ -6052,11 +6076,10 @@
 
         // 켠다.
         $(document).on({
-            mouseenter: function(){
+            mouseenter: async function(){
                 if(!ADD_config.thumbnail_mouse){
                     return false;
                 }
-                var getTimeResult = "?" + getTimeStamp("m");
                 var thumb_this = $(this);
                 var thumb_this_parent = thumb_this.parent("a");
                 var thumb_size_class;
@@ -6081,7 +6104,22 @@
                 }
 
                 var ADD_thumb_href = "";
-                ADD_thumb_href = thumb_this.attr("src") + getTimeResult;
+                ADD_thumb_href = thumb_this.attr("src");
+
+                if(ADD_config.thumbnail_refresh){
+                    var thumbRefreshGap = ADD_config.thumbnail_refresh_gap;
+                    if(!$.isNumeric(thumbRefreshGap) || Number(thumbRefreshGap) < 1){
+                        thumbRefreshGap = 1;
+                    }
+                    var isThumbRefresh = await GM_cache("thumbnail_refresh",Number(thumbRefreshGap)*60*1000);
+                    
+                    if(isThumbRefresh){
+                        getTimeStampRes = "?" + getTimeStamp("m");
+                    }
+    
+                    ADD_thumb_href += getTimeStampRes;
+                }
+
                 // check image size
                 switch(ADD_config.thumbnail_size){
                 case "1":
