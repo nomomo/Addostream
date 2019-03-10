@@ -335,6 +335,7 @@
             chat_block_nickname : { category:"chat", depth:3, type: "checkbox", value: false, title:"검색대상: 닉네임", desc:"채팅 닉네임에 금지단어가 있으면 차단" },
             chat_block_contents : { category:"chat", depth:3, type: "checkbox", value: false, title:"검색대상: 내용", desc:"- 채팅 내용에 금지단어가 있으면 차단<br />- 닉네임을 바꿔가며 유사 내용을 도배하는 환경에서 유용" },
             chat_block_record : { category:"chat", depth:2, type: "checkbox", value: true, title:"채팅 차단 로그 기록", desc:"금지단어 및 채팅매니저에 의해 차단된 채팅 로그를 기록함", append:"<span class='show_blocked_chat btn btn-primary'>채팅 로그 보기</span><span class='reset_blocked_chat btn btn-primary'>채팅 로그 초기화</span>"},
+            chat_block_log_letter_limit : { under_dev:true, category:"chat", depth:3, type: "text", value: 40, valid:"number", min_value:0, max_value:100000, title:"채팅 내용을 잘라서 기록", desc:"채팅 로그 기록 시 설정된 글자 수 만큼 채팅 내용을 잘라서 기록함(기본값 40)" },
             chat_block_log_limit : { under_dev:true, category:"chat", depth:3, type: "text", value: 100, valid:"number", min_value:0, max_value:100000, title:"차단된 채팅 로그 최대 개수", desc:"- 채팅매니저 차단, 금지단어 차단에 의해 기록된 채팅 로그의 최대 개수를 설정<br />- 이 값을 크게 설정할 시 리소스를 많이 차지할 수 있으며, 알 수 없는 에러가 발생할 수 있음(기본값 100)" },
             chat_auto_reload : { disable:true, category:"chat", depth:2, type: "checkbox", value: false, title:"채팅 중지 시 자동 새로고침 설정", desc:"채팅이 중지된 경우,<br />채팅창 상단의 Auto Reload가 설정된 창에서<br />채팅을 자동으로 새로고침 함 (10초 내 최대 5회)" },
 
@@ -3755,7 +3756,11 @@
                 if(ADD_Blocked_Chat.length >= ADD_config.chat_block_log_limit){
                     ADD_Blocked_Chat.shift();
                 }
-                var temp_obj = {"created":Number(date), "nick":nick, "content":content};
+                var chat_block_log_letter_limit = ADD_config.chat_block_log_letter_limit;
+                if($.isNumeric(chat_block_log_letter_limit) || chat_block_log_letter_limit < 0){
+                    chat_block_log_letter_limit = 40;
+                }
+                var temp_obj = {"created":Number(date), "nick":nick, "content":content.substr(0,chat_block_log_letter_limit)};
                 ADD_Blocked_Chat.push(temp_obj);
                 await ADD_SetVal("ADD_Blocked_Chat", ADD_Blocked_Chat);
             }
@@ -4672,7 +4677,8 @@
         }
 
         // imgur safe screen 투명도 설정
-        if(ADD_config.imgur_preview_safe || (ADD_config.imgur_preview_safe &&
+        if((ADD_config.imgur_preview_safe && arr[0].type !== "youtube" && arr[0].type !== "twitch_clip")
+            || (ADD_config.imgur_preview_safe &&
             ((ADD_config.chat_image_youtube_thumb && !ADD_config.chat_image_youtube_thumb_nonsafe && arr[0].type === "youtube") || 
             (ADD_config.chat_image_twitch_thumb && !ADD_config.chat_image_twitch_thumb_nonsafe && arr[0].type === "twitch_clip")))){
             var safe_screen_opacity = Number(ADD_config.imgur_preview_opacity);
