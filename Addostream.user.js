@@ -4648,9 +4648,9 @@
         }
 
         // imgur safe screen 투명도 설정
-        if(ADD_config.imgur_preview_safe &&
+        if(ADD_config.imgur_preview_safe || (ADD_config.imgur_preview_safe &&
             ((ADD_config.chat_image_youtube_thumb && !ADD_config.chat_image_youtube_thumb_nonsafe && arr[0].type === "youtube") || 
-            (ADD_config.chat_image_twitch_thumb && !ADD_config.chat_image_twitch_thumb_nonsafe && arr[0].type === "twitch_clip"))){
+            (ADD_config.chat_image_twitch_thumb && !ADD_config.chat_image_twitch_thumb_nonsafe && arr[0].type === "twitch_clip")))){
             var safe_screen_opacity = Number(ADD_config.imgur_preview_opacity);
             if(!$.isNumeric(ADD_config.imgur_preview_opacity) || safe_screen_opacity < 0 || safe_screen_opacity > 1){
                 safe_screen_opacity = 0.93;
