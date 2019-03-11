@@ -45,8 +45,7 @@
   *  자동스크롤 변경 기능이 좀 더 잘 동작하도록 수정
   *  채팅 이미지 로드 시 가능한 경우 제목, 작성자, 시청 수 등의 정보를 불러오도록 수정
   *  채팅 이미지 로드 디자인 변경
-  *  개발 중 기능 활성화 및 상세 기능 설정을 유저가 직접 설정할 수 있도록 오픈<br /><br />
-  ![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/190310_setting.jpg)
+  *  개발 중 기능 활성화 및 상세 기능 설정을 유저가 직접 설정할 수 있도록 오픈<br />![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/190310_setting.jpg)
 * 2019-02-24 (v 1.48.3)
   *  설정 창에서 드래그로 스트리머 ID 순서 변경 가능
   *  금지 단어 입력 시 입력한 대문자가 자동으로 소문자로 변경되어 저장되는 증상 수정 - 자주 올라오는 Imgur 이미지 차단할 때 쓰세요.
