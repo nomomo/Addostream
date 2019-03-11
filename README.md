@@ -6,7 +6,8 @@
   * Chrome - [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ko)
   * Firefox - [Tampermonkey](https://addons.mozilla.org/ko/firefox/addon/tampermonkey/)
 * 문제 생길 시 채팅 관련 기능 끄고 새로고침 또는 재설치 하십시오.
-  
+
+
 * 버그 많음 버그리포트 바랍니다 (__) nomotg@gmail.com
   * 버그 제보 시 아래의 내용을 함께 보내주시면 더 빨리 수정 가능합니다.
     - 구체적인 증상
