@@ -9,12 +9,13 @@
 
 
 * 버그 많음 버그리포트 바랍니다 (__) nomotg@gmail.com
-  * 버그 제보 시 아래의 내용을 함께 보내주시면 더 빨리 수정 가능합니다.
-    - 구체적인 증상
-    - 두드온 버전(1.xx.x)
-    - 사용 중인 브라우저 이름(Chrome? Firefox?)
-    - 사용 중인 UserScript 확장기능 이름(Tampermonkey? Violentmonkey?)
-    - 가능한 경우 설정 창 캡쳐 이미지 or 설정 창에서 Backup & Restore 누른 후 나오는 텍스트(필수는 아님)
+* 버그 제보 시 아래의 내용을 함께 보내주시면 더 빨리 수정 가능합니다.
+  - 구체적인 증상
+  - 두드온 버전(1.xx.x)
+  - 사용 중인 브라우저 이름(Chrome? Firefox?)
+  - 사용 중인 UserScript 확장기능 이름(Tampermonkey? Violentmonkey?)
+  - 가능한 경우 설정 창 캡쳐 이미지 or 설정 창에서 Backup & Restore 누른 후 나오는 텍스트(필수는 아님)
+
 
 ## Preview
 ![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/170702_preview.jpg)
