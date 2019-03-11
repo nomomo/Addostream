@@ -5,6 +5,8 @@
 * Userscript 확장 기능 필요
   * Chrome - [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ko)
   * Firefox - [Tampermonkey](https://addons.mozilla.org/ko/firefox/addon/tampermonkey/)
+* 문제 생길 시 채팅 관련 기능 끄고 새로고침 또는 재설치 하십시오.
+  
 * 버그 많음 버그리포트 바랍니다 (__) nomotg@gmail.com
   * 버그 제보 시 아래의 내용을 함께 보내주시면 더 빨리 수정 가능합니다.
     - 구체적인 증상
@@ -12,7 +14,6 @@
     - 사용 중인 브라우저 이름(Chrome? Firefox?)
     - 사용 중인 UserScript 확장기능 이름(Tampermonkey? Violentmonkey?)
     - 가능한 경우 설정 창 캡쳐 이미지 or 설정 창에서 Backup & Restore 누른 후 나오는 텍스트(필수는 아님)
-* 문제 생길 시 채팅 관련 기능 끄고 새로고침 또는 재설치 하십시오.
 
 ## Preview
 ![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/170702_preview.jpg)
@@ -42,7 +43,8 @@
   *  자동스크롤 변경 기능이 좀 더 잘 동작하도록 수정
   *  채팅 이미지 로드 시 가능한 경우 제목, 작성자, 시청 수 등의 정보를 불러오도록 수정
   *  채팅 이미지 로드 디자인 변경
-  *  개발 중 기능 활성화 및 상세 기능 설정을 유저가 직접 설정할 수 있도록 오픈
+  *  개발 중 기능 활성화 및 상세 기능 설정을 유저가 직접 설정할 수 있도록 오픈<br /><br />
+  ![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/190310_setting.jpg)
 * 2019-02-24 (v 1.48.3)
   *  설정 창에서 드래그로 스트리머 ID 순서 변경 가능
   *  금지 단어 입력 시 입력한 대문자가 자동으로 소문자로 변경되어 저장되는 증상 수정 - 자주 올라오는 Imgur 이미지 차단할 때 쓰세요.
