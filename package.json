@@ -1,7 +1,7 @@
 {
   "name": "Addostream",
-  "version": "1.49.0",
-  "update": "많이 바뀜(버그 많음)<br />문제 발생 시 대시보드에서 Addostream 삭제 후 재설치<br />버그 제보: nomotg@gmail.com",
+  "version": "1.49.1",
+  "update": "실험실에 도배 대응 기능 추가<br /><a href='http://www.dostream.com/addostream/' target='_blank'>상세 설정 페이지</a>에서 고급 탭의 실험실 기능 활성화 후 설정하세요.",
   "description": "",
   "notice":""
 }
