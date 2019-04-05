@@ -41,6 +41,9 @@
 * Q: 설치한 후에 채팅창에서 닉네임을 눌러도 바뀌는게 없어요<br />A: 톱니바퀴 모양 버튼을 눌러 설정 창을 열고, 채팅 컨트롤에 체크한 후 저장한 뒤 새로고침 하세요
 
 ## History
+* 2019-04-05 (v 1.49.2)
+  *  편한 좌표 불러오기 시 기본 두스 좌표 사이트(coord.dostream.com)의 것을 가져오도록 변경
+  *  실험실 기능 추가 - 좌표 사이트 선택, 채팅에서 스트리머 이름 자동 링크
 * 2019-04-02 (v 1.49.1)
   *  실험실에 도배 대응 기능 추가<br />[상세 설정 페이지](http://www.dostream.com/addostream/) 접속 후 고급 탭의 실험실 기능을 활성화 한 후 설정 가능<br />![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/190402_dobae.png)
 * 2019-03-10 (v 1.49.0)
