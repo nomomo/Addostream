@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.49.1
+// @version     1.49.2
 // @icon        https://raw.githubusercontent.com/nomomo/Addostream/master/images/logo.png
 // @homepageURL https://nomomo.github.io/Addostream/
 // @supportURL  https://github.com/nomomo/Addostream/issues
@@ -40,6 +40,7 @@
 // @grant       GM_removeValueChangeListener
 // @grant       unsafeWindow
 // @connect     appspot.com
+// @connect     coord.dostream.com
 // ==/UserScript==
 // eslint-disable-next-line no-unused-vars
 /*global $, jQuery, ADD_config, Twitch, nude, Colors, GM, unsafeWindow, GM_addStyle, GM_getValue, GM_setValue, GM_xmlhttpRequest, GM_registerMenuCommand, GM_deleteValue, GM_listValues, GM_getResourceText, GM_getResourceURL, GM_log, GM_openInTab, GM_setClipboard, GM_info, GM_getMetadata, GM_notification, GM_getTab, GM_getTabs, GM_saveTab, $, document, console, location, setInterval, setTimeout, clearInterval, page, ignores, exportFunction, dsStream, web_browser, chat_manager_main, chat_manager, Autolinker */
@@ -223,7 +224,7 @@
 
     // API로 접근해서 스트리머 이름을 가져올 수도 있으나,
     // API CALL 을 줄이기 위해 원래부터 두스 MAIN에 있던 스트리머 이름을 적어둔다.
-    var streamerArray = [["hanryang1125","풍월량"],["ddahyoni","따효니"],["kss7749","쉐리"],["looksam","룩삼"],["yapyap30","얍얍"],["saddummy","서새봄냥"],["109ace","철면수심"],["rhdgurwns","공혁준"],["gmdkdsla","흐앙님"],["jungtaejune","똘똘똘이"],["mascahs","마스카"],["steelohs","스틸로"],["kimdoe","김도"],["togom","토곰"],["ogn_lol","OGN 롤챔스"],["kanetv8","케인TV"],["yumyumyu77","소풍왔니"],["sung0","쥬팬더"],["game2eye","홍방장"],["cocopopp671","초승달"],["dingception","딩셉션"],["redteahs","홍차"],["zzamtiger0310","짬타수아"],["rldnddl789","아빠킹"],["eulcs1","EU LCS"],["kkoma","Kkoma"],["1983kej","단군"],["lol_peanut","Peanut"],["faker","Faker"],["nrmtzv","으음"],["nicegametv","나겜"],["teaminven","인벤"],["capta1n_pony","포니"],["huni","Huni"],["sktt1_wolf","Wolf"],["bang","Bang"],["wpghd321","류제홍"],["jmjdoc","칸데르니아"],["yungi131","윤기"],["mediamuse","미디어뮤즈"],["veritaskk","Veritas"],["themarinekr","김정민"],["tvindra","인드라"],["tranth","자동"],["seine1026","세인님"],["sonycast_","소니쇼"],["dou3796","뱅붕"],["rudbeckia7","연두는말안드뤄"],["trisha","트리샤"],["naseongkim","김나성"],["mari0712","마리"],["dlxowns45","태준이"],["handongsuk","한동숙"],["alenenwooptv","웁_게임방송"],["mr_coat","노래하는코트"],["ajehr","머독"],["lol_crown","Crown"],["rooftopcat99","옥냥이"],["myzet1990","개구멍"],["yoonroot","윤루트"],["sn400ja","액시스마이콜"],["tape22222","테이프2"],["miracle0o0","미라클티비"],["bighead033","빅헤드"],["wkgml","견자희"],["queenhuz","후즈"],["kiyulking","김기열"],["asdn6388","나락호프"],["lol_cuvee","Cuvee"],["VSL","VSL"],["drlee_kor","이민우33세"],["CoreJJ","CoreJJ"],["lol_ambition","앰비션"],["Axenix","아제닉스"],["maknoonlol","막눈"],["zilioner","침착맨"],["timeofcreate","홍랑"],["twitchshow","트위치쇼"],["kangqui","강퀴"],["team_spiritzero","Team Spiritzero"],["zizionmy","젼마이"],["lol_blank","Blank"],["ogn_ow","OGN 오버워치"],["juankorea","주안코리아"],["woowakgood","우왁굳"],["www0606","푸딩"],["runner0608","러너"],["flowervin","꽃빈"],["h920103","이초홍"],["hj0514","백설양"],["pbstream77","피비스트림"],["llilka","릴카"],["beyou0728","피유"],["serayang","세라양"],["mister903","갱생레바"],["what9honggildong","왓구홍길동"],["chicken_angel","통닭천사"],["godbokihs","갓보기"],["yuriseo","서유리"],["kimminyoung","아옳이"],["gabrielcro","가브리엘"],["starcraft_kr","스타크래프트 KR"],["yeziss","신예지"],["ch1ckenkun","치킨쿤"],["lds7131","더헬"],["nodolly","노돌리"],["haku861024","정직원"],["nanajam777","우정잉"],["leehunnyeo","별루다"],["streamer2u","이유님"],["hatsalsal","햇살살"],["pommel0303","폼멜"],["hosu0904","호수"],["surrenderhs","서렌더"],["s_wngud","뜨뜨뜨뜨"],["eukkzzang","윾짱"],["gageu","가그"],["ange_i","요뿌니"],["menpa1030","멘파"],["dua3362","서넹"],["dda_ju","다주"],["taesangyun","태상"],["oreo4679","리치1"],["dmdtkadl69","응삼이"],["sigwon","시권"],["rngudwnswkd","푸린_"],["jungjil","정질"],["ses836","인간젤리"],["DrAquinas","DrAquinas"],["tree2512","말퓨"],["frog135","게구리"],["leechunhyang","이춘향"],["cherrypach","꽃핀"],["lovelyyeon","연두부"],["yd0821","양띵"],["2chamcham2","탬탬버린"],["jinu6734","김진우"],["ddolking555","똘킹"],["erenjjing","에렌디라"],["suk_tv","석티비"],["h0720","군림보"],["rellacast","렐라"],["silphtv","실프"],["playhearthstonekr","playhearthstonekr"],["mirage720","미라지오빠"],["1am_shin","신기해"],["maruemon1019","마루에몽"],["ulsanbigwhale","울산큰고래"],["areuming","알밍"],["esther950","에쓰더"],["pacific8815","쌍베"],["dogswellfish","개복어"],["yeonchobom","연초봄"],["DawNHS","던"],["ssambahong","홍진영"],["Twipkr","트윕KR"],["reniehour","레니아워"],["caroline9071","숑아"],["ssambahong","쌈바홍"],["Funzinnu","Funzinnu"],["loveseti","미모"],["kimgaeune","김총무님"],["1uming","루밍이"],["invenk01","김영일"],["sal_gu","살인마협회장"],["flurry1989","플러리"],["hols7","홀스"],["holsbro","홀스"],["hn950421","고말숙"],["hwkang2","캡틴잭"],["yunlovejoy","도여사"],["yatoring","야토링"],["lolluk4","루ㅋ4"],["rkdthdus930","강소연"],["seogui","서긔"],["pikra10","재슥짱"],["playoverwatch_kr","오버워치 이스포츠"],["maxim_korea_official","남자매거진맥심"],["hanururu","하느르"],["obm1025","오킹"],["acro_land","아크로"],["choerakjo","최락조"],["megthomatho","맥또마또"],["s1032204","삐부"],["rkdwl12","강지"],["jaewon4915","김재원"],["zennyrtlove","신재은"],["2sjshsk","유누"],["queenmico","미코"],["lsd818","득털"],["wlswnwlswn","진주몬"],["apzks1236","학살"],["sunbaking","선바"],["rockid1818","모모88"],["moogrr1211","무굴"],["twitchkr","TwitchKR"],["tlfjaos","시러맨"],["dawnhs","DawN"],["mata","마타타마"],["lol_khan","Khan"],["buzzbean11","대도서관"],["mhj1682","카트문호준"],["remguri","렘쨩"],["heavyrainism","호무새"],["lck_korea","LCK Korea"],["lol_madlife","매드라이프"],["lol_helios","헬리오스"],["pparkshy","샤이"],["pubgkorea","PUBGKorea"],["riotgames","Riot Games"],["lisalove","리즈리사"],["mbcmlt","엠비씨마리텔"],["mbcmlt1","엠비씨마리텔1"],["mbcmlt2","엠비씨마리텔2"],["mbcmlt3","엠비씨마리텔3"],["mbcmlt4","엠비씨마리텔4"],["mbcmlt5","엠비씨마리텔5"],["mbcmlt6","엠비씨마리텔6"],["mbcmlt7","엠비씨마리텔7"],["mbcmlt8","엠비씨마리텔8"],["mbcmlt9","엠비씨마리텔9"],["insec13","인섹"],["realkidcozyboy","키드밀리"],["sbsmobile24","배거슨라이브"],["ok_ja","박옥자누나"]];
+    var streamerArray = [["hanryang1125","풍월량","풍온","김영태","영태"],["ddahyoni","따효니","효니"],["kss7749","쉐리","쉐옹"],["looksam","룩삼"],["yapyap30","얍얍"],["saddummy","서새봄냥","서새봄","새봄추","새봄"],["109ace","철면수심","철수형","철쑤","쑤심","진배"],["rhdgurwns","공혁준","공선생","르건즈","혁준이","혁주니","혁준"],["gmdkdsla","흐앙님","흐앙"],["jungtaejune","똘똘똘이","똘3","똘삼","정태준"],["mascahs","마스카"],["steelohs","스틸로"],["kimdoe","김도"],["togom","토곰"],["htk_","흐트크"],["ogn_lol","OGN 롤챔스"],["kanetv8","케인TV","케인"],["yumyumyu77","소풍왔니","소풍이","소풍","작은풍","원유리"],["tjskdutls","서나랑","스나랑"],["sung0","쥬팬더"],["game2eye","홍방장"],["cocopopp671","초승달","승따리","승딸이","승딸","승달"],["dingception","딩셉션"],["redteahs","홍차"],["zzamtiger0310","짬타수아","짬타"],["rldnddl789","아빠킹"],["eulcs1","EU LCS"],["kkoma","Kkoma"],["1983kej","단군","김의중","의중"],["lol_peanut","Peanut"],["faker","Faker","faker","페이커","이상혁","상혁","페온"],["nrmtzv","으음"],["nicegametv","나겜"],["teaminven","인벤"],["capta1n_pony","포니"],["huni","Huni"],["sktt1_wolf","Wolf"],["bang","Bang"],["wpghd321","류제홍"],["jmjdoc","칸데르니아","칸데","두방"],["yungi131","윤기"],["mediamuse","미디어뮤즈","미뮤"],["veritaskk","Veritas","베리타스","싸세"],["themarinekr","김정민"],["tvindra","인드라"],["tranth","자동"],["seine1026","세인님"],["sonycast_","소니쇼","소니쿤"],["dou3796","뱅붕"],["rudbeckia7","연두는말안드뤄","연두"],["trisha","트리샤"],["naseongkim","김나성","나성"],["dlxowns45","태준이"],["handongsuk","한동숙","동수칸","동숙"],["alenenwooptv","웁_게임방송"],["mr_coat","노래하는코트"],["ajehr","머독"],["lol_crown","Crown"],["rooftopcat99","옥냥이"],["myzet1990","개구멍"],["yoonroot","윤루트"],["sn400ja","액시스마이콜","마이콜"],["tape22222","테이프2"],["miracle0o0","미라클티비"],["bighead033","빅헤드"],["wkgml","견자희"],["queenhuz","후즈"],["kiyulking","김기열"],["asdn6388","나락호프"],["lol_cuvee","Cuvee"],["VSL","VSL"],["drlee_kor","이민우33세"],["CoreJJ","CoreJJ"],["lol_ambition","앰비션","엠비션","강찬밥","강찬용"],["Axenix","아제닉스"],["maknoonlol","막눈"],["zilioner","침착맨","이말년"],["timeofcreate","홍랑"],["twitchshow","트위치쇼"],["kangqui","강퀴"],["team_spiritzero","Team Spiritzero"],["zizionmy","젼마이"],["lol_blank","Blank"],["ogn_ow","OGN 오버워치"],["juankorea","주안코리아"],["woowakgood","우왁굳"],["www0606","푸딩"],["runner0608","러너"],["flowervin","꽃빈"],["h920103","이초홍","초홍"],["hj0514","백설양"],["pbstream77","피비스트림"],["llilka","릴카"],["beyou0728","피유","끠유"],["serayang","세라양"],["mister903","갱생레바","레바"],["what9honggildong","왓구홍길동"],["chicken_angel","통닭천사"],["godbokihs","갓보기"],["yuriseo","서유리"],["kimminyoung","아옳이"],["gabrielcro","가브리엘","가비"],["starcraft_kr","스타크래프트 KR"],["yeziss","신예지"],["ch1ckenkun","치킨쿤","보해"],["lds7131","더헬"],["nodolly","노돌리"],["haku861024","정직원"],["nanajam777","우정잉","정잉"],["leehunnyeo","별루다"],["streamer2u","이유님"],["hatsalsal","햇살살"],["pommel0303","폼멜"],["hosu0904","호수"],["surrenderhs","서렌더"],["s_wngud","뜨뜨뜨뜨"],["eukkzzang","윾짱"],["gageu","가그"],["ange_i","요뿌니"],["menpa1030","멘파"],["dua3362","서넹"],["dda_ju","다주"],["taesangyun","태상"],["oreo4679","리치1"],["dmdtkadl69","응삼이"],["sigwon","시권"],["rngudwnswkd","푸린_"],["jungjil","정질"],["ses836","인간젤리"],["DrAquinas","DrAquinas"],["tree2512","말퓨"],["frog135","게구리"],["leechunhyang","이춘향"],["cherrypach","꽃핀"],["lovelyyeon","연두부"],["yd0821","양띵"],["2chamcham2","탬탬버린","탬탬"],["jinu6734","김진우"],["ddolking555","똘킹"],["erenjjing","에렌디라"],["suk_tv","석티비"],["h0720","군림보"],["rellacast","렐라"],["silphtv","실프"],["playhearthstonekr","playhearthstonekr"],["mirage720","미라지오빠"],["1am_shin","신기해"],["maruemon1019","마루에몽"],["ulsanbigwhale","울산큰고래"],["areuming","알밍"],["esther950","에쓰더"],["pacific8815","쌍베","전상빈"],["dogswellfish","개복어"],["yeonchobom","연초봄"],["ssambahong","홍진영"],["Twipkr","트윕KR"],["reniehour","레니아워"],["caroline9071","숑아"],["ssambahong","쌈바홍","홍진영"],["Funzinnu","Funzinnu"],["loveseti","미모"],["kimgaeune","김총무님"],["1uming","루밍이","루밍"],["invenk01","김영일","K01","김01"],["sal_gu","살인마협회장","살협"],["flurry1989","플러리","로겨","조현수","겨러리"],["hols7","홀스"],["holsbro","홀스"],["hn950421","고말숙","말숙"],["hwkang2","캡틴잭","캡잭","캡짹"],["yunlovejoy","도여사"],["yatoring","야토링"],["lolluk4","루ㅋ4"],["rkdthdus930","강소연","타노스","탑분쇄기","수장님"],["seogui","서긔"],["pikra10","재슥짱"],["playoverwatch_kr","오버워치 이스포츠"],["maxim_korea_official","남자매거진맥심"],["hanururu","하느르"],["obm1025","오킹"],["acro_land","아크로"],["choerakjo","최락조"],["megthomatho","맥또마또"],["s1032204","삐부"],["rkdwl12","강지"],["jaewon4915","김재원"],["zennyrtlove","신재은"],["2sjshsk","유누"],["queenmico","미코"],["lsd818","득털"],["wlswnwlswn","진주몬"],["apzks1236","학살"],["sunbaking","선바"],["rockid1818","모모88"],["moogrr1211","무굴"],["twitchkr","TwitchKR"],["tlfjaos","시러맨"],["dawnhs","DawN"],["mata","마타타마","마타"],["lol_khan","Khan"],["buzzbean11","대도서관","대도"],["mhj1682","카트문호준","문호준"],["remguri","렘쨩"],["heavyrainism","호무새"],["lck_korea","LCK Korea"],["lol_madlife","매드라이프","매라"],["lol_helios","헬리오스"],["pparkshy","샤이"],["pubgkorea","PUBGKorea"],["riotgames","Riot Games"],["lisalove","리즈리사"],["mbcmlt","엠비씨마리텔"],["mbcmlt1","엠비씨마리텔1"],["mbcmlt2","엠비씨마리텔2"],["mbcmlt3","엠비씨마리텔3"],["mbcmlt4","엠비씨마리텔4"],["mbcmlt5","엠비씨마리텔5"],["mbcmlt6","엠비씨마리텔6"],["mbcmlt7","엠비씨마리텔7"],["mbcmlt8","엠비씨마리텔8"],["mbcmlt9","엠비씨마리텔9"],["insec13","인섹"],["realkidcozyboy","키드밀리"],["sbsmobile24","배거슨라이브","배거슨","배성재"],["ok_ja","박옥자누나","박옥자","옥자"],["boxer_lim","임요환"],["kimukihun","기무기훈"],["needsonyun","사신갓","사신"]];
     var streamerArray_name = [],
         streamerArray_display_name = [],
         streamerArray_AutoComplete = [];
@@ -341,7 +342,10 @@
             max_history : { under_dev:true, category:"general", depth:2, type: "text", value: 20, valid:"number", min_value:1, title:"시청 기록 최대 개수", desc:"(기본값: 20)" },
             
             insagirl_button : { category:"general", depth:1, type: "checkbox", value: false, title:"빠른 좌표 보기 활성", desc:"좌표 페이지를 두스트림 내부에서 불러오는 기능을 활성", change:function(){hrm_DOE();} },
-            insagirl_block_by_nick : { category:"general", depth:2, type: "checkbox", value: false, title:"차단한 유저의 좌표 숨기기", desc:"채팅매니저에서 차단한 유저의 좌표를 빠른 좌표 페이지에서 보이지 않도록 함" },
+            insagirl_block_by_nick : { category:"general", depth:2, type: "checkbox", value: false, title:"차단한 유저의 좌표 숨기기", desc:"채팅매니저에서 차단한 유저의 좌표를 숨김" },
+            insagirl_block_dobae : { category:"general", depth:2, type: "checkbox", value: false, title:"연속된 동일 좌표 숨기기", desc:"동일 유저가 같은 좌표를 연속하여 올릴 경우<br />가장 최근의 것만 남기고 숨김" },
+            insagirl_block_dobae_by_href : { category:"general", depth:3, type: "checkbox", value: false, title:"동일 유저가 아닐 경우에도 숨김", desc:"유저에 상관 없이 동일 좌표가 연속되는 경우 무조건 숨김" },
+            insagirl_select : { under_dev:true, category:"general", depth:3, type: "radio", value: 1, title:"좌표 사이트 선택", desc:"", radio: {dostream: {title: "<span style='font-size:11px;'>coord.dostream.com</span>", value:1}, insagirl: {title: "<span style='font-size:11px;'>insagirl-hrm.appspot.com</span>", value:2}} },
 
             list : { category:"list", category_name:"리스트", depth:1, type: "checkbox", value:true, title:"메인 리스트 관리 기능 사용", desc:"메인 리스트 관리 기능을 일괄적으로 켜고 끈다."},
             main_list_two_column : { under_dev:true, category:"list", depth:2, type: "checkbox", value:false, title:"[실험실] 메인 리스트를 두 줄로 표시", desc:"- 모니터 가로 해상도 1920 이상에 권장<br />- 섬네일 기능 사용 시 중간 설정이 적당함", change:function(){reloadMain();}},
@@ -426,6 +430,7 @@
             chat_dobae_block_autoban : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: false, title:"도배 유저를 채팅매니저로 자동 차단", desc:"<span style='color:red;'>주의!! 설정 값에 따라 무차별 차단이 발생할 수 있으니 사용에 유의하십시오.<br />예) ㅋㅋㅋ를 반복 입력하는 유저도 차단됨.<br />링크 포함 시에만 도배 판단 기능을 활성화하고 사용할 것을 권장합니다.</span><br />작동 상태 알림 기능이 켜진 경우<br />차단 여부를 채팅창에 시스템 메시지로 알림" },
             
             chat_auto_reload : { disable:true, category:"chat", depth:2, type: "checkbox", value: false, title:"채팅 중지 시 자동 새로고침 설정", desc:"채팅이 중지된 경우,<br />채팅창 상단의 Auto Reload가 설정된 창에서<br />채팅을 자동으로 새로고침 함 (10초 내 최대 5회)" },
+            chat_autoKeyword : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: false, title:"[실험실] 스트리머 닉네임을 링크로 변환", desc:"스트리머 닉네임 감지 시 자동으로 링크로 변환함" },
 
             under_dev : { category:"advanced", category_name:"고급", depth:1, type: "checkbox", value: false, title:"실험실 기능 및 고급 기능 설정", desc:"실험 중인 기능 및 고급 기능을 직접 설정" },
             theme : { disable:true, category:"advanced", depth:1, type: "text", value: "default", title:"테마", desc:"현재 사용 불가" },
@@ -593,7 +598,7 @@
 
             #GM_setting .radio-inline{
                 padding-left:0;
-                padding-right:20px;
+                padding-right:10px;
             }
             #GM_setting .radio-inline input{
                 margin:0 5px 0 0;
@@ -3207,7 +3212,7 @@
                                                     <span class="glyphicon glyphicon-ok"></span>
                                                 </label> 후방주의 기능 활성
                                             </span>
-                                            <span class="ADD_under_dev">
+                                            <span style="display:none;">
                                                 <span aria-label="피부톤 이미지인 경우에만 후방주의 기능을 활성\n너굴맨이 이미지를 먼저 확인한 후\n피부색이 없어야 출력하므로 이미지가 조금 늦게 뜰 수 있다.\n추가 이미지 로드 시에는 적용되지 않는다." data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">
                                                     <span style="margin-left:20px;"></span>
                                                     <label class="btn btn-default btn-xxs">
@@ -3860,42 +3865,42 @@
             }
         }
 
-        var ADD_Blocked_Chat_event_ID;
-        if(typeof GM_addValueChangeListener === "function" && typeof GM_removeValueChangeListener === "function" ){
-            ADD_DEBUG("채팅 차단창에서 addValueChangeListener 바인드");
-            GM_removeValueChangeListener(ADD_Blocked_Chat_event_ID);
-            ADD_Blocked_Chat_event_ID = GM_addValueChangeListener("ADD_Blocked_Chat", async function(val_name, old_value, new_value, remote) {
-                if(remote && $("#ADD_blocked_chat_container").length !== 0){
-                    ADD_Blocked_Chat = new_value;
-                    Blocked_text = "";
-                    for(var i=(ADD_Blocked_Chat.length - 1); i>=0; i--){
-                        if(typeof ADD_Blocked_Chat[i] === "object"){
-                            // {"created":date, "nick":nick, "content":content};
-                            var temp_obj = ADD_Blocked_Chat[i];
-                            Blocked_text = Blocked_text
-                                + "<span class='blocked_chat_date' style='width:110px;margin-right:10px;display:inline-block;white-space:nowrap;overflow:hidden;'>"
-                                + getTimeStampWithDash(new Date(temp_obj.created), "s")
-                                + "</span>|<span class='blocked_chat_nick' style='width:60px;margin:0 10px 0 10px;display:inline-block;text-align:center;white-space:nowrap;overflow:hidden;'>"
-                                + temp_obj.nick
-                                + "</span>:<span class='blocked_chat_content' style='margin:0 0 0 10px;'>"
-                                + temp_obj.content
-                                + "</span><br />";
-                        }
-                        else{
-                            Blocked_text = Blocked_text + ADD_Blocked_Chat[i]+"<br />";
-                        }
-                    }
-                    $("#ADD_blocked_text").empty().html(Blocked_text);
-                }
-            });
+        // var ADD_Blocked_Chat_event_ID;
+        // if(typeof GM_addValueChangeListener === "function" && typeof GM_removeValueChangeListener === "function" ){
+        //     ADD_DEBUG("채팅 차단창에서 addValueChangeListener 바인드");
+        //     GM_removeValueChangeListener(ADD_Blocked_Chat_event_ID);
+        //     ADD_Blocked_Chat_event_ID = GM_addValueChangeListener("ADD_Blocked_Chat", async function(val_name, old_value, new_value, remote) {
+        //         if(remote && $("#ADD_blocked_chat_container").length !== 0){
+        //             ADD_Blocked_Chat = new_value;
+        //             Blocked_text = "";
+        //             for(var i=(ADD_Blocked_Chat.length - 1); i>=0; i--){
+        //                 if(typeof ADD_Blocked_Chat[i] === "object"){
+        //                     // {"created":date, "nick":nick, "content":content};
+        //                     var temp_obj = ADD_Blocked_Chat[i];
+        //                     Blocked_text = Blocked_text
+        //                         + "<span class='blocked_chat_date' style='width:110px;margin-right:10px;display:inline-block;white-space:nowrap;overflow:hidden;'>"
+        //                         + getTimeStampWithDash(new Date(temp_obj.created), "s")
+        //                         + "</span>|<span class='blocked_chat_nick' style='width:60px;margin:0 10px 0 10px;display:inline-block;text-align:center;white-space:nowrap;overflow:hidden;'>"
+        //                         + temp_obj.nick
+        //                         + "</span>:<span class='blocked_chat_content' style='margin:0 0 0 10px;'>"
+        //                         + temp_obj.content
+        //                         + "</span><br />";
+        //                 }
+        //                 else{
+        //                     Blocked_text = Blocked_text + ADD_Blocked_Chat[i]+"<br />";
+        //                 }
+        //             }
+        //             $("#ADD_blocked_text").empty().html(Blocked_text);
+        //         }
+        //     });
 
-            $(document).one("click", "#ADD_blocked_chat_container", function(e){
-                ADD_DEBUG("블록챗 갱신 이벤트 삭제됨");
-                if(typeof GM_removeValueChangeListener === "function" ){
-                    GM_removeValueChangeListener(ADD_Blocked_Chat_event_ID);
-                }
-            });
-        }
+        //     $(document).one("click", "#ADD_blocked_chat_container", function(e){
+        //         ADD_DEBUG("블록챗 갱신 이벤트 삭제됨");
+        //         if(typeof GM_removeValueChangeListener === "function" ){
+        //             GM_removeValueChangeListener(ADD_Blocked_Chat_event_ID);
+        //         }
+        //     });
+        // }
 
         $("body").append(`
             <div class="lightbox-opened" id="ADD_blocked_chat_container">
@@ -4290,10 +4295,35 @@
         className : "auto_a"
     } );
 
+    var prev_nick = "", prev_href = "", prev_count = 0;
+    var coord_length = 20;
     async function parse_insagirl(page){
-        ADD_DEBUG("RUNNING - parse_insagirl");
+        ADD_DEBUG("RUNNING - parse_coord, page:"+page);
+        if(page === 0 || page === 1){
+            prev_nick = "";
+            prev_href = "";
+            prev_count = 0;
+            last_prev_count_elem = undefined;
+        }
+        if(coord_length === undefined || coord_length === null || coord_length === 0){
+            coord_length = 20;
+        }
+
+        var coord_url = "";
+        if(ADD_config.insagirl_select == 1){    // 기본 두스트림의 경우
+            coord_url = "http://coord.dostream.com/api/?offset="+String(parseInt((page-1)*coord_length));
+            $("#hrmbodyexpand").html(coord_length+"개 더 보기");
+        }
+        else if(ADD_config.insagirl_select == 2){   // 인사걸의 경우
+            coord_url = "http://insagirl-hrm.appspot.com/json2/2/1/"+page+"/";
+            $("#hrmbodyexpand").html("더 보기");
+        }
+        else{
+            ADD_DEBUG("예상하지 못한 설정변수", ADD_config.insagirl_select);
+            return;
+        }
         GM_xmlhttpRequest({
-            url: "http://insagirl-hrm.appspot.com/json2/2/1/"+page+"/",
+            url:coord_url,
             method: "GET",
             headers: {
                 "Content-Type": "application/javascript"
@@ -4308,42 +4338,149 @@
                     get_chat_manager_from_main_frame();
                 }
                 //var expUrl = /(\b(https?|ftp|file):\/\/([-A-Z0-9+&@#%?=~_|!:,.;]*)([-A-Z0-9+&@#%?/=~_|!:,.;]*)[-A-Z0-9+&@#/%=~_|])/ig;
-                var data = response.responseText;
+                var data = JSON.parse(response.responseText);
+                if(ADD_config.insagirl_select == 2){
+                    data = data.v;
+                }
+                coord_length = data.length;
+
                 var hrm_DOE_HTML = "";
-                data = JSON.parse(data);
-                data = data.v;
+                var added = 0;
                 for(var z=0; z<data.length; z++){
-                    data[z] = data[z].split("|");
-                    var nick = data[z][1];
+                    if(ADD_config.insagirl_select == 2){
+                        data[z] = data[z].split("|");
+                        data[z] = {created:Number(data[z][0]), user:data[z][1], message:data[z][2]};
+                    }
+
+                    var nick = data[z].user;
                     if(ADD_config.insagirl_block_by_nick && chat_manager !== undefined && chat_manager.getIsBlock(nick)){
                         continue;
                     }
-                    var content = data[z][2];//.replace(expUrl, "<a href=\"$&\" target=\"_blank\">$&</a>");
+                    var content = autolinker.link(data[z].message);//.replace(expUrl, "<a href=\"$&\" target=\"_blank\">$&</a>");
+
+                    // 연속된 좌표 숨기기
+                    if(ADD_config.insagirl_block_dobae){
+                        var temp_a = $("<span>"+content+"</span>").find("a");
+                        if(temp_a.length > 0){
+                            var temp_href = temp_a.first().attr("href");
+                            if((ADD_config.insagirl_block_dobae_by_href || nick === prev_nick) && temp_href === prev_href){
+                                // ADD_DEBUG("연속된 좌표 숨기기", content, temp_href);
+                                prev_count = prev_count + 1;
+                                continue;
+                            }
+                            else{
+                                prev_href = temp_href;
+                                if(prev_count > 0){
+                                    hrm_DOE_HTML = hrm_DOE_HTML + "<li style='font-size:11px;display:flex;align-items:center;color:#ccc;text-align:center;padding:2px 10px;'><span style='flex:1;border-bottom:1px solid #ccc;margin-right:10px;'></span>" + prev_count + "개의 좌표 숨겨짐" + "<span style='flex:1;border-bottom:1px solid #ccc;margin-left:10px;'></span></li>";
+                                }
+                                prev_count = 0;
+                            }
+                        }
+                        else{
+                            prev_href = "";
+                        }
+                        prev_nick = nick;
+                    }
+
                     var a = (new Date).getTime();
-                    var e = data[z][0];
+                    var e = Number(new Date(data[z].created));
                     var i = Math.floor((a - e) / 1e3),
                         r = parseInt(i / 3600),
                         s = parseInt(i / 60) % 60,
                         u = i % 60,
                         l = "(" + (r > -1 && 10 > r ? "0" + r : r) + ":" + (s > -1 && 10 > s ? "0" + s : s) + ":" + (u > -1 && 10 > u ? "0" + u : u) + ")";
-                    //if(content.indexOf("#/stream/") !== -1){
-                    //    content = content.replace("target=\"_blank\"","");
-                    //}
+                        //if(content.indexOf("#/stream/") !== -1){
+                        //    content = content.replace("target=\"_blank\"","");
+                        //}
                     hrm_DOE_HTML = hrm_DOE_HTML + "<li>" + l + nick + ": " + content + "</li>";
+                    added = added + 1;
                 }
-                var myLinkedHtml = autolinker.link(hrm_DOE_HTML);
-                $("#hrm_DOE ul:first").html("").append(myLinkedHtml);
+                // var myLinkedHtml = autolinker.link(hrm_DOE_HTML);
+                // $("#hrm_DOE ul:first").append(myLinkedHtml);
+                if(added == 0 && prev_count !== 0){
+                    prev_count = 20;
+                    hrm_DOE_HTML = hrm_DOE_HTML + "<li style='display:flex;align-items:center;color:#ccc;text-align:center;padding: 0 10px;'><span style='flex:1;border-bottom:1px solid #ccc;margin-right:10px;'></span>" + prev_count + "개의 좌표 숨겨짐" + "<span style='flex:1;border-bottom:1px solid #ccc;margin-left:10px;'></span></li>";
+                    prev_count = 0;
+                }
+
+                if(ADD_config.insagirl_select == 1){
+                    $("#hrm_DOE ul:first").append(hrm_DOE_HTML);
+                } else {
+                    $("#hrm_DOE ul:first").empty().append(hrm_DOE_HTML);
+                }
+                
             }, onerror: async function(){
                 ADD_DEBUG("좌표 파싱 중 에러 발생");
                 await ADD_SetVal("Cross_Origin_Hrm", false);
             }
         });
+        // GM_xmlhttpRequest({
+        //     url: "http://insagirl-hrm.appspot.com/json2/2/1/"+page+"/",
+        //     method: "GET",
+        //     headers: {
+        //         "Content-Type": "application/javascript"
+        //     },
+        //     onload: async function(response){
+        //         if($("#hrm_DOE").length === 0){
+        //             ADD_DEBUG("hrm_DOE가 없다");
+        //             return;
+        //         }
+        //         // 채팅 매니저 불러오기
+        //         if(ADD_config.insagirl_block_by_nick){
+        //             get_chat_manager_from_main_frame();
+        //         }
+        //         //var expUrl = /(\b(https?|ftp|file):\/\/([-A-Z0-9+&@#%?=~_|!:,.;]*)([-A-Z0-9+&@#%?/=~_|!:,.;]*)[-A-Z0-9+&@#/%=~_|])/ig;
+        //         var data = response.responseText;
+        //         var hrm_DOE_HTML = "";
+        //         data = JSON.parse(data);
+        //         data = data.v;
+        //         for(var z=0; z<data.length; z++){
+        //             data[z] = data[z].split("|");
+        //             var nick = data[z][1];
+        //             if(ADD_config.insagirl_block_by_nick && chat_manager !== undefined && chat_manager.getIsBlock(nick)){
+        //                 continue;
+        //             }
+        //             var content = data[z][2];//.replace(expUrl, "<a href=\"$&\" target=\"_blank\">$&</a>");
+        //             var a = (new Date).getTime();
+        //             var e = data[z][0];
+        //             var i = Math.floor((a - e) / 1e3),
+        //                 r = parseInt(i / 3600),
+        //                 s = parseInt(i / 60) % 60,
+        //                 u = i % 60,
+        //                 l = "(" + (r > -1 && 10 > r ? "0" + r : r) + ":" + (s > -1 && 10 > s ? "0" + s : s) + ":" + (u > -1 && 10 > u ? "0" + u : u) + ")";
+        //             //if(content.indexOf("#/stream/") !== -1){
+        //             //    content = content.replace("target=\"_blank\"","");
+        //             //}
+        //             hrm_DOE_HTML = hrm_DOE_HTML + "<li>" + l + nick + ": " + content + "</li>";
+        //         }
+        //         var myLinkedHtml = autolinker.link(hrm_DOE_HTML);
+        //         $("#hrm_DOE ul:first").html("").append(myLinkedHtml);
+        //     }, onerror: async function(){
+        //         ADD_DEBUG("좌표 파싱 중 에러 발생");
+        //         await ADD_SetVal("Cross_Origin_Hrm", false);
+        //     }
+        // });
     }
 
     function hrm_DOE(){
         if(GM_page === C_UCHAT){
             return false;
         }
+        $("#btnOpenHrm").off("click");
+        $("#btnOpenHrm").on("click", function(e){
+            e.preventDefault();
+            var href="";
+            if(ADD_config.insagirl_select == 1){
+                href="http://coord.dostream.com";
+            }
+            else if(ADD_config.insagirl_select == 2){
+                href="http://insagirl-toto.appspot.com/hrm/?where=2";
+            }
+            
+            window.open(href);
+            $(this).blur();
+            return false;
+        });
 
         if(!ADD_config.insagirl_button && $("#btnOpenHrm").length !== 0 && $("#btnOpenHrm_ADD").length !== 0){
             $("#btnOpenHrm_ADD").fadeOut("300").delay("700").remove();
@@ -4364,7 +4501,7 @@
             <div id="hrm_DOE">
                 <ul></ul>
                 <div style="padding:5px;">
-                    <button id="hrmbodyexpand" type="button" class="btn btn-primary btn-block">더 보기</button>
+                    <button id="hrmbodyexpand" type="button" page="2" class="btn btn-primary btn-block">더 보기</button>
                 </div>
             </div>
             `);
@@ -4504,8 +4641,13 @@
     }
 
     $(document).on("click","#hrmbodyexpand",async function(){
-        await parse_insagirl(2);
-        $("#hrmbodyexpand").hide();
+        var page = parseInt($(this).attr("page"));
+        await parse_insagirl(page);
+        $(this).attr("page",String(parseInt(page+1)));
+        
+        if(ADD_config.insagirl_select == 2){
+            $("#hrmbodyexpand").hide();
+        }
     });
 
     //////////////////////////////////////////////////////////////////////////////////
@@ -5235,11 +5377,62 @@
             }
         }
 
+        // 닉네임 색상화
         if(ADD_config.chat_nick_colorize){
             if(!$line.find("span.nick").hasClass("colorized")){
                 var temp_color2 = Colors.random(nick);
                 $line.find("span.nick").addClass("colorized").css("color",temp_color2.rgb).attr("colorzied",temp_color2.name);
             }
+        }
+
+        
+        // 키워드 링크 추가하기
+        if(ADD_config.chat_autoKeyword){
+            setTimeout(function(){
+                var rep = 0;
+                var br = true;
+                while(rep<10 && br){
+                    br = false;
+                    var $textNodes = $content
+                        .find("*")
+                        .andSelf()
+                        .contents()
+                        .filter(function() {
+                            return this.nodeType === 3 &&
+                                !$(this).parent("a").length && 
+                                !$(this).hasClass("keyword_pass") &&
+                                !$(this).parent().hasClass("keyword_pass");
+                        });
+
+                    $textNodes.each(function(index, element) {
+                        var contentText = $(element).text();
+                        $.each(streamerArray, function(si, sv){
+                            var id = sv[0];
+                            for(var s=1;s<sv.length; s++){
+                                var disp_name = sv[s];
+                                if(contentText.indexOf(disp_name) !== -1){
+                                    contentText = contentText.split(disp_name).join("<a href='http://www.dostream.com/#/stream/twitch/"+id+"' class='topClick autokeyword'>"+disp_name+"</a>");   // replaceAll
+                                    $(element).replaceWith(contentText);
+                                    ADD_DEBUG("contentText", sv, contentText, $(element));
+                                    rep = rep + 1;
+                                    br = true;
+                                    break;
+                                }
+                            }
+
+                            if(br){
+                                return false;
+                            }
+                        });
+
+                        if(br){
+                            return false;
+                        }
+
+                        $(element).addClass("keyword_pass");
+                    });
+                }
+            },0);
         }
 
         // Imgur image preview 시
@@ -5280,7 +5473,7 @@
                     }
 
                     if(ch_text.toLowerCase() !== ch_streamer_id.toLowerCase()){
-                        $aElem.after(" <span style=\"color:#000;font-weight:bold;vertical-align:top;\">["+ch_text+"]</span>");
+                        $aElem.after(" <span class=\"keyword_pass\" style=\"color:#000;font-weight:bold;vertical-align:top;\">["+ch_text+"]</span>");
                     }
 
                     // 스크롤 내리기
@@ -5500,6 +5693,7 @@
                 getImgurData($line, documentElem, iframeElems, ADD_imgur_id, ADD_imgur_type);
             }
         }
+
         // 향상된 자동스크롤
         if(ADD_config.chat_scroll){
             // var scroll_height_check = documentElem.find(".content").prop("scrollHeight") - (documentElem.find(".content").scrollTop()+documentElem.find(".content").height());
@@ -5516,7 +5710,6 @@
 
         chatting_arrive_check = true;
     }
-
 
     //////////////////////////////////////////////////////////////////////////////////
     // 좌표 보내기 버튼 DOE 생성하기 위한 함수
@@ -5825,6 +6018,23 @@
                                 background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABaCAYAAAA/xl1SAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTMyIDc5LjE1OTI4NCwgMjAxNi8wNC8xOS0xMzoxMzo0MCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUuNSAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RjBEQjEyRDJFQzRCMTFFNkFEQjVENzAwNDkwOUQ4MDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RjBEQjEyRDNFQzRCMTFFNkFEQjVENzAwNDkwOUQ4MDYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpGMERCMTJEMEVDNEIxMUU2QURCNUQ3MDA0OTA5RDgwNiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpGMERCMTJEMUVDNEIxMUU2QURCNUQ3MDA0OTA5RDgwNiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgmImiEAAAs1SURBVHja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);
                                 background-repeat:no-repeat;
                                 background-position:center center;
+                            }
+                            .chatContent a.autokeyword, .chatContent a.autokeyword:link{
+                                color:#000 !important;
+                                font-family:dotum;
+                                position:relative
+                            }
+                            .chatContent a.autokeyword:after, .chatContent a.autokeyword:after{
+                                opacity: 0.33;
+                                z-index: -1;
+                                height: calc(100% + 6px);
+                                width: calc(100% + 4px);
+                                content: " ";
+                                position: absolute;
+                                bottom: -3px;
+                                right: -2px;
+                                border-radius: 7px;
+                                background-color: powderblue;
                             }
                             </style>
                             `);
