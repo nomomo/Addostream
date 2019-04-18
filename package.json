@@ -1,7 +1,7 @@
 {
   "name": "Addostream",
-  "version": "1.49.2",
-  "update": "편한 좌표 불러오기 시 두스 좌표 사이트의 것을 가져오도록 변경. 실험실 기능 추가",
+  "version": "1.49.3",
+  "update": "자잘한 버그 수정",
   "description": "",
   "notice":""
 }
