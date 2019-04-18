@@ -5913,9 +5913,9 @@
                         `);
                     }
 
-                    if($GLOBAL_IFRAME_DOCUMENT.find("ADD_chat_css").length === 0){
+                    if($GLOBAL_IFRAME_DOCUMENT.find("#ADD_chat_css").length === 0){
                         $GLOBAL_IFRAME_DOCUMENT.find("head").append(`
-                            <style id="#ADD_chat_css" type="text/css">
+                            <style id="ADD_chat_css" type="text/css">
                             #ADD_send_location_container {
                                 position: absolute;
                                 bottom: 10px;
