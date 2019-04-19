@@ -43,7 +43,7 @@
 ## History
 * 2019-04-19 (v 1.49.3)
   *  자잘한 버그 수정
-  *  실험실에 방송용 Chatbox 생성 기능(방송 모드) 추가. 사용법:([](https://raw.githubusercontent.com/nomomo/Addostream/master/images/addostream_broadcaster_setting.jpg))
+  *  실험실에 방송용 Chatbox 생성 기능(방송 모드) 추가. [사용법](https://raw.githubusercontent.com/nomomo/Addostream/master/images/addostream_broadcaster_setting.jpg)
 * 2019-04-05 (v 1.49.2)
   *  편한 좌표 불러오기 시 기본 두스 좌표 사이트(coord.dostream.com)의 것을 가져오도록 변경
   *  실험실 기능 추가 - 좌표 사이트 선택, 채팅에서 스트리머 이름 자동 링크
