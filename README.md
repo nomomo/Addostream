@@ -41,6 +41,12 @@
 * Q: 설치한 후에 채팅창에서 닉네임을 눌러도 바뀌는게 없어요<br />A: 톱니바퀴 모양 버튼을 눌러 설정 창을 열고, 채팅 컨트롤에 체크한 후 저장한 뒤 새로고침 하세요
 
 ## History
+* 2019-05-02 (v 1.49.4)
+  *  방송 모드 테마 추가(box, twitch, simple)
+  *  방송 모드 변경 시 더 이상 새로고침이 필요 없음(라이브로 바뀜)
+  *  채팅매니저 차단 시 시스템 메시지 출력
+  *  채팅매니저 차단 시 채팅창에서 해당 유저의 모든 채팅 삭제
+  *  채팅매니저 관리 창 변경 등
 * 2019-04-19 (v 1.49.3)
   *  자잘한 버그 수정
   *  실험실에 방송용 Chatbox 생성 기능(방송 모드) 추가. [사용법](https://raw.githubusercontent.com/nomomo/Addostream/master/images/addostream_broadcaster_setting.jpg)
