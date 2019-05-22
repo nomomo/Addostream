@@ -1,7 +1,7 @@
 {
   "name": "Addostream",
-  "version": "1.49.4",
-  "update": "<br /><br />방송 모드 테마 추가(box, twitch, simple)<br />방송 모드 변경 시 새로고침이 필요 없음(라이브 변경)<br />채팅매니저 차단 시 시스템 메시지 출력<br />채팅매니저 차단 시 채팅창에서 해당 유저의 모든 채팅 삭제<br />채팅매니저 관리 창 변경 등<br />",
+  "version": "1.49.5",
+  "update": "실험실에 채팅-재생창 위치 반전 기능 추가 등",
   "description": "",
   "notice":""
 }
