@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.49.4
+// @version     1.49.5
 // @icon        https://raw.githubusercontent.com/nomomo/Addostream/master/images/logo.png
 // @homepageURL https://nomomo.github.io/Addostream/
 // @supportURL  https://github.com/nomomo/Addostream/issues
@@ -224,7 +224,7 @@
 
     // API로 접근해서 스트리머 이름을 가져올 수도 있으나,
     // API CALL 을 줄이기 위해 원래부터 두스 MAIN에 있던 스트리머 이름을 적어둔다.
-    var streamerArray = [["hanryang1125","풍월량","풍온","김영태","영태"],["ddahyoni","따효니","효니"],["kss7749","쉐리","쉐옹"],["looksam","룩삼"],["yapyap30","얍얍"],["saddummy","서새봄냥","서새봄","새봄추","새봄"],["109ace","철면수심","철수형","철쑤","쑤심","진배"],["rhdgurwns","공혁준","공선생","르건즈","혁준이","혁주니","혁준"],["gmdkdsla","흐앙님","흐앙"],["jungtaejune","똘똘똘이","똘3","똘삼","정태준"],["mascahs","마스카"],["steelohs","스틸로"],["kimdoe","김도"],["togom","토곰"],["htk_","흐트크"],["ogn_lol","OGN 롤챔스"],["kanetv8","케인TV","케인"],["yumyumyu77","소풍왔니","소풍이","소풍","작은풍","원유리"],["tjskdutls","서나랑","스나랑"],["sung0","쥬팬더"],["game2eye","홍방장"],["cocopopp671","초승달","승따리","승딸이","승딸","승달"],["dingception","딩셉션"],["redteahs","홍차"],["zzamtiger0310","짬타수아","짬타"],["rldnddl789","아빠킹"],["eulcs1","EU LCS"],["kkoma","Kkoma"],["1983kej","단군","김의중","의중"],["lol_peanut","Peanut"],["faker","Faker","faker","페이커","이상혁","상혁","페온"],["nrmtzv","으음"],["nicegametv","나겜"],["teaminven","인벤"],["capta1n_pony","포니"],["huni","Huni"],["sktt1_wolf","Wolf"],["bang","Bang"],["wpghd321","류제홍"],["jmjdoc","칸데르니아","칸데","두방"],["yungi131","윤기"],["mediamuse","미디어뮤즈","미뮤"],["veritaskk","Veritas","베리타스","싸세"],["themarinekr","김정민"],["tvindra","인드라"],["tranth","자동"],["seine1026","세인님"],["sonycast_","소니쇼","소니쿤"],["dou3796","뱅붕"],["rudbeckia7","연두는말안드뤄","연두"],["trisha","트리샤"],["naseongkim","김나성","나성"],["dlxowns45","태준이"],["handongsuk","한동숙","동수칸","동숙"],["alenenwooptv","웁_게임방송"],["mr_coat","노래하는코트"],["ajehr","머독"],["lol_crown","Crown"],["rooftopcat99","옥냥이"],["myzet1990","개구멍"],["yoonroot","윤루트"],["sn400ja","액시스마이콜","마이콜"],["tape22222","테이프2"],["miracle0o0","미라클티비"],["bighead033","빅헤드"],["wkgml","견자희"],["queenhuz","후즈"],["kiyulking","김기열"],["asdn6388","나락호프"],["lol_cuvee","Cuvee"],["VSL","VSL"],["drlee_kor","이민우33세"],["CoreJJ","CoreJJ"],["lol_ambition","앰비션","엠비션","강찬밥","강찬용"],["Axenix","아제닉스"],["maknoonlol","막눈"],["zilioner","침착맨","이말년"],["timeofcreate","홍랑"],["twitchshow","트위치쇼"],["kangqui","강퀴"],["team_spiritzero","Team Spiritzero"],["zizionmy","젼마이"],["lol_blank","Blank"],["ogn_ow","OGN 오버워치"],["juankorea","주안코리아"],["woowakgood","우왁굳"],["www0606","푸딩"],["runner0608","러너"],["flowervin","꽃빈"],["h920103","이초홍","초홍"],["hj0514","백설양"],["pbstream77","피비스트림"],["llilka","릴카"],["beyou0728","피유","끠유"],["serayang","세라양"],["mister903","갱생레바","레바"],["what9honggildong","왓구홍길동"],["chicken_angel","통닭천사"],["godbokihs","갓보기"],["yuriseo","서유리"],["kimminyoung","아옳이","김민영"],["gabrielcro","가브리엘","가비"],["starcraft_kr","스타크래프트 KR"],["yeziss","신예지"],["ch1ckenkun","치킨쿤","보해"],["lds7131","더헬"],["nodolly","노돌리"],["haku861024","정직원"],["nanajam777","우정잉","정잉"],["leehunnyeo","별루다"],["streamer2u","이유님"],["hatsalsal","햇살살"],["pommel0303","폼멜"],["hosu0904","호수"],["surrenderhs","서렌더"],["eukkzzang","윾짱"],["gageu","가그"],["ange_i","요뿌니"],["menpa1030","멘파"],["dua3362","서넹"],["dda_ju","다주"],["taesangyun","태상"],["oreo4679","리치1"],["dmdtkadl69","응삼이"],["sigwon","시권"],["rngudwnswkd","푸린"],["jungjil","정질"],["ses836","인간젤리"],["DrAquinas","DrAquinas"],["tree2512","말퓨"],["frog135","게구리"],["leechunhyang","이춘향"],["cherrypach","꽃핀"],["lovelyyeon","연두부"],["yd0821","양띵"],["2chamcham2","탬탬버린","탬탬"],["jinu6734","김진우"],["ddolking555","똘킹"],["erenjjing","에렌디라"],["suk_tv","석티비"],["h0720","군림보"],["rellacast","렐라"],["silphtv","실프"],["playhearthstonekr","playhearthstonekr"],["mirage720","미라지오빠"],["1am_shin","신기해"],["maruemon1019","마루에몽"],["ulsanbigwhale","울산큰고래"],["areuming","알밍"],["esther950","에쓰더"],["pacific8815","쌍베","전상빈"],["dogswellfish","개복어"],["yeonchobom","연초봄"],["ssambahong","홍진영"],["Twipkr","트윕KR"],["reniehour","레니아워"],["caroline9071","숑아"],["ssambahong","쌈바홍","홍진영"],["Funzinnu","Funzinnu"],["loveseti","미모"],["kimgaeune","김총무님"],["1uming","루밍이","루밍"],["invenk01","김영일","K01","김01"],["sal_gu","살인마협회장","살협"],["flurry1989","플러리","로겨","조현수","겨러리"],["holsbro","홀스형","홀스"],["hn950421","고말숙","말숙"],["jaeheeng2","햄재희","재희"],["hwkang2","캡틴잭","캡잭","캡짹"],["yunlovejoy","도여사"],["yatoring","야토링"],["lolluk4","루ㅋ4"],["rkdthdus930","강소연","타노스","탑분쇄기","수장님"],["seogui","서긔"],["pikra10","재슥짱"],["playoverwatch_kr","오버워치 이스포츠"],["maxim_korea_official","남자매거진맥심"],["hanururu","하느르"],["obm1025","오킹"],["acro_land","아크로"],["choerakjo","최락조"],["megthomatho","맥또마또"],["s1032204","삐부"],["rkdwl12","강지"],["jaewon4915","김재원"],["zennyrtlove","신재은"],["2sjshsk","유누"],["queenmico","미코"],["lsd818","득털"],["wlswnwlswn","진주몬"],["apzks1236","학살"],["sunbaking","선바"],["rockid1818","모모88"],["moogrr1211","무굴"],["twitchkr","TwitchKR"],["tlfjaos","시러맨"],["dawnhs","DawN"],["mata","마타타마","마타"],["lol_khan","Khan"],["buzzbean11","대도서관","대도"],["mhj1682","카트문호준","문호준"],["remguri","렘쨩"],["heavyrainism","호무새"],["lck_korea","LCK Korea"],["lol_madlife","매드라이프","매라"],["lol_helios","헬리오스"],["pparkshy","샤이"],["pubgkorea","PUBGKorea"],["riotgames","Riot Games"],["lisalove","리즈리사"],["mbcmlt","엠비씨마리텔"],["mbcmlt1","엠비씨마리텔1"],["mbcmlt2","엠비씨마리텔2"],["mbcmlt3","엠비씨마리텔3"],["mbcmlt4","엠비씨마리텔4"],["mbcmlt5","엠비씨마리텔5"],["mbcmlt6","엠비씨마리텔6"],["mbcmlt7","엠비씨마리텔7"],["mbcmlt8","엠비씨마리텔8"],["mbcmlt9","엠비씨마리텔9"],["insec13","인섹"],["realkidcozyboy","키드밀리"],["sbsmobile24","배거슨라이브","배거슨","배성재"],["ok_ja","박옥자누나","박옥자","옥자"],["boxer_lim","임요환"],["kimukihun","기무기훈"],["needsonyun","사신갓","사신"],["dardarae","달다래오"],["taezzang","태은짱","태은쨩","태은"],["jammi95","잼미님","잼미"],["coppag2","꿀혜"],["overwatchleague_kr","오버워치리그"],["fastloves","홍진호"],["jinsooo0","진수0","진수"]];
+    var streamerArray = [["hanryang1125","풍월량","풍온","김영태","영태"],["ddahyoni","따효니","효니"],["kss7749","쉐리","쉐옹"],["looksam","룩삼"],["yapyap30","얍얍"],["saddummy","서새봄냥","서새봄","새봄추","새봄"],["109ace","철면수심","철수형","철쑤","쑤심","진배"],["rhdgurwns","공혁준","공선생","르건즈","혁준이","혁주니","혁준"],["gmdkdsla","흐앙님","흐앙"],["jungtaejune","똘똘똘이","똘3","똘삼","정태준"],["mascahs","마스카"],["steelohs","스틸로"],["kimdoe","김도"],["togom","토곰"],["htk_","흐트크"],["ogn_lol","OGN 롤챔스"],["kanetv8","케인TV","케인"],["yumyumyu77","소풍왔니","소풍이","소풍","작은풍","원유리"],["tjskdutls","서나랑","스나랑"],["sung0","쥬팬더"],["game2eye","홍방장"],["cocopopp671","초승달","승따리","승딸이","승딸","승달"],["dingception","딩셉션"],["redteahs","홍차"],["zzamtiger0310","짬타수아","짬타"],["rldnddl789","아빠킹"],["eulcs1","EU LCS"],["kkoma","Kkoma"],["1983kej","단군","김의중","의중"],["lol_peanut","Peanut"],["faker","Faker","faker","페이커","이상혁","상혁","페온"],["nrmtzv","으음"],["nicegametv","나겜"],["teaminven","인벤"],["capta1n_pony","포니"],["huni","Huni"],["sktt1_wolf","Wolf"],["bang","Bang"],["wpghd321","류제홍"],["jmjdoc","칸데르니아","칸데","두방"],["yungi131","윤기"],["mediamuse","미디어뮤즈","미뮤"],["veritaskk","Veritas","베리타스","싸세"],["themarinekr","김정민"],["tvindra","인드라"],["tranth","자동"],["seine1026","세인님"],["sonycast_","소니쇼","소니쿤"],["dou3796","뱅붕"],["rudbeckia7","연두는말안드뤄","연두"],["trisha","트리샤"],["naseongkim","김나성","나성"],["dlxowns45","태준이"],["handongsuk","한동숙","동수칸","동숙"],["alenenwooptv","웁_게임방송"],["mr_coat","노래하는코트"],["ajehr","머독"],["lol_crown","Crown"],["rooftopcat99","옥냥이"],["myzet1990","개구멍"],["yoonroot","윤루트"],["sn400ja","액시스마이콜","마이콜"],["tape22222","테이프2"],["miracle0o0","미라클티비"],["bighead033","빅헤드"],["wkgml","견자희"],["queenhuz","후즈"],["kiyulking","김기열"],["asdn6388","나락호프"],["lol_cuvee","Cuvee"],["VSL","VSL"],["drlee_kor","이민우33세"],["CoreJJ","CoreJJ"],["lol_ambition","앰비션","엠비션","강찬밥","강찬용"],["Axenix","아제닉스"],["maknoonlol","막눈"],["zilioner","침착맨","이말년"],["timeofcreate","홍랑"],["twitchshow","트위치쇼"],["kangqui","강퀴"],["team_spiritzero","Team Spiritzero"],["zizionmy","젼마이"],["lol_blank","Blank"],["ogn_ow","OGN 오버워치"],["juankorea","주안코리아"],["woowakgood","우왁굳"],["www0606","푸딩"],["runner0608","러너"],["flowervin","꽃빈"],["h920103","이초홍","초홍"],["hj0514","백설양"],["pbstream77","피비스트림"],["llilka","릴카"],["beyou0728","피유","끠유"],["serayang","세라양"],["mister903","갱생레바","레바"],["what9honggildong","왓구홍길동"],["chicken_angel","통닭천사"],["godbokihs","갓보기"],["yuriseo","서유리"],["kimminyoung","아옳이","김민영"],["gabrielcro","가브리엘","가비"],["starcraft_kr","스타크래프트 KR"],["yeziss","신예지"],["ch1ckenkun","치킨쿤","보해"],["lds7131","더헬"],["nodolly","노돌리"],["haku861024","정직원"],["nanajam777","우정잉","정잉"],["leehunnyeo","별루다"],["streamer2u","이유님"],["hatsalsal","햇살살"],["pommel0303","폼멜"],["hosu0904","호수"],["surrenderhs","서렌더"],["eukkzzang","윾짱"],["gageu","가그"],["ange_i","요뿌니"],["menpa1030","멘파"],["dua3362","서넹"],["dda_ju","다주"],["taesangyun","태상"],["oreo4679","리치1"],["dmdtkadl69","응삼이"],["sigwon","시권"],["rngudwnswkd","푸린"],["jungjil","정질"],["ses836","인간젤리"],["DrAquinas","DrAquinas"],["tree2512","말퓨"],["frog135","게구리"],["leechunhyang","이춘향"],["cherrypach","꽃핀"],["lovelyyeon","연두부"],["yd0821","양띵"],["2chamcham2","탬탬버린","탬탬"],["jinu6734","김진우"],["ddolking555","똘킹"],["erenjjing","에렌디라"],["suk_tv","석티비"],["h0720","군림보"],["rellacast","렐라"],["silphtv","실프"],["playhearthstonekr","playhearthstonekr"],["mirage720","미라지오빠"],["1am_shin","신기해"],["maruemon1019","마루에몽"],["ulsanbigwhale","울산큰고래"],["areuming","알밍"],["esther950","에쓰더"],["pacific8815","쌍베","전상빈"],["dogswellfish","개복어"],["yeonchobom","연초봄"],["ssambahong","홍진영"],["Twipkr","트윕KR"],["reniehour","레니아워"],["caroline9071","숑아"],["ssambahong","쌈바홍","홍진영"],["Funzinnu","Funzinnu"],["loveseti","미모"],["kimgaeune","김총무님"],["1uming","루밍이","루밍"],["invenk01","김영일","K01","김01"],["sal_gu","살인마협회장","살협"],["flurry1989","플러리","로겨","조현수","겨러리"],["holsbro","홀스형","홀스"],["hn950421","고말숙","말숙"],["jaeheeng2","햄재희","재희"],["hwkang2","캡틴잭","캡잭","캡짹"],["yunlovejoy","도여사"],["yatoring","야토링"],["lolluk4","루ㅋ4"],["rkdthdus930","강소연","타노스","탑분쇄기","수장님"],["seogui","서긔"],["pikra10","재슥짱"],["playoverwatch_kr","오버워치 이스포츠"],["maxim_korea_official","남자매거진맥심"],["hanururu","하느르"],["obm1025","오킹"],["acro_land","아크로"],["choerakjo","최락조"],["megthomatho","맥또마또"],["s1032204","삐부"],["rkdwl12","강지"],["jaewon4915","김재원"],["zennyrtlove","신재은"],["2sjshsk","유누"],["queenmico","미코"],["lsd818","득털"],["wlswnwlswn","진주몬"],["apzks1236","학살"],["sunbaking","선바"],["rockid1818","모모88"],["moogrr1211","무굴"],["twitchkr","TwitchKR"],["tlfjaos","시러맨"],["dawnhs","DawN"],["mata","마타타마","마타"],["lol_khan","Khan"],["buzzbean11","대도서관","대도"],["mhj1682","카트문호준","문호준"],["remguri","렘쨩"],["heavyrainism","호무새"],["lck_korea","LCK Korea"],["lol_madlife","매드라이프","매라"],["lol_helios","헬리오스"],["pparkshy","샤이"],["pubgkorea","PUBGKorea"],["riotgames","Riot Games"],["lisalove","리즈리사"],["mbcmlt","엠비씨마리텔"],["mbcmlt1","엠비씨마리텔1"],["mbcmlt2","엠비씨마리텔2"],["mbcmlt3","엠비씨마리텔3"],["mbcmlt4","엠비씨마리텔4"],["mbcmlt5","엠비씨마리텔5"],["mbcmlt6","엠비씨마리텔6"],["mbcmlt7","엠비씨마리텔7"],["mbcmlt8","엠비씨마리텔8"],["mbcmlt9","엠비씨마리텔9"],["insec13","인섹"],["realkidcozyboy","키드밀리"],["sbsmobile24","배거슨라이브","배거슨","배성재"],["ok_ja","박옥자누나","박옥자","옥자"],["boxer_lim","임요환"],["kimukihun","기무기훈"],["needsonyun","사신갓","사신"],["dardarae","달다래오","차짬좌"],["taezzang","태은짱","태은쨩","태은"],["jammi95","잼미님","잼미"],["coppag2","꿀혜"],["overwatchleague_kr","오버워치리그"],["fastloves","홍진호"],["jinsooo0","진수0","진수"],["wltn4765","지수소녀"],["gamesdonequick","GamesDoneQuick"],["dragon3652","스피드소닉"],["parkjand","박잔디"],["jinnytty","윰찌니"],["danpaeng2","단팽이"],["inas1220","야생의딸기"],["limlim72","진자림"],["bongsoon0115","봉순"],["eodyd188","밴쯔","벤쯔"],["duedrop","권이슬","이슬이","이스리"],["soulkrlol","소우릎"],["lo10002","혜요"],["GhostGC","고스트","수광","수팡"]];
     var streamerArray_name = [],
         streamerArray_display_name = [],
         streamerArray_AutoComplete = [];
@@ -346,6 +346,8 @@
             insagirl_block_dobae : { category:"general", depth:2, type: "checkbox", value: false, title:"연속된 동일 좌표 숨기기", desc:"동일 유저가 같은 좌표를 연속하여 올릴 경우<br />가장 최근의 것만 남기고 숨김" },
             insagirl_block_dobae_by_href : { category:"general", depth:3, type: "checkbox", value: false, title:"동일 유저가 아닐 경우에도 숨김", desc:"유저에 상관 없이 동일 좌표가 연속되는 경우 무조건 숨김" },
             insagirl_select : { under_dev:true, category:"general", depth:3, type: "radio", value: 1, title:"좌표 사이트 선택", desc:"", radio: {dostream: {title: "<span style='font-size:11px;'>coord.dostream.com</span>", value:1}, insagirl: {title: "<span style='font-size:11px;'>insagirl-hrm.appspot.com</span>", value:2}} },
+            
+            theme_leftchat : { under_dev:true, category:"general", depth:1, type: "checkbox", value: false, title:"채팅창 위치를 왼쪽으로 변경", desc:"", change:function(){ADD_customStyle();} },
 
             list : { category:"list", category_name:"리스트", depth:1, type: "checkbox", value:true, title:"메인 리스트 관리 기능 사용", desc:"메인 리스트 관리 기능을 일괄적으로 켜고 끈다."},
             main_list_two_column : { under_dev:true, category:"list", depth:2, type: "checkbox", value:false, title:"[실험실] 메인 리스트를 두 줄로 표시", desc:"- 모니터 가로 해상도 1920 이상에 권장<br />- 섬네일 기능 사용 시 중간 설정이 적당함", change:function(){reloadMain();}},
@@ -376,9 +378,10 @@
             remember_youtube : { category:"list", depth:3, type: "checkbox", value: false, title:"유투브 숨기기", desc:"" },
             list_sort_by_viewer : { under_dev:true, category:"list", depth:2, type: "checkbox", value: false, title:"[실험실] 무조건 시청자 수로 정렬", desc:"- 무조건 시청자 수가 많은 항목이 위로 오도록 정렬<br />- 리스트 순서와 관련된 다른 모든 설정을 무시" },
 
-            playing_quick_list_button : { category:"playing", category_name:"재생 중", depth:1, type: "checkbox", value: true, title:"퀵 리스트 버튼 표시", desc:"재생 중 팝업으로 메인 리스트를 볼 수 있도록<br />퀵 리스트 버튼을 표시" },
-            playing_chat_button : { category:"playing", depth:1, type: "checkbox", value: true, title:"트위치↔멀티트위치 전환 버튼 표시", desc:"트위치 또는 멀티트위치 재생 시<br />서로 전환할 수 있는 버튼을 표시" },
-            playing_setting_button : { category:"playing", depth:1, type: "checkbox", value: true, title:"설정 버튼 표시", desc:"재생 중 설정 버튼을 표시.<br />체크 해제 시 설정 버튼은 메인에서만 노출됨" },
+            playing_quick_list_button : { category:"playing", category_name:"재생 중", depth:1, type: "checkbox", value: true, title:"퀵 리스트 버튼 표시", desc:"재생 중 팝업으로 메인 리스트를 볼 수 있도록<br />퀵 리스트 버튼을 표시", change:function(){$(window).trigger("hashchange");} },
+            playing_chat_button : { category:"playing", depth:1, type: "checkbox", value: true, title:"트위치↔멀티트위치 전환 버튼 표시", desc:"트위치 또는 멀티트위치 재생 시<br />서로 전환할 수 있는 버튼을 표시", change:function(){$(window).trigger("hashchange");} },
+            playing_twip_button : { under_dev:true, category:"playing", depth:1, type: "checkbox", value: false, title:"Twip 버튼 표시", desc:"트위치 재생 시 Twip donate 버튼을 표시<br />donate 창은 새 창으로 열림", change:function(){$(window).trigger("hashchange");} },
+            playing_setting_button : { category:"playing", depth:1, type: "checkbox", value: true, title:"설정 버튼 표시", desc:"재생 중 설정 버튼을 표시.<br />체크 해제 시 설정 버튼은 메인에서만 노출됨", change:function(){$(window).trigger("hashchange");} },
 
             chat_ctr : { category:"chat", category_name:"채팅", depth:1, type: "checkbox", value: false, title:"채팅 제어", desc:"- 채팅 관련 기능을 일괄적으로 켜고 끔<br />- 채팅 관련 기능은 새로고침 해야 적용됨" },
             chat_memo : { category:"chat", depth:2, type: "checkbox", value: true, title:"채팅매니저 기능 사용 (메모 기능)", desc:"- 채팅 닉네임 클릭 시 메모하기 버튼 표시<br />- 닉네임별 메모 작성/차단 가능<br />- 작성한 메모는 채팅창의 닉네임 뒤에 표시됨<br />- 차단 기능은 기존 두스 차단 기능과 별개로<br />　작동하므로, 차단목록이 날아가더라도 보존됨", append:"<span class='show_memo_log btn btn-primary'>채팅매니저 관리</span>" },
@@ -1312,6 +1315,17 @@
         $("head").append(text+font_css);
     }
 
+    function ADD_customStyle(){
+        if(GM_page === C_MAIN || GM_page === C_STREAM){
+            if(ADD_config.theme_leftchat){
+                $("body").addClass("leftchat");
+            }
+            else{
+                $("body").removeClass("leftchat");
+            }
+        }
+    }
+
     function ADD_addStyle(){
         GM_addStyle(`
             /* microtip.css
@@ -1528,7 +1542,7 @@
             #popup_ADD_config{ top:50px; right:10px; }
             #popup_ADD_config .input_text_by_tag { display:none; }
             #popup_ADD_config  .no_border {border:none;}
-            #ADD_change_multi {opacity:0; display:inline-block}/*{ display:none; }*/
+            #ADD_change_multi, #ADD_twip {opacity:0; display:inline-block}/*{ display:none; }*/
             /*.onstream #ADD_change_multi { opacity:1; display:inline-block !important;}*/
             #ADD_quick_list {opacity:0; display:inline-block}/*{ display:none; }*/
             /*.onstream #ADD_quick_list { opacity:1; display:inline-block !important;}*/
@@ -1686,6 +1700,26 @@
             }
             #memo_contents th{
                 white-space:nowrap;
+            }
+
+            /* left chatwrap*/
+            body.leftchat div.chat {
+                right:unset;
+                left:0;
+            }
+            body.leftchat div.wrap {
+                margin-right:unset;
+                margin-left:345px;
+            }
+            body.leftchat div.wrap.wide{
+                margin:0;
+            }
+            body.leftchat .chat.closed button.chat-close{
+                right:unset;
+                left:0;
+            }
+            body.leftchat .chat-btns button.chat-close{
+                float:left;
             }
         `);
     }
@@ -3006,13 +3040,14 @@
                 <div id="notice_text_elem" title="Dosteam+ System Message"><span id="notice_text">문어문어문어문어<br />블러드트레일 블러드트레일</span><span id="notice_text2"></span></div>
                     <div id="history_elem"></div>
                     <div class="AD_title">
-                        <span id="ADD_change_multi" class="btn btn-default" aria-label="멀티트위치↔트위치 전환" data-microtip-position="left" role="tooltip">
-                            <span class="glyphicon glyphicon-resize-horizontal">
+                        <span id="ADD_twip" class="btn btn-default" aria-label="Twip donate" data-microtip-position="left" role="tooltip">
+                            <span class="glyphicon glyphicon-usd"></span>
                         </span>
-                    </span>
+                        <span id="ADD_change_multi" class="btn btn-default" aria-label="멀티트위치↔트위치 전환" data-microtip-position="bottom" role="tooltip">
+                            <span class="glyphicon glyphicon-resize-horizontal"></span>
+                        </span>
                     <span id="ADD_quick_list" class="btn btn-default" aria-label="퀵리스트" data-microtip-position="bottom" role="tooltip">
-                        <span class="glyphicon glyphicon-list">
-                        </span>
+                        <span class="glyphicon glyphicon-list"></span>
                     </span>
                     <span id="ADD_config" class="btn btn-default" aria-label="설정" data-microtip-position="right" role="tooltip">
                         <span class="glyphicon glyphicon-cog">
@@ -5444,8 +5479,8 @@
             if(!$line.find("span.nick").hasClass("colorized")){
                 var temp_color2 = Colors.random(nick);
                 if(ADD_config.broadcaster_mode && temp_color2.name.indexOf("blue") !== -1){
-                    temp_color2.rgb = "rgb(46, 139, 87)";
-                    temp_color2.name = temp_color2.name+"_seagreen_replaced";
+                    temp_color2.rgb = "pink";
+                    temp_color2.name = temp_color2.name+"_pink_replaced";
                 }
                 $line.find("span.nick").addClass("colorized").css("color",temp_color2.rgb).attr("colorzied",temp_color2.name);
             }
@@ -7248,31 +7283,32 @@
     //////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////
 
-    var Colors = {};
-    Colors.names = {
-        orange:"#FF4500",brownishorange:"#DAA520",darkgreen:"#008000",blue:"#0000FF",blueviolet:"#8a2be2",brown:"#a52a2a",cadetblue:"#5f9ea0",chocolate:"#d2691e",coral:"#ff7f50",cornflowerblue:"#6495ed",crimson:"#dc143c",darkblue:"#00008b",darkgoldenrod:"#b8860b",darkmagenta:"#8b008b",darkolivegreen:"#556b2f",darkorange:"#ff8c00",darkorchid:"#9932cc",darkred:"#8b0000",darksalmon:"#e9967a",darkslateblue:"#483d8b",darkslategray:"#2f4f4f",darkturquoise:"#00ced1",darkviolet:"#9400d3",deeppink:"#ff1493",dimgray:"#696969",dodgerblue:"#1e90ff",firebrick:"#b22222",forestgreen:"#228b22",grey:"#808080",hotpink:"#ff69b4",indianred:"#cd5c5c",indigo:"#4b0082",lightcoral:"#f08080",lightsalmon:"#ffa07a",lightseagreen:"#20b2aa",lightslategrey:"#778899",limegreen:"#32cd32",magenta:"magenta",mediumblue:"#0000cd",mediumorchid:"#ba55d3",mediumpurple:"#9370db",mediumseagreen:"#3cb371",mediumslateblue:"#7b68ee",mediumturquoise:"#48d1cc",mediumvioletred:"#c71585",midnightblue:"#191970",navy:"#000080",olive:"olive",olivedrab:"#6b8e23",orangered:"#ff4500",orchid:"#da70d6",pink:"#FF69B4",purple:"purple",red:"#FF0000",rosybrown:"#bc8f8f",royalblue:"#4169e1",saddlebrown:"#8b4513",salmon:"#fa8072",seagreen:"#2e8b57",sienna:"#a0522d",slateblue:"#6a5acd",slategrey:"#708090",steelblue:"#4682b4",tan:"#d2b48c",tomato:"#ff6347",violet:"#ee82ee",
-    };
-    Colors.random = function(str) {
-        if(str === undefined){
-            var result;
-            var count = 0;
-            for (var prop in this.names){
-                if (Math.random() < 1/++count){
-                    result = prop;
+    var Colors = {
+        names: {
+            orange:"#FF4500",brownishorange:"#DAA520",darkgreen:"#008000",blue:"#0000FF",blueviolet:"#8a2be2",brown:"#a52a2a",cadetblue:"#5f9ea0",chocolate:"#d2691e",coral:"#ff7f50",cornflowerblue:"#6495ed",crimson:"#dc143c",darkblue:"#00008b",darkgoldenrod:"#b8860b",darkmagenta:"#8b008b",darkolivegreen:"#556b2f",darkorange:"#ff8c00",darkorchid:"#9932cc",darkred:"#8b0000",darksalmon:"#e9967a",darkslateblue:"#483d8b",darkslategray:"#2f4f4f",darkturquoise:"#00ced1",darkviolet:"#9400d3",deeppink:"#ff1493",dimgray:"#696969",dodgerblue:"#1e90ff",firebrick:"#b22222",forestgreen:"#228b22",grey:"#808080",hotpink:"#ff69b4",indianred:"#cd5c5c",indigo:"#4b0082",lightcoral:"#f08080",lightsalmon:"#ffa07a",lightseagreen:"#20b2aa",lightslategrey:"#778899",limegreen:"#32cd32",magenta:"magenta",mediumblue:"#0000cd",mediumorchid:"#ba55d3",mediumpurple:"#9370db",mediumseagreen:"#3cb371",mediumslateblue:"#7b68ee",mediumturquoise:"#48d1cc",mediumvioletred:"#c71585",midnightblue:"#191970",navy:"#000080",olive:"olive",olivedrab:"#6b8e23",orangered:"#ff4500",orchid:"#da70d6",pink:"#FF69B4",purple:"purple",red:"#FF0000",rosybrown:"#bc8f8f",royalblue:"#4169e1",saddlebrown:"#8b4513",salmon:"#fa8072",seagreen:"#2e8b57",sienna:"#a0522d",slateblue:"#6a5acd",slategrey:"#708090",steelblue:"#4682b4",tan:"#d2b48c",tomato:"#ff6347",violet:"#ee82ee",
+        },
+        random: function(str) {
+            if(str === undefined){
+                var result;
+                var count = 0;
+                for (var prop in this.names){
+                    if (Math.random() < 1/++count){
+                        result = prop;
+                    }
                 }
+                return { name: result, rgb: this.names[result]};
             }
-            return { name: result, rgb: this.names[result]};
-        }
-        else{
-            var hash = 0;
-            for (var i = 0; i < str.length; i++) {
-                hash = str.charCodeAt(i) + ((hash << 5) - hash);
-                hash = hash & hash;
+            else{
+                var hash = 0;
+                for (var i = 0; i < str.length; i++) {
+                    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+                    hash = hash & hash;
+                }
+                var hashkeys = Object.keys(this.names);
+                hash = ((hash % hashkeys.length) + hashkeys.length) % hashkeys.length;
+                var hashkey = hashkeys[hash];
+                return { name: hashkey, rgb: this.names[hashkey] };
             }
-            var hashkeys = Object.keys(this.names);
-            hash = ((hash % hashkeys.length) + hashkeys.length) % hashkeys.length;
-            var hashkey = hashkeys[hash];
-            return { name: hashkey, rgb: this.names[hashkey] };
         }
     };
 
@@ -7796,6 +7832,7 @@
         ///////////////////////////////////////////////////////////////////////////////////
         // 공통 사항
         // CSS LOAD
+        ADD_customStyle();
         ADD_addStyle();
         ADD_head_append();
 
@@ -7908,8 +7945,16 @@
             }
             else{
                 $("#ADD_change_multi").css("opacity", "0.0").hide(300);
-    
             }
+
+            // 재생 중 트윕 버튼 설정
+            if(ADD_config.playing_twip_button && (twitch_url  !== -1 || (multitwitch_url !== -1 && document_url.indexOf("&") === -1))){
+                $("#ADD_twip").css("opacity", "1.0").fadeIn(300);
+            }
+            else{
+                $("#ADD_twip").css("opacity", "0.0").hide(300);
+            }
+
     
             // 재생 중 퀵 리스트 버튼 보이기
             if(ADD_config.playing_quick_list_button && GM_page === C_STREAM){
@@ -8106,6 +8151,21 @@
         }
     });
 
+    //////////////////////////////////////////////////////////////////////////////////
+    $(document).on("click", "#ADD_twip", function(){
+        if(ADD_now_playing.id !== undefined && ADD_now_playing.id !== ""){
+            var ww = $(window).width(),
+                wh = $(window).height();
+            var wn = (ww > 850 ? 850 : ww/5*4);
+            var left  = (ww/2)-(wn/2),
+                top = (wh/2)-(wh/5*4/2);
+            window.open("https://twip.kr/"+ADD_now_playing.id,"winname",
+                "directories=yes,titlebar=yes,toolbar=yes,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+wn+",height="+wh/5*4+",top="+top+",left="+left);
+        }
+        else{
+            ADD_DEBUG("ADD_now_playing 이 없다.", ADD_now_playing);
+        }
+    });
 
     //////////////////////////////////////////////////////////////////////////////////
     // 퀵리스트 온오프 이벤트
