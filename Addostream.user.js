@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.49.5
+// @version     1.49.6
 // @icon        https://raw.githubusercontent.com/nomomo/Addostream/master/images/logo.png
 // @homepageURL https://nomomo.github.io/Addostream/
 // @supportURL  https://github.com/nomomo/Addostream/issues
@@ -1573,7 +1573,7 @@
             .btn {font-size: 12px;}
             .main-streams>ul>li>a{padding: 10px 5px 10px 15px !important;}
             .ADD_li_box_container{position:relative;}
-            .ADD_li_box{position:absolute; top:-42px; right:70px; height:30px; vertical-align:middle; text-align:center; font-size:12px; z-index:100; margin:0;}
+            .ADD_li_box{position:absolute; top:-42px; right:70px; height:30px; vertical-align:middle; text-align:center; font-size:12px; z-index:5; margin:0;}
             .ADD_li_box:before{content: "";display:inline-block;vertical-align: middle;height: 100%;}
             #popup_ADD_quick .ADD_checkbox_container{display:none;}
             #popup_ADD_quick .multitwitch_button btn:hover{background:none;}
@@ -1720,6 +1720,10 @@
             }
             body.leftchat .chat-btns button.chat-close{
                 float:left;
+            }
+            body.leftchat .stream_zoomout{
+                left:unset !important;
+                right:30px;
             }
         `);
     }
