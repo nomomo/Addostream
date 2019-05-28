@@ -1,7 +1,7 @@
 {
   "name": "Addostream",
-  "version": "1.49.5",
-  "update": "실험실에 채팅-재생창 위치 반전 기능 추가 등",
+  "version": "1.49.6",
+  "update": "채팅창 좌측으로 이동 사용 시<br />팝업 플레이어가 우측에 뜨도록 변경",
   "description": "",
   "notice":""
 }
