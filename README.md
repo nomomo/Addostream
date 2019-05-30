@@ -7,21 +7,8 @@
   * Firefox - [Tampermonkey](https://addons.mozilla.org/ko/firefox/addon/tampermonkey/)
 * 문제 생길 시 채팅 관련 기능 끄고 새로고침 또는 재설치 하십시오.
 
-
-* 버그 많음 버그리포트 바랍니다 (__) nomotg@gmail.com
-* 버그 제보 시 아래의 내용을 함께 보내주시면 더 빨리 수정 가능합니다.
-  - 구체적인 증상
-  - 두드온 버전(1.xx.x)
-  - 사용 중인 브라우저 이름(Chrome? Firefox?)
-  - 사용 중인 UserScript 확장기능 이름(Tampermonkey? Violentmonkey?)
-  - 가능한 경우 설정 창 캡쳐 이미지 or 설정 창에서 Backup & Restore 누른 후 나오는 텍스트(필수는 아님)
-
-
 ## Preview
 ![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/addostream_full_option_preview.png)
-
-## Config
-![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/ADD_CONFIG.png)
 
 ## Install
 1. 자신의 브라우저에 맞는 유저스크립트 확장기능 설치 - 아래의 링크를 클릭하여 이동
@@ -31,6 +18,11 @@
 2. 확장 기능 설치 이후 아래의 링크를 클릭하여 이동, 설치 버튼 누르기
    * [https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js](https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js)
    * 주의: 본 스크립트를 설치 및 사용하며 브라우저 과부하로 인한 응답 없음/뻗음 등 으로 인한 데이터 손실 등 문제 발생 시 개발자는 책임지지 않음(보고된 문제는 없음)
+
+## How to Use
+* 설치 후 두스트림 메인에 생기는 톱니바퀴 버튼을 눌러 기능을 설정합니다.
+* 일부 기능은 새로고침 해야 적용됩니다.
+* 상세 설정 페이지에서 세부 설정을 변경할 수 있습니다.<br />[](https://raw.githubusercontent.com/nomomo/Addostream/master/images/190310_setting.jpg)
 
 ## FAQ
 * Q: 설치한 후에 채팅창에서 닉네임을 눌러도 바뀌는게 없어요<br />A: 톱니바퀴 모양 버튼을 눌러 설정 창을 열고, 채팅 컨트롤에 체크한 후 저장한 뒤 새로고침 하세요
@@ -151,5 +143,13 @@
 * 팔로워 정보 가져와서 자동으로 추가 (로그인 필요 X)
 * 현재 보고있는 or 특정 Twitch 스트리머의 채팅을 두스 채팅에서 같이보기
   * 특정 닉네임 가진 사람 채팅만 보여주기
-* 테마 기능 등 현재 동작 제대로 안 하는 기능들 복구
 * 딥러닝으로 이미지 분류 및 차단
+
+## 버그 제보
+* 버그 많음 버그리포트 바랍니다 (__) nomotg@gmail.com
+* 버그 제보 시 아래의 내용을 함께 보내주시면 더 빨리 수정 가능합니다.
+  - 구체적인 증상
+  - 두드온 버전(1.xx.x)
+  - 사용 중인 브라우저 이름(Chrome? Firefox?)
+  - 사용 중인 UserScript 확장기능 이름(Tampermonkey? Violentmonkey?)
+  - 가능한 경우 설정 창 캡쳐 이미지 or 설정 창에서 Backup & Restore 누른 후 나오는 텍스트(필수는 아님)
