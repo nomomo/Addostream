@@ -2,9 +2,6 @@
 <!--Add new feature for dostream.com-->
 * 두스트림에 새로운 기능을 추가하는 브라우저 확장 Userscript
 * Chrome, Firefox 지원 (2019-03-10 v1.49 기준)
-* Userscript 확장 기능 필요
-  * Chrome - [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=ko)
-  * Firefox - [Tampermonkey](https://addons.mozilla.org/ko/firefox/addon/tampermonkey/)
 * 문제 생길 시 채팅 관련 기능 끄고 새로고침 또는 재설치 하십시오.
 
 ## Preview
@@ -22,7 +19,7 @@
 ## How to Use
 * 설치 후 두스트림 메인에 생기는 톱니바퀴 버튼을 눌러 기능을 설정합니다.
 * 일부 기능은 새로고침 해야 적용됩니다.
-* 상세 설정 페이지에서 세부 설정을 변경할 수 있습니다.<br />[](https://raw.githubusercontent.com/nomomo/Addostream/master/images/190310_setting.jpg)
+* 상세 설정 페이지에서 세부 설정을 변경할 수 있습니다.<br />![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/190310_setting.jpg)
 
 ## FAQ
 * Q: 설치한 후에 채팅창에서 닉네임을 눌러도 바뀌는게 없어요<br />A: 톱니바퀴 모양 버튼을 눌러 설정 창을 열고, 채팅 컨트롤에 체크한 후 저장한 뒤 새로고침 하세요
@@ -50,12 +47,12 @@
   *  편한 좌표 불러오기 시 기본 두스 좌표 사이트(coord.dostream.com)의 것을 가져오도록 변경
   *  (실험실) 좌표 사이트 선택, 채팅에서 스트리머 이름 자동 링크
 * 2019-04-02 (v 1.49.1)
-  *  (실험실) 도배 대응 기능 추가<br />[상세 설정 페이지](http://www.dostream.com/addostream/) 접속 후 고급 탭의 실험실 기능을 활성화 한 후 설정 가능<br />![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/190402_dobae.png)
+  *  (실험실) 도배 대응 기능 추가<br />상세 설정 페이지 접속 후 고급 탭의 실험실 기능을 활성화 한 후 설정 가능<br />![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/190402_dobae.png)
 * 2019-03-10 (v 1.49.0)
   *  자동스크롤 변경 기능이 좀 더 잘 동작하도록 수정
   *  채팅 이미지 로드 시 가능한 경우 제목, 작성자, 시청 수 등의 정보를 불러오도록 수정
   *  채팅 이미지 로드 디자인 변경
-  *  개발 중 기능 활성화 및 상세 기능 설정을 유저가 직접 설정할 수 있도록 오픈 (실험실)<br />![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/190310_setting.jpg)
+  *  개발 중 기능 활성화 및 상세 기능 설정을 유저가 직접 설정할 수 있도록 오픈 (실험실)
 * 2019-02-24 (v 1.48.3)
   *  설정 창에서 드래그로 스트리머 ID 순서 변경 가능
   *  금지 단어 입력 시 입력한 대문자가 자동으로 소문자로 변경되어 저장되는 증상 수정 - 자주 올라오는 Imgur 이미지 차단할 때 쓰세요.
