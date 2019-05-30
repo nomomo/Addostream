@@ -6743,11 +6743,13 @@
         // 방송 모드 종료 시
         if(GM_page === C_UCHAT && !ADD_config.broadcaster_mode && $GLOBAL_IFRAME_DOCUMENT !== undefined && $GLOBAL_IFRAME_DOCUMENT.find("#ADD_broadcaster_mode_css").length !== 0){
             $GLOBAL_IFRAME_DOCUMENT.find("#ADD_broadcaster_mode_css").remove();
+            ADD_theme();
             return false;
         }
 
         // 방송 모드 시작 시
         if(GM_page === C_UCHAT && ADD_config.broadcaster_mode && $GLOBAL_IFRAME_DOCUMENT !== undefined){
+            ADD_theme("default");
             if($GLOBAL_IFRAME_DOCUMENT.find("#ADD_broadcaster_mode_css").length !== 0){
                 $GLOBAL_IFRAME_DOCUMENT.find("#ADD_broadcaster_mode_css").remove();
             }
