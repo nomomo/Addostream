@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.50.0
+// @version     1.50.1
 // @icon        https://raw.githubusercontent.com/nomomo/Addostream/master/images/logo.png
 // @homepageURL https://nomomo.github.io/Addostream/
 // @supportURL  https://github.com/nomomo/Addostream/issues
@@ -6160,6 +6160,8 @@
         if(!ADD_config.send_location_button && $GLOBAL_IFRAME_DOCUMENT !== undefined && $GLOBAL_IFRAME_DOCUMENT.find("#ADD_send_location_container").length !== 0){
             $GLOBAL_IFRAME_DOCUMENT.find("#ADD_send_location_button").off("click");
             $GLOBAL_IFRAME_DOCUMENT.find("#ADD_send_location_container").remove();
+            return false;
+        } else if(!ADD_config.send_location_button){
             return false;
         }
 
