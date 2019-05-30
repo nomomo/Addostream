@@ -2570,42 +2570,42 @@
         if ( ADD_config.alarm && (!!$.cookie("twitch_api_cookie")) ){
             ADD_DEBUG("DOE 생성을 위해 Twitch API cookie 쿠키 정리 중...");
             // 로컬 변수 선언
-            var $temp_api_cookie = JSON.parse($.cookie("twitch_api_cookie"));
-            if($temp_api_cookie === undefined || $temp_api_cookie === null || $temp_api_cookie.length === 0){
+            var temp_api_cookie = JSON.parse($.cookie("twitch_api_cookie"));
+            if(temp_api_cookie === undefined || temp_api_cookie === null || temp_api_cookie.length === 0){
                 ADD_DEBUG("DOE 생성 중 Twitch API cookie 확인 실패!");
-                ADD_DEBUG("$temp_api_cookie", $temp_api_cookie);
+                ADD_DEBUG("temp_api_cookie", temp_api_cookie);
             }
             else{
                 // 시청자 순으로 정렬하기 (alarm_sort_by_viewer)
                 if(ADD_config.alarm_sort_by_viewer){
-                    $temp_api_cookie.sort(function(a, b) {
+                    temp_api_cookie.sort(function(a, b) {
                         return b.viewers - a.viewers;
                         //return b.viewers > a.viewers ? -1 : b.viewers < a.viewers ? 1 : 0;
                     });
                 }                
 
-                for(i=0; i<$temp_api_cookie.length ; i++ ){
-                    var t_index = data.map(function(o){ return o.streamer; }).indexOf($temp_api_cookie[i].name);
+                for(i=0; i<temp_api_cookie.length ; i++ ){
+                    var t_index = data.map(function(o){ return o.streamer; }).indexOf(temp_api_cookie[i].name);
                     if(t_index !== -1){
-                        data[t_index].title = $temp_api_cookie[i].status;
-                        data[t_index].viewers = $temp_api_cookie[i].viewers;
-                        data[t_index].display_name = $temp_api_cookie[i].display_name;
+                        data[t_index].title = temp_api_cookie[i].status;
+                        data[t_index].viewers = temp_api_cookie[i].viewers;
+                        data[t_index].display_name = temp_api_cookie[i].display_name;
                         data[t_index].main_favorite = true;
 
                         data.splice(0, 0, data.splice(t_index, 1)[0]);
                     }
                     else{
                         var temp_one = {};
-                        temp_one.title = $temp_api_cookie[i].status;
-                        if($temp_api_cookie[i].game !== undefined){
-                            temp_one.game = $temp_api_cookie[i].game;
+                        temp_one.title = temp_api_cookie[i].status;
+                        if(temp_api_cookie[i].game !== undefined){
+                            temp_one.game = temp_api_cookie[i].game;
                         }
                         temp_one.from = "twitch";
-                        temp_one.url = "/twitch/"+$temp_api_cookie[i].name;
-                        temp_one.image = "http://static-cdn.jtvnw.net/previews-ttv/live_user_"+$temp_api_cookie[i].name+"-240x180.jpg";
-                        temp_one.streamer = $temp_api_cookie[i].name;
-                        temp_one.viewers = $temp_api_cookie[i].viewers;
-                        temp_one.display_name = $temp_api_cookie[i].display_name;
+                        temp_one.url = "/twitch/"+temp_api_cookie[i].name;
+                        temp_one.image = "http://static-cdn.jtvnw.net/previews-ttv/live_user_"+temp_api_cookie[i].name+"-240x180.jpg";
+                        temp_one.streamer = temp_api_cookie[i].name;
+                        temp_one.viewers = temp_api_cookie[i].viewers;
+                        temp_one.display_name = temp_api_cookie[i].display_name;
                         temp_one.main_fixed = false;
                         temp_one.main_favorite = true;
 
@@ -3978,12 +3978,12 @@
         else{
             // 아이디에 따른 닉네임 찾기
             var ch_text = "";
-            var $temp_array = rw_array[0].split("&");
-            for (var j=0; j<$temp_array.length; j++){
+            var temp_array = rw_array[0].split("&");
+            for (var j=0; j<temp_array.length; j++){
                 if(j !== 0){
                     ch_text = ch_text+"&";
                 }
-                ch_text = ch_text+ADD_streamer_nick($temp_array[j]).toUpperCase();
+                ch_text = ch_text+ADD_streamer_nick(temp_array[j]).toUpperCase();
             }
             if(rw_array[2] === "multitwitch"){
                 ch_text = ch_text+"(멀티)";
@@ -4793,12 +4793,12 @@
                             var ch_text = "";
                             var ch_streamer_id = href.split("/").pop();
         
-                            var $temp_array = ch_streamer_id.split("&");
-                            for (var j=0; j<$temp_array.length; j++){
+                            var temp_array = ch_streamer_id.split("&");
+                            for (var j=0; j<temp_array.length; j++){
                                 if(j !== 0){
                                     ch_text = ch_text+"&";
                                 }
-                                var temp_id = ADD_streamer_nick($temp_array[j]).toUpperCase();
+                                var temp_id = ADD_streamer_nick(temp_array[j]).toUpperCase();
                                 ch_text = ch_text+temp_id;
                             }
         
@@ -5896,12 +5896,12 @@
                     var ch_text = "";
                     var ch_streamer_id = href.split("/").pop();
 
-                    var $temp_array = ch_streamer_id.split("&");
-                    for (var j=0; j<$temp_array.length; j++){
+                    var temp_array = ch_streamer_id.split("&");
+                    for (var j=0; j<temp_array.length; j++){
                         if(j !== 0){
                             ch_text = ch_text+"&";
                         }
-                        var temp_id = ADD_streamer_nick($temp_array[j]).toUpperCase();
+                        var temp_id = ADD_streamer_nick(temp_array[j]).toUpperCase();
                         ch_text = ch_text+temp_id;
                     }
 
@@ -5977,11 +5977,11 @@
                     {format: 'json', url: youtube_url}, function (data) {
                         ADD_DEBUG("youtube getJSON", youtube_id, data);
 
-                        var $temp_arr = [];
+                        var temp_arr = [];
                         var temp_img_obj = {type:"youtube", id:youtube_id, link: data.thumbnail_url, title: "[Youtube] "+data.title+" - "+data.author_name, "width":data.thumbnail_width, "height":data.thumbnail_height};
-                        $temp_arr.push(temp_img_obj);
+                        temp_arr.push(temp_img_obj);
                         ADD_DEBUG(temp_img_obj);
-                        chatImageDOEfromLinks($line, documentElem, iframeElems, $temp_arr);
+                        chatImageDOEfromLinks($line, documentElem, iframeElems, temp_arr);
                 });
             }
         }
@@ -6031,11 +6031,11 @@
                             `;
                             var title = response.gfyItem.title + " - " + response.gfyItem.userDisplayName;
 
-                            var $temp_arr = [];
+                            var temp_arr = [];
                             var temp_img_obj = {link: "", title: title, html:gfy_html, width:width_mod, height:height_mod, views:response.gfyItem.views};
-                            $temp_arr.push(temp_img_obj);
+                            temp_arr.push(temp_img_obj);
                             ADD_DEBUG(temp_img_obj);
-                            chatImageDOEfromLinks($line, documentElem, iframeElems, $temp_arr);
+                            chatImageDOEfromLinks($line, documentElem, iframeElems, temp_arr);
 
                             // GC
                             response = null;
@@ -6048,11 +6048,11 @@
                                 </div>
                             `;
 
-                            var $temp_arr = [];
+                            var temp_arr = [];
                             var temp_img_obj = {"link": "", "title": "", "html":gfy_html};
-                            $temp_arr.push(temp_img_obj);
+                            temp_arr.push(temp_img_obj);
                             ADD_DEBUG(temp_img_obj);
-                            chatImageDOEfromLinks($line, documentElem, iframeElems, $temp_arr);
+                            chatImageDOEfromLinks($line, documentElem, iframeElems, temp_arr);
                         }
                     });
                 }
@@ -6080,10 +6080,10 @@
                             var image_url = response.thumbnails.medium;
                             var title = response.title + " - " + response.broadcaster.display_name;
 
-                            var $temp_arr = [];
+                            var temp_arr = [];
                             var temp_img_obj = {type:"twitch_clip", id:twitch_thumb_id, link: image_url, title: "[Twitch] "+title, width:480, height:272, views:response.views};
-                            $temp_arr.push(temp_img_obj);
-                            chatImageDOEfromLinks($line, documentElem, iframeElems, $temp_arr);
+                            temp_arr.push(temp_img_obj);
+                            chatImageDOEfromLinks($line, documentElem, iframeElems, temp_arr);
 
                             // GC
                             response = null;
@@ -8336,12 +8336,12 @@
             var display_name = ADD_now_playing.display_name;
             var ch_text = "";
             if(display_name.indexOf("&").length !== -1){
-                var $temp_array = display_name.split("&");
-                for (var j=0; j<$temp_array.length; j++){
+                var temp_array = display_name.split("&");
+                for (var j=0; j<temp_array.length; j++){
                     if(j !== 0){
                         ch_text = ch_text+"&";
                     }
-                    var temp_id = ADD_streamer_nick($temp_array[j]).toUpperCase();
+                    var temp_id = ADD_streamer_nick(temp_array[j]).toUpperCase();
                     ch_text = ch_text+temp_id;
                 }
                 display_name = ch_text;
@@ -8677,16 +8677,16 @@
     function MD5(s){function L(k,d){return(k<<d)|(k>>>(32-d));}function K(G,k){var I,d,F,H,x;F=(G&2147483648);H=(k&2147483648);I=(G&1073741824);d=(k&1073741824);x=(G&1073741823)+(k&1073741823);if(I&d){return(x^2147483648^F^H);}if(I|d){if(x&1073741824){return(x^3221225472^F^H);}else{return(x^1073741824^F^H);}}else{return(x^F^H);}}function r(d,F,k){return(d&F)|((~d)&k);}function q(d,F,k){return(d&k)|(F&(~k));}function p(d,F,k){return(d^F^k);}function n(d,F,k){return(F^(d|(~k)));}function u(G,F,aa,Z,k,H,I){G=K(G,K(K(r(F,aa,Z),k),I));return K(L(G,H),F);}function f(G,F,aa,Z,k,H,I){G=K(G,K(K(q(F,aa,Z),k),I));return K(L(G,H),F);}function D(G,F,aa,Z,k,H,I){G=K(G,K(K(p(F,aa,Z),k),I));return K(L(G,H),F);}function t(G,F,aa,Z,k,H,I){G=K(G,K(K(n(F,aa,Z),k),I));return K(L(G,H),F);}function e(G){var Z;var F=G.length;var x=F+8;var k=(x-(x%64))/64;var I=(k+1)*16;var aa=Array(I-1);var d=0;var H=0;while(H<F){Z=(H-(H%4))/4;d=(H%4)*8;aa[Z]=(aa[Z]| (G.charCodeAt(H)<<d));H++;}Z=(H-(H%4))/4;d=(H%4)*8;aa[Z]=aa[Z]|(128<<d);aa[I-2]=F<<3;aa[I-1]=F>>>29;return aa;}function B(x){var k="",F="",G,d;for(d=0;d<=3;d++){G=(x>>>(d*8))&255;F="0"+G.toString(16);k=k+F.substr(F.length-2,2);}return k;}function J(k){k=k.replace(/rn/g,"n");var d="";for(var F=0;F<k.length;F++){var x=k.charCodeAt(F);if(x<128){d+=String.fromCharCode(x);}else{if((x>127)&&(x<2048)){d+=String.fromCharCode((x>>6)|192);d+=String.fromCharCode((x&63)|128);}else{d+=String.fromCharCode((x>>12)|224);d+=String.fromCharCode(((x>>6)&63)|128);d+=String.fromCharCode((x&63)|128);}}}return d;}var C=Array();var P,h,E,v,g,Y,X,W,V;var S=7,Q=12,N=17,M=22;var A=5,z=9,y=14,w=20;var o=4,m=11,l=16,j=23;var U=6,T=10,R=15,O=21;s=J(s);C=e(s);Y=1732584193;X=4023233417;W=2562383102;V=271733878;for(P=0;P<C.length;P+=16){h=Y;E=X;v=W;g=V;Y=u(Y,X,W,V,C[P+0],S,3614090360);V=u(V,Y,X,W,C[P+1],Q,3905402710);W=u(W,V,Y,X,C[P+2],N,606105819);X=u(X,W,V,Y,C[P+3],M,3250441966);Y=u(Y,X,W,V,C[P+4],S,4118548399);V=u(V,Y,X,W,C[P+5],Q,1200080426);W=u(W,V,Y,X,C[P+6],N,2821735955);X=u(X,W,V,Y,C[P+7],M,4249261313);Y=u(Y,X,W,V,C[P+8],S,1770035416);V=u(V,Y,X,W,C[P+9],Q,2336552879);W=u(W,V,Y,X,C[P+10],N,4294925233);X=u(X,W,V,Y,C[P+11],M,2304563134);Y=u(Y,X,W,V,C[P+12],S,1804603682);V=u(V,Y,X,W,C[P+13],Q,4254626195);W=u(W,V,Y,X,C[P+14],N,2792965006);X=u(X,W,V,Y,C[P+15],M,1236535329);Y=f(Y,X,W,V,C[P+1],A,4129170786);V=f(V,Y,X,W,C[P+6],z,3225465664);W=f(W,V,Y,X,C[P+11],y,643717713);X=f(X,W,V,Y,C[P+0],w,3921069994);Y=f(Y,X,W,V,C[P+5],A,3593408605);V=f(V,Y,X,W,C[P+10],z,38016083);W=f(W,V,Y,X,C[P+15],y,3634488961);X=f(X,W,V,Y,C[P+4],w,3889429448);Y=f(Y,X,W,V,C[P+9],A,568446438);V=f(V,Y,X,W,C[P+14],z,3275163606);W=f(W,V,Y,X,C[P+3],y,4107603335);X=f(X,W,V,Y,C[P+8],w,1163531501);Y=f(Y,X,W,V,C[P+13],A,2850285829);V=f(V,Y,X,W,C[P+2],z,4243563512);W=f(W,V,Y,X,C[P+7],y,1735328473);X=f(X,W,V,Y,C[P+12],w,2368359562);Y=D(Y,X,W,V,C[P+5],o,4294588738);V=D(V,Y,X,W,C[P+8],m,2272392833);W=D(W,V,Y,X,C[P+11],l,1839030562);X=D(X,W,V,Y,C[P+14],j,4259657740);Y=D(Y,X,W,V,C[P+1],o,2763975236);V=D(V,Y,X,W,C[P+4],m,1272893353);W=D(W,V,Y,X,C[P+7],l,4139469664);X=D(X,W,V,Y,C[P+10],j,3200236656);Y=D(Y,X,W,V,C[P+13],o,681279174);V=D(V,Y,X,W,C[P+0],m,3936430074);W=D(W,V,Y,X,C[P+3],l,3572445317);X=D(X,W,V,Y,C[P+6],j,76029189);Y=D(Y,X,W,V,C[P+9],o,3654602809);V=D(V,Y,X,W,C[P+12],m,3873151461);W=D(W,V,Y,X,C[P+15],l,530742520);X=D(X,W,V,Y,C[P+2],j,3299628645);Y=t(Y,X,W,V,C[P+0],U,4096336452);V=t(V,Y,X,W,C[P+7],T,1126891415);W=t(W,V,Y,X,C[P+14],R,2878612391);X=t(X,W,V,Y,C[P+5],O,4237533241);Y=t(Y,X,W,V,C[P+12],U,1700485571);V=t(V,Y,X,W,C[P+3],T,2399980690);W=t(W,V,Y,X,C[P+10],R,4293915773);X=t(X,W,V,Y,C[P+1],O,2240044497);Y=t(Y,X,W,V,C[P+8],U,1873313359);V=t(V,Y,X,W,C[P+15],T,4264355552);W=t(W,V,Y,X,C[P+6],R,2734768916);X=t(X,W,V,Y,C[P+13],O,1309151649);Y=t(Y,X,W,V,C[P+4],U,4149444226);V=t(V,Y,X,W,C[P+11],T,3174756917);W=t(W,V,Y,X,C[P+2],R,718787259);X=t(X,W,V,Y,C[P+9],O,3951481745);Y=K(Y,h);X=K(X,E);W=K(W,v);V=K(V,g);}var i=B(Y)+B(X)+B(W)+B(V);return i.toLowerCase();}
 
     $(document).on("click", "#ADD_config_restore", async () => {
-        var $temp_ADD_config = await GM.getValue("ADD_config");
-        if(!IsJsonString($temp_ADD_config)){
-            $temp_ADD_config = JSON.stringify($temp_ADD_config);
+        var temp_ADD_config = await GM.getValue("ADD_config");
+        if(!IsJsonString(temp_ADD_config)){
+            temp_ADD_config = JSON.stringify(temp_ADD_config);
         }
-        var $temp_ADD_chat_memo = await GM.getValue("ADD_chat_manager_data",[]);
-        if(!IsJsonString($temp_ADD_chat_memo)){
-            $temp_ADD_chat_memo = JSON.stringify($temp_ADD_chat_memo);
+        var temp_ADD_chat_memo = await GM.getValue("ADD_chat_manager_data",[]);
+        if(!IsJsonString(temp_ADD_chat_memo)){
+            temp_ADD_chat_memo = JSON.stringify(temp_ADD_chat_memo);
         }
 
-        var backup_text = "<<<ADD_chat_memo>>>"+$temp_ADD_chat_memo+"<<<ADD_config>>>"+$temp_ADD_config+"<<<END>>>";
+        var backup_text = "<<<ADD_chat_memo>>>"+temp_ADD_chat_memo+"<<<ADD_config>>>"+temp_ADD_config+"<<<END>>>";
         var MD5_key = MD5(backup_text);
         ADD_DEBUG("backup_text",backup_text);
         ADD_DEBUG("MD5_key",MD5_key);
@@ -8714,8 +8714,8 @@
     });
 
     $(document).on("click", "#backup_ok", async () => {
-        var $temp_ADD_config = await GM.getValue("ADD_config");
-        var $temp_ADD_chat_memo = await GM.getValue("ADD_chat_manager_data", []);
+        var temp_ADD_config = await GM.getValue("ADD_config");
+        var temp_ADD_chat_memo = await GM.getValue("ADD_chat_manager_data", []);
         var restore_text = $("#backup_textbox").val();
         $("#backup_text").fadeOut(200);
         setTimeout(async () => {
@@ -8768,7 +8768,7 @@
                     else if(restore_config === undefined || restore_config === null){
                         text_contents = "설정 복원 중 오류 발생!<br />나가려면 배경화면을 누르세요.";
                     }
-                    else if($temp_ADD_config == restore_config && $temp_ADD_chat_memo == recorver_chat_memo){
+                    else if(temp_ADD_config == restore_config && temp_ADD_chat_memo == recorver_chat_memo){
                         text_contents = "현재 설정과 복원할 설정이 같아서 복원하지 않습니다. <br />나가려면 배경화면을 누르세요.";
                     }
                     else {
