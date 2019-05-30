@@ -18,12 +18,7 @@
 
 
 ## Preview
-![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/170702_preview.jpg)
-
-* 원하는 스트리머 최상단 고정 (핀 표시)
-* 원래 메인에 없는 Twitch 스트리머 추가 가능 (★표시)
-* 메인 노출하고 싶지 않은 스트리머 숨기기
-* 체크박스 체크 후 멀티트위치 버튼 누르면 멀티트위치 실행됨
+![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/addostream_full_option_preview.png)
 
 ## Config
 ![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/ADD_CONFIG.png)
@@ -41,29 +36,34 @@
 * Q: 설치한 후에 채팅창에서 닉네임을 눌러도 바뀌는게 없어요<br />A: 톱니바퀴 모양 버튼을 눌러 설정 창을 열고, 채팅 컨트롤에 체크한 후 저장한 뒤 새로고침 하세요
 
 ## History
+* 2019-05-30 (v 1.50.0)
+  *  (실험실) Black 테마 기능 추가
+  *  실험실 기능이었던 채팅 내에서 Clip, Youtube 재생 기능을 기본값으로 적용
+  *  빠른 좌표 기능 내 트위치 좌표에 스트리머 닉네임 표시
+  *  자잘한 버그 수정
 * 2019-05-28 (v 1.49.6)
-  *  채팅창 좌측으로 이동 사용 시 팝업 플레이어가 우측에 뜨도록 변경
+  *  (실험실) 채팅창 좌측으로 이동 사용 시 팝업 플레이어가 우측에 뜨도록 변경
 * 2019-05-22 (v 1.49.5)
-  *  실험실에 채팅-재생창 위치 반전 기능 추가
+  *  (실험실) 채팅-재생창 위치 반전 기능 추가
 * 2019-05-02 (v 1.49.4)
-  *  방송 모드 테마 추가(box, twitch, simple)
-  *  방송 모드 변경 시 더 이상 새로고침이 필요 없음(라이브로 바뀜)
+  *  (실험실) 방송 모드 테마 추가(box, twitch, simple)
+  *  (실험실) 방송 모드 변경 시 더 이상 새로고침이 필요 없음(라이브로 바뀜)
   *  채팅매니저 차단 시 시스템 메시지 출력
   *  채팅매니저 차단 시 채팅창에서 해당 유저의 모든 채팅 삭제
   *  채팅매니저 관리 창 변경 등
 * 2019-04-19 (v 1.49.3)
   *  자잘한 버그 수정
-  *  실험실에 방송용 Chatbox 생성 기능(방송 모드) 추가. [사용법](https://raw.githubusercontent.com/nomomo/Addostream/master/images/addostream_broadcaster_setting.jpg)
+  *  (실험실) 방송용 Chatbox 생성 기능(방송 모드) 추가. [사용법](https://raw.githubusercontent.com/nomomo/Addostream/master/images/addostream_broadcaster_setting.jpg)
 * 2019-04-05 (v 1.49.2)
   *  편한 좌표 불러오기 시 기본 두스 좌표 사이트(coord.dostream.com)의 것을 가져오도록 변경
-  *  실험실 기능 추가 - 좌표 사이트 선택, 채팅에서 스트리머 이름 자동 링크
+  *  (실험실) 좌표 사이트 선택, 채팅에서 스트리머 이름 자동 링크
 * 2019-04-02 (v 1.49.1)
-  *  실험실에 도배 대응 기능 추가<br />[상세 설정 페이지](http://www.dostream.com/addostream/) 접속 후 고급 탭의 실험실 기능을 활성화 한 후 설정 가능<br />![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/190402_dobae.png)
+  *  (실험실) 도배 대응 기능 추가<br />[상세 설정 페이지](http://www.dostream.com/addostream/) 접속 후 고급 탭의 실험실 기능을 활성화 한 후 설정 가능<br />![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/190402_dobae.png)
 * 2019-03-10 (v 1.49.0)
   *  자동스크롤 변경 기능이 좀 더 잘 동작하도록 수정
   *  채팅 이미지 로드 시 가능한 경우 제목, 작성자, 시청 수 등의 정보를 불러오도록 수정
   *  채팅 이미지 로드 디자인 변경
-  *  개발 중 기능 활성화 및 상세 기능 설정을 유저가 직접 설정할 수 있도록 오픈<br />![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/190310_setting.jpg)
+  *  개발 중 기능 활성화 및 상세 기능 설정을 유저가 직접 설정할 수 있도록 오픈 (실험실)<br />![](https://raw.githubusercontent.com/nomomo/Addostream/master/images/190310_setting.jpg)
 * 2019-02-24 (v 1.48.3)
   *  설정 창에서 드래그로 스트리머 ID 순서 변경 가능
   *  금지 단어 입력 시 입력한 대문자가 자동으로 소문자로 변경되어 저장되는 증상 수정 - 자주 올라오는 Imgur 이미지 차단할 때 쓰세요.
