@@ -3,7 +3,7 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.50.1
+// @version     1.50.2
 // @icon        https://raw.githubusercontent.com/nomomo/Addostream/master/images/logo.png
 // @homepageURL https://nomomo.github.io/Addostream/
 // @supportURL  https://github.com/nomomo/Addostream/issues
@@ -41,6 +41,7 @@
 // @grant       unsafeWindow
 // @connect     appspot.com
 // @connect     coord.dostream.com
+// @connect     twitch.tv
 // ==/UserScript==
 // eslint-disable-next-line no-unused-vars
 /*global $, jQuery, ADD_config, Twitch, nude, Colors, GM, unsafeWindow, GM_addStyle, GM_getValue, GM_setValue, GM_xmlhttpRequest, GM_registerMenuCommand, GM_deleteValue, GM_listValues, GM_getResourceText, GM_getResourceURL, GM_log, GM_openInTab, GM_setClipboard, GM_info, GM_getMetadata, GM_notification, GM_getTab, GM_getTabs, GM_saveTab, $, document, console, location, setInterval, setTimeout, clearInterval, page, ignores, exportFunction, dsStream, web_browser, chat_manager_main, chat_manager, Autolinker */
@@ -220,11 +221,11 @@
         twitch_api_cookie = [],
         ADD_status = [],
         ADD_status_init = {"ad_remove":0,"auto_image":0,"api_call":0,"update":0},
-        ADD_now_playing = {id:"", display_name:"", title:""};
+        ADD_now_playing = {id:"", display_name:"", title:"", toonat_link:"", twip_link:""};
 
     // API로 접근해서 스트리머 이름을 가져올 수도 있으나,
     // API CALL 을 줄이기 위해 원래부터 두스 MAIN에 있던 스트리머 이름을 적어둔다.
-    var streamerArray = [["hanryang1125","풍월량","풍온","김영태","영태"],["ddahyoni","따효니","효니"],["kss7749","쉐리","쉐옹"],["looksam","룩삼"],["yapyap30","얍얍"],["saddummy","서새봄냥","서새봄","새봄추","새봄"],["109ace","철면수심","철수형","철쑤","쑤심","진배"],["rhdgurwns","공혁준","공선생","르건즈","혁준이","혁주니","혁준"],["gmdkdsla","흐앙님","흐앙"],["jungtaejune","똘똘똘이","똘3","똘삼","정태준"],["mascahs","마스카"],["steelohs","스틸로"],["kimdoe","김도"],["togom","토곰"],["htk_","흐트크"],["ogn_lol","OGN 롤챔스"],["kanetv8","케인TV","케인"],["yumyumyu77","소풍왔니","소풍이","소풍","작은풍","원유리"],["tjskdutls","서나랑","스나랑"],["sung0","쥬팬더"],["game2eye","홍방장"],["cocopopp671","초승달","승따리","승딸이","승딸","승달"],["dingception","딩셉션"],["redtea","홍차"],["zzamtiger0310","짬타수아","짬타"],["rldnddl789","아빠킹"],["eulcs1","EU LCS"],["kkoma","Kkoma"],["1983kej","단군","김의중","의중"],["lol_peanut","Peanut"],["faker","Faker","faker","페이커","이상혁","상혁","페온"],["nrmtzv","으음"],["nicegametv","나겜"],["teaminven","인벤"],["capta1n_pony","포니"],["huni","Huni"],["sktt1_wolf","Wolf"],["bang","Bang"],["wpghd321","류제홍"],["jmjdoc","칸데르니아","칸데","두방"],["yungi131","윤기"],["mediamuse","미디어뮤즈","미뮤"],["veritaskk","Veritas","베리타스","싸세"],["themarinekr","김정민"],["tvindra","인드라"],["tranth","자동"],["seine1026","세인님"],["sonycast_","소니쇼","소니쿤"],["dou3796","뱅붕"],["rudbeckia7","연두는말안드뤄","연두"],["trisha","트리샤"],["naseongkim","김나성","나성"],["dlxowns45","태준이"],["handongsuk","한동숙","동수칸","동숙"],["alenenwooptv","웁_게임방송"],["mr_coat","노래하는코트"],["ajehr","머독"],["lol_crown","Crown"],["rooftopcat99","옥냥이"],["myzet1990","개구멍"],["yoonroot","윤루트"],["sn400ja","액시스마이콜","마이콜"],["tape22222","테이프2"],["miracle0o0","미라클티비"],["bighead033","빅헤드"],["wkgml","견자희"],["queenhuz","후즈"],["kiyulking","김기열"],["asdn6388","나락호프"],["lol_cuvee","Cuvee"],["VSL","VSL"],["drlee_kor","이민우33세"],["CoreJJ","CoreJJ"],["lol_ambition","앰비션","엠비션","강찬밥","강찬용"],["Axenix","아제닉스"],["maknoonlol","막눈"],["zilioner","침착맨","이말년"],["timeofcreate","홍랑"],["twitchshow","트위치쇼"],["kangqui","강퀴"],["team_spiritzero","Team Spiritzero"],["zizionmy","젼마이"],["lol_blank","Blank"],["ogn_ow","OGN 오버워치"],["juankorea","주안코리아"],["woowakgood","우왁굳"],["www0606","푸딩"],["runner0608","러너"],["flowervin","꽃빈"],["h920103","이초홍","초홍"],["hj0514","백설양"],["pbstream77","피비스트림"],["llilka","릴카"],["beyou0728","피유","끠유"],["serayang","세라양"],["mister903","갱생레바","레바"],["what9honggildong","왓구홍길동"],["chicken_angel","통닭천사"],["godbokihs","갓보기"],["yuriseo","서유리"],["kimminyoung","아옳이","김민영"],["gabrielcro","가브리엘","가비"],["starcraft_kr","스타크래프트 KR"],["yeziss","신예지"],["ch1ckenkun","치킨쿤","보해"],["lds7131","더헬"],["nodolly","노돌리"],["haku861024","정직원"],["nanajam777","우정잉","정잉"],["leehunnyeo","별루다"],["streamer2u","이유님"],["hatsalsal","햇살살"],["pommel0303","폼멜"],["hosu0904","호수"],["surrenderhs","서렌더"],["eukkzzang","윾짱"],["gageu","가그"],["ange_i","요뿌니"],["menpa1030","멘파"],["dua3362","서넹"],["dda_ju","다주"],["taesangyun","태상"],["oreo4679","리치1"],["dmdtkadl69","응삼이"],["sigwon","시권"],["rngudwnswkd","푸린"],["jungjil","정질"],["ses836","인간젤리"],["DrAquinas","DrAquinas"],["tree2512","말퓨"],["frog135","게구리"],["leechunhyang","이춘향"],["cherrypach","꽃핀"],["lovelyyeon","연두부"],["yd0821","양띵"],["2chamcham2","탬탬버린","탬탬"],["jinu6734","김진우"],["ddolking555","똘킹"],["erenjjing","에렌디라"],["suk_tv","석티비"],["h0720","군림보"],["rellacast","렐라"],["silphtv","실프"],["playhearthstonekr","playhearthstonekr"],["mirage720","미라지오빠"],["1am_shin","신기해"],["maruemon1019","마루에몽"],["ulsanbigwhale","울산큰고래"],["areuming","알밍"],["esther950","에쓰더"],["pacific8815","쌍베","전상빈"],["dogswellfish","개복어"],["yeonchobom","연초봄"],["ssambahong","홍진영"],["Twipkr","트윕KR"],["reniehour","레니아워"],["caroline9071","숑아"],["ssambahong","쌈바홍","홍진영"],["Funzinnu","Funzinnu"],["loveseti","미모"],["kimgaeune","김총무님"],["1uming","루밍이","루밍"],["invenk01","김영일","K01","김01"],["sal_gu","살인마협회장","살협"],["flurry1989","플러리","로겨","조현수","겨러리"],["holsbro","홀스형","홀스"],["hn950421","고말숙","말숙"],["jaeheeng2","햄재희","재희"],["hwkang2","캡틴잭","캡잭","캡짹"],["yunlovejoy","도여사"],["yatoring","야토링"],["lolluk4","루ㅋ4"],["rkdthdus930","강소연","타노스","탑분쇄기","수장님"],["seogui","서긔"],["pikra10","재슥짱"],["playoverwatch_kr","오버워치 이스포츠"],["maxim_korea_official","남자매거진맥심"],["hanururu","하느르"],["obm1025","오킹"],["acro_land","아크로"],["choerakjo","최락조"],["megthomatho","맥또마또"],["s1032204","삐부"],["rkdwl12","강지"],["jaewon4915","김재원"],["zennyrtlove","신재은"],["2sjshsk","유누"],["queenmico","미코"],["lsd818","득털"],["wlswnwlswn","진주몬"],["apzks1236","학살"],["sunbaking","선바"],["rockid1818","모모88"],["moogrr1211","무굴"],["twitchkr","TwitchKR"],["tlfjaos","시러맨"],["dawnhs","DawN"],["mata","마타타마","마타"],["lol_khan","Khan"],["buzzbean11","대도서관","대도"],["mhj1682","카트문호준","문호준"],["remguri","렘쨩"],["heavyrainism","호무새"],["lck_korea","LCK Korea"],["lol_madlife","매드라이프","매라"],["lol_helios","헬리오스"],["pparkshy","샤이"],["pubgkorea","PUBGKorea"],["riotgames","Riot Games"],["lisalove","리즈리사"],["mbcmlt","엠비씨마리텔"],["mbcmlt1","엠비씨마리텔1"],["mbcmlt2","엠비씨마리텔2"],["mbcmlt3","엠비씨마리텔3"],["mbcmlt4","엠비씨마리텔4"],["mbcmlt5","엠비씨마리텔5"],["mbcmlt6","엠비씨마리텔6"],["mbcmlt7","엠비씨마리텔7"],["mbcmlt8","엠비씨마리텔8"],["mbcmlt9","엠비씨마리텔9"],["insec13","인섹"],["realkidcozyboy","키드밀리"],["sbsmobile24","배거슨라이브","배거슨","배성재"],["ok_ja","박옥자누나","박옥자","옥자"],["boxer_lim","임요환"],["kimukihun","기무기훈"],["needsonyun","사신갓","사신"],["dardarae","달다래오","차짬좌"],["taezzang","태은짱","태은쨩","태은"],["jammi95","잼미님","잼미"],["coppag2","꿀혜"],["overwatchleague_kr","오버워치리그"],["fastloves","홍진호"],["jinsooo0","진수0","진수"],["wltn4765","지수소녀"],["gamesdonequick","GamesDoneQuick"],["dragon3652","스피드소닉"],["parkjand","박잔디"],["jinnytty","윰찌니"],["danpaeng2","단팽이"],["inas1220","야생의딸기"],["limlim72","진자림"],["bongsoon0115","봉순"],["eodyd188","밴쯔","벤쯔"],["duedrop","권이슬","이슬이","이스리","권자봉"],["so_urf","소우릎"],["lo10002","혜요"],["GhostGC","고스트","수광","수팡"],["mari0712","마리"]];
+    var streamerArray = [["hanryang1125","풍월량","풍온","김영태","영태","풍형","풍월주인한량","우리풍"],["ddahyoni","따효니","효니","백상현","상현"],["kss7749","쉐리","쉐옹"],["looksam","룩삼","룩우스","김진효","진효"],["yapyap30","얍얍","야부야부","김성태","성태"],["saddummy","서새봄냥","서새봄","새봄추","스새봄","새봄"],["109ace","철면수심","철수형","철쑤","쑤심","진배"],["rhdgurwns","공혁준","공선생","르건즈","혁준이","혁주니","혁준","건즈"],["gmdkdsla","흐앙님","흐앙"],["jungtaejune","똘똘똘이","똘3","똘삼","정태준"],["mascahs","마스카"],["steelohs","스틸로","조강현"],["kimdoe","김도","이택기","리택기","킴도"],["togom","토곰","토마토곰"],["htk_","흐트크"],["ogn_lol","OGN 롤챔스"],["kanetv8","케인TV","케인"],["yumyumyu77","소풍왔니","소풍이","소풍","작은풍","원유리"],["tjskdutls","서나랑","스나랑"],["sung0","쥬팬더"],["game2eye","홍방장"],["cocopopp671","초승달","승따리","승딸이","승딸","승달","조순달"],["dingception","딩셉션"],["redtea","홍차"],["zzamtiger0310","짬타수아","짬타"],["rldnddl789","아빠킹"],["eulcs1","EU LCS"],["kkoma","Kkoma"],["1983kej","단군","김의중","의중","으중이"],["lol_peanut","Peanut"],["faker","Faker","faker","페이커","이상혁","상혁","페온","우리혁"],["nrmtzv","으음"],["nicegametv","나겜"],["teaminven","인벤"],["capta1n_pony","포니"],["huni","Huni"],["sktt1_wolf","Wolf"],["bang","Bang"],["wpghd321","류제홍"],["jmjdoc","칸데르니아","칸데","두방이","두방","두스의 방패","두스의방패"],["yungi131","윤기"],["mediamuse","미디어뮤즈","미뮤"],["veritaskk","Veritas","베리타스","싸세","김경민"],["themarinekr","김정민"],["tvindra","인드라"],["tranth","자동"],["seine1026","세인님"],["sonycast_","소니쇼","소니쿤"],["dou3796","뱅붕"],["rudbeckia7","연두는말안드뤄","연두"],["trisha","트리샤"],["naseongkim","김나성","나성"],["dlxowns45","태준이","이태준"],["handongsuk","한동숙","동수칸","동숙","한성욱"],["alenenwooptv","웁_게임방송"],["mr_coat","노래하는코트"],["ajehr","머독"],["lol_crown","Crown"],["rooftopcat99","옥냥이"],["myzet1990","개구멍"],["yoonroot","윤루트"],["sn400ja","액시스마이콜","마이콜"],["tape22222","테이프2"],["miracle0o0","미라클티비"],["bighead033","빅헤드"],["wkgml","견자희"],["queenhuz","후즈"],["kiyulking","김기열"],["asdn6388","나락호프"],["lol_cuvee","Cuvee"],["VSL","VSL"],["drlee_kor","이민우33세"],["CoreJJ","CoreJJ"],["lol_ambition","앰비션","엠비션","강찬밥","강찬용"],["Axenix","아제닉스"],["maknoonlol","막눈"],["zilioner","침착맨","이말년","이병건"],["timeofcreate","홍랑"],["twitchshow","트위치쇼"],["kangqui","강퀴","퀴저씨","퀴어빠"],["team_spiritzero","Team Spiritzero"],["zizionmy","젼마이"],["lol_blank","Blank"],["ogn_ow","OGN 오버워치"],["juankorea","주안코리아"],["woowakgood","우왁굳"],["www0606","푸딩"],["runner0608","러너"],["flowervin","꽃빈"],["h920103","이초홍","초홍"],["hj0514","백설양"],["pbstream77","피비스트림"],["beyou0728","피유","끠유","소통퀸","노채리"],["serayang","세라양","양새아","쉐굴"],["mister903","갱생레바","레바"],["what9honggildong","왓구홍길동"],["chicken_angel","통닭천사"],["godbokihs","갓보기"],["yuriseo","서유리"],["kimminyoung","아옳이","김민영"],["gabrielcro","가브리엘","가비"],["starcraft_kr","스타크래프트 KR"],["yeziss","신예지"],["ch1ckenkun","치킨쿤","보해"],["lds7131","더헬"],["nodolly","노돌리"],["haku861024","정직원"],["nanajam777","우정잉","정잉"],["leehunnyeo","별루다"],["streamer2u","이유님"],["hatsalsal","햇살살"],["pommel0303","폼멜"],["hosu0904","호수"],["surrenderhs","서렌더"],["eukkzzang","윾짱"],["gageu","가그"],["ange_i","요뿌니"],["menpa1030","멘파"],["dua3362","서넹"],["dda_ju","다주"],["taesangyun","태상"],["oreo4679","리치1"],["dmdtkadl69","응삼이"],["sigwon","시권"],["rngudwnswkd","푸린"],["jungjil","정질"],["ses836","인간젤리"],["DrAquinas","DrAquinas"],["tree2512","말퓨"],["frog135","게구리"],["leechunhyang","이춘향"],["cherrypach","꽃핀"],["lovelyyeon","연두부"],["yd0821","양띵","양명"],["2chamcham2","탬탬버린","탬탬"],["jinu6734","김진우"],["ddolking555","똘킹"],["erenjjing","에렌디라"],["suk_tv","석티비"],["h0720","군림보"],["rellacast","렐라","앗앗"],["silphtv","실프"],["playhearthstonekr","playhearthstonekr"],["mirage720","미라지오빠"],["1am_shin","신기해"],["maruemon1019","마루에몽"],["ulsanbigwhale","울산큰고래"],["areuming","알밍"],["esther950","에쓰더"],["pacific8815","쌍베","전상빈"],["dogswellfish","개복어"],["yeonchobom","연초봄"],["ssambahong","홍진영"],["Twipkr","트윕KR"],["reniehour","레니아워"],["caroline9071","숑아"],["ssambahong","쌈바홍","홍진영"],["Funzinnu","Funzinnu"],["loveseti","미모"],["kimgaeune","김총무님"],["1uming","루밍이","루밍"],["invenk01","김영일","K01","김01"],["sal_gu","살인마협회장","살협","살구"],["flurry1989","플러리","로맨틱겨울","로겨","로7ㅕ","조현수","겨러리"],["holsbro","홀스형","홀스"],["hn950421","고말숙","말숙"],["jaeheeng2","햄재희","재희"],["hwkang2","캡틴잭","캡잭","캡짹"],["yunlovejoy","도여사"],["yatoring","야토링"],["lolluk4","루ㅋ4"],["rkdthdus930","강소연","타노스","탑분쇄기","수장님"],["seogui","서긔"],["pikra10","재슥짱"],["playoverwatch_kr","오버워치 이스포츠"],["maxim_korea_official","남자매거진맥심","맥심","맥심코리아"],["hanururu","하느르"],["obm1025","오킹"],["acro_land","아크로"],["choerakjo","최락조"],["megthomatho","맥또마또"],["s1032204","삐부"],["rkdwl12","강지"],["jaewon4915","김재원"],["zennyrtlove","신재은"],["2sjshsk","유누"],["queenmico","미코"],["lsd818","득털"],["wlswnwlswn","진주몬"],["apzks1236","학살"],["sunbaking","선바"],["rockid1818","모모88"],["moogrr1211","무굴"],["twitchkr","TwitchKR"],["tlfjaos","시러맨"],["dawnhs","DawN","장현재"],["mata","마타타마","마타"],["lol_khan","Khan"],["buzzbean11","대도서관","머도서관","대도","머도"],["mhj1682","카트문호준","문호준"],["remguri","렘쨩"],["heavyrainism","호무새"],["lck_korea","LCK Korea","롤챔스","롤챔"],["lol_madlife","매드라이프","매라","매멘","매맨","메라","홍민기"],["lol_helios","헬리오스"],["pparkshy","샤이"],["pubgkorea","PUBGKorea"],["riotgames","Riot Games"],["lisalove","리즈리사"],["mbcmlt","엠비씨마리텔"],["mbcmlt1","엠비씨마리텔1"],["mbcmlt2","엠비씨마리텔2"],["mbcmlt3","엠비씨마리텔3"],["mbcmlt4","엠비씨마리텔4"],["mbcmlt5","엠비씨마리텔5"],["mbcmlt6","엠비씨마리텔6"],["mbcmlt7","엠비씨마리텔7"],["mbcmlt8","엠비씨마리텔8"],["mbcmlt9","엠비씨마리텔9"],["insec13","인섹"],["realkidcozyboy","키드밀리"],["sbsmobile24","배거슨라이브","배거슨","배성재"],["ok_ja","박옥자누나","박옥자","옥자"],["boxer_lim","임요환"],["kimukihun","기무기훈"],["needsonyun","사신갓","사신"],["dardarae","달다래오","차짬좌"],["taezzang","태은짱","태은쨩","태은"],["jammi95","잼미님","잼미"],["coppag2","꿀혜"],["overwatchleague_kr","오버워치리그"],["fastloves","홍진호"],["jinsooo0","진수0","진수"],["wltn4765","지수소녀"],["gamesdonequick","GamesDoneQuick","겜던퀵"],["dragon3652","스피드소닉"],["parkjand","박잔디"],["jinnytty","윰찌니"],["danpaeng2","단팽이"],["inas1220","야생의딸기"],["limlim72","진자림"],["bongsoon0115","봉순"],["eodyd188","밴쯔","벤쯔"],["duedrop","권이슬","이슬이","이스리","권자봉"],["so_urf","소우릎"],["lo10002","혜요"],["GhostGC","고스트","수광","수팡"],["mari0712","마리"],["defconntv","데프콘","트프콘"],["b14ckt41e","검은동화","검동"],["ninja","닌자"],["shroud","슈라우드"],["xkwhd","피닉스박","박종우!","박종우"],["bsll7777","금다정","야망좌"],["tmxk319","괴물쥐","장지환"],["jasper0414","재스퍼","제스퍼"],["cbrace","중괄호"],["maruko_zzang","마루코"],["charming_jo","조매력"],["leeyl1118","영림이","영림"],["soming1907","소밍"],["kimpoong_official","김풍"],["ma_mwa","마뫄"],["kerokero_","케로"],["yurani","이유란","유란"],["kitekorea","고래까와"],["itopicy","용봉탕","봉탕"]];
     var streamerArray_name = [],
         streamerArray_display_name = [],
         streamerArray_AutoComplete = [];
@@ -345,9 +346,14 @@
             insagirl_block_by_nick : { category:"general", depth:2, type: "checkbox", value: false, title:"차단한 유저의 좌표 숨기기", desc:"채팅매니저에서 차단한 유저의 좌표를 숨김" },
             insagirl_block_dobae : { category:"general", depth:2, type: "checkbox", value: false, title:"연속된 동일 좌표 숨기기", desc:"동일 유저가 같은 좌표를 연속하여 올릴 경우<br />가장 최근의 것만 남기고 숨김" },
             insagirl_block_dobae_by_href : { category:"general", depth:3, type: "checkbox", value: false, title:"동일 유저가 아닐 경우에도 숨김", desc:"유저에 상관 없이 동일 좌표가 연속되는 경우 무조건 숨김" },
-            insagirl_select : { under_dev:true, category:"general", depth:3, type: "radio", value: 1, title:"좌표 사이트 선택", desc:"", radio: {dostream: {title: "<span style='font-size:11px;'>coord.dostream.com</span>", value:1}, insagirl: {title: "<span style='font-size:11px;'>insagirl-hrm.appspot.com</span>", value:2}} },
+            insagirl_select : { under_dev:true, category:"general", depth:3, type: "radio", value: 1, title:"[실험실] 좌표 사이트 선택", desc:"", radio: {dostream: {title: "<span style='font-size:11px;'>coord.dostream.com</span>", value:1}, insagirl: {title: "<span style='font-size:11px;'>insagirl-hrm.appspot.com</span>", value:2}} },
             
-            theme_leftchat : { under_dev:true, category:"general", depth:1, type: "checkbox", value: false, title:"채팅창 위치를 왼쪽으로 변경", desc:"", change:function(){ADD_customStyle();} },
+            theme_leftchat : { under_dev:true, category:"theme", category_name:"테마", depth:1, type: "checkbox", value: false, title:"[실험실] 채팅창 위치를 왼쪽으로 변경", desc:"", change:function(){ADD_customStyle();} },
+            theme_on : { under_dev:true, category:"theme", depth:1, type: "checkbox", value: false, title:"[실험실] 테마 기능 사용", desc:"", change:function(){ADD_theme();}},
+            theme : { under_dev:true, category:"theme", depth:2, type: "radio", value: "default", title:"[실험실] 테마 선택", desc:"", radio: {default: {title: "기본", value:"default"}, black: {title: "어두운 테마", value:"black"} }, change:function(){ADD_theme();}},
+            theme_self_bold_chat : { under_dev:true, category:"theme", depth:2, type: "checkbox", value: false, title:"[실험실] 자신의 채팅을 굵게 표시", desc:"", change:function(){if(GM_page === C_UCHAT){ADD_theme();}} },
+            theme_font_size : { under_dev:true, category:"theme", depth:2, type: "text", value: 1.0, valid:"number", min_value:0.1, max_value:10, title:"[실험실] 채팅 글씨 크기 조절(배수)", desc:"기본값: 1.0", change:function(){if(GM_page === C_UCHAT){ADD_theme();}} },
+            theme_font_custom : { under_dev:true, category:"theme", depth:2, type: "radio", value: "default", radio: {default: {title: "기본", value:"default"}, NotoSanskr: {title: "Noto Sans KR", value:"NotoSanskr"}}, title:"[실험실] 폰트 변경", desc:"일부 OS, 브라우저에서 적용되지 않을 수 있음", change:function(){ADD_theme();} },
 
             list : { category:"list", category_name:"리스트", depth:1, type: "checkbox", value:true, title:"메인 리스트 관리 기능 사용", desc:"메인 리스트 관리 기능을 일괄적으로 켜고 끈다."},
             main_list_two_column : { under_dev:true, category:"list", depth:2, type: "checkbox", value:false, title:"[실험실] 메인 리스트를 두 줄로 표시", desc:"- 모니터 가로 해상도 1920 이상에 권장<br />- 섬네일 기능 사용 시 중간 설정이 적당함", change:function(){reloadMain();}},
@@ -380,10 +386,12 @@
 
             playing_quick_list_button : { category:"playing", category_name:"재생 중", depth:1, type: "checkbox", value: true, title:"퀵 리스트 버튼 표시", desc:"재생 중 팝업으로 메인 리스트를 볼 수 있도록<br />퀵 리스트 버튼을 표시", change:function(){$(window).trigger("hashchange");} },
             playing_chat_button : { category:"playing", depth:1, type: "checkbox", value: true, title:"트위치↔멀티트위치 전환 버튼 표시", desc:"트위치 또는 멀티트위치 재생 시<br />서로 전환할 수 있는 버튼을 표시", change:function(){$(window).trigger("hashchange");} },
-            playing_twip_button : { under_dev:true, category:"playing", depth:1, type: "checkbox", value: false, title:"Twip 버튼 표시", desc:"트위치 재생 시 Twip donate 버튼을 표시<br />donate 창은 새 창으로 열림", change:function(){$(window).trigger("hashchange");} },
+            playing_twip_button : { under_dev:true, category:"playing", depth:1, type: "checkbox", value: false, title:"[실험실] Twip 버튼 표시", desc:"트위치 재생 시 Twip donate 버튼을 표시<br /> - 스트리머의 Dashboard 에 기재된 twip.kr 링크로 접속<br />　링크를 찾을 수 없는 경우 버튼 표시하지 않음<br /><br />주의사항: <br /> - 반드시 주소창의 주소 및 도네이션 수령자가 올바른지 확인할 것<br /> - 오작동으로 잘못 도네이션 되더라도 책임지지 않음", change:function(){$(window).trigger("hashchange");} },
+            playing_twip_button_force : { under_dev:true, category:"playing", depth:2, type: "checkbox", value: false, title:"[실험실] Twip 버튼을 항상 표시", desc:"Dashboard 에 twip.kr 링크가 없더라도 무조건 표시<br />https://twip.kr/donate/{streamer-id} 링크로 접속", change:function(){$(window).trigger("hashchange");} },
+            playing_toonat_button : { under_dev:true, category:"playing", depth:1, type: "checkbox", value: false, title:"[실험실] Toonation 버튼 표시", desc:"트위치 재생 시 Toonation donate 버튼을 표시<br /> - 스트리머의 Dashboard 에 기재된 toon.at 링크로 접속<br />　링크를 찾을 수 없는 경우 버튼 표시하지 않음<br /><br />주의사항:<br /> - 반드시 주소창의 주소 및 도네이션 수령자가 올바른지 확인할 것<br /> - 오작동으로 잘못 도네이션 되더라도 책임지지 않음", change:function(){$(window).trigger("hashchange");} },
             playing_setting_button : { category:"playing", depth:1, type: "checkbox", value: true, title:"설정 버튼 표시", desc:"재생 중 설정 버튼을 표시.<br />체크 해제 시 설정 버튼은 메인에서만 노출됨", change:function(){$(window).trigger("hashchange");} },
 
-            chat_ctr : { category:"chat", category_name:"채팅", depth:1, type: "checkbox", value: false, title:"채팅 제어", desc:"- 채팅 관련 기능을 일괄적으로 켜고 끔<br />- 채팅 관련 기능은 새로고침 해야 적용됨" },
+            chat_ctr : { category:"chat", category_name:"채팅", depth:1, type: "checkbox", value: true, title:"채팅 제어", desc:"- 채팅 관련 기능을 일괄적으로 켜고 끔<br />- 채팅 관련 기능은 새로고침 해야 적용됨" },
             chat_memo : { category:"chat", depth:2, type: "checkbox", value: true, title:"채팅매니저 기능 사용 (메모 기능)", desc:"- 채팅 닉네임 클릭 시 메모하기 버튼 표시<br />- 닉네임별 메모 작성/차단 가능<br />- 작성한 메모는 채팅창의 닉네임 뒤에 표시됨<br />- 차단 기능은 기존 두스 차단 기능과 별개로<br />　작동하므로, 차단목록이 날아가더라도 보존됨", append:"<span class='show_memo_log btn btn-primary'>채팅매니저 관리</span>" },
             chat_adb : { disable:true, category:"chat", depth:2, type: "checkbox", value: false, title:"광고 제거", desc:"" },
             hide_nick_change : { disable:true, category:"", depth:2, type: "checkbox", value: false, title:"닉네임 변경 메시지 숨기기", desc:"" },
@@ -391,7 +399,7 @@
             url_self : { category:"chat", depth:2, type: "checkbox", value: true, title:"두스트림 좌표의 경우 현재 창에서 열기", desc:"두스 좌표가 새 창으로 열리는 것을 막음" },
             chat_scroll : { category:"chat", depth:2, type: "checkbox", value: true, title:"자동스크롤 변경", desc:"- 채팅창의 자동스크롤이 끊기는 것을 방지하기 위해<br />　자동스크롤의 동작 방식을 변경<br /><br /><strong>동작 원칙:</strong><br />- 마우스 휠을 위로 굴리면 자동스크롤 멈춤<br />- 더 보기 버튼을 누르거나 맨 아래로 휠 하여<br />　자동스크롤을 재시작할 수 있음<br />- 그 이외의 모든 스크롤 관련 동작은 무시됨" },
             chat_scroll_down_min : { under_dev:true, category:"chat", depth:3, type: "text", value: 30, valid:"number", min_value:0, title:"자동 스크롤 재시작 거리(px)", desc:"스크롤이 정지 상태일 때 스크롤 내림 시<br />최하단과의 거리가 설정 값 이하가 되면<br />자동스크롤을 재시작(기본값:30)" },
-            send_location_button : { category:"chat", depth:2, type: "checkbox", value: true, title:"좌표 보내기 버튼 활성", desc:"클릭 시 현재 주소를 채팅창 입력란에 바로 복사", change:function(){ADD_send_location_DOE();} },
+            send_location_button : { category:"chat", depth:2, type: "checkbox", value: false, title:"좌표 보내기 버튼 활성", desc:"클릭 시 현재 주소를 채팅창 입력란에 바로 복사", change:function(){ADD_send_location_DOE();} },
             send_location_button_top : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: false, title:"좌표 버튼을 채팅창 상단에 고정", desc:"체크 해제 시 채팅창 하단에 고정됨", change:function(){ADD_send_location_DOE();} },
             send_location_existing : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: false, title:"기존에 입력해둔 채팅 내용 유지", desc:"좌표 보내기 버튼을 눌렀을 때, 채팅 입력란의 내용을 유지하고 좌표 링크를 뒤에 덧붙임" },
             send_location_immediately : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: false, title:"[실험실] 좌표 바로 전송", desc:"- 좌표 버튼을 누르면 좌표를 채팅 입력란에<br />　복사하는 것을 건너뛰고 채팅창에 바로 전송<br />- 재사용 대기시간: 10초" },
@@ -440,7 +448,6 @@
             broadcater_theme : { under_dev:true, category:"broadcast", depth:2, type: "radio", value: "box", title:"테마", desc:"", radio: {box: {title: "Box", value:"box"}, twitch: {title: "Twitch", value:"twitch"}, simple: {title: "Simple", value:"simple"} }, change:function(){if(GM_page === C_UCHAT){broadcaster_theme_css();}}},
 
             under_dev : { category:"advanced", category_name:"고급", depth:1, type: "checkbox", value: false, title:"실험실 기능 및 고급 기능 설정", desc:"실험 중인 기능 및 고급 기능을 직접 설정" },
-            theme : { under_dev:true, category:"advanced", depth:2, type: "radio", value: "box", title:"[실험실] 테마", desc:"", radio: {default: {title: "기본", value:"default"}, black: {title: "어두운 테마", value:"black"} }, change:function(){ADD_theme();}},
             twitch_interacite : { disable:true, category:"advanced", depth:1, type: "checkbox", value: false, title:"반응형 트위치 사용", desc:"" },
             twitch_interacite_unmute : { disable:true, category:"advanced", depth:2, type: "checkbox", value: true, title:"시작 시 음소거 하지 않음", desc:"" },
             popup_player : { under_dev:true, category:"advanced", depth:1, type: "checkbox", value: false, title:"[실험실] 시청 중 이동 시 팝업 플레이어 사용", desc:"" },
@@ -949,6 +956,11 @@
                         else{
                             enable[prev_depth] = false;
                         }
+
+                        // 이전 요소가 체크박스가 아니면 그냥 켠다.
+                        // if($prev_checkbox.length !== 0){
+                        //     enable[prev_depth] = true;
+                        // }
                     }
                 }
 
@@ -1528,7 +1540,7 @@
             .nav-brand, .nav-brand_mod{color:#fff;overflow:visible;margin-left:24.5px;background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFsAAAANCAYAAADG4RJzAAAACXBIWXMAAAsTAAALEwEAmpwYAAA752lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxMzggNzkuMTU5ODI0LCAyMDE2LzA5LzE0LTAxOjA5OjAxICAgICAgICAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgICAgICAgICB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIgogICAgICAgICAgICB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIKICAgICAgICAgICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIj4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNyAoV2luZG93cyk8L3htcDpDcmVhdG9yVG9vbD4KICAgICAgICAgPHhtcDpDcmVhdGVEYXRlPjIwMTctMDctMjlUMDI6MTE6MTArMDk6MDA8L3htcDpDcmVhdGVEYXRlPgogICAgICAgICA8eG1wOk1ldGFkYXRhRGF0ZT4yMDE3LTA3LTI5VDAyOjExOjEwKzA5OjAwPC94bXA6TWV0YWRhdGFEYXRlPgogICAgICAgICA8eG1wOk1vZGlmeURhdGU+MjAxNy0wNy0yOVQwMjoxMToxMCswOTowMDwveG1wOk1vZGlmeURhdGU+CiAgICAgICAgIDx4bXBNTTpJbnN0YW5jZUlEPnhtcC5paWQ6ZDZlNmM5ZDctYTQ5NS0yYjQ4LWFkNTQtODk4Y2YxOGYxNmNiPC94bXBNTTpJbnN0YW5jZUlEPgogICAgICAgICA8eG1wTU06RG9jdW1lbnRJRD5hZG9iZTpkb2NpZDpwaG90b3Nob3A6YjljODIzOTYtNzNiNy0xMWU3LTgxMzItZWJiZTQwMzI0ZjNkPC94bXBNTTpEb2N1bWVudElEPgogICAgICAgICA8eG1wTU06T3JpZ2luYWxEb2N1bWVudElEPnhtcC5kaWQ6Y2MwYjBiN2MtYTYwYi1hMzQ3LWE3MWItZGUxZWU1MzYyZGQ1PC94bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ+CiAgICAgICAgIDx4bXBNTTpIaXN0b3J5PgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+Y3JlYXRlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOmNjMGIwYjdjLWE2MGItYTM0Ny1hNzFiLWRlMWVlNTM2MmRkNTwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxNy0wNy0yOVQwMjoxMToxMCswOTowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDpkNmU2YzlkNy1hNDk1LTJiNDgtYWQ1NC04OThjZjE4ZjE2Y2I8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTctMDctMjlUMDI6MTE6MTArMDk6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE3IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC94bXBNTTpIaXN0b3J5PgogICAgICAgICA8cGhvdG9zaG9wOlRleHRMYXllcnM+CiAgICAgICAgICAgIDxyZGY6QmFnPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHBob3Rvc2hvcDpMYXllck5hbWU+KzwvcGhvdG9zaG9wOkxheWVyTmFtZT4KICAgICAgICAgICAgICAgICAgPHBob3Rvc2hvcDpMYXllclRleHQ+KzwvcGhvdG9zaG9wOkxheWVyVGV4dD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOkJhZz4KICAgICAgICAgPC9waG90b3Nob3A6VGV4dExheWVycz4KICAgICAgICAgPHBob3Rvc2hvcDpEb2N1bWVudEFuY2VzdG9ycz4KICAgICAgICAgICAgPHJkZjpCYWc+CiAgICAgICAgICAgICAgIDxyZGY6bGk+eG1wLmRpZDpDRDkwODM0Mjk1NTIxMUUzODk3REU5MTEyMTdENDYzOTwvcmRmOmxpPgogICAgICAgICAgICA8L3JkZjpCYWc+CiAgICAgICAgIDwvcGhvdG9zaG9wOkRvY3VtZW50QW5jZXN0b3JzPgogICAgICAgICA8cGhvdG9zaG9wOkNvbG9yTW9kZT4zPC9waG90b3Nob3A6Q29sb3JNb2RlPgogICAgICAgICA8ZGM6Zm9ybWF0PmltYWdlL3BuZzwvZGM6Zm9ybWF0PgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICAgICA8dGlmZjpYUmVzb2x1dGlvbj43MjAwMDAvMTAwMDA8L3RpZmY6WFJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOllSZXNvbHV0aW9uPjcyMDAwMC8xMDAwMDwvdGlmZjpZUmVzb2x1dGlvbj4KICAgICAgICAgPHRpZmY6UmVzb2x1dGlvblVuaXQ+MjwvdGlmZjpSZXNvbHV0aW9uVW5pdD4KICAgICAgICAgPGV4aWY6Q29sb3JTcGFjZT42NTUzNTwvZXhpZjpDb2xvclNwYWNlPgogICAgICAgICA8ZXhpZjpQaXhlbFhEaW1lbnNpb24+OTE8L2V4aWY6UGl4ZWxYRGltZW5zaW9uPgogICAgICAgICA8ZXhpZjpQaXhlbFlEaW1lbnNpb24+MTM8L2V4aWY6UGl4ZWxZRGltZW5zaW9uPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAKPD94cGFja2V0IGVuZD0idyI/Pvkq298AAAAgY0hSTQAAeiUAAICDAAD5/wAAgOkAAHUwAADqYAAAOpgAABdvkl/FRgAAA9FJREFUeNrsWD2u2zgQ/rTIBbJQ8zphF3idKrHhBQw3OoCqwI0rqfIBBPdW5e41Qir1VmP4AmxYWd0DduHuFRaQI0wKkhb1Q8kIEiywCAEWIoczw/n5ZkSPiAAATcFoU8E5eH7GMfY9/B4/Poiom9cDRVFKpztRb/1+ojSKKIoOdKXB3k+c91NK0eH6y/j/1/MP2/Dt7QYgQOAPPOLH3vGcg6PCpmh+jdfbmvZ7gWQV/i+CmDEmGWOf7bWesT/ehfu0H3vbBEB1QQNQb68piDFmzYJGNG1NWY+GEctqatFSnTFi6z0EgGrDYPNoCkOfUd3a3wMZQ/5FQ8MrdGfVzOqaCot2KKt/L71m9NXrRQNyWCwC8NkBI3c6pRFF6YnuDqi4n9IRzFwP0WBN87EhR8OQQgjrnAUZivc0TKm9iCLN435Ke3qO9LoeHrRLOkUDvWxZDxmaNk1tOfP20jz+csDIB94FgCCAD8wUQoH3jy6iNxVHfj4i9s0Z34tzBTlvdauCTlwgkGAOIeayyuwlpcQuHOjWFLTeC/A873R4eQXv0XzFXnDk5x1Cczc/9vKcA+B4fZnQIykhj7Fn20KIAKW07zoJHcQYM9H+j/39adR12JKn+xKtXEv1WwXwHNx/BsUqXJodQm3wcCc92WEA3W4A+Cte3O0QvoQG0Y6ejLUdLxUBCbaxb9l2D4EE2/AZPe0aZfTIcd6FtgcgACSl5SwTnEkXnFJKZhmeAPwtpfx3jNntDbcFcymvG+WUML7iC5kA+PEWyQOPDfb1OM9klTbA5F5DlwpAslJG0Birss0Yxs3bmU0DWtU49DPg+eCcKpDae0HgClN9MRN9TzinG6G3k9KTskQCgf2aYaqAOVwMJ8IYHaqNKqoboJQSUh69R6prmrFRprJJB9CkAQdd2vL9v+k5Nvac91Sxf0MFINnGi5GsMJpjNcpbZfRzzoHqDY8IdxpkYc/64ZJSelLuvHBBt9kodhhwMgMWglNK+aeUctrYfYiY7oGRlF2B8gMEAMSjWnYRIy4C4CuFkU2hW7wOOvwgeF7xuT2nDsujKdbYD6N4UtZcPXEH5wyMuBk2he6BkxJyF3p2lK4UEMPuNdUlOPJcZYDKmL4zVMFajQrW7dYuFOUxPCkdrCwB0NZZ1//6HCsOiIuAcrjqk83TxNiJQ1nTmO/8AZwZHl0PxOYfRXA+uqFj9KYyoG/rjNZ7scCzpTpTkWZGUkqsLgx91RKU0u4Ips8CCfLzF8S+fstpa8r0T9PjnYcLmDWen7F9X/dlmeDqnTXyW9gyJ1vSifF9AJJYNd1acLVBAAAAAElFTkSuQmCC")}
             .nav-brand:hover, .nav-brand:visited, .nav-brand:active, .nav-brand_mod:hover, .nav-brand_mod:visited, .nav-brand_mod:active {text-decoration:none;color:#fff;}
             .onstream .AD_title{height:45px;padding:7px 0}
-            .AD_title {position:absolute; top:0; right:10px; height:63px; padding:16px 0; font-size:11px; font-style:italic; color:#999; z-index:1500;user-select:none;}
+            .AD_title {position:absolute; top:0; right:10px; height:63px; padding:16px 0; font-size:11px; color:#999; z-index:1500;user-select:none;}
             .icon_star{position:absolute !important;top:10px; right:25px; z-index:10;}
             .icon_pushpin{position:absolute !important;top:10px; right:10px; z-index:50;}
             #ADD_config {cursor:pointer; padding-right:10px;}
@@ -1623,7 +1635,9 @@
             #history_elem .h_youtube{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAA57GlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxMzggNzkuMTU5ODI0LCAyMDE2LzA5LzE0LTAxOjA5OjAxICAgICAgICAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIKICAgICAgICAgICAgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIgogICAgICAgICAgICB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIKICAgICAgICAgICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgICAgICAgICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIj4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNyAoV2luZG93cyk8L3htcDpDcmVhdG9yVG9vbD4KICAgICAgICAgPHhtcDpDcmVhdGVEYXRlPjIwMTgtMTItMjBUMTg6NDE6MzcrMDk6MDA8L3htcDpDcmVhdGVEYXRlPgogICAgICAgICA8eG1wOk1vZGlmeURhdGU+MjAxOC0xMi0yMFQxODo0MjoxNSswOTowMDwveG1wOk1vZGlmeURhdGU+CiAgICAgICAgIDx4bXA6TWV0YWRhdGFEYXRlPjIwMTgtMTItMjBUMTg6NDI6MTUrMDk6MDA8L3htcDpNZXRhZGF0YURhdGU+CiAgICAgICAgIDxkYzpmb3JtYXQ+aW1hZ2UvcG5nPC9kYzpmb3JtYXQ+CiAgICAgICAgIDxwaG90b3Nob3A6Q29sb3JNb2RlPjM8L3Bob3Rvc2hvcDpDb2xvck1vZGU+CiAgICAgICAgIDx4bXBNTTpJbnN0YW5jZUlEPnhtcC5paWQ6YmYwNmRjNTUtNGM2Mi02ODQ5LThjNTYtNDZmNWU2ZDEzNzVkPC94bXBNTTpJbnN0YW5jZUlEPgogICAgICAgICA8eG1wTU06RG9jdW1lbnRJRD5hZG9iZTpkb2NpZDpwaG90b3Nob3A6ODE4ZjQ4NDAtMDQzYi0xMWU5LTgwZDktYWUxYWExNjI1N2EyPC94bXBNTTpEb2N1bWVudElEPgogICAgICAgICA8eG1wTU06T3JpZ2luYWxEb2N1bWVudElEPnhtcC5kaWQ6Zjg4YjMwZDMtMjVmOC02NjQwLTk2MzUtNzlhYWI4ODBmM2M2PC94bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ+CiAgICAgICAgIDx4bXBNTTpIaXN0b3J5PgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+Y3JlYXRlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOmY4OGIzMGQzLTI1ZjgtNjY0MC05NjM1LTc5YWFiODgwZjNjNjwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxOC0xMi0yMFQxODo0MTozNyswOTowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDpiZjA2ZGM1NS00YzYyLTY4NDktOGM1Ni00NmY1ZTZkMTM3NWQ8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTgtMTItMjBUMTg6NDI6MTUrMDk6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE3IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC94bXBNTTpIaXN0b3J5PgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICAgICA8dGlmZjpYUmVzb2x1dGlvbj43MjAwMDAvMTAwMDA8L3RpZmY6WFJlc29sdXRpb24+CiAgICAgICAgIDx0aWZmOllSZXNvbHV0aW9uPjcyMDAwMC8xMDAwMDwvdGlmZjpZUmVzb2x1dGlvbj4KICAgICAgICAgPHRpZmY6UmVzb2x1dGlvblVuaXQ+MjwvdGlmZjpSZXNvbHV0aW9uVW5pdD4KICAgICAgICAgPGV4aWY6Q29sb3JTcGFjZT42NTUzNTwvZXhpZjpDb2xvclNwYWNlPgogICAgICAgICA8ZXhpZjpQaXhlbFhEaW1lbnNpb24+MTY8L2V4aWY6UGl4ZWxYRGltZW5zaW9uPgogICAgICAgICA8ZXhpZjpQaXhlbFlEaW1lbnNpb24+MTY8L2V4aWY6UGl4ZWxZRGltZW5zaW9uPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAKPD94cGFja2V0IGVuZD0idyI/PrHtih0AAAAgY0hSTQAAeiUAAICDAAD5/wAAgOkAAHUwAADqYAAAOpgAABdvkl/FRgAAAcpJREFUeNqs009rE0EYx/EngggK0ip28sfZzexmd9puFgqeQt+AeK9/XoKgvoHiUXpQEUmL11701rfQjQndZku2NaWhpdGt2bqglVYSBE/y8+Cm7upFjAMfBub58tyGANAoaOQFh5ZJh2VZiWx5P7Llw8iWC5Etn0a2rEa2fBGrxm8LcfPgQ1nOhpZJFFrmXGiZCC0Tvb+U6O9QMGV4wZSBX0wElkSXXcY7tYCgPIn0PMWnfVk62JclJHXNEt7fuI69kkAnQ+gaGrrTMt38vEPaNfSjXUPHKV1g+9xZfF1v4luvh7e3bmLrTAadS2PYm55EqjX0Y9rRtZMdXcMpUcRmhvBlZQXDMwgCdGYr2B4fQ6rVtT61hXbSFhqG3qhFeEQYrK4CAL73+/hYXUR7ZgZbVyaQbNtCG5Cvik++KjDU4iqa5y/g88tXOFpeRitfQIMILZbFpl5CsvVVcUweLx54vIikDc1Ak+VRJ4J7cRwbQoenpJtYSG5B9dyCit+tTeTh5hW4V/+cJfjUyClzjZyCf3Sb6jmFall+rcb4XYfxeYfxRw7jjx3GnzmMLzqMLzmMP3cYfxLP5muM33ud5ZV6TvkPn2nUBT8GAIcnSAUTj83WAAAAAElFTkSuQmCC);}
             #history_elem .h_kakao{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABmElEQVQ4jaWTu0oDURCG/zm7WVfRQvDaeEFIEDQQJYUIYmwES19BjekUfA2x0sj6BDZ23roFLdUERBQbxUAwCKvNErOXc46FRDeJGwIOTHFgvv+f4cxASolgCicX9631Pa8YfXALEe4WItwrRu99K7MrnHy8vv73Icq6b63tuy/E3RfIv5O4b6WzUpT1KkffKp+6/7Z4Kp3LFFoIapsz1b7zJVB7hQEA/9jYaRUGAOlcpPjH5g4AkHDycb80lQck+3GITADqMOTnSbM+hDqQSzBhG+kgDACkjkHtPYbScwRShsL6YMI20kxWzIUwD9axDHXwDqxrC6BIo0TFXGCSP8eaDsy6oHRvQ+2/BrXN1ArwpxgLwRqClEGQMtyoT8rIY3OUQ9gGvNdxiPJhnejoIyM9ZYah0r2BX5oFf88AwmrsSk+ZJJxc3C9N136jlgRpSQjbAMDDhhLqwE2CkZa4ZZ0rB7XOVxB2tgkMsM5Vg7TEbXCVz6RzOR9KBL0Dq/zvY8Lf55zZ9Yqxe7egcbegca8Yq57zZH39F6zRNWO4RSGRAAAAAElFTkSuQmCC);}
             #history_elem .h_okru{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACaElEQVQ4jXVTXUhTYRh+zs+2s58czm0mWyd3iNSgTCuliyDM6A+6CiGJtBv1om6iqy666GIQCElJ4CqwLhITAgmbQRwvylgKot3MTTFdTnTqoR088+znbF3YxnaOvVcf7/M87/e87/e9BFRxhjWfaKu3dTWx5hanRVcNALGd9PKPiMSPzAm+6Yj0s5hP5A9lBop5fMX19FKNtQsAqS78L7KfQ/GBR/7ofTGpyIUCZQbKONjOfapzMuf/IyyJYEye6Hy3dFVMKjIFAL3X2f5m1nyjhEWQMHGnoSt3If1nHUCuADnMtIct11eMz8fHiGbWXD94k5spsU0QcHf0g3HVAQDkaBCrb+4CuVzxFdnbQ0sNdNtJW7e6Z6aqFibuFBa9rQCAIw+/gKmqhbwWLKaRbfW2brqJtbSoe1RkEQSlA1NVs2eI0kGRRc0smllLC2030x41kBai2PT3wX3nBQBg09+HtBDVFHBYaI7WZAE4rz2A3lGNjVEvAODA8YugrZWIjfVquOSWlFlWJ7d5H5JrIdgv9MDe2oPkWgjbvE8j3pIyy+T0b4lXA8quCGnhOyhTGSijFdJiAMqudgZTEYkn388KPhQ/MgB9xSG4O55j4+MTbIx64e54Br39sFqfG5kTfNRqPLV+7KDR7bEZGvNINpWAFPoGKTyJ5HoYUngSqa0IkMsW1PyC+MoX2HxJAICVoUxv27nxow7mnMbnPjEfk792Di1djstKggKAZCaX9gfjw5zdUOmxGRpQtGRq2/yi+Preh5VbcVlJYD/i2WpLY36dbaa9PyIkMr+mItLE8KwwEFjZmSnm/wVtfuF8Cyl7UwAAAABJRU5ErkJggg==);}
-
+            #history_elem.twip_margin, #history_elem.toonat_margin{margin-right:221px;}
+            #history_elem.twip_margin.toonat_margin{margin-right:272px;}
+            
             #notice_text_elem{display:none;font-size:10px;color:#666;position:absolute;top:0px;left:0px;width:100%;height:63px;text-align:left;padding-right:170px; vertical-align:middle;overflow: hidden;text-overflow: ellipsis;z-index:1000; background:white;white-space: nowrap;}
             .onstream #notice_text_elem {height:45px;}
             #notice_text_elem:before{content: "";display:inline-block;vertical-align: middle;height: 100%;background:white;}
@@ -1805,7 +1819,7 @@
             --history-font-color:#999;
             --history-gradient:linear-gradient(to right, rgba(0,0,0,0) 0px, rgba(0,0,0,1) 40px);
 
-            --hrm-doe-font-color:#ccc;
+            --hrm-doe-font-color:#3498db;
 
             --chat-nick-color:#ccc;
             --chat-content-color:#ccc;
@@ -1815,6 +1829,19 @@
 
             --chat-more-color:#fff;
             --chat-more-background:rgba(0,0,0,.75);
+            --chat-myLine-nick-color:#3498db;
+            --chat-myLine-color:#fff;
+            --chat-myLine-font-weight:bold;
+        }
+        /* theme-self-bold-chat */
+        body.theme-self-bold-chat div.line.myLine span.nick{
+            font-weight:bold !important;
+        }
+        body.theme-self-bold-chat div.line.myLine span.chatContent{
+            font-weight:bold !important;
+        }
+        body.theme.theme-black div.line.myLine span.chatContent{
+            color:var(--chat-myLine-color) !important;
         }
 
         /* apply theme */
@@ -1830,13 +1857,14 @@
         }
 
         /* font */
+        /*
         body.theme.theme-black .container, 
         body.theme.theme-black #hrm_DOE,
+        body.theme.theme-black button:not(.chat-close)
         body.theme.theme-black .wrap div.line, 
         body.theme.theme-black .wrap .chatContent, 
         body.theme.theme-black .wrap span.nick,
         body.theme.theme-black .wrap .conversation_memo,
-        body.theme.theme-black button:not(.chat-close),
         body.theme.theme-black .chatContent a.autokeyword,
         body.theme.theme-black .chatContent a.autokeyword:link {
             font-family: 'Noto Sans KR', serif !important;
@@ -1847,6 +1875,7 @@
         body.theme.theme-black .wrap .conversation_memo{
             vertical-align: middle !important;
         }
+        */
 
         body.theme ::selection {
             background: var(--drag-background);
@@ -2080,8 +2109,11 @@
             backface-visibility: hidden !important;
             transform: translateZ(0) scale(1,1)!important;
         }
+        body.theme div.line.myLine span.nick:not(.colorized){
+            color: var(--chat-myLine-nick-color) !important;
+        }
         body.theme div.line span.nick:not(.colorized){
-            color: var(--chat-nick-color) !important;
+            color: var(--chat-content-color) !important;
         }
         body.theme div.line span.chatContent{
             color: var(--chat-content-color) !important;
@@ -2116,6 +2148,10 @@
         }
         body.theme .keyword_pass{
             color: var(--chat-nick-color) !important;
+        }
+        body.theme #popupWrap *{
+            border-color: var(--main-border-color) !important;
+            background-color: var(--main-background) !important;
         }
         /* uchat logo */
         body.theme.theme-black div.wrap .top .logo:after{
@@ -2160,34 +2196,31 @@
 
         /* hrm_DOE */
         body.theme #hrm_DOE, body.theme #hrm_DOE li {
-            color: var(--main-font-color) !important;
+            color: var(--main-font-color);
             border-color: var(--main-border-color) !important;
             background-color: var(--main-background) !important;
         }
-        body.theme #hrm_DOE a{
-            color:var(--hrm-doe-font-color) !important;
-        }
-        body.theme.theme-black #hrm_DOE a{
-            font-style: italic;
-            font-size:0.9em;
+        body.theme #hrm_DOE a:link{
+            color:var(--hrm-doe-font-color);
         }
         body.theme #hrm_DOE a:visited{
-            color:var(--link-visited-font-color) !important;
+            color: var(--link-visited-font-color);
         }
     </style>
     `;
 
     function ADD_theme(theme){
+        var theme_use = ADD_config.theme_on;
         if(theme === undefined){
             theme = ADD_config.theme;
+        }
+        else if(theme === "off"){
+            theme = "default";
+            theme_use = false;
         }
         var $target_document = $(document);
 
         var container = "body";
-        // if(GM_page === C_MAIN || GM_page === C_STREAM || GM_page === C_SETTING || GM_page === C_SETTING_NW){
-        //     container = "body";
-        // }
-        // else
         if(GM_page === C_UCHAT && $GLOBAL_IFRAME_DOCUMENT !== undefined){
             container = $GLOBAL_IFRAME_DOCUMENT.find("body").first();
             $target_document = $GLOBAL_IFRAME_DOCUMENT;
@@ -2195,12 +2228,58 @@
         for(var theme_name in ADD_theme_list){
             $(container).removeClass(theme_name);
         }
+
+        if(GM_page === C_UCHAT){
+            // 굵은 글씨
+            if(theme_use && ADD_config.theme_self_bold_chat){
+                $(container).addClass("theme-self-bold-chat");
+            } else{
+                $(container).removeClass("theme-self-bold-chat");
+            }
+
+            // 폰트 크기
+            var theme_font_css_string = `
+                <style id="ADD_theme_font_css" type="text/css">
+                    div.line, div.line .chatContent, div.line span.nick, div.line.system *, .chatInput, .imgur_container .imgur_image_title {
+                        font-size: calc(12px * `+Number(ADD_config.theme_font_size)+`) !important;
+                    }
+                </style>`;
+
+            if($target_document.find("#ADD_theme_font_css").length !== 0){
+                $target_document.find("#ADD_theme_font_css").remove();
+            }
+            
+            if(theme_use && Number(ADD_config.theme_font_size) !== 1.0){
+                $target_document.find("head").append(theme_font_css_string);
+            }
+        }
+
+        // 폰트 변경
+        if(theme_use && ADD_config.theme_font_custom !== "default"){
+            var theme_font_custom_string = `
+                <style id="ADD_theme_font_custom_css" type="text/css">
+                    @import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR:400,900');
+                    *:not(.glyphicon), div.line, .chatContent, span.nick {
+                        font-family: 'Noto Sans KR', serif, "맑은 고딕", malgun gothic, dotum !important;
+                    }
+                </style>`;
+            if($target_document.find("#ADD_theme_font_custom_css").length !== 0){
+                $target_document.find("#ADD_theme_font_custom_css").remove();
+            }
+            $target_document.find("head").append(theme_font_custom_string);
+        } 
+        else {
+            if($target_document.find("#ADD_theme_font_custom_css").length !== 0){
+                $target_document.find("#ADD_theme_font_custom_css").remove();
+            }
+        }
         
+        // 테마 css 는 일단 무조건 추가한다.
         if($target_document.find("#ADD_theme_css").length === 0){
             $target_document.find("head").append(theme_css_string);
         }
 
-        if(theme === "default" || theme === undefined || $.inArray(theme, ADD_theme_list) === -1){
+        if(!ADD_config.theme_on || theme === "default" || theme === undefined || $.inArray(theme, ADD_theme_list) === -1){
             $(container).removeClass("theme");
             ADD_DEBUG("테마 기본값 사용", theme);
         }
@@ -3359,8 +3438,11 @@
                 <div id="notice_text_elem" title="Dosteam+ System Message"><span id="notice_text">문어문어문어문어<br />블러드트레일 블러드트레일</span><span id="notice_text2"></span></div>
                     <div id="history_elem"></div>
                     <div class="AD_title">
-                        <span id="ADD_twip" class="btn btn-default" aria-label="Twip donate" data-microtip-position="left" role="tooltip">
-                            <span class="glyphicon glyphicon-usd"></span>
+                        <span id="ADD_twip" class="btn btn-default btn-sm" aria-label="Twip donate" data-microtip-position="bottom" role="tooltip">
+                            <span>Twip</span>
+                        </span>
+                        <span id="ADD_toonation" class="btn btn-default btn-sm" aria-label="Toonation donate" data-microtip-position="bottom" role="tooltip">
+                            <span>Toon</span>
                         </span>
                         <span id="ADD_change_multi" class="btn btn-default" aria-label="멀티트위치↔트위치 전환" data-microtip-position="bottom" role="tooltip">
                             <span class="glyphicon glyphicon-resize-horizontal"></span>
@@ -3368,7 +3450,7 @@
                     <span id="ADD_quick_list" class="btn btn-default" aria-label="퀵리스트" data-microtip-position="bottom" role="tooltip">
                         <span class="glyphicon glyphicon-list"></span>
                     </span>
-                    <span id="ADD_config" class="btn btn-default" aria-label="설정" data-microtip-position="right" role="tooltip">
+                    <span id="ADD_config" class="btn btn-default" aria-label="설정" data-microtip-position="bottom" role="tooltip">
                         <span class="glyphicon glyphicon-cog">
                         </span>
                     </span>
@@ -4090,7 +4172,7 @@
                     from2 = "";
                 }
                 else{
-                    from2 = "<span style=\"color:#bbb;padding:0px 6px;user-select: none;\">〈</span>";
+                    from2 = "<span class=\"glyphicon\" style=\"color:#bbb;padding:0px 6px;user-select: none;\">〈</span>";
                 }
 
                 if(platform_class !== ""){
@@ -4308,7 +4390,7 @@
                 <div class="lightbox-opened-white-background modal-content" style="cursor:default;max-width:1200px;min-width:500px;display:table;">
                     <div style="font-family:'Noto Sans KR', '맑은 고딕', 'malgun gothic', dotum, serif;">
                         <span style="font-weight:900;font-size:14px;">차단 기록 보기</span><br />
-                        <span style="margin:0 0 5px 0;display:inline-block;">차단된 채팅은 최대 `+ADD_config.chat_block_log_limit+`개까지 저장됩니다.</span><br />
+                        <span style="margin:0 0 5px 0;display:inline-block;">차단된 채팅은 최대 `+ADD_config.chat_block_log_limit+`개까지 저장됩니다.<br />캠페인: 채팅창에서 메모 내용을 언급하지 말고 혼자 조용히 사용해주세요.</span><br />
                         <span id="ADD_blocked_text">`+Blocked_text+`</span>
                     </div>
                 </div>
@@ -4582,6 +4664,54 @@
                     `);
                     $("body").append($setting_container);
                     GM_setting.createDOE($("#setting_contents"));
+                }
+            },
+            {
+                title: "트위치 컨트롤 패널에서 투네이션 링크 가져오기",
+                func:function(){
+                    //[{"data":{"user":{"id":"152596920","self":{"subscriptionBenefit":null,"__typename":"UserSelfConnection"},"__typename":"User"}},"extensions":{"durationMilliseconds":24,"operationName":"ExtensionsForChannelCurrentUser"}},{"data":{"currentUser":{"id":"72346108","login":"pingpink","roles":{"isStaff":null,"isSiteAdmin":null,"__typename":"UserRoles"},"__typename":"User"},"user":{"id":"152596920","login":"lol_ambition","panels":[{"id":"38542165","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-8528b7fe-32ac-46f5-b9cd-19bb5f6f7122","linkURL":"http://invite.blitz.gg/ambitiontwitch","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"37456010","type":"EXTENSION","slotID":"extension-panel-2","__typename":"ExtensionPanel","__typename":"ExtensionPanel","__typename":"ExtensionPanel"},{"id":"32810632","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-c112083a-9ab6-48f0-b058-e12b95670557","linkURL":"http://twip.kr/lol_ambition","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"32810639","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-4e277b54-0647-46d1-9459-43f5648922fa","linkURL":"https://www.twitch.tv/products/lol_ambition/ticket","description":"- 오프라인 이벤트 우선 초청!\n","__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"35947432","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-60afc2cd-c7b7-495e-aede-80ac8ab1fc11","linkURL":"https://www.twitch.tv/lol_ambition/videos?filter=highlights\u0026sort=time","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"40600374","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-7a7e7da1-a808-4b49-85b9-e7ad6db91f4f","linkURL":"https://toon.at/donate/636948107406151844","description":"- 써보는중 화면에 안나올 수도 있음!","__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"38497443","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-4b270383-6977-4c66-bed8-85a8baf133d1","linkURL":"https://tgd.kr/20959561","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"32810647","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-94096cae-602b-4729-b584-d4287d970209","linkURL":"https://tgd.kr/lol_ambition","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"32819922","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-32f56782-3914-4e1e-9ba6-032ce05f5467","linkURL":"https://www.youtube.com/channel/UCHYMpkGhNIr8A0m2H3lIjUA","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"36769376","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-47f7805c-4a4e-45e3-a85c-77c290284583","linkURL":"https://sixshop.co.kr/ambitionrise","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"35918517","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-06e7d54b-cc18-4023-860f-3e4abc7d0b2d","linkURL":"https://www.twitch.tv/lol_ambition/clips?filter=clips\u0026range=7d","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"33402538","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-a8f6b645-8e31-4027-9fa2-01cdff0fd2a8","linkURL":"https://twitter.com/lol_ambition","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"34043014","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-caf969a7-8f69-4828-b461-05a6f7b874c0","linkURL":"https://www.facebook.com/lolambition/?modal=admin_todo_tour","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"34283790","type":"EXTENSION","slotID":"extension-panel-1","__typename":"ExtensionPanel","__typename":"ExtensionPanel","__typename":"ExtensionPanel"},{"id":"32810652","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-bc81e2bb-7a50-413d-91fb-de9dbf88616c","linkURL":"https://www.instagram.com/ambition921027/","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"34519520","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-044a9f8b-d0be-40b7-8d67-e04fc5c24c76","linkURL":"https://tgd.kr/lol_ambition","description":"*텀블러 5월 1일 이후 발송분부터는 디자인변경이 있을 예정입니다! 이미지 나오면 공유드릴게요!\n*에코백도 디자인변경 및 수량제작 일정때문에 잠시 중단되어 있습니다!! :)","__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"32957547","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-6479c235-d0c7-4a2e-b297-e6d55be8b467","linkURL":null,"description":"스폰서십/광고/협찬 등 방송과 관련된 문의는 아래의 메일로 보내주세요! 빠르게 검토하여 회신드릴 수 있도록 하겠습니다. 감사합니다!\n\ncksdyd1037@gmail.com\n\nPlease send inquiries related with broadcasting such as sponsorships, advertisements, collaborations to the email address below. We'll review and respond as soon as possible :) Thank you always!\n\ncksdyd1037@gmail.com","__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"32819932","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-68708b21-953b-4c5a-97c5-2592fae8ad2c","linkURL":null,"description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"}],"__typename":"User"}},"extensions":{"durationMilliseconds":40,"operationName":"ChannelPanels"}},{"data":{"currentUser":{"id":"72346108","login":"pingpink","whisperThreads":{"edges":[],"__typename":"WhisperThreadConnection"},"__typename":"User"}},"extensions":{"durationMilliseconds":32,"operationName":"Whispers_Whispers_UserWhisperThreads"}}]
+                    // GM_xmlhttpRequest({
+                    //     url:"https://gql.twitch.tv/gql",
+                    //     method: "POST",
+                    //     headers: {
+                    //         //"Content-Type": "application/javascript",
+                    //         "Client-ID": "kimne78kx3ncx6brgo4mv6wki5h1ko",//ADD_CLIENT_ID_TWITCH,
+                    //         "Accept-Language": "ko-KR",
+                    //         "Content-Type": "text/plain;charset=UTF-8",
+                    //         "DNT": "1",
+                    //         "type": "POST",
+                    //         "Origin": "https://www.twitch.tv",
+                    //         "Referer": "https://www.twitch.tv/lol_ambition",
+                    //     },
+                    //     onload:function(channel){
+                    //         ADD_DEBUG("Twitch API(Control panel) - Request succeed", channel);
+                    //     },
+                    //     onerror:function(error){
+                    //         ADD_DEBUG("Twitch API(Control panel) - Request failed", error);
+                    //     }
+                    // });
+                    GM_xmlhttpRequest({
+                        url: "https://api.twitch.tv/api/channels/rhdgurwns/panels?client_id="+ADD_CLIENT_ID_TWITCH,
+                        method: "GET",
+                        dataType:"json",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        onload: function (data) {
+                            var temp_response = IsJsonStringReturn(data.responseText);
+                            ADD_DEBUG("Succeed", temp_response);
+                            $.each(temp_response, function(index, value){
+                                if(value.data !== undefined && value.data.link !== undefined && value.data.link.indexOf("https://toon.at/donate/") !== -1){
+                                    var toonat_link = value.data.link;
+                                    ADD_DEBUG("찾았다", toonat_link);
+                                    return false;
+                                }
+                            });
+                        },
+                        onerror: function (err) {
+                            ADD_DEBUG("error", err);
+                        }
+                    });
                 }
             },
             {
@@ -6062,8 +6192,8 @@
 
         // twitch clip 섬네일 으로 부터 찾기(앞에서 링크는 찾았는데, 이미지 링크는 못 찾은 경우)
         if(!image_found && ADD_config.chat_image_preview && !ADD_config.broadcaster_mode && ADD_config.chat_image_twitch_thumb && hrefs.length !== 0 && ADD_chat_images.length === 0){
-            if(hrefs[0].match(/(\.twitch\.tv\/\w*\/clip\/|clips\.twitch\.tv\/(embed\?clip=)?)([a-zA-Z]*)/)){
-                var twitch_thumb_match = hrefs[0].match(/(\.twitch\.tv\/\w*\/clip\/|clips\.twitch\.tv\/(embed\?clip=)?)([a-zA-Z]*)/);
+            if(hrefs[0].match(/(\.twitch\.tv\/\w*\/clip\/|clips\.twitch\.tv\/(embed\?clip=)?)([a-zA-Z0-9]*)/)){
+                var twitch_thumb_match = hrefs[0].match(/(\.twitch\.tv\/\w*\/clip\/|clips\.twitch\.tv\/(embed\?clip=)?)([a-zA-Z0-9]*)/);
 
                 if(twitch_thumb_match){
                     image_found = true;
@@ -6475,6 +6605,7 @@
                                 background-position:center center;
                             }
                             .chatContent a.autokeyword, .chatContent a.autokeyword:link{
+                                white-space:nowrap;
                                 z-index:1;
                                 color:#000;
                                 font-family:dotum;
@@ -6487,7 +6618,7 @@
                                 width: calc(100% + 4px);
                                 content: " ";
                                 position: absolute;
-                                bottom: -3px;
+                                top: -3px;
                                 right: -2px;
                                 border-radius: 7px;
                                 background-color: powderblue;
@@ -6537,9 +6668,9 @@
                     if(!($line.hasClass("fired"))){
                         chatElemControl($line, $GLOBAL_IFRAME_DOCUMENT, iframeElems);
                     
-                        $line.on("click", function(){
-                            ADD_DEBUG("타노스!");
-                        });
+                        // $line.on("click", function(){
+                        //     ADD_DEBUG("타노스!");
+                        // });
                     }
                 });
 
@@ -6751,7 +6882,9 @@
 
         // 방송 모드 시작 시
         if(GM_page === C_UCHAT && ADD_config.broadcaster_mode && $GLOBAL_IFRAME_DOCUMENT !== undefined){
-            ADD_theme("default");
+            // 테마 관련 기능 종료
+            ADD_theme("off");
+
             if($GLOBAL_IFRAME_DOCUMENT.find("#ADD_broadcaster_mode_css").length !== 0){
                 $GLOBAL_IFRAME_DOCUMENT.find("#ADD_broadcaster_mode_css").remove();
             }
@@ -7731,7 +7864,7 @@
 
                         <div id="memo_text_container" style="padding:5px 0px;">
                             <span id="memo_text" style="">
-                                캠페인: 채팅창에서 메모 내용을 언급하지 말고<br />혼자 조용히 사용해주세요.<br />클린채팅 합시다.
+                                캠페인: 채팅창에서 메모 내용을 언급하지 말고<br />혼자 조용히 사용해주세요.<br />저격은 또다른 어그로의 한 형태일 수 있습니다.
                             </span>
                             <div id="memo_change_text" style="padding:5px 0px;display:none;">
                             </span>
@@ -7884,7 +8017,7 @@
             // 메모 닉���임 입력창 초기화 이벤트
             $display_name.on("click", function(){
                 var $this = $(this);
-                if($this.val() == "채팅창에 표시할 내용"){
+                if($this.val() == "채팅���에 표시할 내용"){
                     $this.val("");
                 }
             });
@@ -8270,6 +8403,8 @@
             if(GM_page === C_STREAM){
                 ADD_now_playing.id = document_url.split("/").pop();
                 ADD_now_playing.display_name = ADD_streamer_nick(ADD_now_playing.id);
+                ADD_now_playing.toonat_link = "";
+                ADD_now_playing.twip_link = "";
             }
 
             // 스트림 계속 이어 보기 관련
@@ -8289,15 +8424,93 @@
                 $("#ADD_change_multi").css("opacity", "0.0").hide(300);
             }
 
-            // 재생 중 트윕 버튼 설정
-            if(ADD_config.playing_twip_button && (twitch_url  !== -1 || (multitwitch_url !== -1 && document_url.indexOf("&") === -1))){
+            // 도네이션 버튼 추가
+            if((ADD_config.playing_toonat_button || ADD_config.playing_twip_button) && (twitch_url  !== -1 || (multitwitch_url !== -1 && document_url.indexOf("&") === -1))){
+                GM_xmlhttpRequest({
+                    url: "https://api.twitch.tv/api/channels/"+ADD_now_playing.id+"/panels?client_id="+ADD_CLIENT_ID_TWITCH,
+                    method: "GET",
+                    dataType:"json",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    onload: function (data) {
+                        var temp_response = IsJsonStringReturn(data.responseText);
+                        ADD_DEBUG("Succeed", temp_response);
+                        $.each(temp_response, function(index, value){
+                            if(value.data !== undefined && value.data.link !== undefined){
+                                // 투네이션 버튼
+                                if(ADD_config.playing_toonat_button && value.data.link.indexOf("toon.at/donate/") !== -1){
+                                    ADD_now_playing.toonat_link = value.data.link;
+                                    $("#ADD_toonation").css("opacity", "1.0").fadeIn(300);
+                                    if($("#history_elem").length !== 0){
+                                        $("#history_elem").addClass("toonat_margin");
+                                    }
+                                }
+                                
+                                // 트윕 버튼
+                                if(ADD_config.playing_twip_button && value.data.link.indexOf("twip.kr/") !== -1){
+                                    ADD_now_playing.twip_link = value.data.link;
+                                    $("#ADD_twip").css("opacity", "1.0").fadeIn(300);
+                                    if($("#history_elem").length !== 0){
+                                        $("#history_elem").addClass("twip_margin");
+                                    }
+                                }
+                            }
+                        });
+
+                        // 투네이션 못 찾은 경우
+                        if(ADD_now_playing.toonat_link === ""){
+                            $("#ADD_toonation").css("opacity", "0.0").hide(300);
+                            if($("#history_elem").length !== 0){
+                                $("#history_elem").removeClass("toonat_margin");
+                            }
+                        }
+
+                        // 트윕 못 찾은 경우
+                        if(ADD_now_playing.twip_link === ""){
+                            $("#ADD_twip").css("opacity", "0.0").hide(300);
+                            if($("#history_elem").length !== 0){
+                                $("#history_elem").removeClass("twip_margin");
+                            }
+                        }
+                    },
+                    onerror: function (err) {
+                        ADD_DEBUG("error", err);
+                        ADD_now_playing.toonat_link = "";
+                        ADD_now_playing.twip_link = "";
+                        $("#ADD_toonation").css("opacity", "0.0").hide(300);
+                        $("#ADD_twip").css("opacity", "0.0").hide(300);
+                        if($("#history_elem").length !== 0){
+                            $("#history_elem").removeClass("toonat_margin").removeClass("twip_margin");
+                        }
+                    }
+                });
+            }
+            else{
+                $("#ADD_toonation").css("opacity", "0.0").hide(300);
+                $("#ADD_twip").css("opacity", "0.0").hide(300);
+                if($("#history_elem").length !== 0){
+                    $("#history_elem").removeClass("toonat_margin").removeClass("twip_margin");
+                }
+            }
+
+
+            // 재생 중 트윕 버튼 강제 설정
+            if(ADD_config.playing_twip_button_force && ADD_now_playing.twip_link === "" && (twitch_url  !== -1 || (multitwitch_url !== -1 && document_url.indexOf("&") === -1))){
+                ADD_now_playing.twip_link = "https://twip.kr/donate/"+ADD_now_playing.id;
+                ADD_config.playing_twip_button = false;
                 $("#ADD_twip").css("opacity", "1.0").fadeIn(300);
+                if($("#history_elem").length !== 0){
+                    $("#history_elem").addClass("twip_margin");
+                }
             }
             else{
                 $("#ADD_twip").css("opacity", "0.0").hide(300);
+                if($("#history_elem").length !== 0){
+                    $("#history_elem").removeClass("twip_margin");
+                }
             }
 
-    
             // 재생 중 퀵 리스트 버튼 보이기
             if(ADD_config.playing_quick_list_button && GM_page === C_STREAM){
                 $("#ADD_quick_list").css("opacity", "1.0").fadeIn(300);
@@ -8513,8 +8726,28 @@
             var wn = (ww > 850 ? 850 : ww/5*4);
             var left  = (ww/2)-(wn/2),
                 top = (wh/2)-(wh/5*4/2);
-            window.open("https://twip.kr/"+ADD_now_playing.id,"winname",
-                "directories=yes,titlebar=yes,toolbar=yes,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+wn+",height="+wh/5*4+",top="+top+",left="+left);
+            if(ADD_now_playing.twip_link !== undefined && ADD_now_playing.twip_link !== ""){
+                window.open(ADD_now_playing.twip_link,"winname",
+                    "directories=yes,titlebar=yes,toolbar=yes,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+wn+",height="+wh/5*4+",top="+top+",left="+left);
+            }
+        }
+        else{
+            ADD_DEBUG("ADD_now_playing 이 없다.", ADD_now_playing);
+        }
+    });
+
+    $(document).on("click", "#ADD_toonation", function(){
+        if(ADD_now_playing.id !== undefined && ADD_now_playing.id !== ""){
+            var ww = $(window).width(),
+                wh = $(window).height();
+            var wn = (ww > 850 ? 850 : ww/5*4);
+            var left  = (ww/2)-(wn/2),
+                top = (wh/2)-(wh/5*4/2);
+
+            if(ADD_now_playing.toonat_link !== undefined && ADD_now_playing.toonat_link !== ""){
+                window.open(ADD_now_playing.toonat_link,"winname",
+                    "directories=yes,titlebar=yes,toolbar=yes,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+wn+",height="+wh/5*4+",top="+top+",left="+left);
+            }
         }
         else{
             ADD_DEBUG("ADD_now_playing 이 없다.", ADD_now_playing);
