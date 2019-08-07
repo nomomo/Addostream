@@ -5073,6 +5073,7 @@
         var replace_coord = async function(_page){
             //await ADD_SetVal("Cross_Origin_Hrm", false);
             if(!coord_fail){
+                coord_fail = true;
                 var coord_ori = (ADD_config.insagirl_select == 1 ? "coord.dostream.com" : "insagirl-hrm.appspot.com");
                 var coord_new = (ADD_config.insagirl_select == 1 ? "insagirl-hrm.appspot.com" : "coord.dostream.com");
                 ADD_send_sys_msg_from_main_frame(coord_ori+" 가 응답하지 않아 좌표 사이트를 "+coord_new+" 으로 변경합니다. 설정을 영구적으로 변경하려면 <a href='http://www.dostream.com/addostream/' target='_blank' style='text-decoration:underline;'>[애드온 상세 설정]</a>에서 [고급 기능 설정]을 활성화한 후, [일반-좌표 사이트 선택] 옵션을 변경하십시오.");
@@ -6107,7 +6108,7 @@
                     $aElem.html(decodeURIComponent($aElem.html()));
                 }
 
-                // 트위치 링크인 경우 닉네임을 링크 끝에 추가하기
+                // 트위치 ���크인 경우 닉네임을 링크 끝에 추가하기
                 if(href.toLowerCase().indexOf("dostream.com/#/stream/twitch/") !== -1 || href.toLowerCase().indexOf("dostream.com/#/stream/multitwitch/") !== -1){
                     var ch_text = "";
                     var ch_streamer_id = href.split("/").pop();
