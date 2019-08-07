@@ -4955,7 +4955,7 @@
             headers: {
                 "Content-Type": "application/javascript"
             },
-            timeout: 1000,
+            timeout: 2000,
             onload: async function(response){
                 coord_fail = false;
                 if($("#hrm_DOE").length === 0){
