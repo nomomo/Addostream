@@ -3,7 +3,8 @@
 // @namespace   Addostream
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
-// @version     1.50.7
+// @include     *insagirl-toto.appspot.com/hrm/*
+// @version     1.51.0
 // @icon        https://raw.githubusercontent.com/nomomo/Addostream/master/images/logo.png
 // @homepageURL https://nomomo.github.io/Addostream/
 // @supportURL  https://github.com/nomomo/Addostream/issues
@@ -49,8 +50,8 @@
 "use strict";
 (async () => {
     var ADD_DEBUG_MODE = await ADD_GetVal("ADD_DEBUG_MODE", false);
-    const C_MAIN = 0, C_STREAM = 1, C_UCHAT = 2, C_SETTING = 3, C_SETTING_NW = 4;
-    const urlCheckerText = ["MAIN--","STREAM","UCHAT-","SETTING", "SETTING-NW"];
+    const C_MAIN = 0, C_STREAM = 1, C_UCHAT = 2, C_SETTING = 3, C_SETTING_NW = 4, C_INSAGIRL = 11;
+    const urlCheckerText = ["MAIN--","STREAM","UCHAT-","SETTING", "SETTING-NW","","","","","","","INSAGIRL"];
     var GM_page = urlCheck();
 
     ADD_DEBUG("DEBUG MODE ON");
@@ -225,7 +226,7 @@
 
     // API로 접근해서 스트리머 이름을 가져올 수도 있으나,
     // API CALL 을 줄이기 위해 원래부터 두스 MAIN에 있던 스트리머 이름을 적어둔다.
-    var streamerArray = [["hanryang1125","풍월량","풍온","김영태","영태","풍형","풍월주인한량","우리풍","큰풍","풍"],["ddahyoni","따효니","효니","백상현","상현","따"],["kss7749","쉐리","쉐옹","쉐"],["looksam","룩삼","룩우스","김진효","진효","룩"],["yapyap30","얍얍","야부야부","김성태","성태","얍"],["saddummy","서새봄냥","서새봄","새봄추","스새봄","새봄"],["109ace","철면수심","철수형","철쑤","쑤심","진배"],["rhdgurwns","공혁준","공선생","르건즈","혁준이","혁주니","혁준","건즈","공"],["gmdkdsla","흐앙님","흐앙"],["jungtaejune","똘똘똘이","똘3","똘삼","정태준","똘"],["mascahs","마스카"],["steelohs","스틸로","조강현"],["kimdoe","김도","이택기","리택기","킴도"],["togom","토곰","토마토곰"],["htk_","흐트크"],["ogn_lol","OGN 롤챔스"],["kanetv8","케인","케조씨"],["yumyumyu77","소풍왔니","소풍이","소풍","작은풍","원유리"],["tjskdutls","서나랑","스나랑"],["sung0","쥬팬더"],["game2eye","홍방장","홍"],["cocopopp671","초승달","승따리","승딸이","승딸","승달","조순달","초"],["dingception","딩셉션"],["redtea","홍차"],["zzamtiger0310","짬타수아","짬타","짬"],["rldnddl789","아빠킹"],["eulcs1","EU LCS"],["kkoma","Kkoma"],["1983kej","단군","김의중","의중","으중이"],["lol_peanut","Peanut"],["faker","Faker","faker","페이커","이상혁","상혁","페온","우리혁","페"],["nrmtzv","으음"],["nicegametv","나겜"],["teaminven","인벤"],["capta1n_pony","포니"],["huni","Huni"],["sktt1_wolf","Wolf"],["bang","Bang"],["wpghd321","류제홍"],["jmjdoc","칸데르니아","칸데","두방이","두방","두스의 방패","두스의방패","[]방"],["yungi131","윤기"],["mediamuse","미디어뮤즈","미뮤"],["veritaskk","Veritas","베리타스","싸세","김경민"],["themarinekr","김정민"],["tvindra","인드라"],["tranth","자동"],["seine1026","세인님"],["sonycast_","소니쇼","소니쿤"],["dou3796","뱅붕"],["rudbeckia7","연두는말안드뤄","연두"],["trisha","트리샤"],["naseongkim","김나성","나성"],["dlxowns45","태준이","이태준"],["handongsuk","한동숙","동수칸","동숙","한성욱"],["alenenwooptv","웁_게임방송"],["mr_coat","노래하는코트"],["ajehr","머독"],["lol_crown","Crown"],["rooftopcat99","옥냥이"],["myzet1990","개구멍"],["yoonroot","윤루트"],["sn400ja","액시스마이콜","마이콜"],["tape22222","테이프2"],["miracle0o0","미라클티비"],["bighead033","빅헤드"],["wkgml","견자희"],["queenhuz","후즈"],["kiyulking","김기열"],["asdn6388","나락호프"],["lol_cuvee","Cuvee"],["VSL","VSL"],["drlee_kor","이민우33세"],["CoreJJ","CoreJJ"],["lol_ambition","앰비션","엠비션","강찬밥","강찬용"],["Axenix","아제닉스"],["maknoonlol","막눈"],["zilioner","침착맨","이말년","이병건","침"],["timeofcreate","홍랑"],["twitchshow","트위치쇼"],["kangqui","강퀴","퀴저씨","퀴어빠","퀴"],["team_spiritzero","Team Spiritzero"],["zizionmy","젼마이"],["lol_blank","Blank"],["ogn_ow","OGN 오버워치"],["juankorea","주안코리아"],["woowakgood","우왁굳"],["www0606","푸딩"],["runner0608","러너"],["flowervin","꽃빈"],["h920103","이초홍","초홍"],["hj0514","백설양","진희재"],["pbstream77","피비스트림"],["beyou0728","피유","끠유","소통퀸","노채리"],["serayang","세라양","양새아","쉐굴"],["mister903","갱생레바","레바"],["what9honggildong","왓구홍길동"],["chicken_angel","통닭천사"],["godbokihs","갓보기"],["yuriseo","서유리"],["kimminyoung","아옳이","김민영"],["gabrielcro","가브리엘","가비"],["starcraft_kr","스타크래프트 KR"],["yeziss","신예지"],["ch1ckenkun","치킨쿤","차보해","보해"],["lds7131","더헬"],["nodolly","노돌리"],["haku861024","정직원"],["nanajam777","우정잉","정잉","잉"],["leehunnyeo","루다님","별루다","루다"],["streamer2u","이유님"],["hatsalsal","햇살살"],["pommel0303","폼멜"],["hosu0904","호수"],["surrenderhs","서렌더","티나","김정수"],["eukkzzang","윾짱"],["gageu","가그"],["ange_i","요뿌니"],["menpa1030","멘파"],["dua3362","서넹","서빙"],["dda_ju","다주","주다영"],["taesangyun","태상"],["oreo4679","리치1"],["dmdtkadl69","응삼이"],["sigwon","시권"],["rngudwnswkd","푸린"],["jungjil","정질"],["ses836","인간젤리"],["DrAquinas","DrAquinas"],["tree2512","말퓨"],["frog135","게구리"],["leechunhyang","이춘향"],["cherrypach","꽃핀"],["lovelyyeon","연두부"],["yd0821","양띵","양명"],["2chamcham2","탬탬버린","탬탬"],["jinu6734","김진우"],["ddolking555","똘킹"],["erenjjing","에렌디라"],["suk_tv","석티비"],["h0720","군림보"],["rellacast","렐라","앗앗"],["silphtv","실프"],["playhearthstonekr","playhearthstonekr"],["mirage720","미라지"],["1am_shin","신기해"],["maruemon1019","마루에몽"],["ulsanbigwhale","울산큰고래"],["areuming","알밍"],["esther950","에쓰더"],["pacific8815","쌍베","전상빈","쌍"],["dogswellfish","개복어"],["yeonchobom","연초봄"],["ssambahong","홍진영"],["Twipkr","트윕KR"],["reniehour","레니아워"],["caroline9071","숑아"],["ssambahong","쌈바홍","홍진영"],["funzinnu","Funzinnu","펀즈","펀가놈","펀가"],["loveseti","미모"],["kimgaeune","김총무님"],["1uming","루밍이","루밍"],["invenk01","김영일","K01","김01"],["sal_gu","살인마협회장","살협","살구"],["flurry1989","플러리","로맨틱겨울","로겨","로7ㅕ","조현수","겨러리"],["holsbro","홀스형","홀스"],["hn950421","고말숙","말숙"],["jaeheeng2","햄재희","재희"],["hwkang2","캡틴잭","캡잭","캡짹","잭선장","강형우","잭"],["yunlovejoy","도여사"],["yatoring","야토링"],["lolluk4","루ㅋ4"],["rkdthdus930","강소연","타노스","탑분쇄기","수장님"],["seogui","서긔"],["pikra10","재슥짱"],["playoverwatch_kr","오버워치 이스포츠"],["maxim_korea_official","남자매거진맥심","맥심","맥심코리아"],["hanururu","하느르"],["obm1025","오킹"],["acro_land","아크로"],["choerakjo","최락조"],["megthomatho","맥또마또"],["s1032204","삐부"],["rkdwl12","강지"],["jaewon4915","김재원"],["zennyrtlove","신재은"],["2sjshsk","유누"],["queenmico","미코"],["lsd818","득털"],["wlswnwlswn","진주몬"],["apzks1236","학살"],["sunbaking","선바"],["rockid1818","모모88"],["moogrr1211","무굴"],["twitchkr","TwitchKR"],["tlfjaos","시러맨"],["dawnhs","DawN","장현재","던"],["mata","마타타마","마타"],["lol_khan","Khan","칸"],["buzzbean11","대도서관","머도서관","대도","머도"],["mhj1682","카트문호준","문호준"],["remguri","렘쨩"],["heavyrainism","호무새"],["lck_korea","LCK Korea","롤챔스","롤챔"],["lol_madlife","매드라이프","매라","매멘","매맨","메라","홍민기"],["lol_helios","헬리오스"],["pparkshy","샤이"],["pubgkorea","PUBGKorea"],["riotgames","Riot Games"],["lisalove","리즈리사"],["mbcmlt","엠비씨마리텔"],["mbcmlt1","엠비씨마리텔1"],["mbcmlt2","엠비씨마리텔2"],["mbcmlt3","엠비씨마리텔3"],["mbcmlt4","엠비씨마리텔4"],["mbcmlt5","엠비씨마리텔5"],["mbcmlt6","엠비씨마리텔6"],["mbcmlt7","엠비씨마리텔7"],["mbcmlt8","엠비씨마리텔8"],["mbcmlt9","엠비씨마리텔9"],["insec13","인섹"],["realkidcozyboy","키드밀리"],["sbsmobile24","배거슨라이브","배거슨","배성재"],["ok_ja","박옥자누나","박옥자","옥자","김나영"],["boxer_lim","임요환","임"],["kimukihun","기무기훈"],["sasin_god","사신갓","사신"],["dardarae","달다래오","차짬좌"],["taezzang","태은짱","태은쨩","태은"],["jammi95","잼미님","잼미"],["coppag2","꿀혜"],["overwatchleague_kr","오버워치리그"],["fastloves","홍진호","콩","홍"],["jinsooo0","진수0","진수도사","진수","도사님"],["wltn4765","지수소녀"],["gamesdonequick","GamesDoneQuick","겜던퀵"],["dragon3652","스피드소닉"],["parkjand","박잔디"],["jinnytty","윰찌니"],["danpaeng2","단팽이"],["inas1220","야생의딸기"],["limlim72","진자림"],["bongsoon0115","봉순"],["eodyd188","밴쯔","벤쯔"],["duedrop","권이슬","이슬이","이스리","권자봉"],["so_urf","소우릎"],["lo10002","혜요"],["GhostGC","고스트","수광","수팡"],["mari0712","마리"],["defconntv","데프콘","트프콘","대준이","유대준"],["b14ckt41e","검은동화","검동"],["ninja","닌자"],["shroud","슈라우드"],["xkwhd","피닉스박","박종우!","박종우"],["bsll7777","금다정","야망좌"],["tmxk319","괴물쥐","장지환"],["jasper0414","재스퍼","제스퍼"],["cbrace","중괄호"],["maruko_zzang","마루코"],["charming_jo","조매력"],["leeyl1118","영림이","영림"],["soming1907","소밍"],["kimpoong_official","김풍"],["ma_mwa","마뫄"],["kerokero_","케로"],["yurani","이유란","유란"],["kitekorea","고래까와"],["itopicy","용봉탕","봉탕"],["matarzzz","행수"],["yeji429","예지"],["t1_teddy","테디이","테디"],["clid","클리드"],["seulsiho","슬시호","슬쇼"],["yeokka","여까"],["kimdduddi","김뚜띠","뚜띠"],["collet11","코렛트"],["sabin1","사빈"],["robok2016","로복님","로복"],["salakill2","너겟"],["mununyu","무뉴뉴","잼뉴뉴"],["micka1120","믹카","믹키몬드"],["dosroda","두스로다"],["vzeros88","규현"],["inecr7024","삼식"],["tekken","TEKKEN"],["yuhwanp","빢유환"],["kumikomii","고차비"],["uzuhama","우주하마"],["dkwl025","양아지"],["rainblue37","김블루"],["lucia94","루시아"],["d2kyun","김느"],["t1_haru","SKTT1 Haru","하루"],["box930205","와나나"],["nineunni","니네언니"],["djhenney","djhenney","표은지"],["pjs9073","쫀득이"],["nanayango3o","나나양"],["hejin0_0","헤징"],["reapered","Reapered","레퍼드","래퍼드"],["loven4862","솔빈"],["bonnysurang","김반희"],["genius_mad","지니어스매드"],["riotgames_korea","RiotGames Korea","라이엇코리아","라코"],["nokduro","녹두로"],["magenta62","마젠타"],["edoongs2","에디린"],["yattaa_","얏따"],["nnabi","연나비님","연나비"],["akvl1229","김은별컴퍼니","김은별"],["discoverwcg","discoverWCG","WCG","wcg"],["atk","ATK","알버트킴","알굴"],["rhea90","춘샘"],["roadofthestrength","힘의길","힘길"],["zoodasa","주다사"],["crazzyccat","크캣66","크캣"],["ogn","OGN","온게임넷","온겜"],["lpl","LPL"],["honeylatte","꿀라떼"],["eff2ct","이펙트"],["ogn_e","오지네"],["heesu216","희수"],["sikkazama","식빵월드","식빵아재","식빵 아재","식빵"],["nunu836836","익산누누"],["aram4519","과로사"]];
+    var streamerArray = [["hanryang1125","풍월량","풍온","김영태","영태","풍형","풍월주인한량","우리풍","큰풍","풍"],["ddahyoni","따효니","효니","백상현","상현","따"],["kss7749","쉐리","쉐옹","쉐"],["looksam","룩삼","룩우스","김진효","진효","룩"],["yapyap30","얍얍","야부야부","김성태","성태","얍"],["saddummy","서새봄냥","서새봄","새봄추","스새봄","새봄"],["109ace","철면수심","철수형","철쑤","쑤심","진배"],["rhdgurwns","공혁준","공선생","르건즈","혁준이","혁주니","혁준","건즈","공"],["gmdkdsla","흐앙님","흐앙"],["jungtaejune","똘똘똘이","똘3","똘삼","정태준","똘"],["mascahs","마스카"],["steelohs","스틸로","조강현"],["kimdoe","김도","이택기","리택기","킴도"],["togom","토곰","토마토곰"],["htk_","흐트크"],["ogn_lol","OGN 롤챔스"],["kanetv8","케인","케조씨"],["yumyumyu77","소풍왔니","소풍이","소풍","작은풍","원유리"],["tjskdutls","서나랑","스나랑"],["sung0","쥬팬더"],["game2eye","홍방장","홍"],["cocopopp671","초승달","승따리","승딸이","승딸","승달","조순달","초"],["dingception","딩셉션"],["redtea","홍차"],["zzamtiger0310","짬타수아","짬타","짬"],["rldnddl789","아빠킹"],["eulcs1","EU LCS"],["kkoma","Kkoma"],["1983kej","단군","김의중","의중","으중이"],["lol_peanut","Peanut"],["faker","Faker","faker","페이커","이상혁","상혁","페온","우리혁","페"],["nrmtzv","으음"],["nicegametv","나겜"],["teaminven","인벤"],["capta1n_pony","포니"],["huni","Huni"],["sktt1_wolf","Wolf"],["bang","Bang"],["wpghd321","류제홍"],["jmjdoc","칸데르니아","칸데","두방이","두방","두스의 방패","두스의방패","[]방"],["yungi131","윤기"],["mediamuse","미디어뮤즈","미뮤"],["veritaskk","Veritas","베리타스","싸세","김경민"],["themarinekr","김정민"],["tvindra","인드라"],["tranth","자동"],["seine1026","세인님"],["sonycast_","소니쇼","소니쿤"],["dou3796","뱅붕"],["rudbeckia7","연두는말안드뤄","연두"],["trisha","트리샤"],["naseongkim","김나성","나성"],["dlxowns45","태준이","이태준"],["handongsuk","한동숙","동수칸","동숙","한성욱"],["alenenwooptv","웁_게임방송"],["mr_coat","노래하는코트"],["ajehr","머독"],["lol_crown","Crown"],["rooftopcat99","옥냥이"],["myzet1990","개구멍"],["yoonroot","윤루트"],["sn400ja","액시스마이콜","마이콜"],["tape22222","테이프2"],["miracle0o0","미라클티비"],["bighead033","빅헤드"],["wkgml","견자희"],["queenhuz","후즈"],["kiyulking","김기열"],["asdn6388","나락호프"],["lol_cuvee","Cuvee"],["VSL","VSL"],["drlee_kor","이민우33세"],["CoreJJ","CoreJJ"],["lol_ambition","앰비션","엠비션","강찬밥","강찬용"],["Axenix","아제닉스"],["maknoonlol","막눈"],["zilioner","침착맨","이말년","이병건","침"],["timeofcreate","홍랑"],["twitchshow","트위치쇼"],["kangqui","강퀴","퀴저씨","퀴어빠","퀴"],["team_spiritzero","Team Spiritzero"],["zizionmy","젼마이"],["lol_blank","Blank"],["ogn_ow","OGN 오버워치"],["juankorea","주안코리아"],["woowakgood","우왁굳"],["www0606","푸딩"],["runner0608","러너"],["flowervin","꽃빈"],["h920103","이초홍","초홍"],["hj0514","백설양","진희재"],["pbstream77","피비스트림"],["beyou0728","피유","끠유","소통퀸","노채리"],["serayang","세라양","양새아","쉐굴"],["mister903","갱생레바","레바"],["what9honggildong","왓구홍길동"],["chicken_angel","통닭천사"],["godbokihs","갓보기"],["yuriseo","서유리"],["kimminyoung","아옳이","김민영"],["gabrielcro","가브리엘","가비"],["starcraft_kr","스타크래프트 KR"],["yeziss","신예지"],["ch1ckenkun","치킨쿤","차보해","보해"],["lds7131","더헬"],["nodolly","노돌리"],["haku861024","정직원"],["nanajam777","우정잉","정잉","잉"],["leehunnyeo","루다님","별루다","루다"],["streamer2u","이유님"],["hatsalsal","햇살살"],["pommel0303","폼멜"],["hosu0904","호수"],["surrenderhs","서렌더","티나","김정수"],["eukkzzang","윾짱"],["gageu","가그"],["ange_i","요뿌니"],["menpa1030","멘파"],["dua3362","서넹","서빙"],["dda_ju","다주","주다영"],["taesangyun","태상"],["oreo4679","리치1"],["dmdtkadl69","응삼이"],["sigwon","시권"],["rngudwnswkd","푸린"],["jungjil","정질"],["ses836","인간젤리"],["DrAquinas","DrAquinas"],["tree2512","말퓨"],["frog135","게구리"],["leechunhyang","이춘향"],["cherrypach","꽃핀"],["lovelyyeon","연두부"],["yd0821","양띵","양명"],["2chamcham2","탬탬버린","탬탬"],["jinu6734","김진우"],["ddolking555","똘킹"],["erenjjing","에렌디라"],["suk_tv","석티비"],["h0720","군림보"],["rellacast","렐라","앗앗"],["silphtv","실프"],["playhearthstonekr","playhearthstonekr"],["mirage720","미라지"],["1am_shin","신기해"],["maruemon1019","마루에몽"],["ulsanbigwhale","울산큰고래"],["areuming","알밍"],["esther950","에쓰더"],["pacific8815","쌍베","전상빈","쌍"],["dogswellfish","개복어"],["yeonchobom","연초봄"],["ssambahong","홍진영"],["Twipkr","트윕KR"],["reniehour","레니아워"],["caroline9071","숑아"],["ssambahong","쌈바홍","홍진영"],["funzinnu","Funzinnu","펀즈","펀가놈","펀가"],["loveseti","미모"],["kimgaeune","김총무님"],["1uming","루밍이","루밍"],["invenk01","김영일","K01","김01"],["sal_gu","살인마협회장","살협","살구"],["flurry1989","플러리","로맨틱겨울","로겨","로7ㅕ","조현수","겨러리"],["holsbro","홀스형","홀스"],["hn950421","고말숙","말숙"],["jaeheeng2","햄재희","재희"],["hwkang2","캡틴잭","캡잭","캡짹","잭선장","강형우","잭"],["yunlovejoy","도여사"],["yatoring","야토링"],["lolluk4","루ㅋ4"],["rkdthdus930","강소연","타노스","탑분쇄기","수장님"],["seogui","서긔"],["pikra10","재슥짱"],["playoverwatch_kr","오버워치 이스포츠"],["maxim_korea_official","남자매거진맥심","맥심","맥심코리아"],["hanururu","하느르"],["obm1025","오킹"],["acro_land","아크로"],["choerakjo","최락조"],["megthomatho","맥또마또"],["s1032204","삐부"],["rkdwl12","강지"],["jaewon4915","김재원"],["zennyrtlove","신재은"],["2sjshsk","유누"],["queenmico","미코"],["lsd818","득털"],["wlswnwlswn","진주몬"],["apzks1236","학살"],["sunbaking","선바"],["rockid1818","모모88"],["moogrr1211","무굴"],["twitchkr","TwitchKR"],["tlfjaos","시러맨"],["dawnhs","DawN","장현재","던"],["mata","마타타마","마타"],["lol_khan","Khan","칸"],["buzzbean11","대도서관","머도서관","대도","머도"],["mhj1682","카트문호준","문호준"],["remguri","렘쨩"],["heavyrainism","호무새"],["lck_korea","LCK Korea","롤챔스","롤챔"],["lol_madlife","매드라이프","매라","매멘","매맨","메라","홍민기"],["lol_helios","헬리오스"],["pparkshy","샤이"],["pubgkorea","PUBGKorea"],["riotgames","Riot Games"],["lisalove","리즈리사"],["mbcmlt","엠비씨마리텔"],["mbcmlt1","엠비씨마리텔1"],["mbcmlt2","엠비씨마리텔2"],["mbcmlt3","엠비씨마리텔3"],["mbcmlt4","엠비씨마리텔4"],["mbcmlt5","엠비씨마리텔5"],["mbcmlt6","엠비씨마리텔6"],["mbcmlt7","엠비씨마리텔7"],["mbcmlt8","엠비씨마리텔8"],["mbcmlt9","엠비씨마리텔9"],["insec13","인섹"],["realkidcozyboy","키드밀리"],["sbsmobile24","배거슨라이브","배거슨","배성재"],["ok_ja","박옥자누나","박옥자","옥자","김나영"],["boxer_lim","임요환","임"],["kimukihun","기무기훈"],["sasin_god","사신갓","사신"],["dardarae","달다래오","차짬좌"],["taezzang","태은짱","태은쨩","태은"],["jammi95","잼미님","잼미"],["coppag2","꿀혜"],["overwatchleague_kr","오버워치리그"],["fastloves","홍진호","콩","홍"],["jinsooo0","진수0","진수도사","진수","도사님"],["wltn4765","지수소녀"],["gamesdonequick","GamesDoneQuick","겜던퀵"],["dragon3652","스피드소닉"],["parkjand","박잔디"],["jinnytty","윰찌니"],["danpaeng2","단팽이"],["inas1220","야생의딸기"],["limlim72","진자림"],["bongsoon0115","봉순"],["eodyd188","밴쯔","벤쯔"],["duedrop","권이슬","이슬이","이스리","권자봉"],["so_urf","소우릎"],["lo10002","혜요"],["GhostGC","고스트","수광","수팡"],["mari0712","마리"],["defconntv","데프콘","트프콘","대준이","유대준"],["b14ckt41e","검은동화","검동"],["ninja","닌자"],["shroud","슈라우드"],["xkwhd","피닉스박","박종우!","박종우"],["bsll7777","금다정","야망좌"],["tmxk319","괴물쥐","장지환"],["jasper0414","재스퍼","제스퍼"],["cbrace","중괄호"],["maruko_zzang","마루코"],["charming_jo","조매력"],["leeyl1118","영림이","영림"],["soming1907","소밍"],["kimpoong_official","김풍"],["ma_mwa","마뫄"],["kerokero_","케로"],["yurani","이유란","유란"],["kitekorea","고래까와"],["itopicy","용봉탕","봉탕"],["matarzzz","행수"],["yeji429","예지"],["t1_teddy","테디이","테디"],["clid","클리드"],["seulsiho","슬시호","슬쇼"],["yeokka","여까"],["kimdduddi","김뚜띠","뚜띠"],["collet11","코렛트"],["sabin1","사빈"],["robok2016","로복님","로복"],["salakill2","너겟"],["mununyu","무뉴뉴","잼뉴뉴"],["micka1120","믹카","믹키몬드"],["dosroda","두스로다"],["vzeros88","규현"],["inecr7024","삼식"],["tekken","TEKKEN"],["yuhwanp","빢유환"],["kumikomii","고차비"],["uzuhama","우주하마"],["dkwl025","양아지"],["rainblue37","김블루"],["lucia94","루시아"],["d2kyun","김느"],["t1_haru","SKTT1 Haru","하루"],["box930205","와나나"],["nineunni","니네언니"],["djhenney","djhenney","표은지"],["pjs9073","쫀득이"],["nanayango3o","나나양"],["hejin0_0","헤징"],["reapered","Reapered","레퍼드","래퍼드"],["loven4862","솔빈"],["bonnysurang","김반희"],["genius_mad","지니어스매드"],["riotgames_korea","RiotGames Korea","라이엇코리아","라코"],["nokduro","녹두로"],["magenta62","마젠타"],["edoongs2","에디린"],["yattaa_","얏따"],["nnabi","연나비님","연나비"],["akvl1229","김은별컴퍼니","김은별"],["discoverwcg","discoverWCG","WCG","wcg"],["atk","ATK","알버트킴","알굴"],["rhea90","춘샘"],["roadofthestrength","힘의길","힘길"],["zoodasa","주다사"],["crazzyccat","크캣66","크캣"],["ogn","OGN","온게임넷","온겜"],["lpl","LPL"],["honeylatte","꿀라떼"],["eff2ct","이펙트"],["ogn_e","오지네"],["heesu216","희수"],["sikkazama","식빵월드","식빵아재","식빵 아재","식빵"],["nunu836836","익산누누"],["aram4519","과로사"],["firebather","흑운장티비","흑운장"],["rafraf2016","라프입니다","라프"]];
     var streamerArray_name = [],
         streamerArray_display_name = [],
         streamerArray_AutoComplete = [];
@@ -294,6 +295,7 @@
         var keyword_uchat = document_url.indexOf("uchat2.php");
         var keyword_setting = document_url.indexOf("#/addostream");
         var keyword_setting_nw = document_url.indexOf("dostream.com/addostream");
+        var insagirl = document_url.indexOf("insagirl-toto.appspot.com/hrm/");
         if(keyword_uchat !== -1){
             return C_UCHAT;
         }
@@ -305,6 +307,9 @@
         }
         else if(keyword_setting_nw !== -1){
             return C_SETTING_NW;
+        }
+        else if(insagirl !== -1){
+            return C_INSAGIRL
         }
         else{
             return C_MAIN;
@@ -342,30 +347,34 @@
             history_hide_icon : { category:"general", depth:2, type: "checkbox", value: false, title:"플랫폼 아이콘 숨기기", desc:"시청 기록에서 플랫폼 아이콘을 숨김", change:function(){ADD_Channel_History_Run();} },
             max_history : { under_dev:true, category:"general", depth:2, type: "text", value: 20, valid:"number", min_value:1, title:"시청 기록 최대 개수", desc:"(기본값: 20)" },
             
-            insagirl_button : { category:"general", depth:1, type: "checkbox", value: false, title:"빠른 좌표 보기 활성", desc:"좌표 페이지를 두스트림 내부에서 불러오는 기능을 활성", change:function(){hrm_DOE();} },
-            insagirl_block_by_nick : { category:"general", depth:2, type: "checkbox", value: false, title:"차단한 유저의 좌표 숨기기", desc:"채팅매니저에서 차단한 유저의 좌표를 숨김" },
-            insagirl_block_dobae : { category:"general", depth:2, type: "checkbox", value: false, title:"연속된 동일 좌표 숨기기", desc:"동일 유저가 같은 좌표를 연속하여 올릴 경우<br />가장 최근의 것만 남기고 숨김" },
-            insagirl_block_dobae_by_href : { category:"general", depth:3, type: "checkbox", value: false, title:"동일 유저가 아닐 경우에도 숨김", desc:"유저에 상관 없이 동일 좌표가 연속되는 경우 무조건 숨김" },
-            insagirl_select : { under_dev:true, category:"general", depth:2, type: "radio", value: 1, title:"좌표 사이트 선택", desc:"", radio: {dostream: {title: "<span style='font-size:11px;'>coord.dostream.com</span>", value:1}, insagirl: {title: "<span style='font-size:11px;'>insagirl-hrm.appspot.com</span>", value:2}} },
-            
-            theme_leftchat : { under_dev:true, category:"theme", category_name:"테마", depth:1, type: "checkbox", value: false, title:"[실험실] 채팅창 위치를 왼쪽으로 변경", desc:"", change:function(){ADD_customStyle();} },
-            theme_on : { under_dev:true, category:"theme", depth:1, type: "checkbox", value: false, title:"[실험실] 테마 기능 사용", desc:"", change:function(){ADD_theme();}},
-            theme : { under_dev:true, category:"theme", depth:2, type: "radio", value: "default", title:"[실험실] 테마 선택", desc:"", radio: {default: {title: "기본", value:"default"}, black: {title: "어두운 테마", value:"black"} }, change:function(){ADD_theme();}},
-            theme_self_bold_chat : { under_dev:true, category:"theme", depth:2, type: "checkbox", value: false, title:"[실험실] 자신의 채팅을 굵게 표시", desc:"", change:function(){if(GM_page === C_UCHAT){ADD_theme();}} },
-            theme_font_size : { under_dev:true, category:"theme", depth:2, type: "text", value: 1.0, valid:"number", min_value:0.1, max_value:10, title:"[실험실] 채팅 글씨 크기 조절(배수)", desc:"기본값: 1.0", change:function(){if(GM_page === C_UCHAT){ADD_theme();}} },
-            theme_font_custom : { under_dev:true, category:"theme", depth:2, type: "radio", value: "default", radio: {default: {title: "기본", value:"default"}, NotoSanskr: {title: "Noto Sans KR", value:"NotoSanskr"}}, title:"[실험실] 폰트 변경", desc:"일부 OS, 브라우저에서 적용되지 않을 수 있음", change:function(){ADD_theme();} },
+            theme_leftchat : { category:"theme", category_name:"테마", depth:1, type: "checkbox", value: false, title:"채팅창 위치를 왼쪽으로 변경", desc:"", change:function(){ADD_customStyle();} },
+            theme_on : { category:"theme", depth:1, type: "checkbox", value: false, title:"테마 기능 사용", desc:"", change:function(){ADD_theme();}},
+            theme : { category:"theme", depth:2, type: "radio", value: "default", title:"테마 선택", desc:"", radio: {default: {title: "기본", value:"default"}, black: {title: "어두운 테마", value:"black"} }, change:function(){ADD_theme();}},
+            theme_self_bold_chat : { under_dev:true, category:"theme", depth:2, type: "checkbox", value: false, title:"자신의 채팅을 굵게 표시", desc:"", change:function(){if(GM_page === C_UCHAT){ADD_theme();}} },
+            theme_font_size : { category:"theme", depth:2, type: "text", value: 1.0, valid:"number", min_value:0.1, max_value:10, title:"채팅 글씨 크기 조절(배수)", desc:"(기본값: 1.0)", change:function(){if(GM_page === C_UCHAT){ADD_theme();}} },
+            theme_font_custom : { category:"theme", depth:2, type: "radio", value: "default", radio: {default: {title: "기본", value:"default"}, NotoSanskr: {title: "Noto Sans KR", value:"NotoSanskr"}}, title:"폰트 변경", desc:"일부 OS, 브라우저에서 적용되지 않을 수 있음", change:function(){ADD_theme();} },
 
+            insagirl_button : { category:"coord", category_name:"좌표", depth:1, type: "checkbox", value: false, title:"빠른 좌표 보기 활성", desc:"좌표 페이지를 두스트림 내부에서 불러오는 기능을 활성", change:function(){hrm_DOE();} },
+            insagirl_block_by_nick : { category:"coord", depth:1, type: "checkbox", value: false, title:"차단한 유저의 좌표 숨기기", desc:"채팅매니저에서 차단한 유저의 좌표를 숨김" },
+            insagirl_block_dobae : { category:"coord", depth:1, type: "checkbox", value: false, title:"연속된 동일 좌표 숨기기", desc:"동일 유저가 같은 좌표를 연속하여 올릴 경우<br />가장 최근의 것만 남기고 숨김" },
+            insagirl_block_dobae_by_href : { category:"coord", depth:2, type: "checkbox", value: false, title:"동일 유저가 아닐 경우에도 숨김", desc:"유저에 상관 없이 동일 좌표가 연속되는 경우 무조건 숨김" },
+            insagirl_select : { under_dev:true, category:"coord", category_name:"좌표 - 고급", depth:1, type: "radio", value: 1, title:"좌표 사이트 선택", desc:"", radio: {dostream: {title: "<span style='font-size:11px;'>coord.dostream.com</span>", value:1}, insagirl: {title: "<span style='font-size:11px;'>insagirl-hrm.appspot.com</span>", value:2}} },
+            insagirl_modify_directly : { under_dev:true, category:"coord", depth:1, type: "checkbox", value: false, title:"[실험실] 좌표 사이트에 직접 적용", desc:"실험 중" },
+            
             list : { category:"list", category_name:"리스트", depth:1, type: "checkbox", value:true, title:"메인 리스트 관리 기능 사용", desc:"메인 리스트 관리 기능을 일괄적으로 켜고 끈다."},
-            main_list_two_column : { under_dev:true, category:"list", depth:2, type: "checkbox", value:false, title:"[실험실] 메인 리스트를 두 줄로 표시", desc:"- 모니터 가로 해상도 1920 이상에 권장<br />- 섬네일 기능 사용 시 중간 설정이 적당함", change:function(){reloadMain();}},
-            main_list_cache : { under_dev:true, category:"list", depth:2, type: "checkbox", value:true, title:"메인 리스트 캐쉬", desc:"빠른 메인 로딩을 위해 메인 리스트를 캐쉬함"},
-            main_list_cache_time : { under_dev:true, category:"list", depth:3, type: "text", value: 3, valid:"number", min_value:1, title:"캐쉬 간격", desc:"분 단위로 입력, 최소 1분(기본값: 3)" },
-            button_set : { under_dev:true, category:"list", depth:2, type: "checkbox", value:true, title:"버튼 모음 생성", desc:"- 트위치, 카카오, 유투브, 멀티트위치 버튼 모음을 생성<br />- 리스트에 멀티트위치 선택을 위한 체크박스를 생성"},
-            button_chatmode : { under_dev:true, category:"list", depth:2, type: "checkbox", value:true, title:"채팅 모드 버튼 생성", desc:"리스트의 각 항목에 채팅 모드 버튼을 생성"},
             show_display_name : { under_dev:true, category:"list", depth:2, type: "checkbox", value:true, title:"스트리머 이름 보이기", desc:"표시 가능한 스트리머의 이름 및 아이디를 표시"},
-            top_fix : { category:"list", depth:2, type: "checkbox", value: false, title:"특정 스트리머 상단 고정", desc:"두스 메인 리스트의 최상단에 원하는 스트리머를 고정"},
+            
+            thumbnail_mouse : { category:"list", category_name:"리스트 - 섬네일", depth:2, type: "checkbox", value: false, title:"섬네일에 마우스 올렸을 시 확대", desc:"두스 메인 리스트의 섬네일에 마우스를 올렸을 때 확대한 팝업을 띄움" },
+            thumbnail_size : { category:"list", depth:3, type: "radio", value: 1, title:"섬네일 사이즈", desc:"", radio: {small: {title: "작음", value:1}, medium: {title: "보통", value:2}, large:{title: "큼", value:3} } },
+            thumbnail_refresh : { under_dev:true, category:"list", depth:2, type: "checkbox", value: true, title:"리스트 섬네일 자동 갱신", desc:"- 리스트 섬네일을 자동으로 갱신<br />- 체크 해제 시 새로고침 이전까지 초기 접속 시 섬네일 유지됨" },
+            thumbnail_refresh_gap : { under_dev:true, category:"list", depth:3, type: "text", value: 5, valid:"number", min_value:1, title:"갱신 간격", desc:"분 단위로 입력, 최소 1분(기본값: 5)" },
+
+            top_fix : { category:"list", category_name:"리스트<br />- 상단 고정", depth:2, type: "checkbox", value: false, title:"특정 스트리머 상단 고정", desc:"두스 메인 리스트의 최상단에 원하는 스트리머를 고정"},
             top_fix_ID : { category:"list", depth:3, type: "tag", value: ["hanryang1125"], valid:"array_string", title:"등록할 스트리머 ID", desc:"스트리머 ID를 콤마(,)로 구분하여 입력<br />영문, 숫자, 언더바(_) 만 입력 가능"},
             top_off_fix : { category:"list", depth:3, type: "checkbox", value: false, title:"오프라인 시에도 고정", desc:""},
-            alarm : { category:"list", depth:2, type: "checkbox", value: false, title:"메인에 스트리머 추가", desc:"기본 두스 메인 리스트에 없는 Twitch 스트리머를<br />메인 리스트에 추가 (Twitch API 사용)" },
+            
+            
+            alarm : { category:"list", category_name:"리스트 - 추가", depth:2, type: "checkbox", value: false, title:"메인에 스트리머 추가", desc:"기본 두스 메인 리스트에 없는 Twitch 스트리머를<br />메인 리스트에 추가 (Twitch API 사용)" },
             top_alarm_ID : { category:"list", depth:3, type: "tag", value: ["hanryang1125"], valid:"array_string", title:"등록할 스트리머 ID", desc:"스트리머 ID를 콤마(,)로 구분하여 입력<br />영문, 숫자, 언더바(_) 만 입력 가능" },
             alarm_gap : { category:"list", depth:3, type: "text", value: 5, valid:"number", min_value:1, title:"조회 간격", desc:"분 단위로 입력, 최소 1분(기본값: 5)" },
             alarm_noti : { category:"list", depth:3, type: "checkbox", value: false, title:"온라인 시 알림(수정 중)", desc:"위 목록에 등록된 스트리머가 온라인이 될 때<br />데스크톱 메시지로 알림" },
@@ -373,82 +382,88 @@
             alarm_main_reload : { under_dev:true, category:"list", depth:3, type: "checkbox", value: true, title:"스트림 정보 갱신 시 리스트 새로고침", desc:"두스트림 메인 화면인 경우<br />스트림 정보 갱신 시 두스 메인 리스트를<br />자동으로 새로고침 함" },
             alarm_show_game_name : { under_dev:true, category:"list", depth:3, type: "checkbox", value: false, title:"[실험실] 게임 이름 표시", desc:"게임 이름을 표시할 수 있는 경우 리스트에 표시" },
             alarm_sort_by_viewer : { under_dev:true, category:"list", depth:3, type: "checkbox", value: false, title:"[실험실] 시청자 수로 정렬", desc:"입력한 순서로 정렬하는 대신<br />시청자 수가 많은 스트리머가 위로 오도록 정렬" },
-            thumbnail_mouse : { category:"list", depth:2, type: "checkbox", value: false, title:"섬네일에 마우스 올렸을 시 확대", desc:"두스 메인 리스트의 섬네일에 마우스를 올렸을 때 확대한 팝업을 띄움" },
-            thumbnail_size : { category:"list", depth:3, type: "radio", value: 1, title:"섬네일 사이즈", desc:"", radio: {small: {title: "작음", value:1}, medium: {title: "보통", value:2}, large:{title: "큼", value:3} } },
-            thumbnail_refresh : { under_dev:true, category:"list", depth:2, type: "checkbox", value: true, title:"리스트 섬네일 자동 갱신", desc:"- 리스트 섬네일을 자동으로 갱신<br />- 체크 해제 시 새로고침 이전까지 초기 접속 시 섬네일 유지됨" },
-            thumbnail_refresh_gap : { under_dev:true, category:"list", depth:3, type: "text", value: 5, valid:"number", min_value:1, title:"갱신 간격", desc:"분 단위로 입력, 최소 1분(기본값: 5)" },
-            streamer_hide : { category:"list", depth:2, type: "checkbox", value: false, title:" 특정 스트리머 숨기기", desc:"기본 두스트림에 메인에 노출하고 싶지 않은<br />Twitch 스트리머를 메인 리스트에서 제거" },                 // 메인에 스트리머 숨기기 사용 여부
+            streamer_hide : { category:"list", category_name:"리스트 - 제거", depth:2, type: "checkbox", value: false, title:" 특정 스트리머 숨기기", desc:"기본 두스트림에 메인에 노출하고 싶지 않은<br />Twitch 스트리머를 메인 리스트에서 제거" },                 // 메인에 스트리머 숨기기 사용 여부
             streamer_hide_ID : { category:"list", depth:3, type: "tag", value: ["nalcs1", "nalcs2"], valid:"array_string", title:"등록할 스트리머 ID", desc:"스트리머 ID를 콤마(,)로 구분하여 입력<br />영문, 숫자, 언더바(_) 만 입력 가능" },
             remember_platform : { category:"list", depth:2, type: "checkbox", value: false, title:"특정 플랫폼 숨기기", desc:"기본 두스트림에 메인에 노출하고 싶지 않은<br />플랫폼에 해당되는 항목을 메인 리스트에서 제거" },
             remember_twitch : { category:"list", depth:3, type: "checkbox", value: false, title:"트위치 숨기기", desc:"" },
             remember_kakao : { category:"list", depth:3, type: "checkbox", value: false, title:"카카오 숨기기", desc:"" },
             remember_youtube : { category:"list", depth:3, type: "checkbox", value: false, title:"유투브 숨기기", desc:"" },
+            
+            main_list_cache : { under_dev:true, category:"list", category_name:"리스트 - 고급", depth:2, type: "checkbox", value:true, title:"메인 리스트 캐쉬", desc:"빠른 메인 로딩을 위해 메인 리스트를 캐쉬함"},
+            main_list_cache_time : { under_dev:true, category:"list", depth:3, type: "text", value: 3, valid:"number", min_value:1, title:"캐쉬 간격", desc:"분 단위로 입력, 최소 1분(기본값: 3)" },
+            button_set : { under_dev:true, category:"list", depth:2, type: "checkbox", value:true, title:"버튼 모음 생성", desc:"- 트위치, 카카오, 유투브, 멀티트위치 버튼 모음을 생성<br />- 리스트에 멀티트위치 선택을 위한 체크박스를 생성"},
+            button_chatmode : { under_dev:true, category:"list", depth:2, type: "checkbox", value:true, title:"채팅 모드 버튼 생성", desc:"리스트의 각 항목에 채팅 모드 버튼을 생성"},
             list_sort_by_viewer : { under_dev:true, category:"list", depth:2, type: "checkbox", value: false, title:"[실험실] 무조건 시청자 수로 정렬", desc:"- 무조건 시청자 수가 많은 항목이 위로 오도록 정렬<br />- 리스트 순서와 관련된 다른 모든 설정을 무시" },
+            main_list_two_column : { under_dev:true, category:"list", depth:2, type: "checkbox", value:false, title:"[실험실] 메인 리스트를 두 줄로 표시", desc:"- 모니터 가로 해상도 1920 이상에 권장<br />- 섬네일 기능 사용 시 중간 설정이 적당함", change:function(){reloadMain();}},
 
             playing_quick_list_button : { category:"playing", category_name:"재생 중", depth:1, type: "checkbox", value: true, title:"퀵 리스트 버튼 표시", desc:"재생 중 팝업으로 메인 리스트를 볼 수 있도록<br />퀵 리스트 버튼을 표시", change:function(){$(window).trigger("hashchange");} },
+            playing_setting_button : { category:"playing", depth:1, type: "checkbox", value: true, title:"설정 버튼 표시", desc:"재생 중 설정 버튼을 표시.<br />체크 해제 시 설정 버튼은 메인에서만 노출됨", change:function(){$(window).trigger("hashchange");} },
             playing_chat_button : { category:"playing", depth:1, type: "checkbox", value: true, title:"트위치↔멀티트위치 전환 버튼 표시", desc:"트위치 또는 멀티트위치 재생 시<br />서로 전환할 수 있는 버튼을 표시", change:function(){$(window).trigger("hashchange");} },
-            playing_twip_button : { under_dev:true, category:"playing", depth:1, type: "checkbox", value: false, title:"[실험실] Twip 버튼 표시", desc:"트위치 재생 시 Twip donate 버튼을 표시<br /> - 스트리머의 Dashboard 에 기재된 twip.kr 링크로 접속<br />　링크를 찾을 수 없는 경우 버튼 표시하지 않음<br /><br />주의사항: <br /> - 반드시 주소창의 주소 및 도네이션 수령자가 올바른지 확인할 것<br /> - 오작동으로 잘못 도네이션 되더라도 책임지지 않음", change:function(){$(window).trigger("hashchange");} },
+            playing_twip_button : { under_dev:true, category:"playing", category_name:"재생 중 - 고급", depth:1, type: "checkbox", value: false, title:"[실험실] Twip 버튼 표시", desc:"트위치 재생 시 Twip donate 버튼을 표시<br /> - 스트리머의 Dashboard 에 기재된 twip.kr 링크로 접속<br />　링크를 찾을 수 없는 경우 버튼 표시하지 않음<br /><br />주의사항: <br /> - 반드시 주소창의 주소 및 도네이션 수령자가 올바른지 확인할 것<br /> - 오작동으로 잘못 도네이션 되더라도 책임지지 않음", change:function(){$(window).trigger("hashchange");} },
             playing_twip_button_force : { under_dev:true, category:"playing", depth:2, type: "checkbox", value: false, title:"[실험실] Twip 버튼을 항상 표시", desc:"Dashboard 에 twip.kr 링크가 없더라도 무조건 표시<br />https://twip.kr/donate/{streamer-id} 링크로 접속", change:function(){$(window).trigger("hashchange");} },
             playing_toonat_button : { under_dev:true, category:"playing", depth:1, type: "checkbox", value: false, title:"[실험실] Toonation 버튼 표시", desc:"트위치 재생 시 Toonation donate 버튼을 표시<br /> - 스트리머의 Dashboard 에 기재된 toon.at 링크로 접속<br />　링크를 찾을 수 없는 경우 버튼 표시하지 않음<br /><br />주의사항:<br /> - 반드시 주소창의 주소 및 도네이션 수령자가 올바른지 확인할 것<br /> - 오작동으로 잘못 도네이션 되더라도 책임지지 않음", change:function(){$(window).trigger("hashchange");} },
-            playing_setting_button : { category:"playing", depth:1, type: "checkbox", value: true, title:"설정 버튼 표시", desc:"재생 중 설정 버튼을 표시.<br />체크 해제 시 설정 버튼은 메인에서만 노출됨", change:function(){$(window).trigger("hashchange");} },
 
-            chat_ctr : { category:"chat", category_name:"채팅", depth:1, type: "checkbox", value: true, title:"채팅 제어", desc:"- 채팅 관련 기능을 일괄적으로 켜고 끔<br />- 채팅 관련 기능은 새로고침 해야 적용됨" },
+            chat_ctr : { category:"chat", category_name:"채팅 - 일반", depth:1, type: "checkbox", value: true, title:"채팅 제어", desc:"- 채팅 관련 기능을 일괄적으로 켜고 끔<br />- 채팅 관련 기능은 새로고침 해야 적용됨" },
             chat_memo : { category:"chat", depth:2, type: "checkbox", value: true, title:"채팅매니저 기능 사용 (메모 기능)", desc:"- 채팅 닉네임 클릭 시 메모하기 버튼 표시<br />- 닉네임별 메모 작성/차단 가능<br />- 작성한 메모는 채팅창의 닉네임 뒤에 표시됨<br />- 차단 기능은 기존 두스 차단 기능과 별개로<br />　작동하므로, 차단목록이 날아가더라도 보존됨", append:"<span class='show_memo_log btn btn-primary'>채팅매니저 관리</span>" },
             chat_adb : { disable:true, category:"chat", depth:2, type: "checkbox", value: false, title:"광고 제거", desc:"" },
             hide_nick_change : { disable:true, category:"", depth:2, type: "checkbox", value: false, title:"닉네임 변경 메시지 숨기기", desc:"" },
-            sys_meg : { category:"chat", depth:2, type: "checkbox", value: true, title:"작동 상태 알림", desc:"애드온의 작동 상태를 채팅창에 메시지로 알림" },
             url_self : { category:"chat", depth:2, type: "checkbox", value: true, title:"두스트림 좌표의 경우 현재 창에서 열기", desc:"두스 좌표가 새 창으로 열리는 것을 막음" },
             chat_scroll : { category:"chat", depth:2, type: "checkbox", value: true, title:"자동스크롤 변경", desc:"- 채팅창의 자동스크롤이 끊기는 것을 방지하기 위해<br />　자동스크롤의 동작 방식을 변경<br /><br /><strong>동작 원칙:</strong><br />- 마우스 휠을 위로 굴리면 자동스크롤 멈춤<br />- 더 보기 버튼을 누르거나 맨 아래로 휠 하여<br />　자동스크롤을 재시작할 수 있음<br />- 그 이외의 모든 스크롤 관련 동작은 무시됨" },
-            chat_scroll_down_min : { under_dev:true, category:"chat", depth:3, type: "text", value: 30, valid:"number", min_value:0, title:"자동 스크롤 재시작 거리(px)", desc:"스크롤이 정지 상태일 때 스크롤 내림 시<br />최하단과의 거리가 설정 값 이하가 되면<br />자동스크롤을 재시작(기본값:30)" },
+            chat_scroll_down_min : { under_dev:true, category:"chat", depth:3, type: "text", value: 50, valid:"number", min_value:0, title:"자동 스크롤 재시작 거리(px)", desc:"스크롤이 정지 상태일 때 스크롤 내림 시<br />최하단과의 거리가 설정 값 이하가 되면<br />자동스크롤을 재시작(기본값:50)" },
             send_location_button : { category:"chat", depth:2, type: "checkbox", value: false, title:"좌표 보내기 버튼 활성", desc:"클릭 시 현재 주소를 채팅창 입력란에 바로 복사", change:function(){ADD_send_location_DOE();} },
             send_location_button_top : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: false, title:"좌표 버튼을 채팅창 상단에 고정", desc:"체크 해제 시 채팅창 하단에 고정됨", change:function(){ADD_send_location_DOE();} },
             send_location_existing : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: false, title:"기존에 입력해둔 채팅 내용 유지", desc:"좌표 보내기 버튼을 눌렀을 때, 채팅 입력란의 내용을 유지하고 좌표 링크를 뒤에 덧붙임" },
             send_location_immediately : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: false, title:"[실험실] 좌표 바로 전송", desc:"- 좌표 버튼을 누르면 좌표를 채팅 입력란에<br />　복사하는 것을 건너뛰고 채팅창에 바로 전송<br />- 재사용 대기시간: 10초" },
-            chat_image_preview : { category:"chat", depth:2, type: "checkbox", value: false, title:"이미지 미리보기", desc:"이미지 주소 형태의 링크가 채팅창에 등록되면 바로 보여줌" },
+            
+            chat_image_preview : { category:"chat", category_name:"채팅<br />- 이미지 미리보기", depth:2, type: "checkbox", value: false, title:"이미지 미리보기", desc:"이미지 주소 형태의 링크가 채팅창에 등록되면 바로 보여줌" },
             imgur_preview_safe : { category:"chat", depth:3, type: "checkbox", value: true, title:"후방주의 기능 활성", desc:"이미지를 어둡게 가려진 상태로 보여줌<br />버튼을 클릭해야 이미지 보기 가능" },
             imgur_preview_opacity : { category:"chat", depth:4, type: "text", value: 0.93, valid:"number", min_value:0, max_value:1, title:"박스 투명도", desc:"0:투명, 1:불투명, 기본값:0.93" },
             nudity_block : { disable:true, category:"chat", depth:4, type: "checkbox", value: false, title:"피부톤 이미지에만 후방주의 기능 활성", desc:"피부톤 이미지인 경우에만 후방주의 기능을 활성<br />너굴맨이 이미지를 먼저 확인한 후 피부색이 없어야 출력하므로 이미지가 조금 늦게 뜰 수 있다.<br />추가 이미지 로드 시에는 적용되지 않는다." },
             chat_image_youtube_thumb : { category:"chat", depth:3, type: "checkbox", value: false, title:"유투브 섬네일 미리보기", desc:"" },
-            chat_image_youtube_thumb_nonsafe : { under_dev:true, category:"chat", depth:4, type: "checkbox", value: false, title:"[실험실] 유투브 섬네일에 대해 후방 주의 기능 사용하지 않음", desc:"" },
+            chat_image_youtube_thumb_nonsafe : { under_dev:true, category:"chat", depth:4, type: "checkbox", value: false, title:"유투브 섬네일에 대해 후방 주의 기능 사용하지 않음", desc:"" },
             chat_image_twitch_thumb : { category:"chat", depth:3, type: "checkbox", value: false, title:"트위치 클립 섬네일 미리보기", desc:"" },
-            chat_image_twitch_thumb_nonsafe : { under_dev:true, category:"chat", depth:4, type: "checkbox", value: false, title:"[실험실] 트위치 클립 섬네일에 대해 후방 주의 기능 사용하지 않음", desc:"" },
+            chat_image_twitch_thumb_nonsafe : { under_dev:true, category:"chat", depth:4, type: "checkbox", value: false, title:"트위치 클립 섬네일에 대해 후방 주의 기능 사용하지 않음", desc:"" },
             imgur_preview : { category:"chat", depth:3, type: "checkbox", value: false, title:"Imgur 이미지 미리보기", desc:"Imgur 주소 형태의 링크가 채팅창에 등록되면 바로 보여줌<br />(Imgur API 사용)" },
             imgur_preview_gif_as_mp4 : { under_dev:true, category:"chat", depth:4, type: "checkbox", value: true, title:"gif 를 동영상 형태로 불러옴", desc:"gif 파일 대신 mp4 파일이 사용 가능한 경우 더 빠른 로딩을 위해 동영상 형태로 불러옴" },
             gfycat_preview : { category:"chat", depth:3, type: "checkbox", value: false, title:"Gfycat 동영상 미리보기", desc:"Gfycat 주소 형태의 링크가 채팅창에 등록되면 바로 보여줌<br />(Gfycat API 사용, 테스트 중)" },
             chat_video_autoplay : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: true, title:"동영상 자동 재생", desc:"Imgur, Gfycat 등에서 동영상을 불러오는 경우 음소거 된 상태로 자동 재생함" },
-            chat_image_mouseover_prevent : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: true, title:"이미지 링크 주소에 마우스 올려도 팝업 띄우지 않음", desc:"이미지 미리보기 기능을 사용하는 경우, 이미지 링크 주소에 마우스 커서를 올렸을 때 작은 미리보기 팝업을 띄우는 것을 막음" },
+            chat_image_mouseover_prevent : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: true, title:"이미지 링크 주소에 마우스 올려도 팝업 띄우지 않음", desc:"이미지 미리보기 기능을 사용하는 경우, 이미지 링크 주소에 마우스 커서를 올렸을 때 작은 미리보기 팝업을 띄우는 것을 막음(UCHAT의 기본 기능)" },
             chat_image_max_width : { under_dev:true, category:"chat", depth:3, type: "text", value: 325, valid:"number", min_value:1, title:"이미지 최대 너비(width, px)", desc:"이미지 가로(width) 최대 길이(기본값:325)" },
-            chat_image_max_height : { under_dev:true, category:"chat", depth:3, type: "text", value: 1000, valid:"number", min_value:1, title:"이미지 최대 높이(height, px)", desc:"이미지 세로(height) 최대 길이(기본값:1000)" },
-            chat_nick_colorize : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: false, title:"[실험실] 닉네임 색상화", desc:"채팅 닉네임에 임의의 색상을 적용" },
-            chat_url_decode : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: true, title:"한글 URL을 구분 가능하도록 변경", desc:"채팅 내에서 유니코드 형태의 URL 링크 감지 시,<br />내용을 알아볼 수 있도록 표시<br />예) <a href='https://namu.wiki/w/%ED%92%8D%EC%9B%94%EB%9F%89' target='_blank'>https://namu.wiki/w/%ED%92%8D%EC%9B%94%EB%9F%89</a> → <a href='https://namu.wiki/w/%ED%92%8D%EC%9B%94%EB%9F%89' target='_blank'>https://namu.wiki/w/풍월량</a>" },
-            chat_unicode_err_replace : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: true, title:"� 문자를 공백으로 변경", desc:"텍스트 인코딩 문제 발생 시 표시되는 � 문자를 공백으로 대체" },
-            chat_block : { category:"chat", depth:2, type: "checkbox", value: false, title:"금지단어 기반 채팅 차단", desc:"채팅 내용 또는 닉네임에 금지단어 리스트에 추가한 단어가 포함되어 있는 경우 해당 채팅을 차단함" },
+            chat_image_max_height : { under_dev:true, category:"chat", depth:3, type: "text", value: 600, valid:"number", min_value:1, title:"이미지 최대 높이(height, px)", desc:"이미지 세로(height) 최대 길이(기본값:600)" },
+            
+            chat_block : { category:"chat", category_name:"채팅<br />- 금지단어 차단", depth:2, type: "checkbox", value: false, title:"금지단어 기반 채팅 차단 사용", desc:"채팅 내용 또는 닉네임에 금지단어 리스트에 추가한 단어가 포함되어 있는 경우 해당 채팅을 차단함" },
             chat_block_tag : { category:"chat", depth:3, type: "tag", valid:"array_word", value: ["네다통","통구이","민주화","ㅁㅈㅎ","느금마","니애미","니어미","니엄마","니애비","느그애비","느그애미","애미터","애미뒤","앰뒤","앰창"], title:"금지단어 리스트", desc:"콤마로 구분" },
             chat_block_noti : { category:"chat", depth:3, type: "checkbox", value: false, title:"차단 후 &lt;message deleted&gt; 로 표시", desc:"- 차단 후 기존 채팅 내용을 &lt;message deleted&gt; 로 대체<br />- 마우스를 올리면 툴팁으로 내용을 볼 수 있음" },
             chat_block_nickname : { category:"chat", depth:3, type: "checkbox", value: false, title:"검색대상: 닉네임", desc:"채팅 닉네임에 금지단어가 있으면 차단" },
-            chat_block_contents : { category:"chat", depth:3, type: "checkbox", value: false, title:"검색대상: 내용", desc:"- 채팅 내용에 금지단어가 있으면 차단<br />- 닉네임을 바꿔가며 유사 내용을 도배하는 환경에서 유용" },
+            chat_block_contents : { category:"chat", depth:3, type: "checkbox", value: false, title:"검색대상: 내용", desc:"- 채팅 내용에 금지단어가 있으면 차단<br />- 닉네임을 바꿔가며 유사 내용을 도배하는 환경에서 유용<br />- 자주 올라오는 Imgur 이미지를 차단할 때 유용" },
             chat_block_record : { category:"chat", depth:2, type: "checkbox", value: true, title:"채팅 차단 로그 기록", desc:"금지단어 및 채팅매니저에 의해 차단된 채팅 로그를 기록함", append:"<span class='show_blocked_chat btn btn-primary'>채팅 로그 보기</span><span class='reset_blocked_chat btn btn-primary'>채팅 로그 초기화</span>"},
             chat_block_log_letter_limit : { under_dev:true, category:"chat", depth:3, type: "text", value: 40, valid:"number", min_value:0, max_value:100000, title:"채팅 내용을 잘라서 기록", desc:"채팅 로그 기록 시 설정된 글자 수 만큼 채팅 내용을 잘라서 기록함(기본값 40)" },
-            chat_block_log_limit : { under_dev:true, category:"chat", depth:3, type: "text", value: 100, valid:"number", min_value:0, max_value:100000, title:"차단된 채팅 로그 최대 개수", desc:"- 채팅매니저 차단, 금지단어 차단에 의해 기록된 채팅 로그의 최대 개수를 설정<br />- 이 값을 크게 설정할 시 리소스를 많이 차지할 수 있으며, 알 수 없는 에러가 발생할 수 있음<br />(기본값 100)" },
+            chat_block_log_limit : { under_dev:true, category:"chat", depth:3, type: "text", value: 100, valid:"number", min_value:0, max_value:100000, title:"차단된 채팅 로그 최대 개수", desc:"- 채팅매니저 차단, 금지단어 차단에 의해 기록된 채팅 로그의 최대 개수를 설정<br />- 이 값을 크게 설정할 시 리소스를 많이 차지할 수 있으며, 알 수 없는 에러가 발생할 수 있음<br />(기본값:100)" },
             
-            chat_dobae_block : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: false, title:"[실험실] 도배 채팅 숨기기", desc:"동일 유저가 지정된 시간 내 유사한 문장을<br />지정된 횟수 이상 반복하여 입력하는 경우<br />도배로 판단하고 내용을 숨김" },
+            chat_dobae_block : { category:"chat", category_name:"채팅 - 도배 대응", depth:2, type: "checkbox", value: false, title:"도배 채팅 숨기기 사용", desc:"동일 유저가 짧은 시간동안 유사한 문장을<br />지정된 횟수 이상 반복하여 입력하는 경우<br />도배로 판단하고 내용을 숨김" },
+            chat_dobae_repeat : { category:"chat", depth:3, type: "text", value: 2, valid:"number", min_value:2, max_value:10, title:"채팅 숨김 - 반복 입력 수 (회)", desc:"지정된 반복 입력 수 이상 올라온 채팅부터 숨김.<br />(기본값:2회)" },
+            chat_dobae_onlylink : { category:"chat", depth:3, type: "checkbox", value: false, title:"채팅 내용에 링크 포함 시에만 도배 판단", desc:"채팅 내용에 링크가 포함된 것만 도배 판단을 위해 카운트함" },
+            chat_dobae_block_autoban : { category:"chat", depth:3, type: "checkbox", value: false, title:"도배 유저를 채팅매니저로 자동 차단", desc:"<span style='color:red;'>설정 값에 따라 무차별 차단이 발생할 수 있으니 사용에 유의하십시오.<br />예) ㅋㅋㅋ를 반복 입력하는 유저도 차단됨" },
+            chat_dobae_block_autoban_repeat : { category:"chat", depth:4, type: "text", value: 4, valid:"number", min_value:2, max_value:10, title:"유저 차단 - 반복 입력 수 (회)", desc:"지정된 반복 입력 수 이상 올라온 채팅부터 차단.<br />(기본값:4회)" },
+            chat_dobae_block_onlylink : { category:"chat", depth:4, type: "checkbox", value: false, title:"채팅 내용에 링크 포함 시에만 차단", desc:"- 채팅 내용에 링크가 포함되지 않은 경우<br />　채팅은 숨기지만 자동 차단은 하지 않음<br />- [링크 포함 시에만 도배 판단] 옵션을<br />　끄는 것을 권장함" },
             chat_dobae_judge : { under_dev:true, category:"chat", depth:3, type: "text", value: 0.8, valid:"number", min_value:0.1, max_value:1, title:"문장 유사도", desc:"도배로 판단할 문장 유사도 설정<br />1 : 문장이 완전 일치하는 경우에만 차단<br />0 에 가까울 수록 불일치하는 경우에도 차단<br />(기본값:0.8)" },
-            chat_dobae_timelimit : { under_dev:true, category:"chat", depth:3, type: "text", value: 8, valid:"number", min_value:0, max_value:120, title:"판단 시간 (초)", desc:"지정된 시간 이전에 올라온 채팅에 대해서는<br />도배 여부를 판단하지 않음. 기본값:8초" },
-            chat_dobae_repeat : { under_dev:true, category:"chat", depth:3, type: "text", value: 4, valid:"number", min_value:2, max_value:10, title:"반복 입력 수 (회)", desc:"지정된 반복 입력 수 이상 올라온 채팅부터 숨김.<br />기본값:4회" },
-            chat_dobae_onlylink : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: false, title:"링크 포함 시에만 도배 판단", desc:"채팅 내용에 링크가 포함된 경우에만 도배 여부를 판단" },
-            chat_dobae_block_record : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: false, title:"채팅 차단 로그에 기록", desc:"도배로 판단된 채팅을 채팅 차단 로그에 기록" },
-            chat_dobae_block_autoban : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: false, title:"도배 유저를 채팅매니저로 자동 차단", desc:"<span style='color:red;'>주의!! 설정 값에 따라 무차별 차단이 발생할 수 있으니 사용에 유의하십시오.<br />예) ㅋㅋㅋ를 반복 입력하는 유저도 차단됨.<br />링크 포함 시에만 도배 판단 기능을 활성화하고 사용할 것을 권장합니다.</span><br />작동 상태 알림 기능이 켜진 경우<br />차단 여부를 채팅창에 시스템 메시지로 알림" },
+            chat_dobae_timelimit : { under_dev:true, category:"chat", depth:3, type: "text", value: 8, valid:"number", min_value:0, max_value:120, title:"판단 시간 (초)", desc:"지정된 시간 이전에 올라온 채팅에 대해서는<br />도배 여부를 판단하지 않음(기본값:8초)" },
+            chat_dobae_block_record : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: true, title:"채팅 차단 로그에 기록", desc:"도배로 판단된 채팅을 채팅 차단 로그에 기록" },
             
-            chat_auto_reload : { disable:true, category:"chat", depth:2, type: "checkbox", value: false, title:"채팅 중지 시 자동 새로고침 설정", desc:"채팅이 중지된 경우,<br />채팅창 상단의 Auto Reload가 설정된 창에서<br />채팅을 자동으로 새로고침 함 (10초 내 최대 5회)" },
-            chat_autoKeyword : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: false, title:"[실험실] 스트리머 닉네임을 링크로 변환", desc:"스트리머 닉네임 감지 시 자동으로 링크로 변환함" },
+            chat_autoKeyword : { category:"chat", depth:2, type: "checkbox", category_name:"채팅 - 고급", value: false, title:"스트리머 닉네임을 링크로 변환", desc:"스트리머 닉네임 감지 시 자동으로 링크로 변환함" },
             chat_autoKeyword_1char : { disable:true, category:"chat", depth:3, type: "checkbox", value: false, title:"[실험실] 한 글자 별칭도 링크로 변환함", desc:"한 글자 별칭도 링크로 변환함" },
+            chat_url_decode : { category:"chat", depth:2, type: "checkbox", value: true, title:"한글 URL을 구분 가능하도록 변경", desc:"채팅 내에서 유니코드 형태의 URL 링크 감지 시,<br />내용을 알아볼 수 있도록 표시<br />예) <a href='https://namu.wiki/w/%ED%92%8D%EC%9B%94%EB%9F%89' target='_blank'>https://namu.wiki/w/%ED%92%8D%EC%9B%94%EB%9F%89</a> → <a href='https://namu.wiki/w/%ED%92%8D%EC%9B%94%EB%9F%89' target='_blank'>https://namu.wiki/w/풍월량</a>" },
+            sys_meg : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: true, title:"작동 상태 알림", desc:"애드온의 작동 상태를 채팅창에 메시지로 알림" },
+            chat_nick_colorize : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: false, title:"닉네임 색상화", desc:"채팅 닉네임에 임의의 색상을 적용" },
+            chat_unicode_err_replace : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: true, title:"� 문자를 공백으로 변경", desc:"텍스트 인코딩 문제 발생 시 표시되는 � 문자를 공백으로 대체" },
+            chat_auto_reload : { disable:true, category:"chat", depth:2, type: "checkbox", value: false, title:"채팅 중지 시 자동 새로고침 설정", desc:"채팅이 중지된 경우,<br />채팅창 상단의 Auto Reload가 설정된 창에서<br />채팅을 자동으로 새로고침 함 (10초 내 최대 5회)" },
 
             broadcaster_mode : { under_dev:true, category:"broadcast", category_name:"방송 모드", depth:1, type: "checkbox", value: false, title:"[실험실] 방송 모드", desc:"채팅창을 방송에 적합한 모드로 변경<br />Xsplit 등에서 스크린 캡쳐 후, 크로마키(기본값 blue)를 이용하여 배경색을 제거할 수 있습니다.", change:function(){if(GM_page === C_UCHAT){broadcaster_theme_css();}}},
             broadcaster_font_size : { under_dev:true, category:"broadcast", depth:2, type: "text", value: 1.0, valid:"number", min_value:0.1, max_value:10, title:"글씨 크기 조절(배수)", desc:"", change:function(){if(GM_page === C_UCHAT){broadcaster_theme_css();}} },
             broadcaster_bg_color : { under_dev:true, category:"broadcast", depth:2, type: "text", value: "blue", title:"배경 색상", desc:"예) blue, white, #fff, rgb(255, 255, 255)", change:function(){if(GM_page === C_UCHAT){broadcaster_theme_css();}} },
             broadcaster_nick_hide : { under_dev:true, category:"broadcast", depth:2, type: "checkbox", value:false, title:"닉네임의 일부를 숨김", desc:"예) 닉네임을 abcd**** 형태로 표시함" },
             broadcaster_use_nick_color : { under_dev:true, category:"broadcast", depth:2, type: "checkbox", value:true, title:"닉네임 색상화 사용", desc:"닉네임을 랜덤으로 색상화 함<br />참고: 배경색이 blue 또는 green 일 경우<br />크로마키를 위해 해당 색으로는 닉네임을 표시하지 않음" },
-            broadcaster_msg_time : { under_dev:true, category:"broadcast", depth:2, type: "text", value: 15.0, valid:"number", min_value:0, max_value:300, title:"메시지 표시 시간", desc:"새로운 채팅이 올라오면 설정한 시간 이후 사라짐<br />0초로 설정해 두면 항상 메시지를 표시<br />기본값: 15초", change:function(){if(GM_page === C_UCHAT){broadcaster_theme_css();}} },
+            broadcaster_msg_time : { under_dev:true, category:"broadcast", depth:2, type: "text", value: 15.0, valid:"number", min_value:0, max_value:300, title:"메시지 표시 시간", desc:"새로운 채팅이 올라오면 설정한 시간 이후 사라짐<br />0초로 설정해 두면 항상 메시지를 표시<br />(기본값:15초)", change:function(){if(GM_page === C_UCHAT){broadcaster_theme_css();}} },
             broadcater_theme : { under_dev:true, category:"broadcast", depth:2, type: "radio", value: "box", title:"테마", desc:"", radio: {box: {title: "Box", value:"box"}, twitch: {title: "Twitch", value:"twitch"}, simple: {title: "Simple", value:"simple"} }, change:function(){if(GM_page === C_UCHAT){broadcaster_theme_css();}}},
 
             under_dev : { category:"advanced", category_name:"고급", depth:1, type: "checkbox", value: false, title:"실험실 기능 및 고급 기능 설정", desc:"실험 중인 기능 및 고급 기능을 직접 설정" },
@@ -575,8 +590,8 @@
             #GM_setting .GM_setting_depth1.GM_setting_category {border-top: 2px solid #999;margin-top:20px;padding-top:10px;}
             #GM_setting li[GM_setting_key='version_check'] {margin-top:0px !important}
 
-            #GM_setting .GM_setting_category_name{display:table-cell;width:80px;padding:0 0 0 0px;font-weight:700;vertical-align:top;}
-            #GM_setting .GM_setting_category_blank{display:table-cell;width:80px;padding:0 0 0 0px;vertical-align:top;}
+            #GM_setting .GM_setting_category_name{display:table-cell;width:110px;padding:0 0 0 0px;font-weight:700;vertical-align:top;}
+            #GM_setting .GM_setting_category_blank{display:table-cell;width:110px;padding:0 0 0 0px;vertical-align:top;}
 
             #GM_setting .GM_setting_list_head{display:table-cell;box-sizing:content-box;vertical-align:top;}
             #GM_setting .GM_setting_depth1 .GM_setting_list_head {padding-left:0px;width:300px;}
@@ -656,6 +671,7 @@
                 </div>
                 `);
             var $ul = $("<ul id='GM_setting'></ul>");
+            var $prev = undefined;
             $elem.append($container);
             $container.append($setting_head).append($ul);
             for(var key in settings_full){
@@ -706,7 +722,7 @@
                 var $head = $("<div class='GM_setting_list_head'></div>");
                 var $title = $("<span class='GM_setting_title'>"+title+"</span>");
                 var $desc = $("<span class='GM_setting_desc'>"+desc+"</span>");
-                var $li = $("<li GM_setting_key='"+key+"' GM_setting_depth='"+depth+"' class='"+(settings_full[key].under_dev ? "GM_setting_under_dev " : "")+(category_name !== undefined ? "GM_setting_category " : "")+"GM_setting_depth"+depth+"'></li>");
+                var $li = $("<li GM_setting_key='"+key+"' GM_setting_depth='"+depth+"' class='"+(settings_full[key].under_dev ? "GM_setting_under_dev " : "")+(category_name !== undefined && category !== $prev.category ? "GM_setting_category " : "")+"GM_setting_depth"+depth+"'></li>");
                 $ul.append($li);
                 $head.append($title).append($desc);
 
@@ -747,6 +763,8 @@
                     ADD_DEBUG("숨김", key);
                     $li.css("display","none");
                 }
+
+                $prev = settings_full[key];
             }
 
             // 설정 on-off 이벤트
@@ -2151,7 +2169,7 @@
 
         body.theme .imgur_container,
         body.theme .imgur_container .imgur_more_images_button,
-        .imgur_container .viewers,
+        body.theme .imgur_container .viewers,
         body.theme .imgur_image_title{
             color: var(--chat-image-container-color) !important;
         }
@@ -4420,18 +4438,36 @@
             Blocked_text = "현재 차단된 채팅이 없습니다.";
         }
         else{
+            if(chat_manager !== undefined && ADD_config.chat_memo){
+                await chat_manager.reloadData();
+            }
+
             for(var i=(ADD_Blocked_Chat.length - 1); i>=0; i--){
                 if(typeof ADD_Blocked_Chat[i] === "object"){
+
                     // {"created":date, "nick":nick, "content":content};
                     var temp_obj = ADD_Blocked_Chat[i];
+
+                    // 메모 내용 가져오기
+                    var temp_display_name = "";
+                    if(chat_manager !== undefined && ADD_config.chat_memo){
+                        var memo_index = chat_manager.indexFromData(temp_obj.nick);
+                        if(memo_index !== -1){
+                            ADD_DEBUG(memo_index);
+                            var memo_obj = chat_manager.getData(memo_index);
+                            temp_display_name = " ["+memo_obj.display_name+"]";
+                        }
+                    }
+
                     Blocked_text = Blocked_text
-                        + "<span class='blocked_chat_date' style='width:110px;margin-right:10px;display:inline-block;white-space:nowrap;overflow:hidden;'>"
+                        + "<tr><td class='blocked_chat_date' style='max-width:110px;padding-right:15px;white-space:nowrap;overflow:hidden;'>"
                         + getTimeStampWithDash(new Date(temp_obj.created), "s")
-                        + "</span>|<span class='blocked_chat_nick' style='width:60px;margin:0 10px 0 10px;display:inline-block;text-align:center;white-space:nowrap;overflow:hidden;'>"
+                        + "</td><td class='blocked_chat_nick' style='max-width:120px;padding-right:15px;text-align:left;white-space:nowrap;overflow:hidden;'>"
                         + temp_obj.nick
-                        + "</span>:<span class='blocked_chat_content' style='margin:0 0 0 10px;'>"
+                        + temp_display_name
+                        + "</td><td class='blocked_chat_content' style='margin:0 0 0 10px;'>"
                         + temp_obj.content
-                        + "</span><br />";
+                        + "</td></tr>";
                 }
                 else{
                     Blocked_text = Blocked_text + ADD_Blocked_Chat[i]+"<br />";
@@ -4439,50 +4475,15 @@
             }
         }
 
-        // var ADD_Blocked_Chat_event_ID;
-        // if(typeof GM_addValueChangeListener === "function" && typeof GM_removeValueChangeListener === "function" ){
-        //     ADD_DEBUG("채팅 차단창에서 addValueChangeListener 바인드");
-        //     GM_removeValueChangeListener(ADD_Blocked_Chat_event_ID);
-        //     ADD_Blocked_Chat_event_ID = GM_addValueChangeListener("ADD_Blocked_Chat", async function(val_name, old_value, new_value, remote) {
-        //         if(remote && $("#ADD_blocked_chat_container").length !== 0){
-        //             ADD_Blocked_Chat = new_value;
-        //             Blocked_text = "";
-        //             for(var i=(ADD_Blocked_Chat.length - 1); i>=0; i--){
-        //                 if(typeof ADD_Blocked_Chat[i] === "object"){
-        //                     // {"created":date, "nick":nick, "content":content};
-        //                     var temp_obj = ADD_Blocked_Chat[i];
-        //                     Blocked_text = Blocked_text
-        //                         + "<span class='blocked_chat_date' style='width:110px;margin-right:10px;display:inline-block;white-space:nowrap;overflow:hidden;'>"
-        //                         + getTimeStampWithDash(new Date(temp_obj.created), "s")
-        //                         + "</span>|<span class='blocked_chat_nick' style='width:60px;margin:0 10px 0 10px;display:inline-block;text-align:center;white-space:nowrap;overflow:hidden;'>"
-        //                         + temp_obj.nick
-        //                         + "</span>:<span class='blocked_chat_content' style='margin:0 0 0 10px;'>"
-        //                         + temp_obj.content
-        //                         + "</span><br />";
-        //                 }
-        //                 else{
-        //                     Blocked_text = Blocked_text + ADD_Blocked_Chat[i]+"<br />";
-        //                 }
-        //             }
-        //             $("#ADD_blocked_text").empty().html(Blocked_text);
-        //         }
-        //     });
-
-        //     $(document).one("click", "#ADD_blocked_chat_container", function(e){
-        //         ADD_DEBUG("블록챗 갱신 이벤트 삭제됨");
-        //         if(typeof GM_removeValueChangeListener === "function" ){
-        //             GM_removeValueChangeListener(ADD_Blocked_Chat_event_ID);
-        //         }
-        //     });
-        // }
-
         $("body").append(`
             <div class="lightbox-opened" id="ADD_blocked_chat_container">
                 <div class="lightbox-opened-white-background modal-content" style="cursor:default;max-width:1200px;min-width:500px;display:table;">
                     <div style="font-family:'Noto Sans KR', '맑은 고딕', 'malgun gothic', dotum, serif;">
                         <span style="font-weight:900;font-size:14px;">차단 기록 보기</span><br />
                         <span style="margin:0 0 5px 0;display:inline-block;">차단된 채팅은 최대 `+ADD_config.chat_block_log_limit+`개까지 저장됩니다.<br />캠페인: 채팅창에서 메모 내용을 언급하지 말고 혼자 조용히 사용해주세요.</span><br />
-                        <span id="ADD_blocked_text">`+Blocked_text+`</span>
+                        <table id="ADD_blocked_text">
+                            `+Blocked_text+`
+                        </table>
                     </div>
                 </div>
             </div>
@@ -4923,7 +4924,7 @@
     var prev_nick = "", prev_href = "", prev_count = 0;
     var coord_length = 20;
     var coord_fail = false;
-    async function parse_insagirl(page){
+    async function ADD_parse_insagirl(page){
         ADD_DEBUG("RUNNING - parse_coord, page:"+page);
         if(page === 0 || page === 1){
             prev_nick = "";
@@ -4938,11 +4939,11 @@
         var coord_url = "";
         if(ADD_config.insagirl_select == 1){    // 기본 두스트림의 경우
             coord_url = "http://coord.dostream.com/api/?offset="+String(parseInt((page-1)*coord_length));
-            $("#hrmbodyexpand").html(coord_length+"개 더 보기");
+            $("#ADD_hrmbodyexpand").html(coord_length+"개 더 보기");
         }
         else if(ADD_config.insagirl_select == 2){   // 인사걸의 경우
             coord_url = "http://insagirl-hrm.appspot.com/json2/2/1/"+page+"/";
-            $("#hrmbodyexpand").html("더 보기");
+            $("#ADD_hrmbodyexpand").html("더 보기");
         }
         else{
             ADD_DEBUG("예상하지 못한 설정변수", ADD_config.insagirl_select);
@@ -5079,7 +5080,7 @@
                 ADD_send_sys_msg_from_main_frame(coord_ori+" 가 응답하지 않아 좌표 사이트를 "+coord_new+" 으로 변경합니다. 설정을 영구적으로 변경하려면 <a href='http://www.dostream.com/addostream/' target='_blank' style='text-decoration:underline;'>[애드온 상세 설정]</a>에서 [고급 기능 설정]을 활성화한 후, [일반-좌표 사이트 선택] 옵션을 변경하십시오.");
 
                 ADD_config.insagirl_select = (ADD_config.insagirl_select == 1 ? 2 : 1);
-                await parse_insagirl(_page);
+                await ADD_parse_insagirl(_page);
             }
         };
     }
@@ -5123,7 +5124,7 @@
             <div id="hrm_DOE">
                 <ul></ul>
                 <div style="padding:5px;">
-                    <button id="hrmbodyexpand" type="button" page="2" class="btn btn-primary btn-block">더 보기</button>
+                    <button id="ADD_hrmbodyexpand" type="button" page="2" class="btn btn-primary btn-block">더 보기</button>
                 </div>
             </div>
             `);
@@ -5139,7 +5140,7 @@
     $(document).on("click","#btnOpenHrm_ADD",async function(){
         if($("#hrm_DOE").is(":hidden")){
             if(await checkCrossAccess("http://insagirl-hrm.appspot.com/json2/2/1/1/","Cross_Origin_Hrm", function(){$("#btnOpenHrm_ADD").trigger("click");})){
-                await parse_insagirl(1);
+                await ADD_parse_insagirl(1);
 
                 $(this).html("▲");
 
@@ -5153,7 +5154,7 @@
 
                 $("#hrm_DOE").height(hrmDOEHeight+"px").show();
                 $("#hrm_split_bar").css("top",(hrmDOEHeight+45)+"px").show();
-                $("#hrmbodyexpand").show();
+                $("#ADD_hrmbodyexpand").show();
 
                 $(".chat-container").css("top",(hrmDOEHeight+45+5)+"px");
             }
@@ -5262,13 +5263,13 @@
         }
     }
 
-    $(document).on("click","#hrmbodyexpand",async function(){
+    $(document).on("click","#ADD_hrmbodyexpand",async function(){
         var page = parseInt($(this).attr("page"));
-        await parse_insagirl(page);
+        await ADD_parse_insagirl(page);
         $(this).attr("page",String(parseInt(page+1)));
         
         if(ADD_config.insagirl_select == 2){
-            $("#hrmbodyexpand").hide();
+            $("#ADD_hrmbodyexpand").hide();
         }
     });
 
@@ -5959,9 +5960,19 @@
                 ADD_DEBUG("도배 차단됨, ["+last_similar_content+"], ["+content+"] :"+last_similar);
 
                 $line.remove();
-                if(ADD_config.chat_dobae_block_autoban){
-                    ADD_send_sys_msg("[도배 유저 자동 차단] 닉네임: "+nick +"<br />마지막 채팅: "+content);
-                    chat_manager.simpleBlock(nick,content);
+
+                // 도배 자동 차단 사용 시
+                if(ADD_config.chat_dobae_block_autoban && (dobae_repeat + 1 >= ADD_config.chat_dobae_block_autoban_repeat)){
+                    if(ADD_config.chat_dobae_block_onlylink){   // 링크 포함시에만 차단하는 경우
+                        if($content.find("a").length > 0){  // 가장 마지막 채팅에 링크 포함되어있는지 여부 확인
+                            ADD_send_sys_msg("[도배 유저 자동 차단] 닉네임: "+nick +"<br />마지막 채팅: "+content);
+                            chat_manager.simpleBlock(nick,content);
+                        }
+                    }
+                    else {   // 링크 포함여부 상관 없이 차단하는 경우
+                        ADD_send_sys_msg("[도배 유저 자동 차단] 닉네임: "+nick +"<br />마지막 채팅: "+content);
+                        chat_manager.simpleBlock(nick,content);
+                    }
                 }
 
                 return;
@@ -6108,7 +6119,7 @@
                     $aElem.html(decodeURIComponent($aElem.html()));
                 }
 
-                // 트위치 ���크인 경우 닉네임을 링크 끝에 추가하기
+                // 트위치 링크인 경우 닉네임을 링크 끝에 추가하기
                 if(href.toLowerCase().indexOf("dostream.com/#/stream/twitch/") !== -1 || href.toLowerCase().indexOf("dostream.com/#/stream/multitwitch/") !== -1){
                     var ch_text = "";
                     var ch_streamer_id = href.split("/").pop();
@@ -6197,7 +6208,7 @@
                         ADD_DEBUG("youtube getJSON", youtube_id, data);
 
                         var temp_arr = [];
-                        var temp_img_obj = {type:"youtube", id:youtube_id, link: data.thumbnail_url, title: "[Youtube] "+data.title+" - "+data.author_name, "width":data.thumbnail_width, "height":data.thumbnail_height};
+                        var temp_img_obj = {type:"youtube", id:youtube_id, link: data.thumbnail_url, title: "[Youtube] " + (data.title !== undefined ? data.title : "") + (data.author_name !== undefined ? " - " + data.author_name : ""), "width":data.thumbnail_width, "height":data.thumbnail_height};
                         temp_arr.push(temp_img_obj);
                         ADD_DEBUG(temp_img_obj);
                         chatImageDOEfromLinks($line, documentElem, iframeElems, temp_arr);
@@ -6248,7 +6259,7 @@
                                     <iframe src='https://gfycat.com/ifr/` + gfy_name + gfy_autoplay + `' frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen></iframe>
                                 </div>
                             `;
-                            var title = response.gfyItem.title + " - " + response.gfyItem.userDisplayName;
+                            var title = response.gfyItem.title + " - " + (response.gfyItem.userDisplayName !== undefined ? response.gfyItem.userDisplayName : response.gfyItem.userName);
 
                             var temp_arr = [];
                             var temp_img_obj = {link: "", title: title, html:gfy_html, width:width_mod, height:height_mod, views:response.gfyItem.views};
@@ -6297,7 +6308,7 @@
                         success:function(response){
                             ADD_DEBUG("Twitch Clip API 호출 완료", response);
                             var image_url = response.thumbnails.medium;
-                            var title = response.title + " - " + response.broadcaster.display_name;
+                            var title = (response.title !== undefined ? response.title : "") + (response.broadcaster.display_name !== undefined ? " - " + response.broadcaster.display_name : "");
 
                             var temp_arr = [];
                             var temp_img_obj = {type:"twitch_clip", id:twitch_thumb_id, link: image_url, title: "[Twitch] "+title, width:480, height:272, views:response.views};
@@ -8332,7 +8343,15 @@
                 }
             },
             simpleBlock: async function(nick, content){
-                var temp_obj = objInit({nick:nick, display_name:"도배", detail_content:content, modified_date:Number(new Date()), isBlock:true});
+                var memo_index = getObjIndexFromData(nick);
+                var new_nick = "도배";
+                var new_content = content;
+                if(memo_index !== -1){
+                    var memo_obj = chat_manager.getData(memo_index);
+                    new_nick = memo_obj.display_name + "_도배";
+                    new_content = memo_obj.detail_content + "_도배_" + content;
+                }
+                var temp_obj = objInit({nick:nick, display_name:new_nick, detail_content:new_content, modified_date:Number(new Date()), isBlock:true});
                 addObjtoData(temp_obj);
                 await saveData();
             },
@@ -8394,6 +8413,101 @@
     window.GM_setting = GM_setting;
     await GM_setting.init("ADD_config");
     await GM_setting.load();
+
+    /////////////////////////////////////////////////////////////////////////////////
+    // 외부 사이트 관리 - 인사걸
+    if(GM_page === C_INSAGIRL){
+        if(!ADD_config.insagirl_modify_directly){
+            return;
+        }
+
+        ADD_DEBUG("인사걸에서 실행됨", document.location.href);
+        var coord_prev_a = undefined;
+        var coord_prev_count = 0;
+        var $coord_prev = undefined;
+        var coord_prev_nick = undefined;
+
+        // 채팅 매니저 불러오기
+        if(ADD_config.insagirl_block_by_nick){
+            await chat_manager.reloadData();
+        }
+
+        $(document).arrive("#hrmbody > tr", {existing: true}, async (e) => {
+        //$(document).on("DOMNodeInserted", "#hrmbody > tr", function (e){
+            //var $target = $(e.target);
+            var $target = $(e);
+            if($target.hasClass("fired") || $target.prop("tagName").toLowerCase() !== "tr"){
+                return false;
+            }
+            $target.addClass("fired");
+
+            // 필수 정보 얻기
+            var coord_nick = "";
+            var $coord_a = $target.find("a").first();
+            try{
+                coord_nick = $target.text().split(")")[1].split(":").shift();
+            }
+            catch(err){
+                ADD_DEBUG("error: coord_nick", err);
+            }
+
+            // 링크 존재 시
+            if($coord_a !== undefined && $coord_a.length > 0){
+                var coord_a = $coord_a.attr("href");
+                //console.log(coord_a, coord_nick);
+                
+                // 채팅 매니저에 의한 차단
+                if(ADD_config.insagirl_block_by_nick && chat_manager !== undefined && chat_manager.getIsBlock(coord_nick)){
+                    coord_prev_count = 0;
+                    ADD_DEBUG("채팅 매니저에 의한 차단", coord_nick);
+                    $target.remove();
+                }
+                // 도배에 의한 차단
+                else if(ADD_config.insagirl_block_dobae && coord_prev_a === coord_a && (ADD_config.insagirl_block_dobae_by_href || (!ADD_config.insagirl_block_dobae_by_href && coord_prev_nick === coord_nick))){
+                    $target.remove();
+                    coord_prev_count = coord_prev_count + 1;
+                }
+                else { // 중복 아닐 시
+                    if(coord_prev_count > 1){
+                        ADD_DEBUG("중복", coord_prev_count);
+                        $coord_prev.find("td").first().append("<span class='fired' style='background-color:lightpink;border-radius:50%;margin-left:5px;white-space:nowrap;padding:5px;font-size:0.85em;' title='중복' alt='중복'>+"+coord_prev_count+"</span>");
+                        coord_prev_count = 0;
+                    }
+
+                    // 트위치 링크인경우 이름 추가
+                    if(coord_a.toLowerCase().indexOf("dostream.com/#/stream/twitch/") !== -1 || coord_a.toLowerCase().indexOf("dostream.com/#/stream/multitwitch/") !== -1){
+                        var ch_text = "";
+                        var ch_streamer_id = coord_a.split("/").pop();
+    
+                        var temp_array = ch_streamer_id.split("&");
+                        for (var j=0; j<temp_array.length; j++){
+                            if(j !== 0){
+                                ch_text = ch_text+"&";
+                            }
+                            var temp_id = ADD_streamer_nick(temp_array[j]);
+                            ch_text = ch_text+temp_id;
+                        }
+                        if(ch_text !== undefined || ch_text !== ""){
+                            $coord_a.after(" <span class='fired' style='font-weight:700;'>["+ch_text+"]</span>");
+                        }
+                    }
+
+                    $coord_prev = $target;
+                }
+                coord_prev_a = coord_a;
+                coord_prev_nick = coord_nick;
+            }
+            // 링크 존재하지 않을 시
+            else{
+                coord_prev_a = undefined;
+                $coord_prev = $target;
+                coord_prev_nick = coord_nick;
+            }
+        });
+        return;
+    }
+    // 외부 사이트 관리 - 인사걸 끝
+    /////////////////////////////////////////////////////////////////////////////////
 
     // 채팅창 아닌 경우
     if(GM_page !== C_UCHAT){
