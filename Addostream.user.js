@@ -4,6 +4,7 @@
 // @description 두스트림에 기능을 추가한다.
 // @include     *.dostream.com/*
 // @include     *insagirl-toto.appspot.com/hrm/*
+// @exclude     *insagirl-toto.appspot.com/hrm/notfound.html
 // @version     1.51.0
 // @icon        https://raw.githubusercontent.com/nomomo/Addostream/master/images/logo.png
 // @homepageURL https://nomomo.github.io/Addostream/
