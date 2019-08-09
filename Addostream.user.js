@@ -1618,7 +1618,7 @@
             /*.onstream #ADD_change_multi { opacity:1; display:inline-block !important;}*/
             #ADD_quick_list {opacity:0; display:inline-block}/*{ display:none; }*/
             /*.onstream #ADD_quick_list { opacity:1; display:inline-block !important;}*/
-            #popup_ADD_quick .modal-body{ padding:10px; }
+            #popup_ADD_quick .modal-body{ padding:10px; position:relative; }
             #popup_ADD_quick { top:50px; right:10px; }
             #popup_ADD_quick .quick_list_title { padding:0 5px 2px 5px; margin-bottom:0px; border-bottom:2px solid rgb(221, 221, 221); font-weight:700;}
             #popup_ADD_quick ul { list-style:none; margin:0;padding:0;display:block;font-size:11px;}
@@ -1635,8 +1635,8 @@
             #popup_ADD_quick .ADD_li_box .btn {font-size:9px;padding:1px 2px;letter-spacing:-0.5px; border:0; opacity:0.7;border-radius:0px;}
             #popup_ADD_quick .icon_star{top:7px; right:15px; z-index:10;}
             #popup_ADD_quick .icon_pushpin{top:7px; right:5px; z-index:50;}
-            #popup_ADD_quick .ADD_thumb_elem{left:70px;}
-            #popup_ADD_quick .ADD_thumb_elem{width:290px; height:163px; !important;}
+            #popup_ADD_quick .ADD_thumb_elem{left:80px;}
+            #popup_ADD_quick .ADD_thumb_elem{width:290px; height:163px !important;}
             #popup_ADD_quick .stream_list_scroll {overflow-y: auto; max-height: calc(100vh - 105px); scrollbar-width: thin;}
             .modal-content {box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);background-clip: padding-box;background-color: #fff;border: 1px solid rgba(0, 0, 0, 0.2);border-radius: 6px;outline: 0 none;}
             .modal-content {opacity:0.93}
@@ -1708,6 +1708,7 @@
             #ADD_send_location_notice {display:none;width:60px;height:24px;font-size:10px;color:#333;background-color:#f5f5f5;}
             #ADD_send_location_button {width:24px;height:24px;font-size:18px;cursor:pointer;}
             div.ADD_thumb_elem_container{position:relative;display:none;}
+            #popup_ADD_quick .ADD_thumb_elem_container{position:inherit;}
             div.ADD_thumb_elem_container div.ADD_thumb_elem{position:absolute;top:0px;left:105px;z-index:300;}
             div.ADD_thumb_elem_container img.ADD_thumb_img{z-index:400;}
             div.ADD_thumb_elem_container div.ADD_thumb_size_0{width:240px;height:180px;}
@@ -7492,7 +7493,7 @@
 
         // 켠다.
         $(document).on({
-            mouseenter: async function(){
+            mouseenter: async function(e){
                 if(!ADD_config.thumbnail_mouse){
                     return false;
                 }
@@ -7574,6 +7575,15 @@
 
                 if( !(thumb_this_parent.find(".ADD_thumb_elem").hasClass(thumb_size_class)) ){
                     thumb_this_parent.find(".ADD_thumb_elem").removeClass("ADD_thumb_size_1 ADD_thumb_size_2 ADD_thumb_size_3 ADD_thumb_size_0").addClass(thumb_size_class);
+                }
+
+                // 퀵뷰의 경우 섬네일 위치 설정
+                if(thumb_this_parent.closest("#popup_ADD_quick").length !== 0){
+                    var offsetTop = thumb_this_parent[0].offsetTop;
+                    var height = thumb_this_parent.find(".ADD_thumb_elem").first().height();
+                    var heightParent = $("#popup_ADD_quick").height();
+                    //ADD_DEBUG(heightParent , offsetTop, height);
+                    thumb_this_parent.find("div.ADD_thumb_elem").first().css("top",(heightParent > offsetTop + height ? offsetTop + 5 : heightParent - height - 15)+"px");
                 }
             },
             mouseleave:function(){
