@@ -1,0 +1,5 @@
+node_modules
+dist/*
+*.log
+Addostream.meta.js.gz
+Addostream.user.js.gz
