@@ -155,6 +155,9 @@ export var GM_setting = (function($, global, document){ //
         chat_unicode_err_replace : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: true, title:"� 문자를 공백으로 변경", desc:"텍스트 인코딩 문제 발생 시 표시되는 � 문자를 공백으로 대체" },
         chat_auto_reload : { disable:true, category:"chat", depth:2, type: "checkbox", value: false, title:"채팅 중지 시 자동 새로고침 설정", desc:"채팅이 중지된 경우,<br />채팅창 상단의 Auto Reload가 설정된 창에서<br />채팅을 자동으로 새로고침 함 (10초 내 최대 5회)" },
 
+        uhaha_auto_remove : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: false, title:"우하하 채팅 자동 초기화", desc:"우하하 채팅창 사용 시 누적 채팅 개수가 일정 개수를 넘으면 자동으로 싹쓸이를 실행하여 채팅이 느려지는 것을 방지. 채팅을 맨 위로 스크롤하여 이전 채팅을 불러올 시 이상하게 동작할 수 있으니 주의하십시오." },
+        uhaha_auto_remove_count : { under_dev:true, category:"chat", depth:3, type: "text", value: 1000, valid:"number", min_value:200, max_value:100000, title:"자동 초기화 개수", desc:"(기본값:1000, 범위:200~100000)" },
+
         broadcaster_mode : { under_dev:true, category:"broadcast", category_name:"방송 모드", depth:1, type: "checkbox", value: false, title:"[실험실] 방송 모드", desc:"채팅창을 방송에 적합한 모드로 변경<br />Xsplit 등에서 스크린 캡쳐 후, 크로마키(기본값 blue)를 이용하여 배경색을 제거할 수 있습니다.", change:function(){if(nomo_common.ADD_get_page_type() === nomo_const.C_UCHAT){nomo_theme.broadcaster_theme_css();}}},
         broadcaster_font_size : { under_dev:true, category:"broadcast", depth:2, type: "text", value: 1.0, valid:"number", min_value:0.1, max_value:10, title:"글씨 크기 조절(배수)", desc:"", change:function(){if(nomo_common.ADD_get_page_type() === nomo_const.C_UCHAT){nomo_theme.broadcaster_theme_css();}} },
         broadcaster_bg_color : { under_dev:true, category:"broadcast", depth:2, type: "text", value: "blue", title:"배경 색상", desc:"예) blue, white, #fff, rgb(255, 255, 255)", change:function(){if(nomo_common.ADD_get_page_type() === nomo_const.C_UCHAT){nomo_theme.broadcaster_theme_css();}} },

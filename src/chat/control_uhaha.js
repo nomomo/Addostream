@@ -5,6 +5,15 @@ import {ADD_chatBlock, chat_basic_css, getImgurData, chatImagelayoutfromLinks, g
 import * as utils from "libs/nomo-utils.js";
 var ADD_DEBUG = utils.ADD_DEBUG;
 
+function UHAHA_sys_msg(msg){
+    var $uha_chat_msgs = $("#uha_chat_msgs");
+    if($uha_chat_msgs.length > 0){
+        $(`<li class="is_notme"><span class="name" data-date="${String(Number(new Date())).substr(0,10)}" data-name="Dostream+">Dostream+</span>
+                        <span class="text">${msg}</span></li>`)
+            .appendTo($uha_chat_msgs);
+    }
+}
+
 //////////////////////////////////////////////////////////////////////////////////
 // 우하하용 채팅 도구
 export async function ADD_chatting_arrive_for_UHAHA(){
@@ -16,8 +25,28 @@ export async function ADD_chatting_arrive_for_UHAHA(){
     // arrive bind 및 unbind
     if(ADD_config.chat_ctr){
         $(document).arrive("li.is_notme", async elems => {
+            // 일정 개수 넘을 시 자동 채팅창 초기화
+            if(ADD_config.uhaha_auto_remove){
+                var auto_remove_count = Number(ADD_config.uhaha_auto_remove_count);
+                if(auto_remove_count < 200){
+                    auto_remove_count = 200;
+                }
+
+                // ADD_DEBUG(nomo_global.uhaha_chat_auto_remove_counter);
+                var line_auto_remove_length = nomo_global.uhaha_chat_auto_remove_counter - auto_remove_count;
+                if(line_auto_remove_length > 0){
+                    chatlog_local = {};
+                    nomo_global.uhaha_chat_auto_remove_counter = 0;
+                    $("#uha_chat_btnclear").trigger("click");
+                    UHAHA_sys_msg(`자동 싹쓸이 개수(${auto_remove_count})에 도달하여 채팅창을 초기화 했습니다.`);
+                }
+            }
+
+            nomo_global.uhaha_chat_auto_remove_counter = nomo_global.uhaha_chat_auto_remove_counter + 1;
             uhaha_arrive(elems);
+
         });
+
         $(document).arrive("li.is_me", async elems => {
             uhaha_arrive(elems);
         });
@@ -125,6 +154,42 @@ export async function ADD_chatting_arrive_for_UHAHA(){
 
         // 이벤트 수정
         $("#uha_chat_msgs").off("click","a");
+
+
+        //////////////////////////////////////////////////////////////////////////////////
+        // imgur click event
+        $(document)
+            .on("click", ".imgur_safe_button", function(){
+                $(this).parent(".imgur_safe_screen").addClass("clicked").fadeOut(300);
+            })
+            .on("click", ".imgur_control_hide", function(){
+                ADD_DEBUG("Chatting 내 호출된 imgur 이미지 에서 - 버튼 클릭됨");
+                var $safe_screen = $(this).closest(".imgur_container").find(".imgur_safe_screen");
+                if($safe_screen.hasClass("clicked")){
+                    var safe_screen_opacity = Number(ADD_config.imgur_preview_opacity);
+                    if(!($.isNumeric(ADD_config.imgur_preview_opacity))){
+                        safe_screen_opacity = 0.93;
+                    }
+                    else if(safe_screen_opacity < 0 || safe_screen_opacity > 1){
+                        safe_screen_opacity = 0.93;
+                    }
+                    $safe_screen.removeClass("clicked").fadeTo(300, safe_screen_opacity);
+                }
+                else{
+                    $safe_screen.addClass("clicked").fadeOut(300);
+                }
+            })
+            .on("click", ".imgur_control_remove", function(){
+                ADD_DEBUG("Chatting 내 호출된 imgur 이미지 에서 x 버튼 클릭됨");
+                $(this).closest(".imgur_container").remove();
+            });
+            
+
+        // 싹쓸이 버튼 클릭 시
+        $("#uha_chat_btnclear").on("click", function(){
+            chatlog_local = {};
+            nomo_global.uhaha_chat_auto_remove_counter = 0;
+        });
     } // else 끝
 }
 
@@ -135,12 +200,6 @@ async function uhaha_arrive(elems){
 
     var $uha_chat_msgs = $("#uha_chat_msgs");
     var temp_isChatScrollOn = $uha_chat_msgs.prop("scrollTop") >= $uha_chat_msgs.prop("scrollHeight") - $uha_chat_msgs.height() - 40;
-
-    // 자동 삭제 시 에러 발생
-    // var line_auto_remove_length = $("#uha_chat_msgs li").length - 20;
-    // if(line_auto_remove_length > 0){
-    //     $("#uha_chat_msgs li:lt("+line_auto_remove_length+")").remove();
-    // }
 
     var elem = $(elems);
     var $line = elem;
@@ -651,30 +710,4 @@ async function uhaha_arrive(elems){
         },1);
     }
 
-    //////////////////////////////////////////////////////////////////////////////////
-    // imgur click event
-    $(document).on("click", ".imgur_safe_button", function(){
-        $(this).parent(".imgur_safe_screen").addClass("clicked").fadeOut(300);
-    })
-        .on("click", ".imgur_control_hide", function(){
-            ADD_DEBUG("Chatting 내 호출된 imgur 이미지 에서 - 버튼 클릭됨");
-            var $safe_screen = $(this).closest(".imgur_container").find(".imgur_safe_screen");
-            if($safe_screen.hasClass("clicked")){
-                var safe_screen_opacity = Number(ADD_config.imgur_preview_opacity);
-                if(!($.isNumeric(ADD_config.imgur_preview_opacity))){
-                    safe_screen_opacity = 0.93;
-                }
-                else if(safe_screen_opacity < 0 || safe_screen_opacity > 1){
-                    safe_screen_opacity = 0.93;
-                }
-                $safe_screen.removeClass("clicked").fadeTo(300, safe_screen_opacity);
-            }
-            else{
-                $safe_screen.addClass("clicked").fadeOut(300);
-            }
-        })
-        .on("click", ".imgur_control_remove", function(){
-            ADD_DEBUG("Chatting 내 호출된 imgur 이미지 에서 x 버튼 클릭됨");
-            $(this).closest(".imgur_container").remove();
-        });
 }

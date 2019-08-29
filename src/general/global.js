@@ -44,7 +44,10 @@ var nomo_global_manager = async function(global){
         GLOBAL_CHAT_IFRAME: undefined,
         $GLOBAL_CHAT_IFRAME: undefined,
         $GLOBAL_IFRAME_DOCUMENT: undefined,
-        GLOBAL_CHAT_CONTENT_DIV: undefined
+        GLOBAL_CHAT_CONTENT_DIV: undefined,
+
+        // 우하하 채팅
+        uhaha_chat_auto_remove_counter: 0
     };
 
     var init = async function(){
