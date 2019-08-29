@@ -340,7 +340,8 @@ var streamerArray = [
     ["battledogtv", "BattledogTV", "배틀독"],
     ["ranran2_", "란란"],
     ["abc16789", "요룰레히"],
-    ["surinoelcats", "수리노을"]
+    ["surinoelcats", "수리노을"],
+    ["sorimcaster", "정소림", "소림좌", "소림"]
 ];
 
 var streamerArray_name = [],

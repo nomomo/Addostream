@@ -1706,7 +1706,7 @@ export function isChatScrollOn(){
 }
 
 // 타겟 url 이 동영상인지 체크
-function isVideo(target_url){
+export function isVideo(target_url){
     if(target_url !== undefined && (target_url.indexOf(".mp4") !== -1 || target_url.indexOf(".gifv") !== -1 || target_url.indexOf(".flv") !== -1 || target_url.indexOf(".webm") !== -1)){
         return true;
     }

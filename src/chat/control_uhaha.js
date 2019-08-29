@@ -1,7 +1,7 @@
 import nomo_const from "general/const.js";
 import * as nomo_common from "general/common.js";
 import { ADD_streamer_nick, streamerArray } from "general/streamer-lib.js";
-import {ADD_chatBlock, chat_basic_css, getImgurData, chatImagelayoutfromLinks, goScrollDown} from "chat/control.js";
+import {ADD_chatBlock, chat_basic_css, getImgurData, chatImagelayoutfromLinks, goScrollDown, isVideo} from "chat/control.js";
 import * as utils from "libs/nomo-utils.js";
 var ADD_DEBUG = utils.ADD_DEBUG;
 
@@ -183,7 +183,22 @@ export async function ADD_chatting_arrive_for_UHAHA(){
                 ADD_DEBUG("Chatting 내 호출된 imgur 이미지 에서 x 버튼 클릭됨");
                 $(this).closest(".imgur_container").remove();
             });
-            
+        
+        // 채팅창 내 Lightbox 클릭 시 Lightbox 띄움
+        $(document).on("click", ".imgur_image_in_chat.open-lightbox", function(e){
+            e.preventDefault();
+            var $this = $(this);
+            var image = $this.attr("src");
+            $("html").addClass("no-scroll");
+            var simple_image = "";
+            if(isVideo(image)){
+                simple_image = "<video class='chat_image' loop controls muted autoplay src=\""+image+"\"></video>";
+            }
+            else{
+                simple_image = "<img class='chat_image' src=\""+image+"\" />";
+            }
+            $("body").append("<div class=\"lightbox-opened\">"+simple_image+"</div>");
+        });
 
         // 싹쓸이 버튼 클릭 시
         $("#uha_chat_btnclear").on("click", function(){
