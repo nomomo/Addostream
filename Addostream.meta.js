@@ -17,7 +17,6 @@
 // @require http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
 // @require https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
-// @require https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.libs.js?20190115
 // @require https://embed.twitch.tv/embed/v1.js
 // @grant GM.addStyle
 // @grant GM_addStyle
