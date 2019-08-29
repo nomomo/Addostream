@@ -34,7 +34,17 @@ export default (function(){
         // 우하하 채팅에서 링크 클릭 시 이벤트 무시하기
         if(a === "click"){
             if(this.id === "uha_chat_msgs" && this.nodeName.toLowerCase() === "ul"){
-                return;
+                // console.log(a,b,c,this);
+                var _b = b;
+                b = function(e){
+                    // console.log($(e.target), $(e.target).parent("span.text").length);
+                    // 부모가 span.text 인 경우 함수 실행하지 않음
+                    if($(e.target).parent("span.text").length !== 0){
+                        return;
+                    }
+                    _b(e);
+                };
+                // return;
             }
         }
 
