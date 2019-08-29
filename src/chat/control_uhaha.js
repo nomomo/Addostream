@@ -650,4 +650,31 @@ async function uhaha_arrive(elems){
             }
         },1);
     }
+
+    //////////////////////////////////////////////////////////////////////////////////
+    // imgur click event
+    $(document).on("click", ".imgur_safe_button", function(){
+        $(this).parent(".imgur_safe_screen").addClass("clicked").fadeOut(300);
+    })
+        .on("click", ".imgur_control_hide", function(){
+            ADD_DEBUG("Chatting 내 호출된 imgur 이미지 에서 - 버튼 클릭됨");
+            var $safe_screen = $(this).closest(".imgur_container").find(".imgur_safe_screen");
+            if($safe_screen.hasClass("clicked")){
+                var safe_screen_opacity = Number(ADD_config.imgur_preview_opacity);
+                if(!($.isNumeric(ADD_config.imgur_preview_opacity))){
+                    safe_screen_opacity = 0.93;
+                }
+                else if(safe_screen_opacity < 0 || safe_screen_opacity > 1){
+                    safe_screen_opacity = 0.93;
+                }
+                $safe_screen.removeClass("clicked").fadeTo(300, safe_screen_opacity);
+            }
+            else{
+                $safe_screen.addClass("clicked").fadeOut(300);
+            }
+        })
+        .on("click", ".imgur_control_remove", function(){
+            ADD_DEBUG("Chatting 내 호출된 imgur 이미지 에서 x 버튼 클릭됨");
+            $(this).closest(".imgur_container").remove();
+        });
 }
