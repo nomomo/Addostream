@@ -1,6 +1,6 @@
 export default (function(){
     // 이벤트 탈취
-    console.log("이벤트 탈취 시작");
+    // console.log("이벤트 탈취 시작");
     // unsafeWindow.document._addEventListener = unsafeWindow.document.addEventListener;
     // unsafeWindow.document.addEventListener = function(a,b,c){
     //     // if(a === "visibilitychange"){
@@ -31,14 +31,24 @@ export default (function(){
         //     console.log(b);
         // }
 
+        // 우하하 채팅에서 링크 클릭 시 이벤트 무시하기
+        if(a === "click"){
+            if(this.id === "uha_chat_msgs" && this.nodeName.toLowerCase() === "ul"){
+                return;
+            }
+        }
+
         if(c==undefined)
             c=false;
         this._addEventListener(a,b,c);
+
+        /*
         if(!unsafeWindow.eventListenerList)
             unsafeWindow.eventListenerList = {};
         if(!unsafeWindow.eventListenerList[a])
             unsafeWindow.eventListenerList[a] = [];
-        //this.removeEventListener(a,b,c); // TODO - handle duplicates..
+        // this.removeEventListener(a,b,c); // TODO - handle duplicates..
         unsafeWindow.eventListenerList[a].push({listener:b,useCapture:c});
+        */
     };
 })();

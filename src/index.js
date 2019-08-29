@@ -1,4 +1,4 @@
-//import "general/event_hijacking.js";
+import "general/event_hijacking.js";
 import "libs/arrive.js";
 import web_browser from "libs/jquery-browser.js";
 // import lib_nude from "libs/nude.js";
