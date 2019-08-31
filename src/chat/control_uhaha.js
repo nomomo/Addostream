@@ -148,6 +148,9 @@ export async function ADD_chatting_arrive_for_UHAHA(){
             display: inline-block;
             width: 100%;
         }
+        #uha_chat_msgs.uhaha_delete_button_hide li span.delete {
+            display:none !important;
+        }
         ${chat_basic_css}
         `;
         GM_addStyle(temp_addStyle);
@@ -205,6 +208,75 @@ export async function ADD_chatting_arrive_for_UHAHA(){
             chatlog_local = {};
             nomo_global.uhaha_chat_auto_remove_counter = 0;
         });
+
+        // delete 버튼 숨김 적용
+        uhaha_chat_delete_hide();
+
+        // 스크롤바 관련 이벤트 - 향상된 자동 스크롤
+        if(ADD_config.uhaha_chat_scroll){
+            ADD_DEBUG("CHAT - Scroll 이벤트 ON");
+            $("#uha_chat_msgs").on("wheel.chatScrollFunc mousewheel.chatScrollFunc", function(event) {//div.wrap div.contentWrap
+                //마우스휠 위로 돌릴때 이벤트
+                //ADD_DEBUG(event);
+                var scroll_val = -1;
+                if (event.type == "mousewheel"){
+                    scroll_val = event.originalEvent.wheelDelta;
+                }
+                else if (event.type == "wheel"){
+                    scroll_val = event.originalEvent.deltaY * (-1);
+                }
+                if (scroll_val >= 0) {
+                    // 세로 스크롤바가 있을 경우 처리
+                    if( $(this).get(0).scrollHeight > $(this).innerHeight() ){  //find("div.content").first(). find("div.content").
+                        // 대체 latest_chat 생성
+                        if($("#uha_chat").find(".latest_chat_new_container").length === 0){
+                            var $latest_chat_new = $(`
+                            <div style="position:relative;">
+                                <div class="latest_chat_new_container" style="display:none;">
+                                    <div class="latest_chat_new" style="background:rgba(0,0,0,.75);bottom:0px;color:#faf9fa;padding:5px;height:28px;font-size:12px;position:absolute;justify-content:center;align-items:center;text-align:center;width:100%;box-sizing:border-box;z-index:1000;cursor:pointer;border-radius:4px;">
+                                        <span>아래에서 더 많은 메시지를 확인하세요.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            `);
+                            $("#uha_chat").append($latest_chat_new);
+                            $latest_chat_new.on("click", function(){
+                                nomo_global.isGoScrollDown = true;
+                                goScrollDown();
+                                $("#uha_chat").find(".latest_chat_new_container").hide();
+                            });
+                        }
+
+                        $("#uha_chat").find(".latest_chat_new_container").stop("true","true").show();
+                        nomo_global.isGoScrollDown = false;
+                        // 대체 latest_chat 생성 끝
+                    }
+                    else {
+                        // 스크롤바가 없는 경우
+                    }
+
+                }
+
+                else {
+                    //마우스휠 아래로 돌릴때 이벤트
+                    if(nomo_global.isGoScrollDown){//if(isChatScrollOn()){
+                        nomo_global.isGoScrollDown = true;
+                        $("#uha_chat").find(".latest_chat_new_container").stop("true","true").hide();
+                    }
+
+                    var scrollHeight = $(this)[0].scrollHeight;
+                    var scrollTop = $(this)[0].scrollTop;
+                    var height = $(this).height();
+
+                    if(scrollHeight - scrollTop - height <= ADD_config.chat_scroll_down_min){
+                        nomo_global.isGoScrollDown = true;
+                        goScrollDown();
+                        $("#uha_chat").find(".latest_chat_new_container").stop("true","true").hide();
+                    }
+                }
+            });
+        }
+
     } // else 끝
 }
 
@@ -725,4 +797,15 @@ async function uhaha_arrive(elems){
         },1);
     }
 
+}
+
+export function uhaha_chat_delete_hide() {
+    if($("#uha_chat_msgs").length !== 0){
+        if(ADD_config.uhaha_delete_button_hide){
+            $("#uha_chat_msgs").addClass("uhaha_delete_button_hide");
+        }
+        else{
+            $("#uha_chat_msgs").removeClass("uhaha_delete_button_hide");
+        }
+    }
 }

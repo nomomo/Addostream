@@ -1,4 +1,5 @@
-export default (function(){
+import {ADD_DEBUG} from "libs/nomo-utils.js";
+export function event_hijacking(){
     // 이벤트 탈취
     // console.log("이벤트 탈취 시작");
     // unsafeWindow.document._addEventListener = unsafeWindow.document.addEventListener;
@@ -28,7 +29,11 @@ export default (function(){
         // }
 
         // if(a === "scroll"){
-        //     console.log(b);
+        //     console.log(a,b,c,this);
+        //     if(this.id === "uha_chat_msgs"){
+        //         ADD_DEBUG("우하하 스크롤 이벤트 삭제");
+        //         return;
+        //     }
         // }
 
         // 우하하 채팅에서 링크 클릭 시 이벤트 무시하기
@@ -61,4 +66,4 @@ export default (function(){
         unsafeWindow.eventListenerList[a].push({listener:b,useCapture:c});
         */
     };
-})();
+}

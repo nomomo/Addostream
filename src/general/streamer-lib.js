@@ -2,7 +2,7 @@ import {ADD_DEBUG} from "../libs/nomo-utils.js";
 
 // API로 접근해서 스트리머 이름을 가져올 수도 있으나,
 // API CALL 을 줄이기 위해 원래부터 두스 MAIN에 있던 스트리머 이름을 적어둔다.
-// ID, 정식명(display name), 별명, 한글자 별명 순서
+// 스트리머 ID, 정식명(display name), 별명, 한글자 별명 순서
 var streamerArray = [
     ["hanryang1125", "풍월량", "풍온", "김영태", "영태", "풍형", "풍월주인한량", "우리풍", "큰풍", "풍"],
     ["ddahyoni", "따효니", "효니", "백상현", "상현", "따"],
@@ -341,7 +341,8 @@ var streamerArray = [
     ["ranran2_", "란란"],
     ["abc16789", "요룰레히"],
     ["surinoelcats", "수리노을"],
-    ["sorimcaster", "정소림", "소림좌", "소림"]
+    ["sorimcaster", "정소림", "소림좌", "소림"],
+    ["cdprojektred", "CD PROJEKT RED"]
 ];
 
 var streamerArray_name = [],

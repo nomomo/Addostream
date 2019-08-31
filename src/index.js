@@ -1,4 +1,4 @@
-import "general/event_hijacking.js";
+import {event_hijacking} from "general/event_hijacking.js";
 import "libs/arrive.js";
 import web_browser from "libs/jquery-browser.js";
 // import lib_nude from "libs/nude.js";
@@ -44,6 +44,9 @@ import {ADD_popup_player} from "general/popup_player.js";
     window.GM_setting = GM_setting;
     await GM_setting.init("ADD_config");
     await GM_setting.load();
+
+    // 이벤트 탈취
+    event_hijacking();
 
     //////////////////////////////////////////////////////////////////////////////////
     // 메인 또는 스트림인 경우
