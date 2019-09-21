@@ -1154,12 +1154,6 @@ export async function ADD_night_mode(options){
     if(options !== undefined && options.message !== undefined){
         is_message = options.message;
     }
-
-    // 페이지 로딩 후 최소 10초가 지나야 transition 효과가 발동된다.
-    setTimeout(function(){
-        nomo_global.night_mode_direct_call = true;
-    },10000);
-
     var night_mode_finish = function(){
         clearTimeout(nomo_global.night_mode_on);
         clearTimeout(nomo_global.night_mode_end);
@@ -1167,12 +1161,18 @@ export async function ADD_night_mode(options){
         nomo_global.night_mode = false;
     };
 
-    if(!ADD_config.theme_night_mode){
+    if(!(ADD_config.theme_on && ADD_config.theme_night_mode)){
         if(nomo_global.night_mode){
             night_mode_finish();
         }
         return;
     }
+
+    // 페이지 로딩 후 최소 10초가 지나야 transition 효과가 발동된다.
+    setTimeout(function(){
+        nomo_global.night_mode_direct_call = true;
+    },10000);
+
     // 목표 시간 === 종료 시간인 경우 리턴
     // 서울 지역 일출, 일몰 시간 가져오기
     // https://api.sunrise-sunset.org/json?lat=37.532600&lng=127.024612&formatted=0        
