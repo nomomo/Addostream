@@ -1,3 +1,4 @@
+import "libs/date_format.js";
 import { ADD_DEBUG, getTimeStamp } from "../libs/nomo-utils.js";
 import * as nomo_common from "./common.js";
 import { streamerArray } from "./streamer-lib.js";
@@ -327,6 +328,7 @@ export async function ADD_run(data,flag){
             </li>`;
     });
 
+    // 퀵리스트
     if(flag === 0){
         $ul = $("#stream .main-streams ul");
         if($ul === undefined){
@@ -344,8 +346,28 @@ export async function ADD_run(data,flag){
         $("#popup_ADD_quick ul").empty().hide().append(append).fadeIn(300);
     }
 
-    // GC
-    append = null;
+    // 업데이트 시간 알림
+    await get_last_list_update_time();
+    if(nomo_global.list_update_time !== undefined){
+        var $ul_cont;
+        if(flag === 0){
+            $ul_cont = $("#stream .main-streams ul");
+        }
+        else{
+            $ul_cont = $("#popup_ADD_quick ul");
+        }
+        var $last_list_update_time = $ul_cont.closest("div").find(".last_list_update_time");
+        if($last_list_update_time.length === 0){
+            $ul_cont.after(`
+                <div class="last_list_update_time" style="font-size:${flag === 0 ? "11" : "10"}px;color:#999;clear:both;padding:5px 0;text-align:right;"></div>
+            `);
+            $last_list_update_time = $(".last_list_update_time");
+        }
+        $last_list_update_time.hide().html(
+            `Last Updated : ${new Date(nomo_global.list_update_time).format("yyyy-MM-dd amp hh:mm:ss")}`
+        ).fadeIn(300);
+    }
+
 }
 
 // 체크박스 클릭 시 이벤트
@@ -389,6 +411,7 @@ export async function ADD_parse_list_data(flag){
             main_list_cache_time = 1;
         }
         GM_cache_stream_list = await nomo_common.GM_cache_read("GM_cache_stream_list", Number(ADD_config.main_list_cache_time)*60*1000);
+        
     }
     if(GM_cache_stream_list){
         $.ajax({
@@ -407,6 +430,8 @@ export async function ADD_parse_list_data(flag){
                 nomo_common.GM_cache_write("GM_cache_stream_list");
                 GM.setValue("ADD_stream_list", data);
                 ADD_run(data,flag);
+                nomo_global.list_update_time = new Date();
+                ADD_DEBUG("리스트 업데이트 시간 갱신 - 리스트:", nomo_global.list_update_time);
 
             },
             error:function(){
@@ -417,7 +442,40 @@ export async function ADD_parse_list_data(flag){
     }
     else{
         ADD_DEBUG("기본 리스트 캐시된 것 읽어옴");
+        // 데이터 읽어오기
         var data = await GM.getValue("ADD_stream_list", []);
+        // 메인 리스트 갱신
         ADD_run(data,flag);
+    }
+}
+
+async function get_last_list_update_time(){
+    try{
+        // 마지막 리스트 갱신 시간 읽어오기
+        var GM_cached_time_list = await nomo_common.GM_cache_time_read("GM_cache_stream_list");
+        var GM_cached_time_twitch = await nomo_common.GM_cache_time_read("GM_cache_twitch_api");
+
+        // 리스트 갱신 시간 Max 값 찾기
+        var GM_cached_time_max_arr = [];
+        var GM_cached_time_max;
+        if($.isNumeric(GM_cached_time_list)){
+            GM_cached_time_max_arr.push(GM_cached_time_list);
+        }
+        if($.isNumeric(GM_cached_time_twitch)){
+            GM_cached_time_max_arr.push(GM_cached_time_twitch);
+        }
+        if(GM_cached_time_max_arr.length !== 0){
+            GM_cached_time_max = Math.max.apply(null, GM_cached_time_max_arr);
+        }
+        if($.isNumeric(GM_cached_time_twitch)){
+            nomo_global.list_update_time = new Date(GM_cached_time_max);
+        }
+        else{
+            nomo_global.list_update_time = undefined;
+        }
+    }
+    catch(e){
+        ADD_DEBUG("error from function get_last_list_update_time()", e);
+        nomo_global.list_update_time = undefined;
     }
 }

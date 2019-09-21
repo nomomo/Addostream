@@ -47,7 +47,15 @@ var nomo_global_manager = async function(global){
         GLOBAL_CHAT_CONTENT_DIV: undefined,
 
         // 우하하 채팅
-        uhaha_chat_auto_remove_counter: 0
+        uhaha_chat_auto_remove_counter: 0,
+
+        // night mode
+        night_mode: false,
+        night_mode_transition: undefined,
+        night_mode_on: undefined,
+        night_mode_end: undefined,
+        night_mode_black: false,
+        night_mode_direct_call: false
     };
 
     var init = async function(){

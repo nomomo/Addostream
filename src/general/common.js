@@ -11,6 +11,7 @@ export const ADD_get_page_type = function (){
     var keyword_setting = document_url.indexOf("#/addostream");
     var keyword_setting_nw = document_url.indexOf("dostream.com/addostream");
     var insagirl = document_url.indexOf("insagirl-toto.appspot.com/hrm/");
+    var twitch_player = document_url.indexOf("player.twitch.tv");
     if(keyword_uchat !== -1){
         return nomo_const.C_UCHAT;
     }
@@ -25,6 +26,9 @@ export const ADD_get_page_type = function (){
     }
     else if(insagirl !== -1){
         return nomo_const.C_INSAGIRL;
+    }
+    else if(twitch_player !== -1){
+        return nomo_const.C_EMBEDED_TWITCH;
     }
     else{
         return nomo_const.C_MAIN;
@@ -53,16 +57,16 @@ export async function GM_cache(name, time_ms, readonly){
     var currentDate = Number(new Date());
     var cachedDate = Number(await GM.getValue(name, currentDate - time_ms*2.0));
     var is = currentDate - cachedDate > time_ms;
-    ADD_DEBUG(name, (currentDate - cachedDate)/1000, ">", time_ms/1000 , "?", is);
+    // ADD_DEBUG(name, (currentDate - cachedDate)/1000, ">", time_ms/1000 , "?", is);
     if(is){
-        ADD_DEBUG(name, "캐시 갱신됨");
+        // ADD_DEBUG(name, "캐시 갱신됨");
         if(readonly === undefined || !readonly){
             await GM.setValue(name, currentDate);
         }
         return true;
     }
     else{
-        ADD_DEBUG(name, "캐시 갱신하지 않음");
+        // ADD_DEBUG(name, "캐시 갱신하지 않음");
         return false;
     }
 }
@@ -70,9 +74,13 @@ export async function GM_cache_read(name, time_ms){
     return await GM_cache(name, time_ms, READ_ONLY);
 }
 export async function GM_cache_write(name){
-    ADD_DEBUG(name, "작성됨");
+    // ADD_DEBUG(name, "작성됨");
     var currentDate = Number(new Date());
     await GM.setValue(name, currentDate);
+}
+export async function GM_cache_time_read(name){
+    var retn_var = await GM.getValue(name);
+    return $.isNumeric(retn_var) ? retn_var : undefined;
 }
 
 export function reloadMain(){

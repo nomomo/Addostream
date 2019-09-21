@@ -99,7 +99,7 @@ async function twitch_api_get_user_ids(ch_ids_array) {
     return return_arr;
 }
 
-export async function twitch_api() {
+export async function twitch_api(option) {
     if (!ADD_config.alarm) {
         return false;
     }
@@ -236,7 +236,7 @@ export async function twitch_api() {
 
                     // 메인일 경우 리로드
                     ADD_DEBUG("Twitch API - API 호출에 의하여 메인 리로드 됨");
-                    if (ADD_config.alarm_main_reload) {
+                    if (ADD_config.alarm_main_reload && nomo_global.PAGE === nomo_const.C_MAIN) {
                         nomo_common.reloadMain();
                     }
 
@@ -250,6 +250,8 @@ export async function twitch_api() {
                     */
 
                     nomo_common.GM_cache_write("GM_cache_twitch_api");
+                    nomo_global.list_update_time = new Date();
+                    ADD_DEBUG("리스트 업데이트 시간 갱신 - 트위치 api:", nomo_global.list_update_time);
                 })
                 .fail(function (error) {
                     ADD_DEBUG("Twitch API - Request failed", error);
@@ -264,10 +266,14 @@ export async function twitch_api() {
             // 쿠키 존재 시 변수로 쓴다.
             nomo_global.twitch_api_cookie = JSON.parse($.cookie("twitch_api_cookie"));
         }
-        // 메인일 경우 리로드
-        ADD_DEBUG("Twitch API - API 호출 없이 메인 리로드 됨");
-        if (ADD_config.alarm_main_reload && nomo_global.PAGE === nomo_const.C_MAIN) {
-            nomo_common.reloadMain();
+
+        // API 업데이트 하지 않는 경우
+        // twitch_api_call_interval 에 의해 호출되는 경우가 아니면 메인 리로드 하지 않도록 함
+        if(option !== undefined && option.main_refresh !== undefined && option.main_refresh){
+            ADD_DEBUG("Twitch API - API 호출 없이 메인 리로드 됨");
+            if (ADD_config.alarm_main_reload && nomo_global.PAGE === nomo_const.C_MAIN) {
+                nomo_common.reloadMain();
+            }
         }
     }
 }
@@ -293,6 +299,6 @@ export async function twitch_api_call_interval() {
 
     nomo_global.ADD_API_SET_INTERVAL = setInterval(async function () {
         ADD_DEBUG("twitch_api_call_interval 에 의해 twitch_api() 함수 호출됨");
-        await twitch_api();
+        await twitch_api({"main_refresh":true});
     }, api_call_interval);
 }

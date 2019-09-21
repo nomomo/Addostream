@@ -130,110 +130,7 @@ async function writeMemoLogtolayout(){
         $(".ADD_under_dev").hide();
     }
 
-    // 취소 버튼 클릭 시
-    $memo_container
-        .on("click", "span.cancel", function(){
-            writeMemoLogtolayout($memo_container);
-        })
-        // 삭제 버튼 클릭 시
-        .on("click", "span.del", async function(){
-            var $this = $(this);
-            var index = $this.attr("memo_index");
-            var nick = chat_manager_data[index].nick;
-
-            var promptAns = confirm(nick+"에 대한 메모를 정말 삭제하시겠습니까?");
-            if(!promptAns){
-                return;
-            }
-
-            if(await chat_manager.deleteData(nick)){
-                ADD_DEBUG(nick+"에 대한 메모를 성공적으로 삭제 완료");
-                //alert("삭제 되었습니다.");
-            }
-            else{
-                ADD_DEBUG(nick+"에 대한 메모를 삭제 실패");
-            }
-
-            // 다시 읽기
-            chat_manager_data = await chat_manager.reloadData();
-
-            // 다시 쓰기
-            writeMemoLogtolayout($memo_container);
-        })
-        // 저장 버튼 클릭 시
-        .on("click", "span.save", async function(){
-            var data = chat_manager_data;
-            var $this = $(this);
-            var $tr = $this.closest("tr");
-            var $td = $tr.find("td");
-            var index = $this.attr("memo_index");
-            var temp_obj = {};
-            if($this.hasClass("new")){
-                temp_obj = chat_manager.getInitObj();
-            }
-            else{
-                temp_obj = data[index];
-            }
-            //temp_obj.modified_date = Number(new Date());
-            $td.each(function(){
-                var $that = $(this);
-                var temp_class = $that.attr("class").replace("ADD_under_dev","").replace(/\s/g,"");
-                if($that.hasClass("detail_content")){
-                    temp_obj[temp_class] = $that.find("textarea").val();
-                }
-                else if($that.hasClass("display_name") || $that.hasClass("color") || ($this.hasClass("new") && $that.hasClass("nick")) ){
-                    temp_obj[temp_class] = $that.find("input").val();
-                }
-                else if($that.hasClass("isShowDelMsg") || $that.hasClass("isBlock")){
-                    temp_obj[temp_class] = $that.find("input").is(":checked");
-                }
-                else{
-                    return true;
-                }
-            });
-            if(temp_obj.nick === ""){
-                alert("닉네임은 반드시 입력되어야 합니다.");
-                return;
-            }
-
-            var confirmValText = "정말 저장하시겠습니까?\n"
-                + "닉네임: " + temp_obj.nick + "\n"
-                + "표시명: " + temp_obj.display_name + "\n";
-
-            if(ADD_config.under_dev){
-                confirmValText = confirmValText
-                + "상세 내용: " + temp_obj.detail_content + "\n"
-                + "표시 색상: " + temp_obj.color + "\n";
-            }
-            confirmValText = confirmValText
-                + "채팅 차단 여부: " + temp_obj.isBlock + "\n"
-                + "차단시 표시 여부: " + temp_obj.isShowDelMsg;
-
-            var confirmVal = confirm(confirmValText);
-            if(confirmVal){
-                // 중복된 닉네임이 존재하는 경우
-                if($this.hasClass("new") && chat_manager.indexFromData(temp_obj.nick) !== -1){
-                    if(!confirm("닉네임 \"" +temp_obj.nick+"\"에 대한 메모가 이미 존재합니다. 덮어쓰시겠습니까?")){
-                        alert("취소 되었습니다.");
-                        return;
-                    }
-                }
-
-                // 저장하기
-                await chat_manager.addandSaveData(temp_obj);
-
-                // 다시 읽기
-                chat_manager_data = await chat_manager.reloadData();
-
-                alert("저장 되었습니다.");
-
-                // 다시 쓰기
-                writeMemoLogtolayout($memo_container);
-            }
-            else{
-                alert("취소 되었습니다.");
-            }
-        });
+    
 }
 
 
@@ -242,49 +139,152 @@ async function writeMemoLogtolayout(){
 ////////////////////////////////////////////////////////////////////
 
 // 수정 버튼 클릭 시
-$(document).on("click", "span.mod", function(){
-    var data = chat_manager_data;
-    var $this = $(this);
-    $this.hide();
-    var $tr = $this.closest("tr");
-    $tr.find("span.save").show();
-    $tr.find("span.cancel").show();
-    var $td = $tr.find("td");
-    var index = $this.attr("memo_index");
-    var temp_obj = {};
-    var placeholder = chat_manager.getPlaceholder();
-    if($this.hasClass("new")){
-        $tr.find(".index").text(index);
-        temp_obj = chat_manager.getInitObj();
-    }
-    else{
-        temp_obj = data[index];
-    }
-
-    $td.each(function(){
-        var $that = $(this);
-        var temp_class = $that.attr("class").replace("ADD_under_dev","").replace(/\s/g,"");
-        ADD_DEBUG("temp_class", temp_class);
-        if($that.hasClass("detail_content")){
-            $that.html(`
-                <textarea style="width:230px;height:60px;margin:0;" placeholder="`+placeholder[temp_class]+"\">"+temp_obj[temp_class]+`</textarea>
-            `);
-        }
-        else if($that.hasClass("display_name") || ($this.hasClass("new") && $that.hasClass("nick")) || $that.hasClass("color") ){
-            $that.html(`
-                <div style="">
-                    <input autocomplete="off" style="width:120px;margin:0;" type="text" value="`+temp_obj[temp_class]+"\" placeholder=\""+placeholder[temp_class]+`" />
-                </div>
-            `);
-        }
-        else if($that.hasClass("isShowDelMsg") || $that.hasClass("isBlock")){
-            $that.html(`
-                <input style="width:20px;height:20px;" type="checkbox" />
-            `);
-            $that.find("input").prop("checked",temp_obj[temp_class]);
+$(document)
+    .on("click", "span.mod", function(){
+        var data = chat_manager_data;
+        var $this = $(this);
+        $this.hide();
+        var $tr = $this.closest("tr");
+        $tr.find("span.save").show();
+        $tr.find("span.cancel").show();
+        var $td = $tr.find("td");
+        var index = $this.attr("memo_index");
+        var temp_obj = {};
+        var placeholder = chat_manager.getPlaceholder();
+        if($this.hasClass("new")){
+            $tr.find(".index").text(index);
+            temp_obj = chat_manager.getInitObj();
         }
         else{
-            return true;
+            temp_obj = data[index];
+        }
+
+        $td.each(function(){
+            var $that = $(this);
+            var temp_class = $that.attr("class").replace("ADD_under_dev","").replace(/\s/g,"");
+            ADD_DEBUG("temp_class", temp_class);
+            if($that.hasClass("detail_content")){
+                $that.html(`
+                    <textarea style="width:230px;height:60px;margin:0;" placeholder="`+placeholder[temp_class]+"\">"+temp_obj[temp_class]+`</textarea>
+                `);
+            }
+            else if($that.hasClass("display_name") || ($this.hasClass("new") && $that.hasClass("nick")) || $that.hasClass("color") ){
+                $that.html(`
+                    <div style="">
+                        <input autocomplete="off" style="width:120px;margin:0;" type="text" value="`+temp_obj[temp_class]+"\" placeholder=\""+placeholder[temp_class]+`" />
+                    </div>
+                `);
+            }
+            else if($that.hasClass("isShowDelMsg") || $that.hasClass("isBlock")){
+                $that.html(`
+                    <input style="width:20px;height:20px;" type="checkbox" />
+                `);
+                $that.find("input").prop("checked",temp_obj[temp_class]);
+            }
+            else{
+                return true;
+            }
+        });
+    })
+    .on("click", "span.cancel", function(){
+        writeMemoLogtolayout($memo_container);
+    })
+    // 삭제 버튼 클릭 시
+    .on("click", "span.del", async function(){
+        var $this = $(this);
+        var index = $this.attr("memo_index");
+        var nick = chat_manager_data[index].nick;
+
+        var promptAns = confirm(nick+"에 대한 메모를 정말 삭제하시겠습니까?");
+        if(!promptAns){
+            return;
+        }
+
+        if(await chat_manager.deleteData(nick)){
+            ADD_DEBUG(nick+"에 대한 메모를 성공적으로 삭제 완료");
+            //alert("삭제 되었습니다.");
+        }
+        else{
+            ADD_DEBUG(nick+"에 대한 메모를 삭제 실패");
+        }
+
+        // 다시 읽기
+        chat_manager_data = await chat_manager.reloadData();
+
+        // 다시 쓰기
+        writeMemoLogtolayout($memo_container);
+    })
+    // 저장 버튼 클릭 시
+    .on("click", "span.save", async function(){
+        var data = chat_manager_data;
+        var $this = $(this);
+        var $tr = $this.closest("tr");
+        var $td = $tr.find("td");
+        var index = $this.attr("memo_index");
+        var temp_obj = {};
+        if($this.hasClass("new")){
+            temp_obj = chat_manager.getInitObj();
+        }
+        else{
+            temp_obj = data[index];
+        }
+        //temp_obj.modified_date = Number(new Date());
+        $td.each(function(){
+            var $that = $(this);
+            var temp_class = $that.attr("class").replace("ADD_under_dev","").replace(/\s/g,"");
+            if($that.hasClass("detail_content")){
+                temp_obj[temp_class] = $that.find("textarea").val();
+            }
+            else if($that.hasClass("display_name") || $that.hasClass("color") || ($this.hasClass("new") && $that.hasClass("nick")) ){
+                temp_obj[temp_class] = $that.find("input").val();
+            }
+            else if($that.hasClass("isShowDelMsg") || $that.hasClass("isBlock")){
+                temp_obj[temp_class] = $that.find("input").is(":checked");
+            }
+            else{
+                return true;
+            }
+        });
+        if(temp_obj.nick === ""){
+            alert("닉네임은 반드시 입력되어야 합니다.");
+            return;
+        }
+
+        var confirmValText = "정말 저장하시겠습니까?\n"
+            + "닉네임: " + temp_obj.nick + "\n"
+            + "표시명: " + temp_obj.display_name + "\n";
+
+        if(ADD_config.under_dev){
+            confirmValText = confirmValText
+            + "상세 내용: " + temp_obj.detail_content + "\n"
+            + "표시 색상: " + temp_obj.color + "\n";
+        }
+        confirmValText = confirmValText
+            + "채팅 차단 여부: " + temp_obj.isBlock + "\n"
+            + "차단시 표시 여부: " + temp_obj.isShowDelMsg;
+
+        var confirmVal = confirm(confirmValText);
+        if(confirmVal){
+            // 중복된 닉네임이 존재하는 경우
+            if($this.hasClass("new") && chat_manager.indexFromData(temp_obj.nick) !== -1){
+                if(!confirm("닉네임 \"" +temp_obj.nick+"\"에 대한 메모가 이미 존재합니다. 덮어쓰시겠습니까?")){
+                    alert("취소 되었습니다.");
+                    return;
+                }
+            }
+
+            // 저장하기
+            await chat_manager.addandSaveData(temp_obj);
+
+            // 다시 읽기
+            chat_manager_data = await chat_manager.reloadData();
+
+            alert("저장 되었습니다.");
+
+            // 다시 쓰기
+            writeMemoLogtolayout($memo_container);
+        }
+        else{
+            alert("취소 되었습니다.");
         }
     });
-});

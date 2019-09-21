@@ -8,6 +8,7 @@ import {ADD_send_location_layout} from "chat/send_coord.js";
 import {versionStrtoNum} from "settings/version.js";
 import {memoLoglayoutInit} from "chat/simple_memo_log.js";
 import {blocked_chat_layout} from "general/menu_layout.js";
+import {chat_tooltip_toggle} from "chat/control.js";
 import {uhaha_chat_delete_hide} from "chat/control_uhaha.js";
 
 export var GM_setting = (function($, global, document){ // 
@@ -30,6 +31,9 @@ export var GM_setting = (function($, global, document){ //
         theme_self_bold_chat : { under_dev:true, category:"theme", depth:2, type: "checkbox", value: false, title:"자신의 채팅을 굵게 표시", desc:"", change:function(){if(nomo_common.ADD_get_page_type() === nomo_const.C_UCHAT){nomo_theme.ADD_theme();}} },
         theme_font_size : { category:"theme", depth:2, type: "text", value: 1.0, valid:"number", min_value:0.1, max_value:10, title:"채팅 글씨 크기 조절(배수)", desc:"(기본값: 1.0)", change:function(){if(nomo_common.ADD_get_page_type() === nomo_const.C_UCHAT){nomo_theme.ADD_theme();}} },
         theme_font_custom : { category:"theme", depth:2, type: "radio", value: "default", radio: {default: {title: "기본", value:"default"}, NotoSanskr: {title: "Noto Sans KR", value:"NotoSanskr"}}, title:"폰트 변경", desc:"일부 OS, 브라우저에서 적용되지 않을 수 있음", change:function(){nomo_theme.ADD_theme();} },
+        theme_night_mode : { under_dev:true, category:"theme", depth:2, type: "checkbox", value: "default", title:"[실험실] 야간 모드", desc:"지정된 시간에 테마를 black 으로 바꿈", change:function(){nomo_theme.ADD_night_mode();}},
+        theme_night_mode_start : { under_dev:true, category:"theme", depth:3, type: "text", value: 0, valid:"number", min_value:0, max_value:24, title:"시작 시간", desc:"0 ~ 24<br />참고) X시 30분의 경우 X.5 처럼 소수점으로 입력", change:function(){nomo_theme.ADD_night_mode();}},
+        theme_night_mode_end : { under_dev:true, category:"theme", depth:3, type: "text", value: 7, valid:"number", min_value:0, max_value:24, title:"종료 시간", desc:"0 ~ 24", change:function(){nomo_theme.ADD_night_mode();}},
 
         insagirl_button : { category:"coord", category_name:"좌표", depth:1, type: "checkbox", value: false, title:"빠른 좌표 보기 활성", desc:"좌표 페이지를 두스트림 내부에서 불러오는 기능을 활성", change:function(){nomo_coord.hrm_layout();} },
         insagirl_block_by_nick : { category:"coord", depth:1, type: "checkbox", value: false, title:"차단한 유저의 좌표 숨기기", desc:"채팅매니저에서 차단한 유저의 좌표를 숨김" },
@@ -148,18 +152,27 @@ export var GM_setting = (function($, global, document){ //
         chat_dobae_timelimit : { under_dev:true, category:"chat", depth:3, type: "text", value: 8, valid:"number", min_value:0, max_value:120, title:"판단 시간 (초)", desc:"지정된 시간 이전에 올라온 채팅에 대해서는<br />도배 여부를 판단하지 않음(기본값:8초)" },
         chat_dobae_block_record : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: true, title:"채팅 차단 로그에 기록", desc:"도배로 판단된 채팅을 채팅 차단 로그에 기록" },
         
-        chat_autoKeyword : { category:"chat", depth:2, type: "checkbox", category_name:"채팅 - 고급", value: false, title:"스트리머 닉네임을 링크로 변환", desc:"스트리머 닉네임 감지 시 자동으로 링크로 변환함" },
+        chat_autoKeyword : { category:"chat", depth:2, type: "checkbox", category_name:"채팅 - 고급", value: true, title:"스트리머 닉네임을 링크로 변환", desc:"스트리머 닉네임 감지 시 자동으로 링크로 변환함" },
         chat_autoKeyword_1char : { disable:true, category:"chat", depth:3, type: "checkbox", value: false, title:"[실험실] 한 글자 별칭도 링크로 변환함", desc:"한 글자 별칭도 링크로 변환함" },
         chat_url_decode : { category:"chat", depth:2, type: "checkbox", value: true, title:"한글 URL을 구분 가능하도록 변경", desc:"채팅 내에서 유니코드 형태의 URL 링크 감지 시,<br />내용을 알아볼 수 있도록 표시<br />예) <a href='https://namu.wiki/w/%ED%92%8D%EC%9B%94%EB%9F%89' target='_blank'>https://namu.wiki/w/%ED%92%8D%EC%9B%94%EB%9F%89</a> → <a href='https://namu.wiki/w/%ED%92%8D%EC%9B%94%EB%9F%89' target='_blank'>https://namu.wiki/w/풍월량</a>" },
         sys_meg : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: true, title:"작동 상태 알림", desc:"애드온의 작동 상태를 채팅창에 메시지로 알림" },
         chat_nick_colorize : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: false, title:"닉네임 색상화", desc:"채팅 닉네임에 임의의 색상을 적용" },
         chat_unicode_err_replace : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: true, title:"� 문자를 공백으로 변경", desc:"텍스트 인코딩 문제 발생 시 표시되는 � 문자를 공백으로 대체" },
+        chat_tooltip_hide :  { category:"chat", depth:2, type: "checkbox", value: false, title:"채팅창 툴팁 숨김", desc:"채팅 내용에 마우스를 올렸을 때 툴팁이 뜨는 것을 막음", change:function(){if(nomo_common.ADD_get_page_type() === nomo_const.C_UCHAT){chat_tooltip_toggle();}} },
         chat_auto_reload : { disable:true, category:"chat", depth:2, type: "checkbox", value: false, title:"채팅 중지 시 자동 새로고침 설정", desc:"채팅이 중지된 경우,<br />채팅창 상단의 Auto Reload가 설정된 창에서<br />채팅을 자동으로 새로고침 함 (10초 내 최대 5회)" },
 
         uhaha_auto_remove : { under_dev:true, category:"chat", category_name:"채팅 - 고급(우하하)", depth:2, type: "checkbox", value: false, title:"[실험실] 우하하 채팅 자동 싹쓸이", desc:"우하하 채팅창 사용 시 누적 채팅 개수가 일정 개수를 넘으면 자동으로 싹쓸이를 실행하여 채팅이 느려지는 것을 방지.<br /><br />채팅을 맨 위로 스크롤하여 이전 채팅을 불러올 시 이상 동작할 수 있으니 주의하십시오." },
         uhaha_auto_remove_count : { under_dev:true, category:"chat", depth:3, type: "text", value: 1000, valid:"number", min_value:200, max_value:100000, title:"[실험실] 자동 싹쓸이를 실행할 채팅 개수", desc:"(기본값:1000, 범위:200~100000)" },
         uhaha_delete_button_hide : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: false, title:"[실험실] 우하하 채팅 삭제 버튼 숨기기", desc:"우하하 채팅창 사용 시 채팅에 마우스를 올렸을 때 뜨는 삭제 버튼을 숨김", change:function(){uhaha_chat_delete_hide();} },
         uhaha_chat_scroll : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: true, title:"[실험실] 자동스크롤 다시 시작 버튼 생성", desc:"채팅창에서 마우스 스크롤을 위로 올린 경우, 클릭하면 자동스크롤을 재시작 할 수 있는 버튼을 생성" },
+
+        twitch_control : { under_dev:true, category_name:"트위치 플레이어", category:"twitch", depth:1, type: "checkbox", value: false, title:"[실험실] 트위치 플레이어 관련 기능 사용", desc:"" },
+        twitch_start_highest_quality : { under_dev:true, category:"twitch", depth:2, type: "checkbox", value: false, title:"[실험실] 트위치 시청 시 항상 가장 좋은 화질로 시작", desc:"" },
+        twitch_start_unmute : { disable:true, under_dev:true, category:"advanced", depth:2, type: "checkbox", value: false, title:"[실험실] 트위치 시청 시작 시 음소거 하지 않음", desc:"" },
+        twitch_disable_visibilitychange : { under_dev:true, category:"twitch", depth:2, type: "checkbox", value: false, title:"[실험실] 트위치 시청 중 탭 비활성화 시 자동 화질 변경 무시", desc:"" },
+        twitch_error_auto_restart : { under_dev:true, category:"twitch", depth:2, type: "checkbox", value: false, title:"[실험실] 트위치 시청 중 오류 발생 시 자동 재시작", desc:"예) #2000 에러" },
+        // twitch_server_view : { under_dev:true, category:"advanced", depth:2, type: "checkbox", value: false, title:"[실험실] 마지막으로 접속된 트위치 서버 표시", desc:"" },
+        twitch_interacite : { disable:true, category:"advanced", depth:2, type: "checkbox", value: false, title:"반응형 트위치 사용", desc:"" },
 
         broadcaster_mode : { under_dev:true, category:"broadcast", category_name:"방송 모드", depth:1, type: "checkbox", value: false, title:"[실험실] 방송 모드", desc:"채팅창을 방송에 적합한 모드로 변경<br />Xsplit 등에서 스크린 캡쳐 후, 크로마키(기본값 blue)를 이용하여 배경색을 제거할 수 있습니다.", change:function(){if(nomo_common.ADD_get_page_type() === nomo_const.C_UCHAT){nomo_theme.broadcaster_theme_css();}}},
         broadcaster_font_size : { under_dev:true, category:"broadcast", depth:2, type: "text", value: 1.0, valid:"number", min_value:0.1, max_value:10, title:"글씨 크기 조절(배수)", desc:"", change:function(){if(nomo_common.ADD_get_page_type() === nomo_const.C_UCHAT){nomo_theme.broadcaster_theme_css();}} },
@@ -170,8 +183,6 @@ export var GM_setting = (function($, global, document){ //
         broadcater_theme : { under_dev:true, category:"broadcast", depth:2, type: "radio", value: "box", title:"테마", desc:"", radio: {box: {title: "Box", value:"box"}, twitch: {title: "Twitch", value:"twitch"}, simple: {title: "Simple", value:"simple"} }, change:function(){if(nomo_common.ADD_get_page_type() === nomo_const.C_UCHAT){nomo_theme.broadcaster_theme_css();}}},
 
         under_dev : { category:"advanced", category_name:"고급", depth:1, type: "checkbox", value: false, title:"실험실 기능 및 고급 기능 설정", desc:"실험 중인 기능 및 고급 기능을 직접 설정" },
-        twitch_interacite : { disable:true, category:"advanced", depth:1, type: "checkbox", value: false, title:"반응형 트위치 사용", desc:"" },
-        twitch_interacite_unmute : { disable:true, category:"advanced", depth:2, type: "checkbox", value: true, title:"시작 시 음소거 하지 않음", desc:"" },
         popup_player : { under_dev:true, category:"advanced", depth:1, type: "checkbox", value: false, title:"[실험실] 시청 중 이동 시 팝업 플레이어 사용", desc:"" },
         chat_sword : { disable:true, category:"advanced", depth:1, type: "checkbox", value: false, title:"관리자 진은검 아이콘 달기", desc:"" }
     };

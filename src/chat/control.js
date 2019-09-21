@@ -225,6 +225,10 @@ a.autokeyword:after, a.autokeyword:after{
     border-radius: 7px;
     background-color: powderblue;
 }
+
+body.tooltip_hide p.tooltip {
+    display:none !important;
+}
 `;
 
 // 채팅창에서 문자열 탐지, 이벤트 bind, API 함수 호출 동작 실행
@@ -270,6 +274,7 @@ export async function ADD_chatting_arrive(){
 
             chatDoeEvntFunc(nomo_global.$GLOBAL_IFRAME_DOCUMENT);
 
+            //////////////////////////////////////////////////////////////////////////////////////////
             // 채팅창 생성될 때 노티하기
             nomo_global.$GLOBAL_IFRAME_DOCUMENT.one("DOMNodeInserted", "div.content", async function (){
                 // 채팅 엘리먼트 저장
@@ -277,6 +282,7 @@ export async function ADD_chatting_arrive(){
 
                 // 테마 적용
                 nomo_theme.ADD_theme();
+                nomo_theme.ADD_night_mode({message:true});
 
                 // head에 CSS 추가
                 nomo_theme.broadcaster_theme_css();
@@ -323,6 +329,14 @@ export async function ADD_chatting_arrive(){
 
                 // 자동 새로고침 layout 생성
                 ADD_chat_auto_reload.layout();
+
+                // 툴팁 숨기기 토글
+                chat_tooltip_toggle();
+
+                // 스크롤 시 이벤트
+                // nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".content").on("scroll", function(e){
+                //     ADD_DEBUG("scrolled", e);
+                // });
             });
 
 
@@ -466,9 +480,10 @@ export async function ADD_chatting_arrive(){
                     if (event.type == "mousewheel"){
                         scroll_val = event.originalEvent.wheelDelta;
                     }
-                    else if (event.type == "wheel"){
+                    else if (event.type == "wheel" || event.type == "scroll"){
                         scroll_val = event.originalEvent.deltaY * (-1);
                     }
+                    // ADD_DEBUG("scroll_val", scroll_val);
                     if (scroll_val >= 0) {
                         // 세로 스크롤바가 있을 경우 처리
                         if( $(this).get(0).scrollHeight > $(this).innerHeight() ){  //find("div.content").first(). find("div.content").
@@ -534,6 +549,7 @@ export async function ADD_chatting_arrive(){
                         var scrollTop = $(this)[0].scrollTop;
                         var height = $(this).height();
 
+                        // ADD_DEBUG(scrollHeight - scrollTop - height, ADD_config.chat_scroll_down_min);
                         if(scrollHeight - scrollTop - height <= ADD_config.chat_scroll_down_min){
                             nomo_global.isGoScrollDown = true;
                             goScrollDown();
@@ -1447,31 +1463,32 @@ async function chatElemControl($line){
         if(ADD_imgur_match !== null){
             // 로컬 변수 선언
             ADD_imgur_id = ADD_imgur_match[3];
+            if(ADD_imgur_id !== "undefined"){
+                // 이미지 type 체크
+                switch(ADD_imgur_match[2]){
+                case undefined:
+                    // a/ 에 대한 구문이 없는 경우 이미지임
+                    ADD_imgur_type = 0;
+                    break;
+                case "a/":
+                    // a/ 에 대한 구문이 있는 경우 앨범임
+                    ADD_imgur_type = 1;
+                    break;
+                case "gallery/":
+                    // 갤러리
+                    ADD_imgur_type = 2;
+                    break;
+                default:
+                    // 여기까지 오면 안 된다.
+                    ADD_imgur_type = 10;
+                    break;
+                }
 
-            // 이미지 type 체크
-            switch(ADD_imgur_match[2]){
-            case undefined:
-                // a/ 에 대한 구문이 없는 경우 이미지임
-                ADD_imgur_type = 0;
-                break;
-            case "a/":
-                // a/ 에 대한 구문이 있는 경우 앨범임
-                ADD_imgur_type = 1;
-                break;
-            case "gallery/":
-                // 갤러리
-                ADD_imgur_type = 2;
-                break;
-            default:
-                // 여기까지 오면 안 된다.
-                ADD_imgur_type = 10;
-                break;
+                // imgur api 호출
+                image_found = true;
+                ADD_DEBUG("ADD_imgur_id = "+ADD_imgur_id+"  ADD_imgur_type = "+ADD_imgur_type);
+                getImgurData($line, ADD_imgur_id, ADD_imgur_type);
             }
-
-            // imgur api 호출
-            image_found = true;
-            ADD_DEBUG("ADD_imgur_id = "+ADD_imgur_id+"  ADD_imgur_type = "+ADD_imgur_type);
-            getImgurData($line, ADD_imgur_id, ADD_imgur_type);
         }
     }
 
@@ -1711,6 +1728,15 @@ export function isVideo(target_url){
         return true;
     }
     return false;
+}
+
+export function chat_tooltip_toggle(){
+    if(ADD_config.chat_tooltip_hide){
+        nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("body").addClass("tooltip_hide");
+    }
+    else{
+        nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("body").removeClass("tooltip_hide");
+    }
 }
 
 // Imgur API 접근하여 이미지 정보 가져옴

@@ -1,6 +1,7 @@
-import nomo_const from "./const.js";
-import * as nomo_common from "./common.js";
-import {ADD_DEBUG} from "../libs/nomo-utils.js";
+import nomo_const from "general/const.js";
+import * as nomo_common from "general/common.js";
+import {ADD_DEBUG} from "libs/nomo-utils.js";
+import {ADD_send_sys_msg} from "chat/send_message.js";
 
 export function ADD_basic_style(){
     GM_addStyle( //css
@@ -420,6 +421,13 @@ body.leftchat .chat-btns button.chat-close{
 body.leftchat .stream_zoomout{
     left:unset !important;
     right:30px;
+}
+
+body.night_mode_transition, body.night_mode_transition *{
+    -webkit-transition: background-image 1s, background 1s, background-color 1s, border-color 1s, color 1s ease-out !important;
+    transition: background-image 1s, background 1s, background-color 1s, border-color 1s, color 1s ease-out !important;
+    -webkit-transition-delay: 0;
+    transition-delay: 0;
 }
 `);
 
@@ -1138,5 +1146,218 @@ export function broadcaster_theme_css(){
             `+temp_theme_txt+`
             </style>
         `);
+    }
+}
+
+export async function ADD_night_mode(options){
+    var is_message = false;
+    if(options !== undefined && options.message !== undefined){
+        is_message = options.message;
+    }
+
+    // 페이지 로딩 후 최소 10초가 지나야 transition 효과가 발동된다.
+    setTimeout(function(){
+        nomo_global.night_mode_direct_call = true;
+    },10000);
+
+    var night_mode_finish = function(){
+        clearTimeout(nomo_global.night_mode_on);
+        clearTimeout(nomo_global.night_mode_end);
+        ADD_theme();
+        nomo_global.night_mode = false;
+    };
+
+    if(!ADD_config.theme_night_mode){
+        if(nomo_global.night_mode){
+            night_mode_finish();
+        }
+        return;
+    }
+    // 목표 시간 === 종료 시간인 경우 리턴
+    // 서울 지역 일출, 일몰 시간 가져오기
+    // https://api.sunrise-sunset.org/json?lat=37.532600&lng=127.024612&formatted=0        
+    // Parameters
+    // lat (float): Latitude in decimal degrees. Required.
+    // lng (float): Longitude in decimal degrees. Required.
+    // date (string): Date in YYYY-MM-DD format. Also accepts other date formats and even relative date formats. If not present, date defaults to current date. Optional.
+    // callback (string): Callback function name for JSONP response. Optional.
+    // formatted (integer): 0 or 1 (1 is default). Time values in response will be expressed following ISO 8601 and day_length will be expressed in seconds. Optional.
+
+    // 참고
+    // https://github.com/krestaino/themer.js
+    // https://github.com/krestaino/themer.js/blob/master/src/index.js
+
+    // var latitude, longitude;
+
+    // var getLocation = () => {
+    //     return new Promise((resolve, reject) => {
+    //         navigator.geolocation.getCurrentPosition(resolve, reject);
+    //     });
+    // };
+
+    // const {
+    //     coords: { latitude, longitude }
+    // } = await getLocation();
+
+    // import SunCalc from "suncalc";
+    // getSunriseSunset = (latitude, longitude) => {
+    //     const date = new Date();
+    //     const { sunrise, sunset } = SunCalc.getTimes(date, latitude, longitude);
+    
+    //     date < sunrise || date > sunset
+    //       ? this.setTheme(this.dark)
+    //       : this.setTheme(this.light);
+    // };
+
+    var start = ADD_config.theme_night_mode_start;
+    var end = ADD_config.theme_night_mode_end;
+    if(Number(start) === 24){
+        start = 0;
+    }
+    if(Number(end) === 24){
+        end = 0;
+    }
+
+    // 숫자 아니거나 두 숫자가 같은 경우 리턴
+    if(!$.isNumeric(start) || !$.isNumeric(end) || start === end ){
+        night_mode_finish();
+        return;
+    }
+    else{
+        start = Number(start);
+        end = Number(end);
+    }
+
+    var gap = end > start ? end - start : end + 24 - start;
+    var gap_n = gap*60*60*1000; // ms
+    ADD_DEBUG("야간 모드 시작, 종료, 간격", start, end, gap);
+
+    // 시간, 분 구하기
+    var gethm = function(time){
+        var local_time = Number(time).toFixed(3);
+        var hm = local_time.split(".");
+        hm[0] = Number(hm[0]);
+        hm[1] = Math.round(Number(hm[1]) / 100 * 60);
+        return hm;
+    };
+
+    var start_h, start_m, end_h, end_m;
+    [start_h, start_m] = gethm(start);
+    [end_h, end_m] = gethm(end);
+
+    // 시작, 끝 같게 반올림 될 경우 리턴
+    if(start_h === end_h && start_m === end_m){
+        night_mode_finish();
+        return;
+    }
+
+    // 현재 시간 구한다.
+    var now = new Date();
+    
+    // 오늘 기준 시작 시간 구한다.
+    var today = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        start_h,
+        start_m,
+        0
+    );
+    // 어제 기준 시작 시간 구한다.
+    var yesterday = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate() - 1,
+        start_h,
+        start_m,
+        0
+    );
+    // 내일 기준
+    var tomorrow = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate() + 1,
+        start_h,
+        start_m,
+        0
+    );
+
+    // 야간 모드 트랜지션
+    var night_mode_transition = function(){
+        // if(nomo_global.night_mode_direct_call){
+        //     $("body").addClass("night_mode_transition");
+
+        //     clearTimeout(nomo_global.night_mode_transition);
+        //     nomo_global.night_mode_transition = setTimeout(function(){
+        //         $("body").removeClass("night_mode_transition");
+        //     },5000);
+        // }
+    };
+    // 야간 모드 종료
+    var night_mode_off = function(){
+        if(is_message){
+            ADD_send_sys_msg("야간 모드가 꺼졌습니다.");
+        }
+
+        night_mode_transition();
+        ADD_theme();
+        nomo_global.night_mode_black = false;
+    };
+    // 야간 모드 시작
+    var night_mode_on = function(end_time){
+        if(ADD_config.theme_night_mode){
+            ADD_DEBUG("야간 모드 시작");
+            nomo_global.night_mode_black = true;
+            if(nomo_global.PAGE == nomo_const.C_UCHAT && is_message){
+                ADD_send_sys_msg("야간 모드가 켜졌습니다.");
+            }
+            night_mode_transition();
+            ADD_theme("black");
+        }
+        clearTimeout(nomo_global.night_mode_end);
+        nomo_global.night_mode_end = setTimeout(function(){
+            ADD_DEBUG("야간 모드 종료");
+            night_mode_off();
+
+            // 재시작;
+            ADD_night_mode();
+        },end_time);
+    };
+
+    for (var event_time of [Number(yesterday), Number(today), Number(tomorrow)]) {
+        var now_n = Number(now);
+        // 현재 시간 > 예약 시간?
+        if(now_n > event_time){
+            // 현재 시간<예약 시간 + gap?
+            ADD_DEBUG(now < event_time + gap_n, now_n , event_time , gap_n);
+            if(now_n < event_time + gap_n){
+                // 바로 켜기
+                ADD_DEBUG("야간모드 바로 켜짐");
+                night_mode_on(event_time + gap_n - now_n);
+
+                nomo_global.night_mode = true;
+                return;
+            }
+            else{
+                continue;
+            }
+        }
+        else{
+            // 예약 걸기
+            ADD_DEBUG("야간 모드 예약", (event_time - now_n)/(60*60*1000) , "시간 후");
+
+            // 이전에 켜진 경우 테마 초기화
+            if(nomo_global.night_mode && nomo_global.night_mode_black){
+                night_mode_off();
+            }
+
+            clearTimeout(nomo_global.night_mode_on);
+            nomo_global.night_mode_on = setTimeout(function(){
+                night_mode_on(gap_n);
+            },event_time - now_n);
+
+            nomo_global.night_mode = true;
+            return;
+        }
     }
 }

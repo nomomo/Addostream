@@ -8,7 +8,7 @@ import nomo_global_manager from "general/global.js";
 import * as utils from "libs/nomo-utils.js";
 const ADD_DEBUG = utils.ADD_DEBUG;
 
-//import ADD_migration from "./settings/migration.js";
+import ADD_migration from "./settings/migration.js";
 import {GM_setting} from "settings/main.js";
 
 import nomo_const from "general/const.js";
@@ -38,7 +38,7 @@ import {ADD_popup_player} from "general/popup_player.js";
     await nomo_global_manager(window);
     
     // Migration
-    // ADD_migration();
+    ADD_migration();
 
     // 설정 불러오기
     window.GM_setting = GM_setting;
@@ -56,6 +56,7 @@ import {ADD_popup_player} from "general/popup_player.js";
         await twitch_api_call_interval();
 
         $(document).ready(function(){
+            window.chat_manager_main = chat_manager;
             // Hijacking
             // Firefox 의 경우
             if((web_browser === "firefox") && (typeof exportFunction === "function")){
@@ -74,6 +75,7 @@ import {ADD_popup_player} from "general/popup_player.js";
 
             // 테마 적용
             nomo_theme.ADD_theme();
+            nomo_theme.ADD_night_mode({message:false});
 
             // 좌측 채팅 적용
             nomo_theme.ADD_leftchat_change();
@@ -121,7 +123,6 @@ import {ADD_popup_player} from "general/popup_player.js";
             // History layout
             ADD_channel_history_run();
 
-            window.chat_manager_main = chat_manager;
 
             ADD_page_change(jQuery, window, document);
 
@@ -148,6 +149,9 @@ import {ADD_popup_player} from "general/popup_player.js";
     else if(nomo_global.PAGE == nomo_const.C_UCHAT){
         $(document).ready(function(){
             ADD_DEBUG("DOCUMENT_READY");
+            unsafeWindow.ADD_send_sys_msg = ADD_send_sys_msg;
+            unsafeWindow.chat_manager = chat_manager;
+
             // 두번째 iframe 동작 방지
             if(web_browser === "firefox" && $("u-chat").length === 0){
                 return;
@@ -155,11 +159,10 @@ import {ADD_popup_player} from "general/popup_player.js";
 
             // 테마 적용
             nomo_theme.ADD_theme();
+            nomo_theme.ADD_night_mode({message:false});
 
             ADD_chat_event_binding();
 
-            unsafeWindow.ADD_send_sys_msg = ADD_send_sys_msg;
-            unsafeWindow.chat_manager = chat_manager;
         });
     }
     // 상세 설정인 경우
@@ -181,6 +184,70 @@ import {ADD_popup_player} from "general/popup_player.js";
 
             GM_setting.createlayout($("body"));
         });
+    }
+    // 외부 사이트 - EMBEDED TWITCH
+    else if(nomo_global.PAGE === nomo_const.C_EMBEDED_TWITCH){
+        if(ADD_config.twitch_control){
+            $(document).ready(function(){
+                $(document).arrive("div.player-video", {onlyOnce: true, existing: true}, function(){
+                    ADD_DEBUG("EMBEDED_PLAYER", unsafeWindow.player);
+
+                    // 1초 간격으로 player 활성 상태 확인
+                    var is_playing_counter = 0;
+                    var is_playing = false;
+                    var si = setInterval(function(){
+                        if(unsafeWindow.player !== undefined){
+                            is_playing = unsafeWindow.player.isPlaying();
+                        }
+                        ADD_DEBUG("현재 상태:", is_playing);
+                        if(is_playing){
+                            clearInterval(si);
+
+                            // 화질 설정
+                            if(ADD_config.twitch_start_highest_quality){
+                                setTimeout(function(){
+                                    var highest_quality = unsafeWindow.player.getQualities()[1];
+                                    ADD_DEBUG("highest_quality", unsafeWindow.player.getQualities());
+                                    unsafeWindow.player.setQuality(highest_quality.group);
+                                    ADD_DEBUG("최고 화질 설정", highest_quality);
+                                },2000);
+                            }
+            
+                            // 음소거 처리
+                            // if(ADD_config.twitch_start_unmute){
+                            //     setTimeout(function(){
+                            //         unsafeWindow.player.setMuted(false);
+                            //     },2000);
+                            // }
+                        }
+                        else{
+                            is_playing_counter = is_playing_counter + 1;
+                            ADD_DEBUG("1초 후 재시도 합니다. 현재 시도 수:", is_playing_counter);
+
+                            if(is_playing_counter > 10){
+                                ADD_DEBUG("10회 시도에 실패하였습니다");
+                                clearInterval(si);
+                            }
+                        }
+                    },1000);
+        
+                    // 에러 처리
+                    $(document).arrive(".pl-error", function(elem){
+                        var $elem = $(elem);
+                        var errorText = $elem.text();
+                        ADD_DEBUG("pl_error 생성됨", errorText);
+                        if(errorText.indexOf("#")){
+                            $elem.html(errorText + "<br />1초후 자동 새로고침");
+                            setTimeout(function(){
+                                unsafeWindow.player.play();
+                            },1000);
+                            // $("button.player-button").trigger("click");
+                        }
+                    });
+                });
+            });
+        }
+        return;
     }
     // 외부 사이트 - 인사걸
     else if(nomo_global.PAGE === nomo_const.C_INSAGIRL){
