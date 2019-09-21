@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name Addostream
-// @version 1.52.2
+// @version 1.52.3
 // @author Nomo
 // @description 두스트림에 기능을 추가한다.
 // @supportURL https://github.com/nomomo/Addostream/issues
 // @namespace Addostream
 // @include *.dostream.com/*
 // @include *insagirl-toto.appspot.com/hrm/*
+// @include *player.twitch.tv/*
 // @exclude *insagirl-toto.appspot.com/hrm/notfound.html
 // @icon https://raw.githubusercontent.com/nomomo/Addostream/master/images/logo.png
 // @homepageURL https://nomomo.github.io/Addostream/

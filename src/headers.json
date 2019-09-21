@@ -5,7 +5,8 @@
   "description": "두스트림에 기능을 추가한다.",
   "include": [
     "*.dostream.com/*",
-    "*insagirl-toto.appspot.com/hrm/*"
+    "*insagirl-toto.appspot.com/hrm/*",
+    "*player.twitch.tv/*"
   ],
   "exclude": [
     "*insagirl-toto.appspot.com/hrm/notfound.html"
