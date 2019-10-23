@@ -430,7 +430,7 @@ body:not(.leftchat) .stream_chat{
 body.leftchat .stream_chat{
     right:0;
 }
-body:not(.leftchat) #stream{
+body:not(.leftchat) #stream.onstream{
     text-align:right;
 }
 body.leftchat #stream{
