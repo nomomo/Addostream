@@ -683,14 +683,65 @@ export function ADD_basic_layout(){
             var move_url = "";
             if(stream_url !== -1){
                 if(twitch_url !== -1){
-                    move_url = document_url.replace("/twitch/","/multitwitch/");
-                    window.location.href = move_url;
+                    if(ADD_config.playing_chat_iframe && lowercase_document_url.indexOf("&") === -1 && lowercase_document_url.indexOf(",") === -1){
+                        var $stream = $("#stream");
+                        var $stream_chat = $(".stream_chat");
+                        if($stream_chat.length === 0){
+                            // 채팅 넓이 변수 확인
+                            var stream_chat_width = ADD_config.playing_chat_iframe_width;
+                            if(!$.isNumeric(stream_chat_width)){
+                                stream_chat_width = 300;
+                            }
+
+                            // 테마 변수 확인
+                            var stream_chat_theme = "";
+                            switch (ADD_config.playing_chat_iframe_theme) {
+                            case "default":
+                                if(ADD_config.theme === "dark" || ADD_config.theme === "black" || $("body").hasClass("theme-black")){
+                                    stream_chat_theme = "?darkpopout";
+                                }
+                                break;
+                            case "dark":
+                                stream_chat_theme = "?darkpopout";
+                                break;
+                            case "white":
+                                break;
+                            default:
+                                break;
+                            }
+
+                            // header 높이 계산
+                            var $header = $("header");
+                            var header_height;
+                            if($header.length === 1){
+                                header_height = $header.outerHeight();
+                            }
+                            else{
+                                header_height = "45";
+                            }
+                            $stream.find("iframe").css("width", `calc(100% - ${stream_chat_width}px)`);
+                            // leftchat 에 대한 대응은 theme.js 에 추가한 css 를 이용해서 함
+                            $stream_chat = $(`<div class="stream_chat" style="position:absolute;margin-top:${header_height}px;top:0;height:calc(100% - ${header_height}px);"></div>`);
+                            $stream.append($stream_chat);
+                            var $stream_chat_iframe = `<div class="stream_chat_iframe" style="width:${stream_chat_width}px;height:100%;"><iframe src="https://www.twitch.tv/embed/${nomo_global.ADD_now_playing.id}/chat${stream_chat_theme}" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen="allowfullscreen"></iframe></div>`;
+                            // var $stream_chat_iframe = `<div class="stream_chat_iframe" style="width:${stream_chat_width}px;height:100%;"><iframe src="https://www.twitch.tv/${nomo_global.ADD_now_playing.id}/chat${stream_chat_theme}" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen="allowfullscreen"></iframe></div>`;
+                            // var $stream_chat_iframe = `<div class="stream_chat_iframe" style="width:${stream_chat_width}px;height:100%;"><iframe src="https://twitch.tv/chat/embed?channel=${nomo_global.ADD_now_playing.id}${stream_chat_theme}" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen="allowfullscreen"></iframe></div>`;
+                            $stream_chat.empty().append($stream_chat_iframe);
+                        }
+                        else{
+                            $stream_chat.remove();
+                            $stream.find("iframe").css("width", "100%");
+                        }
+                    }
+                    else{
+                        move_url = document_url.replace("/twitch/","/multitwitch/");
+                        window.location.href = move_url;
+                    }
                 }
                 else if(multitwitch_url !== -1){
                     /*
                     var eff_url = document_url.split("/multitwitch/")[1];
                     // 멀티 트위치 하나 이상인 경우
-                    ADD_DEBUG("오케이");
                     if(eff_url.indexOf("&") !== -1){
                         var eff_url_arr = eff_url.split("&");
                         var $multi_window = $(`
@@ -1186,7 +1237,7 @@ export async function blocked_chat_layout(){
                 }
 
                 Blocked_text = Blocked_text
-                    + "<tr><td class='blocked_chat_date' style='max-width:110px;padding-right:15px;white-space:nowrap;overflow:hidden;'>"
+                    + "<tr><td class='blocked_chat_date' style='max-width:130px;padding-right:15px;white-space:nowrap;overflow:hidden;'>"
                     + utils.getTimeStampWithDash(new Date(temp_obj.created), "s")
                     + "</td><td class='blocked_chat_nick' style='max-width:200px;padding-right:15px;text-align:left;white-space:nowrap;overflow:hidden;'>"
                     + temp_obj.nick

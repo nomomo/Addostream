@@ -182,10 +182,21 @@ export function event_hijacking(){
 
 
         if(ADD_config.twitch_control && ADD_config.twitch_disable_visibilitychange){
+            unsafeWindow._addEventListener = unsafeWindow.addEventListener;
+            unsafeWindow.addEventListener = function(a,b,c){
+                if(a === "visibilitychange" || a === "blur" || a === "webkitvisibilitychange"){
+                    ADD_DEBUG("player.twitch.tv window 의 visibilitychange 이벤트 무력화", a, b, c);
+                    return;
+                }
+
+                if(c==undefined)
+                    c=false;
+                this._addEventListener(a,b,c);
+            };
             unsafeWindow.document._addEventListener = unsafeWindow.document.addEventListener;
             unsafeWindow.document.addEventListener = function(a,b,c){
                 if(a === "visibilitychange" || a === "blur" || a === "webkitvisibilitychange"){
-                    ADD_DEBUG("player.twitch.tv 의 visibilitychange 이벤트 무력화", a, b, c);
+                    ADD_DEBUG("player.twitch.tv document 의 visibilitychange 이벤트 무력화", a, b, c);
                     return;
                 }
 

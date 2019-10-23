@@ -1140,7 +1140,7 @@ async function chatElemControl($line){
     }
 
     // 닉네임 색상화
-    if(ADD_config.chat_nick_colorize || (ADD_config.broadcaster_mode && ADD_config.broadcaster_use_nick_color)){
+    if((!ADD_config.broadcaster_mode && ADD_config.chat_nick_colorize) || (ADD_config.broadcaster_mode)){
         if(!$line.find("span.nick").hasClass("colorized")){
             // 닉네임에 따른 고유-랜덤 색 생성
             var temp_color2 = utils.Colors.random(nick);

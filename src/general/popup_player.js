@@ -19,7 +19,7 @@ export function ADD_popup_player(){
         ADD_DEBUG("stream_zoomout 생성");
         $("#stream").addClass("stream_zoomout").attr("id","").after("<div id='stream'></div>");
         $(".stream_zoomout").css("position","fixed").css("bottom","30px").css("left","30px")
-            .css("padding","0").css("margin","0").css("width","280px").css("height","157.5px").css("z-index","100").css("border-radius","4px");
+            .css("padding","0").css("margin","0").css("width","280px").css("height","157.5px").css("z-index","100").css("border-radius","4px").css("overflow","hidden");
         var $doe = $(`
         <div class="stream_zoomin_screen" style="display:none;background:rgba(0,0,0,.6);user-select:none;">
             <div class="stream_zoom_header" style="width:280px;height:40px;padding:5px;position:absolute;z-index:101;background:rgba(0,0,0,.6);color:#fff;font-size:20px;vertical-align:middle;">

@@ -84,7 +84,7 @@ var streamerArray = [
     ["zilioner", "침착맨", "이말년", "이병건", "침"],
     ["timeofcreate", "홍랑"],
     ["twitchshow", "트위치쇼"],
-    ["kangqui", "강퀴", "강승현", "퀴저씨", "퀴어빠", "퀴"],
+    ["kangqui", "강퀴", "강승현", "퀴저씨", "퀴조씨", "퀴어빠", "퀴"],
     ["team_spiritzero", "Team Spiritzero"],
     ["zizionmy", "젼마이"],
     ["lol_blank", "Blank"],
@@ -360,7 +360,16 @@ var streamerArray = [
     ["doublelift", "Doublelift", "더블리프트", "덮립", "덮맆", "피터 펭", "피터펭"],
     ["wadid", "Wadid", "와디드"],
     ["hanna3691", "불누나"],
-    ["yuwol", "유월쨩", "유월짱", "유월"]
+    ["yuwol", "유월쨩", "유월짱", "유월"],
+    ["damicoss", "김다미"],
+    ["a34016042", "씨맥", "cvmax", "CVmax"],
+    ["donaldtrump", "DonaldTrump", "도날드 트럼프", "트럼프"],
+    ["thdlqslek", "쏘입니다"],
+    ["heydaystudios", "HeydayStudios"],
+    ["trackingthepros", "TrackingThePros"],
+    ["garimto", "가림토김동수", "가림토", "김동수"],
+    ["tvcrank", "크랭크"],
+    ["tomboaaa", "톰보아", "김보아"]
 ];
 
 var streamerArray_name = [],
