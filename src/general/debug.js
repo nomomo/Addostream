@@ -258,6 +258,30 @@ export function ADD_test(){
                 <span class="text"><a href="${inputString}" target="_uha_kr">${inputString}</a></span><time>17:42</time><span class="delete">👁</span></li>`;
                 $(elem).append(appendText);
             }
+        },
+        {
+            title: "트위치 컨트롤 패널 테스트2",
+            func:function(){
+                var temp_id = "144200210";
+                GM_xmlhttpRequest({
+                    // url: "https://api.twitch.tv/kraken/streams/?offset=0&limit=100&channel="+temp_id+"&api_version=5",
+                    url: "https://api.twitch.tv/kraken/panels?channel="+temp_id,
+                    //url: "https://api.twitch.tv/helix/panels?channel="+temp_id,
+                    method: "GET",
+                    dataType:"json",
+                    headers: {
+                        'Accept': 'application/vnd.twitchtv.v5+json',
+                        'Client-ID': nomo_const.ADD_CLIENT_ID_TWITCH
+                    },
+                    onload: function (data) {
+                        var temp_response = utils.IsJsonStringReturn(data.responseText);
+                        ADD_DEBUG("Succeed", temp_response);
+                    },
+                    onerror: function (err) {
+                        ADD_DEBUG("error", err);
+                    }
+                });
+            }
         }
     ];
 

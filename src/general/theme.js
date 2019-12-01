@@ -433,7 +433,7 @@ body.leftchat .stream_chat{
 body:not(.leftchat) #stream.onstream{
     text-align:right;
 }
-body.leftchat #stream{
+body.leftchat #stream.onstream{
     text-align:left;
 }
 .stream_zoomout .stream_chat{
@@ -449,6 +449,7 @@ body.night_mode_transition, body.night_mode_transition *{
     -webkit-transition-delay: 0;
     transition-delay: 0;
 }
+
 `);
 
     var text = "<link href=\"https://fonts.googleapis.com/css?family=Noto+Sans+KR:400,900&display=swap&subset=korean\" rel=\"stylesheet\">";
@@ -827,8 +828,8 @@ body.theme div.line,
 body.theme span.chatContent,
 body.theme span.nick,
 body.theme span.conversation_memo{
-    backface-visibility: hidden !important;
-    transform: translateZ(0) scale(1,1)!important;
+    backface-visibility: hidden;
+    transform: translateZ(0) scale(1,1);
 }
 body.theme div.line.myLine span.nick:not(.colorized){
     color: var(--chat-myLine-nick-color) !important;

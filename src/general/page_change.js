@@ -47,95 +47,95 @@ export function ADD_page_change($, global, document){
         }
 
         // 도네이션 버튼 추가
-        if((ADD_config.playing_toonat_button || ADD_config.playing_twip_button) && (is_twitch  !== -1 || (is_multitwitch !== -1 && url_current.indexOf("&") === -1))){
-            GM_xmlhttpRequest({
-                url: "https://api.twitch.tv/api/channels/"+nomo_global.ADD_now_playing.id+"/panels?client_id="+nomo_const.ADD_CLIENT_ID_TWITCH,
-                method: "GET",
-                dataType:"json",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                onload: function (data) {
-                    var temp_response = utils.IsJsonStringReturn(data.responseText);
-                    ADD_DEBUG("Succeed", temp_response);
-                    $.each(temp_response, function(index, value){
-                        if(value.data !== undefined && value.data.link !== undefined){
-                            // 투네이션 버튼
-                            if(ADD_config.playing_toonat_button && value.data.link.indexOf("toon.at/donate/") !== -1){
-                                nomo_global.ADD_now_playing.toonat_link = value.data.link;
-                                $("#ADD_toonation").stop(true,true).css("opacity", "1.0").fadeIn(300);
-                                if($("#history_elem").length !== 0){
-                                    $("#history_elem").addClass("toonat_margin");
-                                }
-                                ADD_DEBUG("투네이션 링크를 찾았다");
-                            }
+        // if((ADD_config.playing_toonat_button || ADD_config.playing_twip_button) && (is_twitch  !== -1 || (is_multitwitch !== -1 && url_current.indexOf("&") === -1))){
+        //     GM_xmlhttpRequest({
+        //         url: "https://api.twitch.tv/api/channels/"+nomo_global.ADD_now_playing.id+"/panels?client_id="+nomo_const.ADD_CLIENT_ID_TWITCH,
+        //         method: "GET",
+        //         dataType:"json",
+        //         headers: {
+        //             "Content-Type": "application/json"
+        //         },
+        //         onload: function (data) {
+        //             var temp_response = utils.IsJsonStringReturn(data.responseText);
+        //             ADD_DEBUG("Succeed", temp_response);
+        //             $.each(temp_response, function(index, value){
+        //                 if(value.data !== undefined && value.data.link !== undefined){
+        //                     // 투네이션 버튼
+        //                     if(ADD_config.playing_toonat_button && value.data.link.indexOf("toon.at/donate/") !== -1){
+        //                         nomo_global.ADD_now_playing.toonat_link = value.data.link;
+        //                         $("#ADD_toonation").stop(true,true).css("opacity", "1.0").fadeIn(300);
+        //                         if($("#history_elem").length !== 0){
+        //                             $("#history_elem").addClass("toonat_margin");
+        //                         }
+        //                         ADD_DEBUG("투네이션 링크를 찾았다");
+        //                     }
                             
-                            // 트윕 버튼
-                            if(ADD_config.playing_twip_button && value.data.link.indexOf("twip.kr/") !== -1){
-                                nomo_global.ADD_now_playing.twip_link = value.data.link;
-                                $("#ADD_twip").stop(true,true).css("opacity", "1.0").fadeIn(300);
-                                if($("#history_elem").length !== 0){
-                                    $("#history_elem").addClass("twip_margin");
-                                }
-                                ADD_DEBUG("트윕 링크를 찾았다");
-                            }
-                        }
-                    });
+        //                     // 트윕 버튼
+        //                     if(ADD_config.playing_twip_button && value.data.link.indexOf("twip.kr/") !== -1){
+        //                         nomo_global.ADD_now_playing.twip_link = value.data.link;
+        //                         $("#ADD_twip").stop(true,true).css("opacity", "1.0").fadeIn(300);
+        //                         if($("#history_elem").length !== 0){
+        //                             $("#history_elem").addClass("twip_margin");
+        //                         }
+        //                         ADD_DEBUG("트윕 링크를 찾았다");
+        //                     }
+        //                 }
+        //             });
 
-                    // 투네이션 못 찾은 경우
-                    if(nomo_global.ADD_now_playing.toonat_link === ""){
-                        ADD_DEBUG("투네이션 링크를 못 찾았다");
-                        $("#ADD_toonation").stop(true,true).css("opacity", "0.0").hide(300);
-                        if($("#history_elem").length !== 0){
-                            $("#history_elem").removeClass("toonat_margin");
-                        }
-                    }
+        //             // 투네이션 못 찾은 경우
+        //             if(nomo_global.ADD_now_playing.toonat_link === ""){
+        //                 ADD_DEBUG("투네이션 링크를 못 찾았다");
+        //                 $("#ADD_toonation").stop(true,true).css("opacity", "0.0").hide(300);
+        //                 if($("#history_elem").length !== 0){
+        //                     $("#history_elem").removeClass("toonat_margin");
+        //                 }
+        //             }
 
-                    // 트윕 못 찾은 경우
-                    if(nomo_global.ADD_now_playing.twip_link === ""){
-                        ADD_DEBUG("트윕 링크를 못 찾았다");
-                        $("#ADD_twip").stop(true,true).css("opacity", "0.0").hide(300);
-                        if($("#history_elem").length !== 0){
-                            $("#history_elem").removeClass("twip_margin");
-                        }
-                    }
-                },
-                onerror: function (err) {
-                    ADD_DEBUG("error", err);
-                    nomo_global.ADD_now_playing.toonat_link = "";
-                    nomo_global.ADD_now_playing.twip_link = "";
-                    $("#ADD_toonation").stop(true,true).css("opacity", "0.0").hide(300);
-                    $("#ADD_twip").stop(true,true).css("opacity", "0.0").hide(300);
-                    if($("#history_elem").length !== 0){
-                        $("#history_elem").removeClass("toonat_margin").removeClass("twip_margin");
-                    }
-                }
-            });
-        }
-        else{
-            $("#ADD_toonation").stop(true,true).css("opacity", "0.0").hide(300);
-            $("#ADD_twip").stop(true,true).css("opacity", "0.0").hide(300);
-            if($("#history_elem").length !== 0){
-                $("#history_elem").removeClass("toonat_margin").removeClass("twip_margin");
-            }
-        }
+        //             // 트윕 못 찾은 경우
+        //             if(nomo_global.ADD_now_playing.twip_link === ""){
+        //                 ADD_DEBUG("트윕 링크를 못 찾았다");
+        //                 $("#ADD_twip").stop(true,true).css("opacity", "0.0").hide(300);
+        //                 if($("#history_elem").length !== 0){
+        //                     $("#history_elem").removeClass("twip_margin");
+        //                 }
+        //             }
+        //         },
+        //         onerror: function (err) {
+        //             ADD_DEBUG("error", err);
+        //             nomo_global.ADD_now_playing.toonat_link = "";
+        //             nomo_global.ADD_now_playing.twip_link = "";
+        //             $("#ADD_toonation").stop(true,true).css("opacity", "0.0").hide(300);
+        //             $("#ADD_twip").stop(true,true).css("opacity", "0.0").hide(300);
+        //             if($("#history_elem").length !== 0){
+        //                 $("#history_elem").removeClass("toonat_margin").removeClass("twip_margin");
+        //             }
+        //         }
+        //     });
+        // }
+        // else{
+        //     $("#ADD_toonation").stop(true,true).css("opacity", "0.0").hide(300);
+        //     $("#ADD_twip").stop(true,true).css("opacity", "0.0").hide(300);
+        //     if($("#history_elem").length !== 0){
+        //         $("#history_elem").removeClass("toonat_margin").removeClass("twip_margin");
+        //     }
+        // }
 
 
         // 재생 중 트윕 버튼 강제 설정
-        if(ADD_config.playing_twip_button_force && nomo_global.ADD_now_playing.twip_link === "" && (is_twitch  !== -1 || (is_multitwitch !== -1 && url_current.indexOf("&") === -1))){
-            nomo_global.ADD_now_playing.twip_link = "https://twip.kr/donate/"+nomo_global.ADD_now_playing.id;
-            ADD_config.playing_twip_button = false;
-            $("#ADD_twip").stop(true,true).css("opacity", "1.0").fadeIn(300);
-            if($("#history_elem").length !== 0){
-                $("#history_elem").addClass("twip_margin");
-            }
-        }
-        else if(nomo_global.ADD_now_playing.twip_link === ""){
-            $("#ADD_twip").stop(true,true).css("opacity", "0.0").hide(300);
-            if($("#history_elem").length !== 0){
-                $("#history_elem").removeClass("twip_margin");
-            }
-        }
+        // if(ADD_config.playing_twip_button_force && nomo_global.ADD_now_playing.twip_link === "" && (is_twitch  !== -1 || (is_multitwitch !== -1 && url_current.indexOf("&") === -1))){
+        //     nomo_global.ADD_now_playing.twip_link = "https://twip.kr/donate/"+nomo_global.ADD_now_playing.id;
+        //     ADD_config.playing_twip_button = false;
+        //     $("#ADD_twip").stop(true,true).css("opacity", "1.0").fadeIn(300);
+        //     if($("#history_elem").length !== 0){
+        //         $("#history_elem").addClass("twip_margin");
+        //     }
+        // }
+        // else if(nomo_global.ADD_now_playing.twip_link === ""){
+        //     $("#ADD_twip").stop(true,true).css("opacity", "0.0").hide(300);
+        //     if($("#history_elem").length !== 0){
+        //         $("#history_elem").removeClass("twip_margin");
+        //     }
+        // }
 
         // 재생 중 퀵 리스트 버튼 보이기
         if(ADD_config.playing_quick_list_button && nomo_global.PAGE === nomo_const.C_STREAM){

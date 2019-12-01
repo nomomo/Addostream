@@ -229,7 +229,39 @@ a.autokeyword:after, a.autokeyword:after{
 body.tooltip_hide p.tooltip {
     display:none !important;
 }
+
+.chat_video_play_top_fix {
+    transform:unset !important;
+}
+.chat_video_play_top_fix .imgur_container{
+    position:fixed;
+    top:23px;
+    left:5;
+    z-index:1000000;
+}
+.chat_video_play_top_fix .ADD_br{
+    display:none;
+}
 `;
+
+// url 을 감지하여 $elem 뒤에 좌표 버튼을 덧붙인다
+function url_to_coord(url, $elem){
+    const regex_twitch = "";
+    // const regex_afreeca = "";
+    // const regex_kakao = "";
+
+    // 정규표현식으로 id 추출한다
+    if(regex_twitch.test(url)){
+        var temp = url.split("/");
+        if(temp.length !== 0){
+            temp = temp.pop();
+        }
+
+        // 좌표 버튼을 덧붙인다
+        var $coord = $(`<span style="font-weight:bold">[]</span>`);
+        $elem.after($coord);
+    }
+}
 
 // 채팅창에서 문자열 탐지, 이벤트 bind, API 함수 호출 동작 실행
 export async function ADD_chatting_arrive(){
@@ -864,18 +896,30 @@ export function chatImagelayoutfromLinks($line, arr){
         // 재생버튼 동작
         $play_container.one("click", function(){
             var $play_iframe;
+            var is_play_iframe_inserted = false;
             if(arr[0].type === "youtube"){
                 $play_iframe = $(`
                 <iframe width="100%" height="100%" src="https://www.youtube.com/embed/`+arr[0].id+`?rel=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 `);
                 $(this).closest("div").empty().append($play_iframe);
+                is_play_iframe_inserted = true;
             }
             else if(arr[0].type === "twitch_clip"){
                 $play_iframe = $(`
                     <iframe src="https://clips.twitch.tv/embed?clip=`+arr[0].id+`&muted=false&autoplay=true" autoplay; frameborder="0" allowfullscreen="true" height="100%" width="100%"></iframe>
                 `);
                 $(this).closest("div.imgur_container").find("div.viewers").hide();
-                $(this).closest("div.simple_image").empty().append($play_iframe);
+                // $(this).closest("div.simple_image").empty().append($play_iframe);
+                $(this).closest("div").empty().append($play_iframe);
+                is_play_iframe_inserted = true;
+            }
+
+            // 재생 시 상단 고정하기
+            console.log(ADD_config.chat_video_play_top_fix, is_play_iframe_inserted);
+            if(ADD_config.chat_video_play_top_fix && is_play_iframe_inserted){
+                $(this).closest("div.content").find(".chat_video_play_top_fix").removeClass("chat_video_play_top_fix").find("div.imgur_container").remove();
+                $(this).closest("div.line").addClass("chat_video_play_top_fix");
+                console.log($(this).closest("div.line"));
             }
         });
     }
@@ -1146,18 +1190,20 @@ async function chatElemControl($line){
             var temp_color2 = utils.Colors.random(nick);
 
             // 방송모드 관련(blue or green 배경 색과 같은 닉네임 색을 핑크로 변경)
-            var temp_ckey = (ADD_config.broadcaster_bg_color).replace(/\s/g,"").toLowerCase();
-            
-            if(temp_ckey === "blue" || temp_ckey === "rgb(0,0,255)" || temp_ckey === "#0000ff"){
-                temp_ckey = "blue";
-            }
-            else if(temp_ckey === "green" || temp_ckey === "rgb(0,255,0)" || temp_ckey === "#00ff00"){
-                temp_ckey = "green";
-            }
-
-            if(ADD_config.broadcaster_mode && temp_color2.name.indexOf(temp_ckey) !== -1){
-                temp_color2.rgb = "pink";
-                temp_color2.name = temp_color2.name+"_pink_replaced";
+            if(ADD_config.broadcaster_mode){
+                var temp_ckey = (ADD_config.broadcaster_bg_color).replace(/\s/g,"").toLowerCase();
+                
+                if($.inArray(temp_ckey, ["blue", "rgb(0,0,255)", "#0000ff"]) !== -1){
+                    temp_ckey = "blue";
+                }
+                else if($.inArray(temp_ckey, ["green", "rgb(0,255,0)", "#00ff00"]) !== -1){
+                    temp_ckey = "green";
+                }
+                
+                if(temp_color2.name.indexOf(temp_ckey) !== -1 || $.inArray(temp_color2.name, ["mediumturquoise", "indigo", "olive"]) !== -1){
+                    temp_color2.rgb = "pink";
+                    temp_color2.name = temp_color2.name+"_pink_replaced";
+                }
             }
             
             // 닉네임 색 적용
