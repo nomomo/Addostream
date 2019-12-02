@@ -27,10 +27,10 @@ export function ADD_basic_layout(){
     </div>
     <div id="history_elem"></div>
     <div class="AD_title">
-        <span id="ADD_twip" class="btn btn-default btn-sm" aria-label="Twip donate" data-microtip-position="bottom" role="tooltip">
+        <span id="ADD_twip" style="display:none;" class="btn btn-default btn-sm" aria-label="Twip donate" data-microtip-position="bottom" role="tooltip">
             <span>Twip</span>
         </span>
-        <span id="ADD_toonation" class="btn btn-default btn-sm" aria-label="Toonation donate" data-microtip-position="bottom" role="tooltip">
+        <span id="ADD_toonation" style="display:none;" class="btn btn-default btn-sm" aria-label="Toonation donate" data-microtip-position="bottom" role="tooltip">
             <span>Toon</span>
         </span>
         <span id="ADD_change_multi" class="btn btn-default" aria-label="멀티트위치↔트위치 전환" data-microtip-position="bottom" role="tooltip">
