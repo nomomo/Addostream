@@ -30,6 +30,7 @@ import {external_insagirl} from "external_site/insagirl.js";
 import {ADD_page_change} from "general/page_change.js";
 import {ADD_popup_player} from "general/popup_player.js";
 // import {easy_go} from "general/go.js";
+// import "general/ingyeodo.js";
 
 
 "use strict";

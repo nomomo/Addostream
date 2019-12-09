@@ -157,5 +157,8 @@ export function ADD_page_change($, global, document){
         else{
             $("#ADD_config").css("opacity", "1.0").fadeIn(300);
         }
+
+        // $(document).trigger("ADD_page_change");
+        
     }).trigger("hashchange");
 }

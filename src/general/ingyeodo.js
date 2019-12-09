@@ -1,3 +1,6 @@
+import * as utils from "libs/nomo-utils.js";
+var ADD_DEBUG = utils.ADD_DEBUG;
+
 // 잉여도 로깅을 위한 모듈
 
 // 최근 X일간의 잉여도를 로깅 (기본값: 30일)
@@ -25,3 +28,7 @@
 
 // 저장 구조 : array
 // index 가 "20191023" 형태가 되도록 하여 저장
+
+$(document).on("ADD_page_change", function(){
+    ADD_DEBUG("ADD_page_change from ingyeodo.js");
+});
