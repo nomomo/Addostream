@@ -267,7 +267,7 @@ function ADD_Channel_History_layout(ADD_h_cookie, fade){
     }
 }
 
-export default function ADD_channel_history_run(){
+export function ADD_channel_history_run(){
     if(nomo_global.PAGE === nomo_const.C_UCHAT){
         return false;
     }

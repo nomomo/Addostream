@@ -5,8 +5,7 @@ import web_browser from "libs/jquery-browser.js";
 // lib_nude();
 
 import nomo_global_manager from "general/global.js";
-import * as utils from "libs/nomo-utils.js";
-const ADD_DEBUG = utils.ADD_DEBUG;
+import {ADD_DEBUG} from "libs/nomo-utils.js";
 
 import ADD_migration from "./settings/migration.js";
 import {GM_setting} from "settings/main.js";
@@ -14,7 +13,7 @@ import {GM_setting} from "settings/main.js";
 import nomo_const from "general/const.js";
 import * as nomo_common from "general/common.js";
 import * as nomo_theme from "general/theme.js";
-import ADD_channel_history_run from "general/browse_history.js";
+import {ADD_channel_history_run} from "general/browse_history.js";
 import {newdsStream, newdostream} from "general/unsafewindow.js";
 import {ADD_multitwitch_layout} from "general/multitwitch.js";
 import {ADD_basic_layout, ADD_var_to_config_form, ADD_simple_config_event} from "general/menu_layout.js";
@@ -29,13 +28,18 @@ import {chat_manager, get_chat_manager_from_main_frame} from "chat/chat_manager.
 import {external_insagirl} from "external_site/insagirl.js";
 import {ADD_page_change} from "general/page_change.js";
 import {ADD_popup_player} from "general/popup_player.js";
+// import {point_clicker} from "general/point_clicker.js";
+// import { test } from "general/import_test.js";
 // import {easy_go} from "general/go.js";
 // import "general/ingyeodo.js";
-
 
 "use strict";
 
 (async () => {
+    // dynamic import example
+    // const {test2, test} = await import("general/import_test.js");
+
+    // global 변수 선언
     await nomo_global_manager(window);
     
     // Migration
@@ -131,20 +135,8 @@ import {ADD_popup_player} from "general/popup_player.js";
             $(document).arrive("#uha_chat", {onlyOnce: true, existing: true}, function(){
                 get_chat_manager_from_main_frame();
                 ADD_chatting_arrive_for_UHAHA();
-
-                // $("#uha_chat_msgs").on("click", "a", function(e){
-                //     ADD_DEBUG("clicked 2");
-                //     e.stopImmediatePropagation();
-                //     e.stopPropagation();
-                // });
             });
         });
-
-        // $(document).on("click", "#uha_chat_msgs a", function(e){
-        //     ADD_DEBUG("clicked 1");
-        //     e.stopImmediatePropagation();
-        //     e.stopPropagation();
-        // });
     }
     // 채팅인 경우
     else if(nomo_global.PAGE == nomo_const.C_UCHAT){
@@ -250,6 +242,13 @@ import {ADD_popup_player} from "general/popup_player.js";
         }
         return;
     }
+    // else if(nomo_global.PAGE === nomo_const.C_TWITCH){
+    //     if(ADD_config.twitch_point_clicker){
+    //         ADD_DEBUG("[TPAC] IS RUNNiNG");
+    //         point_clicker();
+    //     }
+    //     return;
+    // }
     // 외부 사이트 - 인사걸
     else if(nomo_global.PAGE === nomo_const.C_INSAGIRL){
         window.chat_manager = chat_manager;

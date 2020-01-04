@@ -177,6 +177,7 @@ export var GM_setting = (function($, global, document){ //
         twitch_error_auto_restart : { under_dev:true, category:"twitch", depth:2, type: "checkbox", value: false, title:"[실험실] 트위치 시청 중 오류 발생 시 자동 재시작", desc:"예) #2000 에러" },
         // twitch_server_view : { under_dev:true, category:"advanced", depth:2, type: "checkbox", value: false, title:"[실험실] 마지막으로 접속된 트위치 서버 표시", desc:"" },
         twitch_interacite : { disable:true, category:"advanced", depth:2, type: "checkbox", value: false, title:"반응형 트위치 사용", desc:"" },
+        twitch_point_clicker : { disable:true, category:"advanced", depth:1, type: "checkbox", value: false, title:"[실험실] 채널 포인트 자동 습득", desc:"가능한 경우 채널 포인트 자동 습득<br />참고: 포인트는 www.twitch.tv 에 직접 접속했을 때만 쌓입니다." },
 
         broadcaster_mode : { under_dev:true, category:"broadcast", category_name:"방송 모드", depth:1, type: "checkbox", value: false, title:"[실험실] 방송 모드", desc:"채팅창을 방송에 적합한 모드로 변경<br />Xsplit 등에서 스크린 캡쳐 후, 크로마키(기본값 blue)를 이용하여 배경색을 제거할 수 있습니다.", change:function(){if(nomo_common.ADD_get_page_type() === nomo_const.C_UCHAT){nomo_theme.broadcaster_theme_css();}}},
         broadcaster_font_size : { under_dev:true, category:"broadcast", depth:2, type: "text", value: 1.0, valid:"number", min_value:0.1, max_value:10, title:"글씨 크기 조절(배수)", desc:"", change:function(){if(nomo_common.ADD_get_page_type() === nomo_const.C_UCHAT){nomo_theme.broadcaster_theme_css();}} },

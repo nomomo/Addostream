@@ -29,8 +29,8 @@ export function IsJsonStringReturn(str) {
     return JSON.parse(str);
 }
 
-export function ADD_DEBUG(/**/){
-    if(nomo_common.isDebug()){
+export async function ADD_DEBUG(/**/){
+    if(await nomo_common.isDebug()){
         var args = arguments,
             args_length = args.length,
             args_copy = args;

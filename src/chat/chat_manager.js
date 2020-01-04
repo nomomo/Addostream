@@ -423,9 +423,9 @@ export function get_chat_manager_from_main_frame(){
             ADD_DEBUG("iframe  의 chat manager 함수를 가져왔다.");
             window.chat_manager = $(".chat-container > iframe")[0].contentWindow.chat_manager;
         }
-        else{
+        else if(window.chat_manager_main !== undefined){
             ADD_DEBUG("메인 의 chat manager 함수를 가져왔다.");
-            window.chat_manager = chat_manager_main;
+            window.chat_manager = window.chat_manager_main;
         }
         return;
     }

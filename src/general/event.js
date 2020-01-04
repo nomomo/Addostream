@@ -4,7 +4,7 @@ var ADD_DEBUG = utils.ADD_DEBUG;
 
 import {ADD_send_location_layout} from "chat/send_coord.js";
 import * as nomo_coord from "general/coord.js";
-import ADD_channel_history_run from "general/browse_history.js";
+import {ADD_channel_history_run} from "general/browse_history.js";
 import {ADD_chatting_arrive} from "chat/control.js";
 
 // 설정에 따라 ON-OFF 되는 이벤트 모음

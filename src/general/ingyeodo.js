@@ -1,5 +1,6 @@
-import * as utils from "libs/nomo-utils.js";
-var ADD_DEBUG = utils.ADD_DEBUG;
+import nomo_const from "general/const.js";
+import {ADD_get_page_type} from "general/common.js";
+import {ADD_DEBUG} from "libs/nomo-utils.js";
 
 // 잉여도 로깅을 위한 모듈
 
@@ -28,6 +29,50 @@ var ADD_DEBUG = utils.ADD_DEBUG;
 
 // 저장 구조 : array
 // index 가 "20191023" 형태가 되도록 하여 저장
+var ingyeodo_setInterval = undefined;
+function ingyeodo(){
+    const interval_time = 60000;    // 60s = 1분
+
+    if(!ADD_config.ingyeodo){
+        clearInterval(ingyeodo_setInterval);
+        return;
+    }
+
+    if(nomo_global.is_chat_pause){
+        ingyeodo_setInterval = setInterval(function(){
+            ingyeodo_repeat();
+        },interval_time);
+    }
+    
+}
+
+async function ingyeodo_manager(){
+    const ingyeodo_data_init = {
+        total: 0,
+        year: {
+            // 2020:0
+        },
+        month: {
+            // 12:0
+        },
+        date: {
+            // 200103:{d}
+        },
+    };
+}
+
+async function ingyeodo_repeat(){
+    var ingyeodo_data = await GM.getValue("ingyeodo_data", {});
+
+    var parent_href = parent.window.location.href;
+    var page_type = ADD_get_page_type(parent_href);
+    if(page_type === nomo_const.C_MAIN){
+        //
+    }
+    else if(page_type === nomo_const.C_STREAM){
+        //
+    }
+}
 
 $(document).on("ADD_page_change", function(){
     ADD_DEBUG("ADD_page_change from ingyeodo.js");

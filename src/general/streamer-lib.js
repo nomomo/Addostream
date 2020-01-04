@@ -6,22 +6,24 @@ var streamerArray = [],
     streamerArray_display_name = [],
     streamerArray_AutoComplete = [];
 
-for(const property in broadcaster.data){
+var bt = broadcaster.data.twitch;
+
+for(const property in bt){
     streamerArray.push([]);
     var sal = streamerArray.length - 1;
 
     streamerArray[sal].push(property.toLowerCase());
-    streamerArray[sal].push(broadcaster.data[property].dn);
+    streamerArray[sal].push(bt[property].dn);
     
     streamerArray_name.push(property);
-    streamerArray_display_name.push(broadcaster.data[property].dn);
-    streamerArray_AutoComplete.push(`${broadcaster.data[property].dn} (${property})`);
+    streamerArray_display_name.push(bt[property].dn);
+    streamerArray_AutoComplete.push(`${bt[property].dn} (${property})`);
 
-    if(broadcaster.data[property].nn !== undefined && $.isArray(broadcaster.data[property].nn)){
-        streamerArray[sal] = streamerArray[sal].concat(broadcaster.data[property].nn);
+    if(bt[property].nn !== undefined && $.isArray(bt[property].nn)){
+        streamerArray[sal] = streamerArray[sal].concat(bt[property].nn);
     }
-    if(broadcaster.data[property].sn !== undefined && $.isArray(broadcaster.data[property].sn)){
-        streamerArray[sal] = streamerArray[sal].concat(broadcaster.data[property].sn);
+    if(bt[property].sn !== undefined && $.isArray(bt[property].sn)){
+        streamerArray[sal] = streamerArray[sal].concat(bt[property].sn);
     }
 }
 

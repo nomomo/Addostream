@@ -19,8 +19,7 @@ const ADD_config_enable_init = ["ADD_config_top_fix","ADD_config_alarm","ADD_con
 // 설정 관련 버튼, 팝업 layout 생성
 export function ADD_basic_layout(){
     // 설정 버튼 및 팝업 생성
-    var $ADD_basic_layout = $( // html
-        `
+    var $ADD_basic_layout = $( /*html*/ `
 <div style="position:relative;margin-left:170px;">
     <div id="notice_text_elem" title="Dosteam+ System Message">
         <span id="notice_text">문어문어문어문어<br />블러드트레일 블러드트레일</span><span id="notice_text2"></span>
@@ -596,6 +595,7 @@ export function ADD_basic_layout(){
                             nomo_global.DEBUG = !(nomo_global.DEBUG);
                             await nomo_common.nomo.setVal("nomo_global.DEBUG", nomo_global.DEBUG);
                             text_contents = "DEBUG 모드: "+nomo_global.DEBUG;
+                            await nomo_common.nomo.setVal("ADD_DEBUG_MODE", nomo_global.DEBUG);
                         }
                         else if(checked_text1 !== "<VERIFICATION_KEY:"){
                             ADD_DEBUG("checked_text1:", checked_text1);

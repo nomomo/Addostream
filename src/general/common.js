@@ -3,8 +3,11 @@ import {ADD_DEBUG} from "libs/nomo-utils.js";
 import {newdsStream} from "general/unsafewindow.js";
 import {ADD_multitwitch_layout} from "general/multitwitch.js";
 
-export const ADD_get_page_type = function (){
+export const ADD_get_page_type = function (url){
     var document_url = document.location.href;
+    if(url !== undefined){
+        document_url = url;
+    }
     document_url = document_url.toLowerCase();
     var keyword_stream = document_url.indexOf("#/stream/");
     var keyword_uchat = document_url.indexOf("uchat2.php");
@@ -12,6 +15,7 @@ export const ADD_get_page_type = function (){
     var keyword_setting_nw = document_url.indexOf("dostream.com/addostream");
     var insagirl = document_url.indexOf("insagirl-toto.appspot.com/hrm/");
     var twitch_player = document_url.indexOf("player.twitch.tv");
+    var twitch_main = document_url.indexOf("www.twitch.tv");
     if(keyword_uchat !== -1){
         return nomo_const.C_UCHAT;
     }
@@ -29,6 +33,9 @@ export const ADD_get_page_type = function (){
     }
     else if(twitch_player !== -1){
         return nomo_const.C_EMBEDED_TWITCH;
+    }
+    else if(twitch_main !== -1){
+        return nomo_const.C_TWITCH;
     }
     else{
         return nomo_const.C_MAIN;

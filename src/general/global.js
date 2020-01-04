@@ -2,6 +2,7 @@ import * as nomo_common from "./common.js";
 import { ADD_DEBUG } from "../libs/nomo-utils.js";
 import {versionStrtoNum} from "settings/version.js";
 
+// nomo_global 이라는 이름의 전역 변수 관리
 var nomo_global_manager = async function(global){
     var init_var = {
         DEBUG: await nomo_common.isDebug(),
