@@ -2,7 +2,7 @@ import nomo_const from "general/const.js";
 import * as nomo_common from "general/common.js";
 import * as nomo_theme from "general/theme.js";
 import {ADD_DEBUG} from "libs/nomo-utils.js";
-import ADD_channel_history_run from "general/browse_history.js";
+import {ADD_channel_history_run} from "general/browse_history.js";
 import * as nomo_coord from "general/coord.js";
 import {ADD_send_location_layout} from "chat/send_coord.js";
 import {versionStrtoNum} from "settings/version.js";
