@@ -899,7 +899,7 @@ export function chatImagelayoutfromLinks($line, arr){
             var is_play_iframe_inserted = false;
             if(arr[0].type === "youtube"){
                 $play_iframe = $(`
-                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/`+arr[0].id+`?rel=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/`+arr[0].id+`?rel=0&autoplay=1${arr[0].start_time !== undefined ? "&start="+arr[0].start_time : ""}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 `);
                 $(this).closest("div").empty().append($play_iframe);
                 is_play_iframe_inserted = true;
@@ -1374,6 +1374,13 @@ async function chatElemControl($line){
             image_found = true;
             var youtube_id = youtube_match.pop();
             var youtube_url = 'https://www.youtube.com/watch?v=' + youtube_id;
+            var youtube_st = hrefs[0].match(/t=\d+/);
+            if(youtube_st){
+                youtube_st = youtube_st[0].split("=").pop();
+            }
+            else{
+                youtube_st = undefined;
+            }
 
             $.getJSON('https://noembed.com/embed',
                 {format: 'json', url: youtube_url}, function (data) {
@@ -1381,6 +1388,9 @@ async function chatElemControl($line){
 
                     var temp_arr = [];
                     var temp_img_obj = {type:"youtube", id:youtube_id, link: data.thumbnail_url, title: "[Youtube] " + (data.title !== undefined ? data.title : "") + (data.author_name !== undefined ? " - " + data.author_name : ""), "width":data.thumbnail_width, "height":data.thumbnail_height};
+                    if(youtube_st !== undefined){
+                        temp_img_obj["start_time"]  = youtube_st;
+                    }
                     temp_arr.push(temp_img_obj);
                     ADD_DEBUG("temp_img_obj", temp_img_obj);
                     chatImagelayoutfromLinks($line, temp_arr);
