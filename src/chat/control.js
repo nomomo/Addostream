@@ -6,6 +6,7 @@ import * as utils from "libs/nomo-utils.js";
 import * as nomo_version from "settings/version.js";
 import { ADD_send_location_layout } from "chat/send_coord.js";
 import { ADD_send_sys_msg } from "chat/send_message.js";
+import { uchat_connect_waiting, uchat_connect_check_clear} from "chat/server_connector.js";
 const ADD_DEBUG = utils.ADD_DEBUG;
 
 const ADD_UNIQUE_WINDOW_RELOAD_MAX = 5;
@@ -264,6 +265,7 @@ function url_to_coord(url, $elem){
 }
 
 // 채팅창에서 문자열 탐지, 이벤트 bind, API 함수 호출 동작 실행
+var version_message_once = false;
 export async function ADD_chatting_arrive(){
     ADD_DEBUG("ADD_chatting_arrive 함수 실행됨");
     // 기존에 꺼져있는 경우
@@ -299,7 +301,9 @@ export async function ADD_chatting_arrive(){
     if(nomo_global.chatting_arrive_check && ADD_config.chat_ctr){
 
         // (no src) iframe 생길 때 event
+        uchat_connect_waiting();
         $(document).arrive("u-chat > iframe", {existing: true}, async iframeElems => {
+            ADD_DEBUG("채팅 iframe 생성");
             nomo_global.GLOBAL_CHAT_IFRAME = iframeElems;
             nomo_global.$GLOBAL_CHAT_IFRAME = $(iframeElems);
             nomo_global.$GLOBAL_IFRAME_DOCUMENT = nomo_global.$GLOBAL_CHAT_IFRAME.contents().first();
@@ -309,6 +313,15 @@ export async function ADD_chatting_arrive(){
             //////////////////////////////////////////////////////////////////////////////////////////
             // 채팅창 생성될 때 노티하기
             nomo_global.$GLOBAL_IFRAME_DOCUMENT.one("DOMNodeInserted", "div.content", async function (){
+                ADD_DEBUG("채팅 div.content 생성");
+                if($(this).hasClass("fired")){
+                    ADD_DEBUG("already fired");
+                    return;
+                }
+                $(this).addClass("fired");
+                // nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".userListWrap").hide();
+
+                uchat_connect_check_clear();
                 // 채팅 엘리먼트 저장
                 nomo_global.GLOBAL_CHAT_CONTENT_DIV = $(this);
 
@@ -343,7 +356,13 @@ export async function ADD_chatting_arrive(){
                 }
                 
                 // 버전 체크
-                await nomo_version.checkNewVersion();
+                if(!version_message_once){
+                    await nomo_version.checkNewVersion();
+                }
+                else{
+                    version_message_once = true;
+                }
+
                 var temp_func = function(){nomo_version.checkNewVersion(true);};
                 utils.resetAtMidnight(temp_func);
 
