@@ -3,6 +3,7 @@ import * as nomo_common from "general/common.js";
 import { ADD_streamer_nick, streamerArray } from "general/streamer-lib.js";
 import {ADD_chatBlock, chat_basic_css, getImgurData, chatImagelayoutfromLinks, goScrollDown, isVideo} from "chat/control.js";
 import * as utils from "libs/nomo-utils.js";
+import { broadcaster_theme_css } from "general/theme.js";
 var ADD_DEBUG = utils.ADD_DEBUG;
 
 function UHAHA_sys_msg(msg){
@@ -278,6 +279,12 @@ export async function ADD_chatting_arrive_for_UHAHA(){
         }
 
     } // else 끝
+
+    // 방송 모드
+    if(nomo_global.DEBUG && ADD_config.broadcaster_mode){
+        nomo_global.$GLOBAL_IFRAME_DOCUMENT = $(document);
+        broadcaster_theme_css();
+    }
 }
 
 async function uhaha_arrive(elems){
@@ -292,12 +299,19 @@ async function uhaha_arrive(elems){
     var $line = elem;
 
     // 필수 요소 검증
+    var myLine = false;
     var $nick = elem.find("span.name").first();
     var $content = elem.find("span.text");
     var unique_id = $nick.attr("data-sid");
     var nick = $nick.text();
     var content = $content.text();
     var createdDate = new Date(Number($nick.attr("data-date"))*1000);
+
+    
+    // 나 자신인지 확인
+    if($line.hasClass("is_me")){
+        myLine = true;
+    }
 
     // 강제단차 이벤트
     var ADD_ignores = $.cookie("ignores");
@@ -711,28 +725,32 @@ async function uhaha_arrive(elems){
     }
 
     // 닉네임 색상화
+    var debug_color = "";
     if(ADD_config.chat_nick_colorize || (ADD_config.broadcaster_mode && ADD_config.broadcaster_use_nick_color)){
         if(!$nick.hasClass("colorized")){
-            // 닉네임에 따른 고유-랜덤 색 생성
-            var temp_color2 = utils.Colors.random(nick);
+            // 유니크 아이디에 따른 고유-랜덤 색 생성
+            var temp_color2 = utils.Colors.random(unique_id);
 
             // 방송모드 관련(blue or green 배경 색과 같은 닉네임 색을 핑크로 변경)
-            var temp_ckey = (ADD_config.broadcaster_bg_color).replace(/\s/g,"").toLowerCase();
-            
-            if(temp_ckey === "blue" || temp_ckey === "rgb(0,0,255)" || temp_ckey === "#0000ff"){
-                temp_ckey = "blue";
-            }
-            else if(temp_ckey === "green" || temp_ckey === "rgb(0,255,0)" || temp_ckey === "#00ff00"){
-                temp_ckey = "green";
-            }
-
-            if(ADD_config.broadcaster_mode && temp_color2.name.indexOf(temp_ckey) !== -1){
-                temp_color2.rgb = "pink";
-                temp_color2.name = temp_color2.name+"_pink_replaced";
+            if(ADD_config.broadcaster_mode){
+                var temp_ckey = (ADD_config.broadcaster_bg_color).replace(/\s/g,"").toLowerCase();
+                
+                if($.inArray(temp_ckey, ["blue", "rgb(0,0,255)", "#0000ff"]) !== -1){
+                    temp_ckey = "blue";
+                }
+                else if($.inArray(temp_ckey, ["green", "rgb(0,255,0)", "#00ff00"]) !== -1){
+                    temp_ckey = "green";
+                }
+                
+                if(temp_color2.name.indexOf(temp_ckey) !== -1 || $.inArray(temp_color2.name, ["mediumturquoise", "indigo", "olive"]) !== -1){
+                    temp_color2.rgb = "pink";
+                    temp_color2.name = temp_color2.name+"_pink_replaced";
+                }
             }
             
             // 닉네임 색 적용
             $nick.addClass("colorized").attr("style","color:"+temp_color2.rgb+" !important;").attr("colorzied",temp_color2.name);
+            debug_color = temp_color2.rgb;
         }
     }
 
@@ -797,6 +815,9 @@ async function uhaha_arrive(elems){
         },1);
     }
 
+    if(nomo_global.DEBUG){
+        unsafeWindow.$(document).trigger("chat_line", {"id":unique_id, "nick":nick, "content":content, "color":debug_color, "me":myLine, "date":createdDate});
+    }
 }
 
 export function uhaha_chat_delete_hide() {

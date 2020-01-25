@@ -206,6 +206,7 @@
             "lck_korea": { "dn": "LCK Korea", "nn": ["롤챔스", "롤챔"] },
             "lol_madlife": { "dn": "매드라이프", "nn": ["매라", "매멘", "매맨", "ㅁㅁ", "메라", "홍민기"] },
             "lol_helios": { "dn": "헬리오스", "nn": [] },
+            "wlstla2": { "dn": "더샤이", "nn": ["더 샤이", "강형", "강승록", "승록", "TheShy", "theshy"] },
             "pparkshy": { "dn": "샤이", "nn": [] },
             "pubgkorea": { "dn": "PUBGKorea", "nn": [] },
             "riotgames": { "dn": "Riot Games", "nn": [] },
@@ -398,7 +399,9 @@
             "mooomon17": { "dn": "김갑주", "nn": ["갑주"] },
             "pangaeapanga": { "dn": "PangaeaPanga", "nn": ["팡가"] },
             "noizemasta": { "dn": "주펄", "nn": ["주호민", "파괴왕", "파주스님", "주키마우스"] },
-            "remilegi": { "dn": "레밀레기", "nn": ["레밀리아", "박현욱"] }
+            "remilegi": { "dn": "레밀레기", "nn": ["레밀리아", "박현욱"] },
+            "jdm2088": { "dn": "악어", "nn": [] },
+            "t1_cuzz": { "dn": "커즈", "nn": ["문우찬", "우찬", "귀즈", "커제"] }
         },
         "afreeca": {
             "afchall": { "dn": "챌린저스공식", "nn": ["챌린저스", "챌코", "첼코"] },

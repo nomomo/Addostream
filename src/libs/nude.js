@@ -1,3 +1,5 @@
+import { ADD_DEBUG } from "libs/nomo-utils.js";
+
 /*
 * Nude.js - Nudity detection with Javascript and HTMLCanvas
 *
@@ -447,6 +449,25 @@ export default function(){
                 skinRegions = [];
                 resultFn = null;
                 // img = null;
+            },
+            checkNudeImage(node) {
+                var returnVal = false;
+                if(typeof nude !== undefined){
+                    nude.init();
+                    nude.load(node);
+                    // Scan it
+                    nude.scan(function(result){
+                        if(result){
+                            ADD_DEBUG("피부톤 이미지 발견!");
+                            returnVal = true;
+                        }
+                        else{
+                            ADD_DEBUG("Nudity 통과");
+                            returnVal = false;
+                        }
+                    });
+                }
+                return returnVal;
             }
         };
     })();

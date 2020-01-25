@@ -243,7 +243,7 @@ export function ADD_test(){
                 var elem = $("#uha_chat_msgs");
                 var inputString = prompt("채팅내용 입력","https://imgur.com/a/45ps1");
                 var appendText = 
-                `<li class="is_notme"><span class="name" data-date="${String(Number(new Date())).substr(0,10)}" data-sid="2fc48b61c2d7fdca" data-name="몽고뽕나무">몽고뽕나무</span>
+                `<li class="is_notme"><span class="name" data-date="${String(Number(new Date())).substr(0,10)}" data-sid="2fc48b61c2d7fdca" data-name="몽고뽕나무${Math.random()}">몽고뽕나무${Math.random()}</span>
                 <span class="text">${inputString}</span><time>17:42</time><span class="delete">👁</span></li>`;
                 $(elem).append(appendText);
             }
@@ -254,7 +254,7 @@ export function ADD_test(){
                 var elem = $("#uha_chat_msgs");
                 var inputString = prompt("링크 입력","https://imgur.com/a/45ps1");
                 var appendText = 
-                `<li class="is_notme"><span class="name" data-date="${String(Number(new Date())).substr(0,10)}" data-sid="2fc48b61c2d7fdca" data-name="몽고뽕나무">몽고뽕나무</span>
+                `<li class="is_notme"><span class="name" data-date="${String(Number(new Date())).substr(0,10)}" data-sid="2fc48b61c2d7fdca" data-name="몽고뽕나무${Math.random()}">몽고뽕나무${Math.random()}</span>
                 <span class="text"><a href="${inputString}" target="_uha_kr">${inputString}</a></span><time>17:42</time><span class="delete">👁</span></li>`;
                 $(elem).append(appendText);
             }

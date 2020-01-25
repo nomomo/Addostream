@@ -7,6 +7,7 @@ import * as nomo_version from "settings/version.js";
 import { ADD_send_location_layout } from "chat/send_coord.js";
 import { ADD_send_sys_msg } from "chat/send_message.js";
 import { uchat_connect_waiting, uchat_connect_check_clear} from "chat/server_connector.js";
+// import lib_nude from "libs/nude.js";
 const ADD_DEBUG = utils.ADD_DEBUG;
 
 const ADD_UNIQUE_WINDOW_RELOAD_MAX = 5;
@@ -665,7 +666,7 @@ export function chatImagelayoutfromLinks($line, arr){
     var img_length = arr.length;
     var views = "";
     var views_style = "";
-    //var nudity_block = ADD_config.nudity_block;
+    var nudity_block = ADD_config.nudity_block;
 
     if($line === undefined || arr === undefined || img_length === 0){
         ADD_DEBUG("chatImagelayoutfromLinks - 이미지 오브젝트가 존재하지 않음", arr);
@@ -850,6 +851,36 @@ export function chatImagelayoutfromLinks($line, arr){
                 $(this).html("");
             });
     }
+
+    // if(nudity_block){
+    //     if(window.nude === undefined){
+    //         lib_nude();
+    //     }
+    //     var is_video = isVideo(arr[0].link);
+    //     ADD_DEBUG("IMAGE_LOAD_START", arr[0].link);
+    //     var newimage = undefined;
+    //     if(is_video){
+    //         newimage = document.createElement("video");
+    //         newimage.crossOrigin = "Anonymous";
+    //         newimage.src = arr[0].link;
+    //         newimage.height = "500";
+    //         newimage.width = "500";
+    //         newimage.play();
+    //         $(newimage).one("timeupdate", function(){
+    //             nude.checkNudeImage(newimage);
+    //         });
+    //     }
+    //     else{
+    //         newimage = new Image();
+    //         $(newimage).one("load", function() {
+    //             ADD_DEBUG("CHECK START AFTER LOAD");
+    //             nude.checkNudeImage(newimage);
+    //             ADD_DEBUG("CHECK END AFTER LOAD");
+    //         });
+    //         newimage.crossOrigin = "Anonymous";
+    //         newimage.src = arr[0].link;
+    //     }
+    // }
 
     // imgur safe screen 투명도 설정
     if((ADD_config.imgur_preview_safe && arr[0].type !== "youtube" && arr[0].type !== "twitch_clip")
@@ -1203,6 +1234,7 @@ async function chatElemControl($line){
     }
 
     // 닉네임 색상화
+    var debug_color = "";
     if((!ADD_config.broadcaster_mode && ADD_config.chat_nick_colorize) || (ADD_config.broadcaster_mode)){
         if(!$line.find("span.nick").hasClass("colorized")){
             // 닉네임에 따른 고유-랜덤 색 생성
@@ -1227,6 +1259,7 @@ async function chatElemControl($line){
             
             // 닉네임 색 적용
             $line.find("span.nick").addClass("colorized").css("color",temp_color2.rgb).attr("colorzied",temp_color2.name);
+            debug_color = temp_color2.rgb;
         }
     }
 
@@ -1580,6 +1613,10 @@ async function chatElemControl($line){
     //if(true){   // 개수 초과된 채팅 지우기 && 스크롤이 정지 상태 이면...    (UCHAT 기본값: 300)
     //$(document).find("div.line:lt(-300)")
     //}   // 
+
+    if(nomo_global.DEBUG){
+        unsafeWindow.$(document).trigger("chat_line", {"id":nick, "nick":nick, "content":content, "color":debug_color, "me":myLine, "date":createdDate});
+    }
 
     nomo_global.chatting_arrive_check = true;
 }
