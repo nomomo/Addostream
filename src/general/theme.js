@@ -557,8 +557,8 @@ body.theme-black{
     --chat-myLine-color:#fff;
     --chat-myLine-font-weight:bold;
 
-    --scroll-bar-color:#333;
-    --scroll-bar-thumb-color:#111;
+    --scroll-bar-color:#111;
+    --scroll-bar-thumb-color:#333;
 }
 /* theme-self-bold-chat */
 body.theme-self-bold-chat div.line.myLine span.nick{

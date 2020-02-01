@@ -4,14 +4,29 @@ import { ADD_streamer_nick, streamerArray } from "general/streamer-lib.js";
 import {ADD_chatBlock, chat_basic_css, getImgurData, chatImagelayoutfromLinks, goScrollDown, isVideo} from "chat/control.js";
 import * as utils from "libs/nomo-utils.js";
 import { broadcaster_theme_css } from "general/theme.js";
+import { ADD_send_location_layout } from "chat/send_coord.js";
 var ADD_DEBUG = utils.ADD_DEBUG;
 
-function UHAHA_sys_msg(msg){
+function UHAHA_sys_msg(msg, raw){
     var $uha_chat_msgs = $("#uha_chat_msgs");
+    var isScrollDown = false;
     if($uha_chat_msgs.length > 0){
-        $(`<li class="is_notme"><span class="name" data-date="${String(Number(new Date())).substr(0,10)}" data-name="Dostream+">Dostream+</span>
-                        <span class="text">${msg}</span></li>`)
-            .appendTo($uha_chat_msgs);
+        if(($uha_chat_msgs.prop("scrollTop") >= $uha_chat_msgs.prop("scrollHeight") - $uha_chat_msgs.height() - 40)){
+            isScrollDown = true;
+        }
+
+        if(raw !== undefined && raw){
+            $(msg).appendTo($uha_chat_msgs);
+        }
+        else {
+            $(`<li class="is_notme"><span class="name" data-date="${String(Number(new Date())).substr(0,10)}" data-name="Dostream+">Dostream+</span>
+                            <span class="text">${msg}</span></li>`)
+                .appendTo($uha_chat_msgs);
+        }
+
+        if(isScrollDown){
+            $uha_chat_msgs.animate({ scrollTop: 1000000000000  }, 1);
+        }
     }
 }
 
@@ -19,6 +34,7 @@ function UHAHA_sys_msg(msg){
 // 우하하용 채팅 도구
 export async function ADD_chatting_arrive_for_UHAHA(){
     ADD_DEBUG("ADD_chatting_arrive_for_UHAHA 함수 실행");
+    nomo_global.$GLOBAL_IFRAME_DOCUMENT = $(document);
 
     // 일단 먼저 끈다.
     $(document).unbindArrive("li.is_notme");
@@ -52,8 +68,6 @@ export async function ADD_chatting_arrive_for_UHAHA(){
             uhaha_arrive(elems);
         });
 
-        var $iframeDocument = $("ul#uha_chat_msgs");
-
         // 채팅 매니저 초기화
         chat_manager.init($("div#uha_chat"));
 
@@ -62,7 +76,7 @@ export async function ADD_chatting_arrive_for_UHAHA(){
         if(ADD_config.sys_meg !== undefined && ADD_config.sys_meg){
             setTimeout(function(){
                 ADD_DEBUG("채팅창에서 애드온 동작");
-                $iframeDocument.append("<li class=\"uha_info\"><span class=\"system\">안내: </span>두스트림 애드온이 임시 동작중입니다(우하하).<br />일부 기능만 제공합니다.</li>");
+                UHAHA_sys_msg("<li class=\"uha_info\"><span class=\"system\">안내: </span>두스트림 애드온이 임시 동작중입니다(우하하).<br />일부 기능만 제공합니다.</li>", true);
             },3000);
         }
 
@@ -115,7 +129,7 @@ export async function ADD_chatting_arrive_for_UHAHA(){
             if($("#uhaha_memo").length === 0){
                 $("<span id=\"uhaha_memo\" style=\"cursor:pointer;color:red;\">메모하기</span><br />")
                     .on("click", async function(){
-                        var detail_content = "[UHAHA]"+content.substr(0, 40);
+                        var detail_content = "[UHAHA]"+nick+":"+content.substr(0, 40);
                         var temp_obj = {"nick":unique_id,"display_name":nick,"detail_content":detail_content};
                         await chat_manager.openSimplelayout(temp_obj);
                     })
@@ -278,6 +292,7 @@ export async function ADD_chatting_arrive_for_UHAHA(){
             });
         }
 
+        ADD_send_location_layout(2);
     } // else 끝
 
     // 방송 모드
@@ -339,7 +354,7 @@ async function uhaha_arrive(elems){
         var isBlock = chat_manager.getIsBlock(unique_id);
         if(isBlock){
             var isShowDelMsg = chat_manager.getIsShowDelMsg(unique_id);
-            if(await ADD_chatBlock(elem, true, unique_id, content, createdDate, false, false, isShowDelMsg)) return false;
+            if(await ADD_chatBlock(elem, true, unique_id, nick+":"+content, createdDate, false, false, isShowDelMsg)) return false;
         }
     }
 
@@ -533,7 +548,7 @@ async function uhaha_arrive(elems){
                     ADD_DEBUG("youtube getJSON", youtube_id, data);
 
                     var temp_arr = [];
-                    var temp_img_obj = {type:"youtube", id:youtube_id, link: data.thumbnail_url, title: "[Youtube] " + (data.title !== undefined ? data.title : "") + (data.author_name !== undefined ? " - " + data.author_name : ""), "width":data.thumbnail_width, "height":data.thumbnail_height};
+                    var temp_img_obj = {type:"youtube", id:youtube_id, link: data.thumbnail_url, title: "" + (data.title !== undefined ? data.title : "") + (data.author_name !== undefined ? " - " + data.author_name : ""), "width":data.thumbnail_width, "height":data.thumbnail_height};
                     temp_arr.push(temp_img_obj);
                     ADD_DEBUG("temp_img_obj", temp_img_obj);
                     chatImagelayoutfromLinks($line, temp_arr);
@@ -635,7 +650,7 @@ async function uhaha_arrive(elems){
                         var title = (response.title !== undefined ? response.title : "") + (response.broadcaster.display_name !== undefined ? " - " + response.broadcaster.display_name : "");
 
                         var temp_arr = [];
-                        var temp_img_obj = {type:"twitch_clip", id:twitch_thumb_id, link: image_url, title: "[Twitch] "+title, width:480, height:272, views:response.views};
+                        var temp_img_obj = {type:"twitch_clip", id:twitch_thumb_id, link: image_url, title: ""+title, width:480, height:272, views:response.views};
                         temp_arr.push(temp_img_obj);
                         chatImagelayoutfromLinks($line, temp_arr);
 

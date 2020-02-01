@@ -6,6 +6,7 @@ import {ADD_send_location_layout} from "chat/send_coord.js";
 import * as nomo_coord from "general/coord.js";
 import {ADD_channel_history_run} from "general/browse_history.js";
 import {ADD_chatting_arrive} from "chat/control.js";
+import * as nomo_theme from "general/theme.js";
 
 // 설정에 따라 ON-OFF 되는 이벤트 모음
 export function ADD_main_event_binding(){
@@ -17,6 +18,9 @@ export function ADD_main_event_binding(){
 
     // 빠른 좌표 버튼 생성 관련됨
     nomo_coord.hrm_layout();
+
+    // 왼쪽 채팅 관련됨
+    nomo_theme.ADD_leftchat_change();
 
     // 데스크탑 알림 권한 관련됨
     if(ADD_config.alarm_noti){

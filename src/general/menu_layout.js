@@ -405,24 +405,30 @@ export function ADD_basic_layout(){
                                         <label class="btn btn-default btn-xxs">
                                             <input type="checkbox" id="ADD_config_history" class="" onfocus="this.blur()"  />
                                             <span class="glyphicon glyphicon-ok"></span>
-                                        </label> 시청 기록
+                                        </label> 시청기록
+                                    </span>
+                                    <span style="margin-left:5px;" aria-label="채팅창 위치를 왼쪽으로 변경" data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">
+                                        <label class="btn btn-default btn-xxs">
+                                            <input type="checkbox" id="ADD_config_theme_leftchat" class="" onfocus="this.blur()"  />
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </label> 좌측채팅
                                     </span>
                                 </span>
-                                <span style="float:right;">
-                                    <span style="margin-left:50px;">
+                                <span style="">
+                                    <span style="margin-left:5px;">
                                         <span aria-label="두스 내에서 좌표 페이지 호출" data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">
                                             <label class="btn btn-default btn-xxs">
                                                 <input type="checkbox" id="ADD_config_insagirl_button" class="" onfocus="this.blur()"  />
                                                 <span class="glyphicon glyphicon-ok"></span>
-                                            </label> 빠른 좌표
+                                            </label> 빠른좌표
                                         </span>
                                     </span>
-                                    <span style="margin-left:10px;">
+                                    <span style="margin-left:5px;">
                                         <span aria-label="채팅매니저에서 차단한 유저의 좌표를\n빠른 좌표 페이지에서 보이지 않도록 함" data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">
                                             <label class="btn btn-default btn-xxs">
                                                 <input type="checkbox" id="ADD_config_insagirl_block_by_nick" onfocus="this.blur()" class="ADD_config_chat_ctr_form ADD_config_insagirl_button_form form_enabled" />
                                                 <span class="glyphicon glyphicon-ok"></span>
-                                            </label> 좌표 차단
+                                            </label> 좌표차단
                                         </span>
                                     </span>
                                 </span>

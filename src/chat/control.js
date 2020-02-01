@@ -28,6 +28,13 @@ export var chat_basic_css = `#ADD_send_location_button {
     top: 10px;
     bottom: unset;
 }
+#uha_chat #ADD_send_location_container{
+    bottom: 58px;
+}
+#uha_chat #ADD_send_location_container.send_location_button_top{
+    top: 38px;
+    bottom: unset;
+}
 
 .black .myLine{
     background:unset;
@@ -75,6 +82,13 @@ export var chat_basic_css = `#ADD_send_location_button {
     box-sizing: border-box;
     padding: 7px;
     height:31px;
+}
+.imgur_container .ADD_br .videoType{
+    white-space: nowrap;
+    font-size: 12px;
+    line-height: 130%;
+    padding: 1px 5px;
+    font-weight: bold;
 }
 .imgur_container .ADD_tr img, .imgur_container .ADD_br img{
     width:17px;
@@ -240,6 +254,9 @@ body.tooltip_hide p.tooltip {
     top:23px;
     left:5;
     z-index:1000000;
+}
+#uha_chat_msgs .chat_video_play_top_fix .imgur_container{
+    top:71px;
 }
 .chat_video_play_top_fix .ADD_br{
     display:none;
@@ -693,6 +710,7 @@ export function chatImagelayoutfromLinks($line, arr){
             </div>
             <div class="imgur_more_images" style="display:none;"></div>
             <div class="imgur_control_button ADD_br">
+                <span class="videoType" style="display:none"></span>
                 <span class="imgur_more_images_button" style="opacity:0.0"></span>
                 <span class="imgur_control_hide glyphicon glyphicon-minus-sign" style="display:none;">
                 </span>
@@ -943,6 +961,15 @@ export function chatImagelayoutfromLinks($line, arr){
         $ADD_image_container.find("div.simple_image").append($play_container);
         $ADD_image_container.find(".open-lightbox").removeClass(".open-lightbox");
 
+        var videoTypeText = "";
+        if(arr[0].type === "youtube"){
+            videoTypeText = "[Youtube]";
+        }
+        else if(arr[0].type === "twitch_clip"){
+            videoTypeText = "[Twitch]";
+        }
+        $ADD_image_container.find(".videoType").css("display","inline-block").text(videoTypeText);
+
         // 재생버튼 동작
         $play_container.one("click", function(){
             var $play_iframe;
@@ -967,9 +994,17 @@ export function chatImagelayoutfromLinks($line, arr){
             // 재생 시 상단 고정하기
             console.log(ADD_config.chat_video_play_top_fix, is_play_iframe_inserted);
             if(ADD_config.chat_video_play_top_fix && is_play_iframe_inserted){
-                $(this).closest("div.content").find(".chat_video_play_top_fix").removeClass("chat_video_play_top_fix").find("div.imgur_container").remove();
-                $(this).closest("div.line").addClass("chat_video_play_top_fix");
-                console.log($(this).closest("div.line"));
+                var $content = $(this).closest("div.content");
+                var $line = $(this).closest("div.line");
+                if($content.length === 0){
+                    $content = $(this).closest("#uha_chat_msgs");
+                }
+                if($line.length === 0){
+                    $line = $(this).closest("li");
+                }
+                $content.find(".chat_video_play_top_fix").removeClass("chat_video_play_top_fix").find("div.imgur_container").remove();
+                $line.addClass("chat_video_play_top_fix");
+                // console.log($(this).closest("div.line"));
             }
         });
     }
@@ -1439,7 +1474,7 @@ async function chatElemControl($line){
                     ADD_DEBUG("youtube getJSON", youtube_id, data);
 
                     var temp_arr = [];
-                    var temp_img_obj = {type:"youtube", id:youtube_id, link: data.thumbnail_url, title: "[Youtube] " + (data.title !== undefined ? data.title : "") + (data.author_name !== undefined ? " - " + data.author_name : ""), "width":data.thumbnail_width, "height":data.thumbnail_height};
+                    var temp_img_obj = {type:"youtube", id:youtube_id, link: data.thumbnail_url, title: "" + (data.title !== undefined ? data.title : "") + (data.author_name !== undefined ? " - " + data.author_name : ""), "width":data.thumbnail_width, "height":data.thumbnail_height};
                     if(youtube_st !== undefined){
                         temp_img_obj["start_time"]  = youtube_st;
                     }
@@ -1544,7 +1579,7 @@ async function chatElemControl($line){
                         var title = (response.title !== undefined ? response.title : "") + (response.broadcaster.display_name !== undefined ? " - " + response.broadcaster.display_name : "");
 
                         var temp_arr = [];
-                        var temp_img_obj = {type:"twitch_clip", id:twitch_thumb_id, link: image_url, title: "[Twitch] "+title, width:480, height:272, views:response.views};
+                        var temp_img_obj = {type:"twitch_clip", id:twitch_thumb_id, link: image_url, title: ""+title, width:480, height:272, views:response.views};
                         temp_arr.push(temp_img_obj);
                         chatImagelayoutfromLinks($line, temp_arr);
 
