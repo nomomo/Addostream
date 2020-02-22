@@ -56,7 +56,10 @@ var nomo_global_manager = async function(global){
         night_mode_on: undefined,
         night_mode_end: undefined,
         night_mode_black: false,
-        night_mode_direct_call: false
+        night_mode_direct_call: false,
+
+        // theme
+        theme_current: "default"
     };
 
     var init = async function(){

@@ -178,10 +178,12 @@ export async function ADD_chatting_arrive_for_UHAHA(){
         // imgur click event
         $(document)
             .on("click", ".imgur_safe_button", function(){
+                $(this).closest(".imgur_container").removeClass("blurred");
                 $(this).parent(".imgur_safe_screen").addClass("clicked").fadeOut(300);
             })
             .on("click", ".imgur_control_hide", function(){
                 ADD_DEBUG("Chatting 내 호출된 imgur 이미지 에서 - 버튼 클릭됨");
+                $(this).closest(".imgur_container").addClass("blurred");
                 var $safe_screen = $(this).closest(".imgur_container").find(".imgur_safe_screen");
                 if($safe_screen.hasClass("clicked")){
                     var safe_screen_opacity = Number(ADD_config.imgur_preview_opacity);
@@ -302,6 +304,7 @@ export async function ADD_chatting_arrive_for_UHAHA(){
     }
 }
 
+var first_date = undefined;
 async function uhaha_arrive(elems){
     if(ADD_config.chat_image_max_width > 320){
         ADD_config.chat_image_max_width = 320;
@@ -321,6 +324,10 @@ async function uhaha_arrive(elems){
     var nick = $nick.text();
     var content = $content.text();
     var createdDate = new Date(Number($nick.attr("data-date"))*1000);
+
+    if(first_date === undefined){
+        first_date = new Date(Number($("#uha_chat_msgs li:first").find("span.name").attr("data-date"))*1000);
+    }
 
     
     // 나 자신인지 확인
@@ -359,31 +366,31 @@ async function uhaha_arrive(elems){
     }
 
     // 과거 채팅 비교 및 기록하기
-    if( ADD_config.chat_dobae_block && (!ADD_config.chat_dobae_onlylink || ADD_config.chat_dobae_onlylink && $content.find("a").length > 0)){
+    if( ADD_config.chat_dobae_block && (!ADD_config.chat_dobae_onlylink || ADD_config.chat_dobae_onlylink && $content.find("a").length > 0) && Number(createdDate) > Number(first_date)){
         var new_createdDate = Number(createdDate);
         var last_similar_content = "";
         var last_similar;
         var similar;
         var dobae_repeat = 0;
 
-        if(chatlog_local[nick] === undefined){
+        if(chatlog_local[unique_id] === undefined){
             // 초기화
-            chatlog_local[nick] = {};
-            chatlog_local[nick].value = [];
+            chatlog_local[unique_id] = {};
+            chatlog_local[unique_id].value = [];
         }
         else{
             // 검색
-            var old_arr = chatlog_local[nick].value;
+            var old_arr = chatlog_local[unique_id].value;
             for(var ind=old_arr.length-1; ind>=0; ind--){
                 var old_createdDate = old_arr[ind].createdDate;
                 
                 // 시간제한 확인
                 if( new_createdDate - old_createdDate > ADD_config.chat_dobae_timelimit * 1000 ){
-                    // console.log("지우기 전" + JSON.stringify(chatlog_local[nick].value));
+                    // console.log("지우기 전" + JSON.stringify(chatlog_local[unique_id].value));
                     // console.log("지울 개수", ind+1);
                     old_arr.splice(0,ind+1);
-                    chatlog_local[nick].value = old_arr;
-                    // console.log("지운 후" + JSON.stringify(chatlog_local[nick].value));
+                    chatlog_local[unique_id].value = old_arr;
+                    // console.log("지운 후" + JSON.stringify(chatlog_local[unique_id].value));
                     break;
                 }
                 var old_content = old_arr[ind].content;
@@ -399,10 +406,10 @@ async function uhaha_arrive(elems){
         }
 
         // 새 값 추가
-        if(chatlog_local[nick].value.length >= ADD_config.chat_dobae_repeat + 10){
-            chatlog_local[nick].value.shift();
+        if(chatlog_local[unique_id].value.length >= ADD_config.chat_dobae_repeat + 10){
+            chatlog_local[unique_id].value.shift();
         }
-        chatlog_local[nick].value.push({content:content, createdDate:new_createdDate});
+        chatlog_local[unique_id].value.push({content:content, createdDate:new_createdDate});
 
         // 도배인 경우
         if(dobae_repeat + 1 >= ADD_config.chat_dobae_repeat){
@@ -416,7 +423,7 @@ async function uhaha_arrive(elems){
                 if($.isNumeric(chat_block_log_letter_limit) || chat_block_log_letter_limit < 0){
                     chat_block_log_letter_limit = 40;
                 }
-                ADD_Blocked_Chat.push({"created":Number(createdDate), "nick":nick, "content":"[도배] "+content.substr(0,chat_block_log_letter_limit)});
+                ADD_Blocked_Chat.push({"created":Number(createdDate), "nick":unique_id, "content":"[도배] "+content.substr(0,chat_block_log_letter_limit)});
                 await nomo_common.nomo.setVal("ADD_Blocked_Chat", ADD_Blocked_Chat);
             }
             ADD_DEBUG("도배 차단됨, ["+last_similar_content+"], ["+content+"] :"+last_similar);
@@ -430,14 +437,14 @@ async function uhaha_arrive(elems){
                         //ADD_send_sys_msg("[도배 유저 자동 차단] 닉네임: "+nick +"<br />마지막 채팅: "+content);
                         $(`<li class="is_notme"><span class="name" data-date="${String(Number(new Date())).substr(0,10)}" data-name="Dostream+">Dostream+</span>
                         <span class="text">[도배 유저 자동 차단]<br />닉네임: ${nick}<br />마지막 채팅: ${content}</span></li>`).appendTo("#uha_chat_msgs");
-                        chat_manager.simpleBlock(nick,content);
+                        chat_manager.simpleBlock(unique_id,nick+" : "+content);
                     }
                 }
                 else {   // 링크 포함여부 상관 없이 차단하는 경우
                     // ADD_send_sys_msg("[도배 유저 자동 차단] 닉네임: "+nick +"<br />마지막 채팅: "+content);
                     $(`<li class="is_notme"><span class="name" data-date="${String(Number(new Date())).substr(0,10)}" data-name="Dostream+">Dostream+</span>
                         <span class="text">[도배 유저 자동 차단]<br />닉네임: ${nick}<br />마지막 채팅: ${content}</span></li>`).appendTo("#uha_chat_msgs");
-                    chat_manager.simpleBlock(nick,content);
+                    chat_manager.simpleBlock(unique_id,nick+" : "+content);
                 }
             }
 

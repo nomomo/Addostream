@@ -27,7 +27,7 @@ export var GM_setting = (function($, global, document){ //
         
         theme_leftchat : { category:"theme", category_name:"테마", depth:1, type: "checkbox", value: false, title:"채팅창 위치를 왼쪽으로 변경", desc:"", change:function(){nomo_theme.ADD_leftchat_change();} },
         theme_on : { category:"theme", depth:1, type: "checkbox", value: false, title:"테마 기능 사용", desc:"", change:function(){nomo_theme.ADD_theme();}},
-        theme : { category:"theme", depth:2, type: "radio", value: "default", title:"테마 선택", desc:"", radio: {default: {title: "기본", value:"default"}, black: {title: "어두운 테마", value:"black"} }, change:function(){nomo_theme.ADD_theme();}},
+        theme : { category:"theme", depth:2, type: "radio", value: "default", title:"테마 선택", desc:"", radio: {default: {title: "기본", value:"default"}, black: {title: "블랙", value:"black"}/*, dark: {title: "다크(테스트)", value:"dark"} */}, change:function(){nomo_theme.ADD_theme();}},
         theme_self_bold_chat : { under_dev:true, category:"theme", depth:2, type: "checkbox", value: false, title:"자신의 채팅을 굵게 표시", desc:"", change:function(){if(nomo_common.ADD_get_page_type() === nomo_const.C_UCHAT){nomo_theme.ADD_theme();}} },
         theme_font_size : { category:"theme", depth:2, type: "text", value: 1.0, valid:"number", min_value:0.1, max_value:10, title:"채팅 글씨 크기 조절(배수)", desc:"(기본값: 1.0)", change:function(){if(nomo_common.ADD_get_page_type() === nomo_const.C_UCHAT){nomo_theme.ADD_theme();}} },
         theme_font_custom : { category:"theme", depth:2, type: "radio", value: "default", radio: {default: {title: "기본", value:"default"}, NotoSanskr: {title: "Noto Sans KR", value:"NotoSanskr"}}, title:"폰트 변경", desc:"일부 OS, 브라우저에서 적용되지 않을 수 있음", change:function(){nomo_theme.ADD_theme();} },

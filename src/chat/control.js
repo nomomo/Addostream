@@ -55,6 +55,12 @@ export var chat_basic_css = `#ADD_send_location_button {
     height:calc(100% - 62px);
     background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAJElEQVQImWPo6ur6D8MMDAz/GZA5XV1dEAEYB8pGcLq6uv4DAKP8I1nj691jAAAAAElFTkSuQmCC) repeat;
 }
+.imgur_container.blurred .simple_image_container {
+    overflow:hidden;
+}
+.imgur_container.blurred img, .imgur_container.blurred video{
+    filter:blur(5px);
+}
 .imgur_container .imgur_safe_screen .imgur_safe_button{
     border-radius: 5px;
     padding: 10px 15px;
@@ -515,10 +521,12 @@ export async function ADD_chatting_arrive(){
             //////////////////////////////////////////////////////////////////////////////////
             // imgur click event
             nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click", ".imgur_safe_button", function(){
+                $(this).closest(".imgur_container").removeClass("blurred");
                 $(this).parent(".imgur_safe_screen").addClass("clicked").fadeOut(300);
             });
             nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click", ".imgur_control_hide", function(){
                 ADD_DEBUG("Chatting 내 호출된 imgur 이미지 에서 - 버튼 클릭됨");
+                $(this).closest(".imgur_container").addClass("blurred");
                 var $safe_screen = $(this).closest(".imgur_container").find(".imgur_safe_screen");
                 if($safe_screen.hasClass("clicked")){
                     var safe_screen_opacity = Number(ADD_config.imgur_preview_opacity);
@@ -912,6 +920,7 @@ export function chatImagelayoutfromLinks($line, arr){
         $ADD_image_container.find(".imgur_safe_screen").css("opacity",safe_screen_opacity).css("display","inline-flex");
         $ADD_image_container.find(".imgur_control_hide").css("display","inline-flex");
         $ADD_image_container.find(".imgur_safe_button").css("display","inline-block");
+        $ADD_image_container.addClass("blurred");
     }
 
     // 일단 스크롤 내리고, 스크롤 존재 여부 기억해놓기
