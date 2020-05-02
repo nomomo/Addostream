@@ -845,7 +845,7 @@ body.theme .main-streams>ul>li .stream-wrap>.info>.from.youtube{
 body.theme .main-streams>ul>li .stream-wrap>.info>.from.daumpot{
     background-color: var(--main-list-viewer-daumpot-background);
 }
-body.theme .main-streams>ul>li.fixed_streamer{
+body.theme .main-streams>ul>li.fixed_streamer, body.theme .fixed_streamer{
     background-color: var(--main-list-fixed-streamer-background);
 }
 body.theme .icon_star{
