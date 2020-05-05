@@ -1387,8 +1387,24 @@ async function chatElemControl($line){
                 $aElem.html(decodeURIComponent($aElem.html()));
             }
 
-            // 트위치 링크인 경우 닉네임을 링크 끝에 추가하기
-            if(href.toLowerCase().indexOf("dostream.com/#/stream/twitch/") !== -1 || href.toLowerCase().indexOf("dostream.com/#/stream/multitwitch/") !== -1){
+            // const regex_twitch = /^https?:\/\/(?:www\.|)twitch\.tv\/([a-zA-Z1-9-_]+)/;
+            const regex_platform = /^https?:\/\/(?:www\.|play.|)(twitch|afreeca)(?:\.tv|tv\.com)\/([a-zA-Z1-9-_]+)/i;
+            var match_platform = null;
+            if(ADD_config.chat_auto_coor_twitch_afreeca){
+                match_platform = href.match(regex_platform);
+            }
+
+            // 트위치 or 아프리카 링크인 경우
+            if(ADD_config.chat_auto_coor_twitch_afreeca && match_platform !== null && match_platform[2] !== undefined){
+                $aElem.after(`<a href="http://www.dostream.com/#/stream/${match_platform[1]}/${match_platform[2]}" target="_blank" class="topClick" style="display:inline-block;margin-left:0px;color:#000;font-weight:700;vertical-align:baseline;">[${ADD_streamer_nick(match_platform[2])}]</a>`);
+                
+                // 스크롤 내리기
+                if( temp_isChatScrollOn ){
+                    goScrollDown();
+                }
+            }
+            // 두스 트위치 링크인 경우 닉네임을 링크 끝에 추가하기
+            else if(href.toLowerCase().indexOf("dostream.com/#/stream/twitch/") !== -1 || href.toLowerCase().indexOf("dostream.com/#/stream/multitwitch/") !== -1){
                 var ch_text = "";
                 var ch_streamer_id = href.split("/").pop();
 
@@ -1404,7 +1420,7 @@ async function chatElemControl($line){
                 //if(ch_text.toLowerCase() !== ch_streamer_id.toLowerCase()){
                 //if(ch_text !== ch_streamer_id){
                 if(ch_text !== undefined || ch_text !== ""){
-                    $aElem.after(" <span class=\"keyword_pass\" style=\"color:#000;font-weight:700;vertical-align:top;\">["+ch_text+"]</span>");
+                    $aElem.append(" <span class=\"keyword_pass\" style=\"color:#000;font-weight:700;vertical-align:baseline;\">["+ch_text+"]</span>");
                 }
 
                 // 스크롤 내리기
