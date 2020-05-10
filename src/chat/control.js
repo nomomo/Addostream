@@ -1388,7 +1388,7 @@ async function chatElemControl($line){
             }
 
             // const regex_twitch = /^https?:\/\/(?:www\.|)twitch\.tv\/([a-zA-Z1-9-_]+)/;
-            const regex_platform = /^https?:\/\/(?:www\.|play.|)(twitch|afreeca)(?:\.tv|tv\.com)\/([a-zA-Z1-9-_]+)/i;
+            const regex_platform = /^https?:\/\/(?:www\.|play.|)(twitch|afreeca)(?:\.tv|tv\.com)\/([a-zA-Z0-9-_]+)/i;
             var match_platform = null;
             if(ADD_config.chat_auto_coor_twitch_afreeca){
                 match_platform = href.match(regex_platform);
