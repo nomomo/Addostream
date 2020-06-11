@@ -50,6 +50,7 @@
     "unsafeWindow"
   ],
   "connect":[
+    "dostream.com",
     "appspot.com",
     "coord.dostream.com",
     "twitch.tv"

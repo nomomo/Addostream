@@ -704,11 +704,11 @@ export function ADD_basic_layout(){
                             switch (ADD_config.playing_chat_iframe_theme) {
                             case "default":
                                 if(ADD_config.theme === "dark" || ADD_config.theme === "black" || $("body").hasClass("theme-black")){
-                                    stream_chat_theme = "?darkpopout";
+                                    stream_chat_theme = "&darkpopout";
                                 }
                                 break;
                             case "dark":
-                                stream_chat_theme = "?darkpopout";
+                                stream_chat_theme = "&darkpopout";
                                 break;
                             case "white":
                                 break;
@@ -729,7 +729,7 @@ export function ADD_basic_layout(){
                             // leftchat 에 대한 대응은 theme.js 에 추가한 css 를 이용해서 함
                             $stream_chat = $(`<div class="stream_chat" style="position:absolute;margin-top:${header_height}px;top:0;height:calc(100% - ${header_height}px);"></div>`);
                             $stream.append($stream_chat);
-                            var $stream_chat_iframe = `<div class="stream_chat_iframe" style="width:${stream_chat_width}px;height:100%;"><iframe src="https://www.twitch.tv/embed/${nomo_global.ADD_now_playing.id}/chat${stream_chat_theme}" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen="allowfullscreen"></iframe></div>`;
+                            var $stream_chat_iframe = `<div class="stream_chat_iframe" style="width:${stream_chat_width}px;height:100%;"><iframe src="https://www.twitch.tv/embed/${nomo_global.ADD_now_playing.id}/chat?parent=www.dostream.com${stream_chat_theme}" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen="allowfullscreen"></iframe></div>`;
                             // var $stream_chat_iframe = `<div class="stream_chat_iframe" style="width:${stream_chat_width}px;height:100%;"><iframe src="https://www.twitch.tv/${nomo_global.ADD_now_playing.id}/chat${stream_chat_theme}" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen="allowfullscreen"></iframe></div>`;
                             // var $stream_chat_iframe = `<div class="stream_chat_iframe" style="width:${stream_chat_width}px;height:100%;"><iframe src="https://twitch.tv/chat/embed?channel=${nomo_global.ADD_now_playing.id}${stream_chat_theme}" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen="allowfullscreen"></iframe></div>`;
                             $stream_chat.empty().append($stream_chat_iframe);

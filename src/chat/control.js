@@ -1674,7 +1674,7 @@ async function chatElemControl($line){
     //$(document).find("div.line:lt(-300)")
     //}   // 
 
-    if(nomo_global.DEBUG){
+    if(nomo_global.DEBUG && typeof unsafeWindow.$ !== undefined && typeof unsafeWindow.$ === "function"){
         unsafeWindow.$(document).trigger("chat_line", {"id":nick, "nick":nick, "content":content, "color":debug_color, "me":myLine, "date":createdDate});
     }
 

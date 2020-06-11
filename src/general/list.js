@@ -414,11 +414,15 @@ export async function ADD_parse_list_data(flag){
         
     }
     if(GM_cache_stream_list){
-        $.ajax({
-            url: "http://www.dostream.com/dev/stream_list.php",
-            type: "GET",
-            dataType:"json",
-            success:function(data){
+        GM_xmlhttpRequest({
+            url:"http://www.dostream.com/dev/stream_list.php",
+            method: "GET",
+            headers: {
+                "Content-Type": "application/javascript"
+            },
+            timeout: 2000,
+            onload: async function(response){
+                var data = JSON.parse(response.responseText);
                 if(data === null){
                     ADD_DEBUG("기본 파싱 리스트 존재하지 않음");
                     data = [];
@@ -432,13 +436,40 @@ export async function ADD_parse_list_data(flag){
                 ADD_run(data,flag);
                 nomo_global.list_update_time = new Date();
                 ADD_DEBUG("리스트 업데이트 시간 갱신 - 리스트:", nomo_global.list_update_time);
-
-            },
-            error:function(){
-                ADD_DEBUG("파싱 실패함");
+                
+            }, onerror: async function(e){
+                ADD_DEBUG("파싱 실패함", e);
+                ADD_run([],flag);
+            }, ontimeout: async function(e){
+                ADD_DEBUG("파싱 실패함", e);
                 ADD_run([],flag);
             }
         });
+        // $.ajax({
+        //     url: "http://www.dostream.com/dev/stream_list.php",
+        //     type: "GET",
+        //     dataType:"json",
+        //     success:function(data){
+        //         if(data === null){
+        //             ADD_DEBUG("기본 파싱 리스트 존재하지 않음");
+        //             data = [];
+        //             // return;
+        //         }
+        //         else{
+        //             ADD_DEBUG("기본 파싱 리스트 콜 성공");
+        //         }
+        //         nomo_common.GM_cache_write("GM_cache_stream_list");
+        //         GM.setValue("ADD_stream_list", data);
+        //         ADD_run(data,flag);
+        //         nomo_global.list_update_time = new Date();
+        //         ADD_DEBUG("리스트 업데이트 시간 갱신 - 리스트:", nomo_global.list_update_time);
+
+        //     },
+        //     error:function(e){
+        //         ADD_DEBUG("파싱 실패함", e);
+        //         ADD_run([],flag);
+        //     }
+        // });
     }
     else{
         ADD_DEBUG("기본 리스트 캐시된 것 읽어옴");
