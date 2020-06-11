@@ -761,7 +761,7 @@ export function ADD_basic_layout(){
                         for(var i=0; i<eff_url_arr.length; i++){
                             $multi_window.find(".btn-group").append(`
                                 <button type="button" class="btn btn-primary">
-                                    <a href='http://www.dostream.com/#/stream/twitch/`+eff_url_arr[i]+"' style='font-style:normal;color:#fff'>"+(i+1)+`</a>
+                                    <a href='https://www.dostream.com/#/stream/twitch/`+eff_url_arr[i]+"' style='font-style:normal;color:#fff'>"+(i+1)+`</a>
                                 </button>
                             `);
                         }

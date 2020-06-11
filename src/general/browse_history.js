@@ -182,7 +182,7 @@ function ADD_Channel_History_layout(ADD_h_cookie, fade){
             }
 
             h_title_text = ch_streamer_nick + "(" + ch_streamer_id  + ") - " + ch_stream_text;
-            h_text = h_text + "<div class=\"h_text_container\">" + from2 + platform_class + "<a class=" + ch_stream + " href=\"" + "http://www.dostream.com/#/stream/" + ch_stream + "/" + ch_streamer_id + "\" title=\"" + h_title_text + "\">" + ch_text + "</a></div>";
+            h_text = h_text + "<div class=\"h_text_container\">" + from2 + platform_class + "<a class=" + ch_stream + " href=\"" + "https://www.dostream.com/#/stream/" + ch_stream + "/" + ch_streamer_id + "\" title=\"" + h_title_text + "\">" + ch_text + "</a></div>";
         }
         h_text = h_text + "</span>";
         if(fade){

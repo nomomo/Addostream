@@ -415,12 +415,12 @@ export async function ADD_parse_list_data(flag){
     }
     if(GM_cache_stream_list){
         GM_xmlhttpRequest({
-            url:"http://www.dostream.com/dev/stream_list.php",
+            url:"https://www.dostream.com/dev/stream_list.php",
             method: "GET",
             headers: {
                 "Content-Type": "application/javascript"
             },
-            timeout: 2000,
+            timeout: 10000,
             onload: async function(response){
                 var data = JSON.parse(response.responseText);
                 if(data === null){
@@ -441,12 +441,12 @@ export async function ADD_parse_list_data(flag){
                 ADD_DEBUG("파싱 실패함", e);
                 ADD_run([],flag);
             }, ontimeout: async function(e){
-                ADD_DEBUG("파싱 실패함", e);
+                ADD_DEBUG("타임아웃, 파싱 실패함", e);
                 ADD_run([],flag);
             }
         });
         // $.ajax({
-        //     url: "http://www.dostream.com/dev/stream_list.php",
+        //     url: "https://www.dostream.com/dev/stream_list.php",
         //     type: "GET",
         //     dataType:"json",
         //     success:function(data){

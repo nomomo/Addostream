@@ -134,7 +134,7 @@ export function ADD_test(){
         {
             title: "설정 페이지로 이동",
             func:function(){
-                window.location.href = "http://www.dostream.com/#/addostream";
+                window.location.href = "https://www.dostream.com/#/addostream";
             }
         },
         {

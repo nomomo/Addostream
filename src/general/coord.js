@@ -252,7 +252,7 @@ async function ADD_parse_insagirl(page){
                 if(ADD_config.insagirl_block_by_nick && chat_manager !== undefined && chat_manager.getIsBlock(nick)){
                     continue;
                 }
-                var content = autolinker.link(data[z].message);//.replace(expUrl, "<a href=\"$&\" target=\"_blank\">$&</a>");
+                var content = autolinker.link(data[z].message.replace("http://dostream.com/", "https://dostream.com/").replace("http://www.dostream.com/", "https://www.dostream.com/"));//.replace(expUrl, "<a href=\"$&\" target=\"_blank\">$&</a>");
                 var $temp_a = $("<span>"+content+"</span>").find("a");
                 
                 // 연속된 좌표 숨기기
@@ -343,7 +343,7 @@ async function ADD_parse_insagirl(page){
             coord_fail = true;
             var coord_ori = (ADD_config.insagirl_select == 1 ? "coord.dostream.com" : "insagirl-hrm.appspot.com");
             var coord_new = (ADD_config.insagirl_select == 1 ? "insagirl-hrm.appspot.com" : "coord.dostream.com");
-            ADD_send_sys_msg_from_main_frame(coord_ori+" 가 응답하지 않아 좌표 사이트를 "+coord_new+" 으로 변경합니다. 설정을 영구적으로 변경하려면 <a href='http://www.dostream.com/addostream/' target='_blank' style='text-decoration:underline;'>[애드온 상세 설정]</a>에서 [고급 기능 설정]을 활성화한 후, [좌표 사이트 선택] 옵션을 변경하십시오.");
+            ADD_send_sys_msg_from_main_frame(coord_ori+" 가 응답하지 않아 좌표 사이트를 "+coord_new+" 으로 변경합니다. 설정을 영구적으로 변경하려면 <a href='https://www.dostream.com/addostream/' target='_blank' style='text-decoration:underline;'>[애드온 상세 설정]</a>에서 [고급 기능 설정]을 활성화한 후, [좌표 사이트 선택] 옵션을 변경하십시오.");
 
             ADD_config.insagirl_select = (ADD_config.insagirl_select == 1 ? 2 : 1);
             await ADD_parse_insagirl(_page);

@@ -813,7 +813,7 @@ async function uhaha_arrive(elems){
                                 continue;
                             }
                             if(contentText.indexOf(disp_name) !== -1){
-                                contentText = contentText.split(disp_name).join("<a href='http://www.dostream.com/#/stream/twitch/"+id+"' class='topClick autokeyword'>"+disp_name+"</a>");   // replaceAll
+                                contentText = contentText.split(disp_name).join("<a href='https://www.dostream.com/#/stream/twitch/"+id+"' class='topClick autokeyword'>"+disp_name+"</a>");   // replaceAll
                                 $(element).replaceWith(contentText);
                                 //ADD_DEBUG("contentText", sv, contentText, $(element));
                                 rep = rep + 1;

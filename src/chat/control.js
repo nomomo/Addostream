@@ -474,8 +474,10 @@ export async function ADD_chatting_arrive(){
 
             // 채팅창에 있는 두스 링크 클릭 시 이벤트
             nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click",".topClick",function(e){
+                ADD_DEBUG("TOP CLICKED");
                 e.preventDefault();
-                parent.window.location.href = this.href;
+                ADD_DEBUG("PARENT WINDOW LOCATION HREF", parent.window.location.href);
+                window.parent.location.href = this.href;
             });
 
             // 채팅창 닉네임 클릭 시 "메모하기" 버튼 생성하기
@@ -1340,7 +1342,7 @@ async function chatElemControl($line){
                                 continue;
                             }
                             if(contentText.indexOf(disp_name) !== -1){
-                                contentText = contentText.split(disp_name).join("<a href='http://www.dostream.com/#/stream/twitch/"+id+"' class='topClick autokeyword'>"+disp_name+"</a>");   // replaceAll
+                                contentText = contentText.split(disp_name).join("<a href='https://www.dostream.com/#/stream/twitch/"+id+"' class='topClick autokeyword'>"+disp_name+"</a>");   // replaceAll
                                 $(element).replaceWith(contentText);
                                 //ADD_DEBUG("contentText", sv, contentText, $(element));
                                 rep = rep + 1;
@@ -1396,7 +1398,7 @@ async function chatElemControl($line){
 
             // 트위치 or 아프리카 링크인 경우
             if(ADD_config.chat_auto_coor_twitch_afreeca && match_platform !== null && match_platform[2] !== undefined){
-                $aElem.after(`<a href="http://www.dostream.com/#/stream/${match_platform[1]}/${match_platform[2]}" target="_blank" class="topClick" style="display:inline-block;margin-left:0px;color:#000;font-weight:700;vertical-align:baseline;">[${ADD_streamer_nick(match_platform[2])}]</a>`);
+                $aElem.after(`<a href="https://www.dostream.com/#/stream/${match_platform[1]}/${match_platform[2]}" target="_blank" class="topClick" style="display:inline-block;margin-left:0px;color:#000;font-weight:700;vertical-align:baseline;">[${ADD_streamer_nick(match_platform[2])}]</a>`);
                 
                 // 스크롤 내리기
                 if( temp_isChatScrollOn ){
@@ -1756,7 +1758,7 @@ var ADD_chat_auto_reload = {
         }
         if(nomo_global.ADD_is_unique_window_reload && nomo_global.ADD_unique_window_reload_counter < ADD_UNIQUE_WINDOW_RELOAD_MAX){
             nomo_global.ADD_unique_window_reload_counter += 1;
-            window.location.href = "http://www.dostream.com/uchat2.php?uw="+nomo_global.ADD_unique_window+"&uwc="+nomo_global.ADD_unique_window_reload_counter;
+            window.location.href = "https://www.dostream.com/uchat2.php?uw="+nomo_global.ADD_unique_window+"&uwc="+nomo_global.ADD_unique_window_reload_counter;
 
             // setTimeout(function(){
             //     ADD_unique_window_reload_counter -= 1;
