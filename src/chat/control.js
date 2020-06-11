@@ -549,6 +549,14 @@ export async function ADD_chatting_arrive(){
                 $(this).closest(".imgur_container").remove();
             });
 
+            // .chatInput 클릭 관련 이벤트
+            if(ADD_config.chat_input_click){
+                nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click", ".chatInput", function(e){
+                    $(e.target).blur();
+                    $(e.target).focus();
+                });
+            }
+
             // 스크롤바 관련 이벤트 - 향상된 자동 스크롤
             if(ADD_config.chat_scroll){
                 ADD_DEBUG("CHAT - Scroll 이벤트 ON");
