@@ -1002,7 +1002,7 @@ export function chatImagelayoutfromLinks($line, arr){
             }
             else if(arr[0].type === "twitch_clip"){
                 $play_iframe = $(`
-                    <iframe src="https://clips.twitch.tv/embed?clip=`+arr[0].id+`&muted=false&autoplay=true" autoplay; frameborder="0" allowfullscreen="true" height="100%" width="100%"></iframe>
+                    <iframe src="https://clips.twitch.tv/embed?clip=`+arr[0].id+`&muted=false&autoplay=true&parent=www.dostream.com" autoplay; frameborder="0" allowfullscreen="true" height="100%" width="100%"></iframe>
                 `);
                 $(this).closest("div.imgur_container").find("div.viewers").hide();
                 // $(this).closest("div.simple_image").empty().append($play_iframe);
