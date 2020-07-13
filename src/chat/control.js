@@ -328,6 +328,10 @@ export async function ADD_chatting_arrive(){
         uchat_connect_waiting();
         $(document).arrive("u-chat > iframe", {existing: true}, async iframeElems => {
             ADD_DEBUG("채팅 iframe 생성");
+            if($(iframeElems).attr("src") !== undefined && $(iframeElems).attr("src").indexOf("uchat.io") !== -1){
+                ADD_DEBUG("의미를 알 수 없는 iframe 이므로 리턴", $(iframeElems).attr("src"));
+                return;
+            }
             nomo_global.GLOBAL_CHAT_IFRAME = iframeElems;
             nomo_global.$GLOBAL_CHAT_IFRAME = $(iframeElems);
             nomo_global.$GLOBAL_IFRAME_DOCUMENT = nomo_global.$GLOBAL_CHAT_IFRAME.contents().first();
