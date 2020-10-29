@@ -4,6 +4,20 @@ export function event_hijacking(){
 
     if(nomo_global.PAGE == nomo_const.C_EMBEDED_TWITCH){
 
+        if(ADD_config.twitch_control && ADD_config.twitch_frontPageMode){
+            ADD_DEBUG("fetch override!");
+            var realFetch = unsafeWindow.fetch;
+            unsafeWindow.fetch = function(input, init) {
+                if ( arguments.length >= 2 && typeof input === 'string' && input.includes('/access_token') ) {
+                    var url = new URL(arguments[0]);
+                    url.searchParams.set("player_type", "frontpage");
+                    arguments[0] = url.href;
+                    ADD_DEBUG("twitch fetch catched!", url);
+                }
+                return realFetch.apply(this, arguments);
+            };
+        }
+
         if(ADD_config.twitch_control && ADD_config.twitch_disable_visibilitychange){
             unsafeWindow._addEventListener = unsafeWindow.addEventListener;
             unsafeWindow.addEventListener = function(a,b,c){
