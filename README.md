@@ -48,8 +48,8 @@
 
 ## Change log
 
-### 1.53.8 (2020-10-29)
-- (실험실) 테스트 용 Front Page Mode 추가 - Twitch 의 맨 첫화면에서 동영상을 로드하는 것처럼 속여서 중간 광고를 삭제합니다. (제대로 적용되지 않을 수도 있음, 테스트 중)
+### 1.53.8 (2020-10-30)
+- (실험실) 테스트 기능 삭제 ([https://www.reddit.com/r/Twitch/comments/jjepg8/fix_for_ublock_origin_on_twitch_i_updated_the/](https://www.reddit.com/r/Twitch/comments/jjepg8/fix_for_ublock_origin_on_twitch_i_updated_the/) 참고해서 직접 설정하세요)
 
 ### 1.53.7 (2020-09-12)
 - 사전에 저장된 스트리머 ID- 닉네임 리스트 수정/추가
