@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name Addostream
-// @version 1.53.8
+// @version 1.53.9
 // @author Nomo
 // @description 두스트림에 기능을 추가한다.
 // @supportURL https://github.com/nomomo/Addostream/issues
