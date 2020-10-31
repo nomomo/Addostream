@@ -5,11 +5,12 @@ export function event_hijacking(){
     if(nomo_global.PAGE == nomo_const.C_EMBEDED_TWITCH){
 
         if(ADD_config.twitch_control && ADD_config.twitch_frontPageMode){
+            /// twitch-videoad.js
             const origFetch = unsafeWindow.fetch;
             unsafeWindow.fetch = (url, init, ...args) => {
                 if (typeof url === "string") {
                     if (url.includes("/access_token")) {
-                        url = url.replace("player_type=site", "player_type=dashboard");
+                        url = url.replace("player_type=site", "player_type=facebook");
                     } else if (
                         url.includes("/gql") &&
                         init &&
@@ -17,12 +18,12 @@ export function event_hijacking(){
                         init.body.includes("PlaybackAccessToken")
                     ) {
                         const newBody = JSON.parse(init.body);
-                        newBody.variables.playerType = "dashboard";
+                        newBody.variables.playerType = "facebook";
                         init.body = JSON.stringify(newBody);
                     }
                 }
                 return origFetch(url, init, ...args);
-            }
+            };
         }
 
         if(ADD_config.twitch_control && ADD_config.twitch_disable_visibilitychange){

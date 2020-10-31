@@ -48,8 +48,9 @@
 
 ## Change log
 
-### 1.53.9 (2020-10-30)
-- (실험실) 광고 차단 테스트 기능 2차 수정 ([https://www.reddit.com/r/Twitch/comments/jjepg8/fix_for_ublock_origin_on_twitch_i_updated_the/](https://www.reddit.com/r/Twitch/comments/jjepg8/fix_for_ublock_origin_on_twitch_i_updated_the/) 의 방법과 동일하므로 이미 설정한 사람은 하지 않아도 됨)
+### 1.53.10 (2020-10-31)
+- (실험실) 광고 차단 테스트 기능 3차 수정 (마지막임)
+- 새로운 방법이 바로바로 막히고 있어서, 광고 차단 테스트 기능 대신 다음의 링크의 방법을 따라하는 것을 권장함 [https://www.reddit.com/r/Twitch/comments/jjepg8/fix_for_ublock_origin_on_twitch_i_updated_the/](https://www.reddit.com/r/Twitch/comments/jjepg8/fix_for_ublock_origin_on_twitch_i_updated_the/)
 
 ### 1.53.7 (2020-09-12)
 - 사전에 저장된 스트리머 ID- 닉네임 리스트 수정/추가
