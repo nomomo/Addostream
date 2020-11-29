@@ -32,6 +32,7 @@ function UHAHA_sys_msg(msg, raw){
 
 //////////////////////////////////////////////////////////////////////////////////
 // 우하하용 채팅 도구
+var dobae_check_pass = false;
 export async function ADD_chatting_arrive_for_UHAHA(){
     ADD_DEBUG("ADD_chatting_arrive_for_UHAHA 함수 실행");
     nomo_global.$GLOBAL_IFRAME_DOCUMENT = $(document);
@@ -55,6 +56,10 @@ export async function ADD_chatting_arrive_for_UHAHA(){
                     chatlog_local = {};
                     nomo_global.uhaha_chat_auto_remove_counter = 0;
                     $("#uha_chat_btnclear").trigger("click");
+                    dobae_check_pass = true;
+                    setTimeout(function(){
+                        dobae_check_pass = false;
+                    },2000);
                     UHAHA_sys_msg(`자동 싹쓸이 개수(${auto_remove_count})에 도달하여 채팅창을 초기화 했습니다.`);
                 }
             }
@@ -196,6 +201,7 @@ export async function ADD_chatting_arrive_for_UHAHA(){
                     $safe_screen.removeClass("clicked").fadeTo(300, safe_screen_opacity);
                 }
                 else{
+                    $(this).closest(".imgur_container").removeClass("blurred");
                     $safe_screen.addClass("clicked").fadeOut(300);
                 }
             })
@@ -222,6 +228,10 @@ export async function ADD_chatting_arrive_for_UHAHA(){
 
         // 싹쓸이 버튼 클릭 시
         $("#uha_chat_btnclear").on("click", function(){
+            dobae_check_pass = true;
+            setTimeout(function(){
+                dobae_check_pass = false;
+            },2000);
             chatlog_local = {};
             nomo_global.uhaha_chat_auto_remove_counter = 0;
         });
@@ -366,7 +376,7 @@ async function uhaha_arrive(elems){
     }
 
     // 과거 채팅 비교 및 기록하기
-    if( ADD_config.chat_dobae_block && (!ADD_config.chat_dobae_onlylink || ADD_config.chat_dobae_onlylink && $content.find("a").length > 0) && Number(createdDate) > Number(first_date)){
+    if(ADD_config.chat_dobae_block && !dobae_check_pass && (!ADD_config.chat_dobae_onlylink || ADD_config.chat_dobae_onlylink && $content.find("a").length > 0) && Number(createdDate) > Number(first_date)){
         var new_createdDate = Number(createdDate);
         var last_similar_content = "";
         var last_similar;
@@ -458,6 +468,7 @@ async function uhaha_arrive(elems){
     // 링크 엘리먼트 찾기
     var $aElems = $line.find("a");
     var hrefs = [];
+    const regex_m3u8 = /^https?:\/\/.+\.m3u8/i;
     if($aElems.length !== 0){
         $aElems.each(function(index){
             var $aElem = $($aElems[index]);
@@ -492,9 +503,16 @@ async function uhaha_arrive(elems){
                 //if(ch_text.toLowerCase() !== ch_streamer_id.toLowerCase()){
                 //if(ch_text !== ch_streamer_id){
                 if(ch_text !== undefined || ch_text !== ""){
-                    $aElem.after(" <span class=\"keyword_pass\" style=\"color:#000;font-weight:700;vertical-align:top;\">["+ch_text+"]</span>");
+                    $aElem.after(" <span class=\"keyword_pass\" style=\"ch_text\">["+ch_text+"]</span>");
                 }
 
+                // 스크롤 내리기
+                if( temp_isChatScrollOn ){
+                    goScrollDown();
+                }
+            }// M3U8 링크인 경우
+            else if(regex_m3u8.test(href)){
+                $aElem.after(` <a href="https://www.dostream.com/#/stream/m3u8/${href}}" target="_top" class="topClick" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[M3U8 PLAYER]</a>`);
                 // 스크롤 내리기
                 if( temp_isChatScrollOn ){
                     goScrollDown();

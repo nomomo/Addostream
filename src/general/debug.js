@@ -2,7 +2,7 @@ import * as utils from "libs/nomo-utils.js";
 var ADD_DEBUG = utils.ADD_DEBUG;
 import * as nomo_common from "general/common.js";
 import nomo_const from "general/const.js";
-
+import {m3u8_override} from "general/m3u8player.js";
 
 // test event 테스트 이벤트;
 export function ADD_test(){
@@ -281,6 +281,12 @@ export function ADD_test(){
                         ADD_DEBUG("error", err);
                     }
                 });
+            }
+        },
+        {
+            title: "m3u8 테스트",
+            func:function(){
+                m3u8_override();
             }
         }
     ];

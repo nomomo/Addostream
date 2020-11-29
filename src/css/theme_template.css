@@ -1,0 +1,530 @@
+
+body {
+    color:var(--body-font-color);
+    background-color:var(--body-background-color);
+    border-color:var(--body-border-color);
+}
+body.theme ::selection {
+    background: var(--drag-background);
+    color: var(--drag-font-color);
+    text-shadow: none;
+}
+a:hover, a:focus {
+    color: var(--a-hover-font-color);
+    /* text-decoration: var(--a-hover-text-decoration); */
+}
+a, a:link {
+    color: var(--a-font-color);
+    /* text-decoration: var(--a-text-decoration); */
+}
+a:visited {
+    color: var(--a-visited-font-color);
+}
+table, table tbody, table td{
+    /* border-color:var(--table-border-color) !important; */
+}
+table>thead>tr>th {
+    border-color:var(--table-th-border-color) !important;
+}
+.wrap {
+    background-color:var(--wrap-background-color);
+}
+
+/* ************************************************************ */
+/* Header */
+/* ************************************************************ */
+.wrap header {
+    background-color:var(--header-background-color);
+    color:var(--header-font-color);
+}
+/* Header - History */
+#history_elem a {
+    color:var(--header-history-font-color);
+}
+#history_elem a:hover {
+    color:var(--header-history-font-color-hover);
+}
+#history_elem a:focus, #history_elem a:active {
+    color:var(--header-history-font-color-focus);
+}
+
+
+/* ************************************************************ */
+/* 메인 리스트 */
+/* ************************************************************ */
+#stream .main-streams>ul{
+    background-color:var(--list-ul-background-color);
+}
+#stream .main-streams>ul>li{
+    background-color: var(--list-li-background-color);
+    border-color: var(--list-li-border-color);
+    border-bottom-width: var(--list-li-border-size);
+}
+#stream .main-streams>ul>li:hover, .main-streams>ul>li>a:hover{
+    background-color: var(--list-li-background-color-hover);
+}
+#stream .main-streams>ul>li:focus, .main-streams>ul>li>a:focus{
+    background-color: var(--list-li-background-color-focus);
+}
+
+.main-streams>ul>li .stream-wrap>.title{
+    color:var(--list-li-title-font-color);
+}
+.stream-wrap>.info>.game{
+    color:var(--list-li-game-font-color);
+}
+.main-streams>ul>li .stream-wrap>.info>.from.twitch {
+    color:var(--list-li-info-twitch-font-color);
+    background-color: var(--list-li-info-twitch-background-color);
+}
+.main-streams>ul>li .stream-wrap>.info>.viewers {
+    color:var(--list-li-views-font-color);
+}
+.main-streams>ul>li .glyphicon-pushpin{
+    color:var(--list-li-glyphicon-pushpin-font-color);
+}
+.main-streams>ul>li .glyphicon-star{
+    color:var(--list-li-glyphicon-star-font-color);
+}
+
+/* 메인 리스트 상단 버튼 */
+#stream .search .twitch.checkbox {
+    color:var(--list-top-button-twitch-font-color);
+    background-color: var(--list-top-button-twitch-background-color);       
+}
+#stream .search .twitch.checkbox.checked {
+    color:var(--list-top-button-twitch-checked-font-color);
+    background-color: var(--list-top-button-twitch-checked-background-color);          
+}
+
+#stream .search .kakao.checkbox {
+    color:var(--list-top-button-kakao-font-color);
+    background-color: var(--list-top-button-kakao-background-color);      
+}
+#stream .search .kakao.checkbox.checked {
+    color:var(--list-top-button-kakao-checked-font-color);
+    background-color: var(--list-top-button-kakao-checked-background-color);      
+}
+
+#stream .search .youtube.checkbox {
+    color:var(--list-top-button-youtube-font-color);
+    background-color: var(--list-top-button-youtube-background-color);      
+}
+#stream .search .youtube.checkbox.checked {
+    color:var(--list-top-button-youtube-checked-font-color);
+    background-color: var(--list-top-button-youtube-checked-background-color);      
+}
+
+#stream .search #multitwitch {
+    color:var(--list-top-button-multitwitch-font-color);
+    background-color: var(--list-top-button-multitwitch-background-color);   
+}
+#stream .search #multitwitch:hover {
+    color:var(--list-top-button-multitwitch-hover-font-color);
+    background-color: var(--list-top-button-multitwitch-hover-background-color);  
+}
+
+/* 퀵 리스트 */
+#popup_ADD_quick, #popup_ADD_quick .modal-dialog, #popup_ADD_quick .modal-content {
+    color: var(--main-font-color);
+    background-color: var(--list-li-background-color);
+}
+#popup_ADD_quick .title {
+    color:var(--list-li-title-font-color);
+}
+#popup_ADD_quick .from {
+    color:var(--list-li-info-twitch-font-color);
+    background-color: var(--list-li-info-twitch-background-color);
+}
+#popup_ADD_quick .stream-wrap>.info>.viewers {
+    color:var(--list-li-views-font-color);
+}
+#popup_ADD_quick .glyphicon-pushpin{
+    color:var(--list-li-glyphicon-pushpin-font-color);
+}
+#popup_ADD_quick .glyphicon-star{
+    color:var(--list-li-glyphicon-star-font-color);
+}
+#popup_ADD_quick .quick_list_title{
+    border-color: var(--list-li-border-color);
+}
+#popup_ADD_quick li{
+    background-color: var(--list-li-background-color);
+    border-color: var(--list-li-border-color);
+    border-bottom-width: var(--list-li-border-size);
+}
+#popup_ADD_quick li>a:hover{
+    background-color: var(--list-li-background-color-hover);
+}
+
+/* ************************************************************ */
+/* bootstrap modal dialog, modal contents (설정창 등) */
+/* ************************************************************ */
+.modal-body{
+    border-color: var(--modal-body-border-color);
+}
+.modal-dialog, .modal-content {
+    background-color: var(--modal-dialog-background-color);
+}
+.modal-footer {
+    border-color:var(--modal-footer-border-color) !important;
+}
+.modal-footer button {
+    color:var(--modal-footer-button-font-color) !important;
+    background-color: var(--modal-footer-button-background-color) !important;
+    border:var(--modal-footer-button-border) !important;
+}
+.modal-footer button:hover {
+    color:var(--modal-footer-button-hover-font-color) !important;
+    background-color: var(--modal-footer-button-hover-background-color) !important;
+    border:var(--modal-footer-button-hover-border) !important;
+}
+
+#popup_ADD_config td {
+    border-color: var(--ADD_config-td-border-color) !important;
+}
+#popup_ADD_config tr {
+    border-color: var(--ADD_config-tr-border-color) !important;
+}
+#popup_ADD_config tr:hover {
+    background-color: var(--ADD_config-tr-hover-background-color);
+}
+
+.modal-body input {
+    color:var(--modal-body-input-font-color) !important;
+    background-color: var(--modal-body-input-background-color) !important;
+    border-color:var(--modal-body-input-border-color) !important;
+}
+
+.modal-body textarea {
+    color:var(--modal-body-textarea-font-color) !important;
+    background-color: var(--modal-body-textarea-background-color) !important;
+    border-color:var(--modal-body-textarea-border-color) !important;
+}
+
+/* GM Setting */
+
+#GM_setting li {
+    border-color:var(--GM_setting-border-color);
+}
+#GM_setting .GM_setting_title, #GM_setting .GM_setting_category_name{
+    color:var(--GM_setting-title-font-color);
+}
+#GM_setting .GM_setting_depth1.GM_setting_category{
+    border-color:var(--GM_setting-border-color);
+}
+#GM_setting .GM_setting_under_dev .GM_setting_title{
+    color:var(--GM_setting-underdev-title-font-color);
+}
+#GM_setting .GM_setting_item_disable, #GM_setting .GM_setting_item_disable .GM_setting_title, #GM_setting .GM_setting_item_disable .GM_setting_desc{
+    color:var(--GM_setting-desc-font-color);
+}
+#GM_setting input {
+    color:var(--modal-body-input-font-color) !important;
+    background-color: var(--modal-body-input-background-color) !important;
+    border-color:var(--modal-body-input-border-color) !important;
+}
+#GM_setting textarea {
+    color:var(--modal-body-textarea-font-color) !important;
+    background-color: var(--modal-body-textarea-background-color) !important;
+    border-color:var(--modal-body-textarea-border-color) !important;
+}
+
+
+/* tagit */
+ul.tagit {
+    color:#AAA !important;
+    border-color:#303030 !important;
+}
+ul.tagit li.tagit-choice{
+    color:#AAA !important;
+    background-color: #202020 !important;
+    border-color: #101010 !important;
+}
+ul.tagit li.tagit-choice:hover, ul.tagit li.tagit-choice.remove {
+    background-color: #303030 !important;
+    border-color: #202020 !important;
+}
+ul.tagit input[type="text"]{
+    color:#AAA !important;
+    background-color:#101010 !important;
+}
+
+/* ************************************************************ */
+/* Buttons    */
+/* ************************************************************ */
+/* 기본 Button */
+.btn-default {
+    color: var(--btn-default-font-color);
+    background-color: var(--btn-default-background-color);
+    border-color: var(--btn-default-border-color);
+    border-width: var(--btn-default-border-width);
+}
+.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
+    color: var(--btn-default-hover-font-color);
+    background-color: var(--btn-default-hover-background-color);
+    border-color: var(--btn-default-hover-border-color);
+}
+.btn-primary {
+    color: var(--btn-primary-font-color);
+    background-color: var(--btn-primary-background-color);
+    border: var(--btn-primary-border);
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
+    color: var(--btn-primary-hover-font-color);
+    background-color: var(--btn-primary-hover-background-color);
+    border: var(--btn-primary-hover-border);
+}
+
+/* chat 위쪽에 있는 버튼들 기본 배경 */
+div.chat-btns{
+    background-color: var(--buttons-on-chat-conatiner-background-color);
+}
+div.chat-btns button {
+    transition: none;
+}
+
+/* Close button */
+.chat-btns button.chat-close {
+    color:var(--button-chat-close-font-color);
+    background-color:var(--button-chat-close-background-color);
+}
+.chat-btns button.chat-close:hover {
+    background-color:var(--button-chat-close-background-color-hover);
+}
+.chat-btns button.chat-close:focus, .chat-btns button.chat-close:active {
+    background-color:var(--button-chat-close-background-color-focus);
+}
+
+/* 새로고침 버튼 */
+.chat-btns button#btnRefreshChat {
+    color:var(--button-btnRefreshCha-font-color);
+    background-color:var(--button-btnRefreshCha-background-color);
+}
+.chat-btns button#btnRefreshChat:hover {
+    background-color:var(--button-btnRefreshCha-background-color-hover);
+}
+.chat-btns button#btnRefreshChat:focus, .chat-btns button#btnRefreshChat:active {
+    background-color:var(--button-btnRefreshCha-background-color-focus);
+}
+
+
+/* 차단목록 버튼 */
+.chat-btns button#btnIgnoreList {
+    color:var(--button-btnIgnoreList-font-color);
+    background-color:var(--button-btnIgnoreList-background-color);
+}
+.chat-btns button#btnIgnoreList:hover {
+    background-color:var(--button-btnIgnoreList-background-color-hover);
+}
+.chat-btns button#btnIgnoreList:focus, .chat-btns button#btnIgnoreList:active {
+    background-color:var(--button-btnIgnoreList-background-color-focus);
+}
+
+/* 좌표 버튼 (기본) */
+.chat-btns button#btnOpenHrm {
+    color:var(--button-btnOpenHrm-font-color);
+    background-color:var(--button-btnOpenHrm-background-color);
+}
+.chat-btns button#btnOpenHrm:hover {
+    background-color:var(--button-btnOpenHrm-background-color-hover);
+}
+.chat-btns button#btnOpenHrm:focus, .chat-btns button#btnOpenHrm:active {
+    background-color:var(--button-btnOpenHrm-background-color-focus);
+}
+
+/* 좌표 버튼 (펼침 버튼) */
+.chat-btns button#btnOpenHrm_ADD {
+    color:var(--button-btnOpenHrm_ADD-font-color);
+    background-color:var(--button-btnOpenHrm_ADD-background-color);
+}
+.chat-btns button#btnOpenHrm_ADD:hover {
+    background-color:var(--button-btnOpenHrm_ADD-background-color-hover);
+}
+.chat-btns button#btnOpenHrm_ADD:focus, .chat-btns button#btnOpenHrm_ADD:active {
+    background-color:var(--button-btnOpenHrm_ADD-background-color-focus);
+}
+
+
+/* 빠른 좌표 관련 */
+#hrm_layout, .leftchat #hrm_layout {
+    color:var(--hrm-font-color);
+    border:var(--hrm-border);
+}
+
+#hrm_layout a:link {
+    color:var(--hrm-link-font-color);
+}
+#hrm_layout a:hover {
+    color:var(--hrm-link-hover-font-color);
+}
+#hrm_layout a:visited {
+    color:var(--hrm-link-visited-font-color);
+}
+
+
+/* ************************************************************ */
+/* UCHAT */
+/* ************************************************************ */
+
+/* 채팅 TOP: 타이틀 */
+div.wrap .top .title.middlebox {
+    color: var(--chat-top-font-color) !important;
+    background-color: var(--chat-top-background-color) !important;
+}
+div.wrap .top, div.wrap .top.white, div.wrap .top.black {
+    color: var(--chat-top-font-color) !important;
+    background-color: var(--chat-top-background-color) !important;
+}
+
+/* 채팅 MIDDLE: 내용 보이는 곳 */
+div.wrap .middle, div.wrap .middle.white, div.wrap .middle.black {
+    color: var(--chat-middle-font-color) !important;
+    background-color: var(--chat-middle-background-color) !important;
+}
+
+/* 채팅 BOTTOM: 입력란 */
+div.wrap .bottom, div.wrap .bottom.white, div.wrap .bottom.black {
+    color: var(--chat-bottom-font-color) !important;
+    background-color: var(--chat-bottom-background-color) !important;
+    border-color: var(--chat-bottom-border-color) !important;
+}
+div.wrap .bottom [contenteditable=true]:not(:focus):empty:before {
+    color:var(--chat-bottom-input-font-color) !important;
+}
+
+/* 채팅 좌우 선 */
+.wrap, .chat-ignore, .chat-container {
+    border-color:var(--chat-container-border-color);
+}
+
+/* 채팅 참여자 목록 */
+div.wrap .userListWrap {
+    color:var(--chat-userListWrap-font-color) !important;
+    background-color: var(--chat-userListWrap-background-color) !important;
+    border-color: var(--chat-userListWrap-border-color) !important;
+}
+div.wrap .i .userFloor {
+    color: var(--chat-userListWrap-i-font-color) !important;
+    background-color: var(--chat-userListWrap-i-background-color) !important;
+    font-weight: var(--chat-userListWrap-i-font-weight) !important;
+}
+
+/* 채팅 팝업 메뉴 */
+.usermenu_popup {
+    color: var(--chat-usermenu_popup-font-color) !important;
+    background-color: var(--chat-usermenu_popup-background-color) !important;
+    background-color: var(--chat-usermenu_popup-border-color) !important;
+}
+.usermenu_popup .floor, .usermenu_popup .subject, .usermenu_popup .scrollable, .usermenu_popup .hr {
+    border-color: var(--chat-usermenu_popup-btn-floor-border-color) !important;
+}
+.usermenu_popup .floor:hover, .usermenu_popup .hr:hover,
+.usermenu_popup .floor:hover, .usermenu_popup .hr:focus,
+.usermenu_popup .floor:hover, .usermenu_popup .hr:active {
+    background-color:var(--chat-usermenu_popup-btn-floor-hover-background-color) !important;
+}
+
+
+/* 채팅 각 라인의 컨텐츠 기본 색상 */
+div.wrap .chatContent {
+    color:var(--chat-chanContent-font-color) !important;
+}
+/* 내 라인 */
+div.wrap .myLine {
+    color: var(--chat-myLine-font-color) !important;
+    background-color: var(--chat-myLine-background-color) !important;
+}
+/* 자동완성 */
+a.autokeyword:after, a.autokeyword:after {
+    color: var(--chat-autokeyword-font-color) !important;
+    background-color: var(--chat-autokeyword-background-color) !important;
+}
+/* imgur 이미지 컨테이너 */
+.imgur_container .ADD_tr, .imgur_container .ADD_br, .imgur_container .simple_image, .imgur_container .simple_image_container, .imgur_container .imgur_more_image_div, .imgur_container .imgur_more_image_div_container,
+.imgur_container .imgur_image_title:hover {
+    color: var(--chat-imgur_container-font-color) !important;
+    background-color: var(--chat-imgur_container-background-color) !important;
+}
+
+/* 새 메모 작성 창 */
+#memo_simple_layout_container {
+    background-color: var(--memo_simple_layout_container-background-color) !important;
+}
+#memo_simple_layout_content {
+    color:var(--memo_simple_layout_content-font-color) !important;
+    background-color: var(--memo_simple_layout_content-background-color) !important;
+    border:var(--memo_simple_layout_content-border) !important;
+}
+#memo_simple_layout_content *{
+    border-color:var(--memo_simple_layout_content-border-color) !important;
+}
+#memo_isSavedMemo {
+    color: var(--memo_isSavedMemo-font-color) !important;
+}
+#memo_detail_content {
+    color:var(--memo_detail_content-font-color) !important;
+    background-color: var(--memo_detail_content-background-color) !important;
+}
+#memo_simple_layout_content input {
+    color:var(--memo_detail_content-input-font-color) !important;
+    background-color: var(--memo_detail_content-input-background-color) !important;
+}
+#memo_button_container span {
+    color: var(--memo_button_container-font-color) !important;
+    background-color: var(--memo_button_container-background-color) !important;
+}
+
+/* 우하하 채팅 */
+body #uha_chat{
+    background-color:var(--chat-background-color);
+    border-color:var(--chat-border-color);
+    color:var(--chat-font-color);
+}
+body #uha_chat_msgs{
+    color:var(--chat-font-color);
+}
+
+body #uha_chat_msgs > li > .text,
+body #uha_chat_users_count,
+body a.autokeyword,
+body a.autokeyword:link{
+    color:var(--chat-font-color) !important;
+}
+
+body #uha_chat_msgs > li:hover{
+    background-color:unset !important;
+}
+
+body #uha_chat_info, body #uha_chat_contextmenu{
+    background-color:var(--chat-background-color);
+    border-color:var(--chat-border-color);
+}
+#uha_chat_form, #uha_chat_form > div, #uha_chat_form > div > #uha_chat_input {
+    color: var(--chat-bottom-font-color) !important;
+    background-color: var(--chat-bottom-background-color) !important;
+    border-color: var(--chat-bottom-border-color) !important;
+}
+#uha_chat_top_text {
+    color:var(--chat-font-color) !important;
+}
+#uha_chat_msgs > li > .name {
+    color:var(--chat-font-color) !important;
+}
+#uha_chat_msgs > li.date > span {
+    color:var(--chat-font-color) !important;
+    background-color:var(--chat-background-color) !important;
+}
+
+
+/* 임시 */
+.imgur_container .imgur_safe_screen .imgur_safe_button {
+    background:rgba(0,0,0,1) !important;
+    color:#FFF !important;
+}
+#uha_chat_whisper, #uha_chat_invite, #uha_chat_mute, #uha_chat_contextmenu_close, #uhaha_unique_id, #uhaha_forced_dancha, #uhaha_memo {
+    border-color:var(--chat-border-color) !important;
+}
+.imgur_container .imgur_safe_screen {
+    filter:brightness(0.5)
+}

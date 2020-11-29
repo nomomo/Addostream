@@ -10,6 +10,7 @@ export const ADD_get_page_type = function (url){
     }
     document_url = document_url.toLowerCase();
     var keyword_stream = document_url.indexOf("#/stream/");
+    var keyword_m3u8 = document_url.indexOf("#/m3u8/");
     var keyword_uchat = document_url.indexOf("uchat2.php");
     var keyword_setting = document_url.indexOf("#/addostream");
     var keyword_setting_nw = document_url.indexOf("dostream.com/addostream");
@@ -36,6 +37,9 @@ export const ADD_get_page_type = function (url){
     }
     else if(twitch_main !== -1){
         return nomo_const.C_TWITCH;
+    }
+    else if(keyword_m3u8 !== -1){
+        return nomo_const.C_M3U8PLAYER;
     }
     else{
         return nomo_const.C_MAIN;

@@ -83,12 +83,18 @@ function check_stream_and_chennel_from_location(){
             var keyword_stream = (current_url.split("#/stream/"));
             keyword_stream = keyword_stream[1];
             var keyword_channel = keyword_stream.split("/");
-            if(keyword_channel.length !== 2){
+            var return_array = [];
+            if(current_url.indexOf("#/stream/m3u8/") !== -1){
+                return_array[0] = current_url.split("#/stream/m3u8/").pop();
+                return_array[1] = "m3u8";
+                return_array[2] = "m3u8";
+                return return_array;
+            }
+            else if(keyword_channel.length !== 2){
                 ADD_DEBUG("check_stream_and_chennel_from_location 에서 / 개수로 인한 에러 발생");
                 return null;
             }
             else{
-                var return_array = [];
                 return_array[0] = keyword_channel[1];
                 return_array[1] = keyword_channel[1];
                 return_array[2] = keyword_channel[0];
@@ -158,6 +164,11 @@ function ADD_Channel_History_layout(ADD_h_cookie, fade){
                 ch_stream_text = "OK";
                 platform_class = "h_okru";
                 ch_text = ch_streamer_id + "(OK)";
+                break;
+            case "m3u8":
+                ch_stream_text = "m3u8";
+                platform_class = "h_m3u8";
+                ch_text = "M3U8";
                 break;
             default:
                 platform_class = "";//"h_" + ch_stream;

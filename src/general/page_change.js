@@ -3,6 +3,7 @@ import {ADD_streamer_nick} from "general/streamer-lib.js";
 import nomo_const from "general/const.js";
 import * as nomo_common from "general/common.js";
 import * as utils from "libs/nomo-utils.js";
+import {m3u8_override} from "general/m3u8player.js";
 const ADD_DEBUG = utils.ADD_DEBUG;
 
 // 주소창의 주소가 변화(페이지 이동) 시 해야할 것을 아래 함수에 작성한다.
@@ -22,12 +23,25 @@ export function ADD_page_change($, global, document){
             return;
         }
 
+        // if(nomo_global.PAGE === nomo_const.C_M3U8PLAYER){
+        //     var m3u8_url = url_current.split("/#/m3u8/").pop();
+        //     m3u8_override(m3u8_url);
+        //     nomo_global.ADD_now_playing.display_name = "m3u8";
+        // }
+
         // 스트림인 경우
         if(nomo_global.PAGE === nomo_const.C_STREAM){
-            nomo_global.ADD_now_playing.id = url_current.split("/").pop();
-            nomo_global.ADD_now_playing.display_name = ADD_streamer_nick(nomo_global.ADD_now_playing.id);
-            nomo_global.ADD_now_playing.toonat_link = "";
-            nomo_global.ADD_now_playing.twip_link = "";
+            if(url_current.indexOf("/#/stream/m3u8/") !== -1){
+                var m3u8_url = url_current.split("/#/stream/m3u8/").pop();
+                m3u8_override(m3u8_url);
+                nomo_global.ADD_now_playing.display_name = "m3u8";
+            }
+            else{
+                nomo_global.ADD_now_playing.id = url_current.split("/").pop();
+                nomo_global.ADD_now_playing.display_name = ADD_streamer_nick(nomo_global.ADD_now_playing.id);
+                nomo_global.ADD_now_playing.toonat_link = "";
+                nomo_global.ADD_now_playing.twip_link = "";
+            }
         }
 
         // 스트림 계속 이어 보기 관련

@@ -25,13 +25,14 @@ export var GM_setting = (function($, global, document){ //
         history_hide_icon : { category:"general", depth:2, type: "checkbox", value: false, title:"플랫폼 아이콘 숨기기", desc:"시청 기록에서 플랫폼 아이콘을 숨김", change:function(){ADD_channel_history_run();} },
         max_history : { under_dev:true, category:"general", depth:2, type: "text", value: 20, valid:"number", min_value:1, title:"시청 기록 최대 개수", desc:"(기본값: 20)" },
         
-        theme_leftchat : { category:"theme", category_name:"테마", depth:1, type: "checkbox", value: false, title:"채팅창 위치를 왼쪽으로 변경", desc:"", change:function(){nomo_theme.ADD_leftchat_change();} },
+        theme_leftchat : { category:"theme", category_name:"테마", depth:1, type: "checkbox", value: false, title:"채팅창 위치를 왼쪽으로 변경", desc:"", change:function(){nomo_theme.ADD_theme();} },
         theme_on : { category:"theme", depth:1, type: "checkbox", value: false, title:"테마 기능 사용", desc:"", change:function(){nomo_theme.ADD_theme();}},
-        theme : { category:"theme", depth:2, type: "radio", value: "default", title:"테마 선택", desc:"", radio: {default: {title: "기본", value:"default"}, black: {title: "블랙", value:"black"}/*, dark: {title: "다크(테스트)", value:"dark"} */}, change:function(){nomo_theme.ADD_theme();}},
+        theme : { category:"theme", depth:2, type: "radio", value: "default", title:"테마 선택", desc:"", radio: {default: {title: "기본", value:"default"}, black: {title: "블랙", value:"black"}, black_youtube: {title: "다크(Youtube Style)", value:"black_youtube"}/*, dark: {title: "다크(테스트)", value:"dark"} */}, change:function(){nomo_theme.ADD_theme();}},
         theme_self_bold_chat : { under_dev:true, category:"theme", depth:2, type: "checkbox", value: false, title:"자신의 채팅을 굵게 표시", desc:"", change:function(){if(nomo_common.ADD_get_page_type() === nomo_const.C_UCHAT){nomo_theme.ADD_theme();}} },
         theme_font_size : { category:"theme", depth:2, type: "text", value: 1.0, valid:"number", min_value:0.1, max_value:10, title:"채팅 글씨 크기 조절(배수)", desc:"(기본값: 1.0)", change:function(){if(nomo_common.ADD_get_page_type() === nomo_const.C_UCHAT){nomo_theme.ADD_theme();}} },
         theme_font_custom : { category:"theme", depth:2, type: "radio", value: "default", radio: {default: {title: "기본", value:"default"}, NotoSanskr: {title: "Noto Sans KR", value:"NotoSanskr"}}, title:"폰트 변경", desc:"일부 OS, 브라우저에서 적용되지 않을 수 있음", change:function(){nomo_theme.ADD_theme();} },
-        theme_night_mode : { under_dev:false, category:"theme", depth:2, type: "checkbox", value: "default", title:"[실험실] 야간 모드", desc:"지정된 시간에 테마를 black 으로 바꿈", change:function(){nomo_theme.ADD_night_mode();}},
+        theme_night_mode : { under_dev:true, category:"theme", depth:2, type: "checkbox", value: "default", title:"[실험실] 야간 모드", desc:"지정된 시간에 테마를 지정한 테마로 바꿈", change:function(){nomo_theme.ADD_night_mode();}},
+        theme_night_mode_theme : { under_dev:true, category:"theme", depth:3, type: "radio", value: "black", title:"테마 선택", desc:"", radio: { black: {title: "블랙", value:"black"}, black_youtube: {title: "다크", value:"black_youtube"}}, change:function(){{nomo_theme.ADD_night_mode();}} },
         theme_night_mode_start : { under_dev:true, category:"theme", depth:3, type: "text", value: 0, valid:"number", min_value:0, max_value:24, title:"시작 시간", desc:"0 ~ 24<br />참고) X시 30분의 경우 X.5 처럼 소수점으로 입력", change:function(){nomo_theme.ADD_night_mode();}},
         theme_night_mode_end : { under_dev:true, category:"theme", depth:3, type: "text", value: 7, valid:"number", min_value:0, max_value:24, title:"종료 시간", desc:"0 ~ 24", change:function(){nomo_theme.ADD_night_mode();}},
 
@@ -39,7 +40,7 @@ export var GM_setting = (function($, global, document){ //
         insagirl_block_by_nick : { category:"coord", depth:1, type: "checkbox", value: false, title:"차단한 유저의 좌표 숨기기", desc:"채팅매니저에서 차단한 유저의 좌표를 숨김" },
         insagirl_block_dobae : { category:"coord", depth:1, type: "checkbox", value: false, title:"연속된 동일 좌표 숨기기", desc:"동일 유저가 같은 좌표를 연속하여 올릴 경우<br />가장 최근의 것만 남기고 숨김" },
         insagirl_block_dobae_by_href : { category:"coord", depth:2, type: "checkbox", value: false, title:"동일 유저가 아닐 경우에도 숨김", desc:"유저에 상관 없이 동일 좌표가 연속되는 경우 무조건 숨김" },
-        insagirl_select : { under_dev:true, category:"coord", category_name:"좌표 - 고급", depth:1, type: "radio", value: 2, title:"좌표 사이트 선택", desc:"", radio: {dostream: {title: "<span style='font-size:11px;'>coord.dostream.com</span>", value:1}, insagirl: {title: "<span style='font-size:11px;'>insagirl-hrm.appspot.com</span>", value:2}} },
+        insagirl_select : { under_dev:true, category:"coord", category_name:"좌표 - 고급", depth:1, type: "radio", value: 2, title:"좌표 사이트 선택", desc:"", radio: {dostream: {title: "<span style='font-size:11px;text-decoration:line-through;'>coord.dostream.com</span>", value:1}, insagirl: {title: "<span style='font-size:11px;'>insagirl-hrm.appspot.com</span>", value:2}} },
         insagirl_modify_directly : { under_dev:true, category:"coord", depth:1, type: "checkbox", value: false, title:"[실험실] 좌표 사이트에 직접 적용", desc:"실험 중" },
         
         list : { category:"list", category_name:"리스트", depth:1, type: "checkbox", value:true, title:"메인 리스트 관리 기능 사용", desc:"메인 리스트 관리 기능을 일괄적으로 켜고 끈다."},

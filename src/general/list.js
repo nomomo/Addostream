@@ -302,7 +302,7 @@ export async function ADD_run(data,flag){
         }
         if(data.main_favorite){
             favorite_class = " favorite_streamer";
-            favorite_append = "<div style=\"position:relative;color:#333;\"><div class=\"glyphicon glyphicon-star icon_star\"></div></div>";
+            favorite_append = "<div style=\"position:relative;\"><div class=\"glyphicon glyphicon-star icon_star\"></div></div>";
         }
         var game = "";
         if(ADD_config.alarm_show_game_name && data.game !== undefined){

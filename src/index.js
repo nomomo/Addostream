@@ -55,7 +55,7 @@ import {ADD_popup_player} from "general/popup_player.js";
 
     //////////////////////////////////////////////////////////////////////////////////
     // 메인 또는 스트림인 경우
-    if(nomo_global.PAGE == nomo_const.C_MAIN || nomo_global.PAGE == nomo_const.C_STREAM){
+    if(nomo_global.PAGE == nomo_const.C_MAIN || nomo_global.PAGE == nomo_const.C_STREAM || nomo_global.PAGE == nomo_const.C_M3U8PLAYER){
         // Call Twitch api
         await twitch_api();
         await twitch_api_call_interval();
@@ -81,9 +81,6 @@ import {ADD_popup_player} from "general/popup_player.js";
             // 테마 적용
             nomo_theme.ADD_theme();
             nomo_theme.ADD_night_mode({message:false});
-
-            // 좌측 채팅 적용
-            nomo_theme.ADD_leftchat_change();
 
             // 기본 레이아웃 생성
             ADD_basic_layout();
@@ -155,7 +152,6 @@ import {ADD_popup_player} from "general/popup_player.js";
             nomo_theme.ADD_night_mode({message:false});
 
             ADD_chat_event_binding();
-
         });
     }
     // 상세 설정인 경우
@@ -171,6 +167,9 @@ import {ADD_popup_player} from "general/popup_player.js";
             
             // 기본 css 적용
             nomo_theme.ADD_basic_style();
+
+            // 테마 적용
+            nomo_theme.ADD_theme();
 
             // 1회 등록 필요한 event
             ADD_event_bind_init();

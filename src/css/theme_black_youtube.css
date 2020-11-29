@@ -1,0 +1,359 @@
+body{
+    --body-font-color: #AAA;
+    --body-background-color: #202020;
+    --body-border-color: #383838;
+
+    --drag-font-color:#000;
+    --drag-background:#CCC;
+    
+    --a-font-color: #428bca;
+    /* --a-text-decoration: none; */
+    --a-visited-font-color: #428bca;
+    --a-hover-font-color: #2a6496;
+    /* --a-hover-text-decoration: underline; */
+
+    --logo-image:url('https://www.dostream.com/images/logo.dark.png');
+
+    /* Main Page */
+    --main-background-color:#181818;
+    --wrap-background-color:var(--main-background-color);
+
+    --table-border-color:#303030;
+    --table-th-border-color:#303030;
+
+    /* Header */
+    --header-background-color:#202020;
+    --header-font-color:#AAAAAA;
+
+    /* Header - History */
+    --header-history-font-color:var(--header-font-color);
+    --header-history-font-color-hover:#FFF;
+    --header-history-font-color-focus:#FFF;
+
+    /* Main Page - List */
+    --list-ul-background-color:var(--main-background-color);
+
+    --list-li-background-color:var(--main-background-color);
+    --list-li-background-color-hover:#212121;
+    --list-li-background-color-focus::#212121;
+
+    --list-li-border-color:var(--main-background-color);
+    --list-li-border-size:0px;
+
+    --list-li-title-font-color:#FFF;
+    --list-li-views-font-color:#AAAAAA;
+    --list-li-glyphicon-pushpin-font-color:#AAAAAA;
+    --list-li-glyphicon-star-font-color:#AAAAAA;
+    --list-li-game-font-color:#AAAAAA;
+    
+    --list-li-info-font-color:#AAAAAA;
+    --list-li-info-background-color:unset;
+
+    --list-li-info-twitch-font-color:var(--list-li-info-font-color);
+    --list-li-info-twitch-background-color:var(--list-li-info-background-color);
+
+    --list-li-info-kakao-font-color:var(--list-li-info-font-color);
+    --list-li-info-kakao-background-color:var(--list-li-info-background-color);
+
+    --list-li-info-youtube-font-color:var(--list-li-info-font-color);
+    --list-li-info-youtube-background-color:var(--list-li-info-background-color);
+
+    /* 메인 리스트 상단 버튼(Search) */
+    --list-top-button-twitch-font-color:#FFF;
+    --list-top-button-twitch-background-color:#202020;
+    --list-top-button-twitch-checked-font-color:#FFF;
+    --list-top-button-twitch-checked-background-color:#303030;
+    
+    --list-top-button-kakao-font-color:#FFF;
+    --list-top-button-kakao-background-color:#202020;
+    --list-top-button-kakao-checked-font-color:#FFF;
+    --list-top-button-kakao-checked-background-color:#303030;
+    
+    --list-top-button-youtube-font-color:#FFF;
+    --list-top-button-youtube-background-color:#202020;
+    --list-top-button-youtube-checked-font-color:#FFF;
+    --list-top-button-youtube-checked-background-color:#303030;
+    
+    --list-top-button-multitwitch-font-color:#AAA;
+    --list-top-button-multitwitch-background-color:#202020;
+    --list-top-button-multitwitch-hover-font-color:#FFF;
+    --list-top-button-multitwitch-hover-background-color:#303030;
+
+
+    /* bootstrap button  */
+    --btn-default-font-color:#AAA;
+    --btn-default-background-color:unset;
+    --btn-default-border-color:unset;
+    --btn-default-border-width:0px;
+
+    --btn-default-hover-font-color:#FFF;
+    --btn-default-hover-background-color:#383838;
+    --btn-default-hover-border-color:unset;
+
+    --btn-primary-font-color:#FFF;
+    --btn-primary-background-color:#303030;
+    --btn-primary-border:none;
+
+    --btn-primary-hover-font-color:#FFF;
+    --btn-primary-hover-background-color:#383838;
+    --btn-primary-hover-border:none;
+    
+    /* ************************************************************ */
+    /* UCHAT */
+    /* ************************************************************ */
+    --chat-container-border-color:unset;
+
+    --chat-font-color:#fff;
+    --chat-background-color:#202020;
+    --chat-border-color:#202020;
+
+    --chat-top-font-color:var(--chat-font-color);
+    --chat-top-background-color:var(--chat-background-color);
+
+    --chat-middle-font-color:var(--chat-font-color);
+    --chat-middle-background-color:var(--chat-background-color);
+
+    --chat-bottom-font-color:var(--chat-font-color);
+    --chat-bottom-background-color:var(--chat-background-color);
+    --chat-bottom-border-color:var(--chat-background-color);
+    --chat-bottom-input-font-color:#AAA;
+
+    /* 채팅 자동 좌표 */
+    --chat-autokeyword-font-color:var(--chat-font-color);
+    --chat-autokeyword-background-color:var(--chat-font-color);
+
+    /* 채팅 참여자 목록 */
+    --chat-userListWrap-font-color:#FFF;
+    --chat-userListWrap-background-color:var(--chat-background-color);
+    --chat-userListWrap-border-color:#000;
+
+    --chat-userListWrap-i-font-color:#FFF;
+    --chat-userListWrap-i-background-color:#181818;
+    --chat-userListWrap-i-font-weight:700;
+
+    /* 채팅 팝업 메뉴 */
+    --chat-usermenu_popup-font-color:var(--chat-font-color);
+    --chat-usermenu_popup-background-color:var(--chat-background-color);
+    --chat-usermenu_popup-border-color:var(--chat-border-color);
+    
+    --chat-usermenu_popup-btn-floor-border-color:#202020;
+    --chat-usermenu_popup-btn-floor-hover-background-color:#383838;
+
+    /* 채팅 각 라인의 컨텐츠 기본 색상 */
+    --chat-chanContent-font-color:#FFF;
+    
+    /* 내 라인 */
+    --chat-myLine-font-color:var(--chat-chanContent-font-color);
+    --chat-myLine-background-color:#181818;
+
+    /* 자동완성 */
+    --chat-autokeyword-font-color:var(--chat-chanContent-font-color);
+    --chat-autokeyword-background-color:#999;
+
+    /* imgur 이미지 컨테이너 */
+    --chat-imgur_container-font-color:var(--chat-chanContent-font-color);
+    --chat-imgur_container-background-color:#181818;
+
+    /* 새 메모 작성  */
+    --memo_simple_layout_container-background-color:rgba(50,50,50,0.8);
+    
+    --memo_simple_layout_content-font-color:#AAA;
+    --memo_simple_layout_content-background-color:#181818;
+    --memo_simple_layout_content-border:0px;
+    --memo_simple_layout_content-border-color:#303030;
+
+    --memo_isSavedMemo-font-color:lightblue;
+    --memo_detail_content-font-color:#FFF;
+    --memo_detail_content-background-color:#202020;
+    --memo_detail_content-input-font-color:#FFF;
+    --memo_detail_content-input-background-color:#202020;
+    
+    --memo_button_container-font-color:#AAA;
+    --memo_button_container-background-color:#202020;
+
+    /*                 */
+    /* Buttons on chat */
+    /*                 */
+    /* 버튼을 일괄 수정하는 경우 */
+    --buttons-on-chat-conatiner-background-color:var(--header-background-color);
+
+    --buttons-on-chat-font-color:#FFF;
+    --buttons-on-chat-background-color:var(--header-background-color);
+    --buttons-on-chat-background-color-hover:#383838;
+    --buttons-on-chat-background-color-focus:#383838;
+    
+    /* 버튼을 각각 수정하는 경우 */
+    /* X 버튼 */
+    --button-chat-close-font-color:var(--buttons-on-chat-font-color);
+    --button-chat-close-background-color:var(--buttons-on-chat-background-color);
+    --button-chat-close-background-color-hover:var(--buttons-on-chat-background-color-hover);
+    --button-chat-close-background-color-focus:var(--buttons-on-chat-background-color-focus);
+    
+    /* 새로고침 버튼 */
+    --button-btnRefreshCha-font-color:var(--buttons-on-chat-font-color);
+    --button-btnRefreshCha-background-color:var(--buttons-on-chat-background-color);
+    --button-btnRefreshCha-background-color-hover:var(--buttons-on-chat-background-color-hover);
+    --button-btnRefreshCha-background-color-focus:var(--buttons-on-chat-background-color-focus);
+    
+    /* 차단목록 버튼 */
+    --button-btnIgnoreList-font-color:var(--buttons-on-chat-font-color);
+    --button-btnIgnoreList-background-color:var(--buttons-on-chat-background-color);
+    --button-btnIgnoreList-background-color-hover:var(--buttons-on-chat-background-color-hover);
+    --button-btnIgnoreList-background-color-focus:var(--buttons-on-chat-background-color-focus);
+
+    /* 좌표 버튼 (기본) */
+    --button-btnOpenHrm-font-color:var(--buttons-on-chat-font-color);
+    --button-btnOpenHrm-background-color:var(--buttons-on-chat-background-color);
+    --button-btnOpenHrm-background-color-hover:var(--buttons-on-chat-background-color-hover);
+    --button-btnOpenHrm-background-color-focus:var(--buttons-on-chat-background-color-focus);
+    
+    /* 좌표 버튼 (펼침 버튼) */
+    --button-btnOpenHrm_ADD-font-color:var(--buttons-on-chat-font-color);
+    --button-btnOpenHrm_ADD-background-color:var(--buttons-on-chat-background-color);
+    --button-btnOpenHrm_ADD-background-color-hover:var(--buttons-on-chat-background-color-hover);
+    --button-btnOpenHrm_ADD-background-color-focus:var(--buttons-on-chat-background-color-focus);
+
+
+
+    /* ************************************************************ */
+    /* bootstrap modal dialog, modal contents (설정창 등) */
+    /* ************************************************************ */
+    --modal-dialog-background-color:#212121;
+
+    --ADD_config-td-border-color:#303030;
+    --ADD_config-tr-border-color:#303030;
+    --ADD_config-tr-hover-background-color:#383838;
+
+    --modal-footer-border-color:#303030;
+
+    --modal-footer-button-font-color:#AAA;
+    --modal-footer-button-background-color:#303030;
+    --modal-footer-button-border:none;
+    --modal-footer-button-hover-font-color:#AAA;
+    --modal-footer-button-hover-background-color:#383838;
+    --modal-footer-button-hover-border:none;
+
+    --modal-body-input-font-color:#AAA;
+    --modal-body-input-background-color:#181818;
+    --modal-body-input-border-color:#181818;
+
+    --modal-body-textarea-font-color:var(--modal-body-input-font-color);
+    --modal-body-textarea-background-color:var(--modal-body-input-background-color);
+    --modal-body-textarea-border-color:var(--modal-body-input-border-color);
+
+    /* GM_Setting */
+    --GM_setting-border-color:var(--body-border-color);
+    --GM_setting-underdev-title-font-color:#6441a5;
+    --GM_setting-title-font-color:#FFF;
+    --GM_setting-title-desc-color:#AAA;
+
+    /* hrm */
+    --hrm-font-color:var(--chat-middle-font-color);
+    --hrm-border:none;
+    --hrm-link-font-color:#428bca;
+    --hrm-link-hover-font-color:#2a6496;
+    --hrm-link-visited-font-color:#666;
+}
+/*  */
+/* BLACK_YOUTUBE_ONLY */
+/* btn */
+.btn {
+    border-radius: 0px;
+}
+
+/* 채팅 좌우 선 */
+.wrap, .chat-ignore, .chat-container {
+    border-left: none !important;
+    border-right: none !important;
+}
+
+/* 채팅 로고 스타일 */
+div.wrap .top .logo {
+    filter:grayscale(1) brightness(0.6) contrast(2.5);
+}
+
+/* 메인 스크롤바 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 4px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #4a4a4a;
+}
+::-webkit-scrollbar-track {
+    background-color: rgba(0,0,0,0);
+    border:none;
+}
+::-webkit-scrollbar-track-piece {
+    background-color: rgba(0,0,0,0);
+}
+
+/* 채팅 스크롤바 */
+.wrap .content::-webkit-scrollbar {
+    width: 0px !important;
+}
+.nano > .nano-pane {
+    background-color: rgba(0,0,0,0);
+}
+.nano > .nano-pane > .nano-slider {
+    border-radius: 0px;
+    background-color: #4a4a4a;
+}
+.nano > .nano-content {
+    right: 0px !important;
+}
+
+header:not(.onstream) {
+    position: fixed;
+    width: calc(100% - 345px);
+    z-index:1000;
+    height:45px;
+}
+.nav-brand_mod{
+    height:45px;
+}
+#history_elem {
+    height:45px;
+    padding:0px;
+}
+.AD_title{
+    height:45px;
+    padding:7px 0;
+}
+#stream {
+    margin-top:calc(45px + 10px);
+}
+
+.nav-brand_mod {
+    background-image:var(--logo-image) !important;
+}
+
+.top .countIcon{
+    filter: contrast(0.0);
+}
+.inputWrap .plus, .top .menu .bgicon{
+    filter: contrast(0.0);
+    opacity:0.1;
+}
+.inputWrap .plus:hover, .top.black .menu .bgicon:hover{
+    filter: contrast(0.0);
+    opacity:1.0;
+}
+.modal-content {
+    border-radius: 0px;
+}
+
+#uha_chat_form {
+    border-top:1px solid #181818 !important;
+    padding:2px 0 !important;
+    height:40px !important;
+}
+#uha_chat_form, #uha_chat_form > div, #uha_chat_form > div > #uha_chat_input {
+    box-shadow: none !important;
+}
+#uha_chat_form > div > #uha_chat_input:focus {
+    box-shadow: none !important;
+}
+#uha_chat_top_text {
+    box-shadow: none !important;
+}

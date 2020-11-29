@@ -48,9 +48,13 @@
 
 ## Change log
 
+### 1.54.0 (2020-11-30)
+- 테마 기능 수정
+- m3u8 재생 기능 추가 (테스트 중, 채팅창 및 빠른 좌표에 올라온 m3u8 링크에 [M3U8 PLAYER] 링크를 눌러 재생 가능)
+
 ### 1.53.10 (2020-10-31)
-- (실험실) 광고 차단 테스트 기능 3차 수정
-- 새로운 방법이 생성되고 막히고를 반복하는 중입니다. 광고 차단 테스트 기능 대신 다음 링크의 방법을 따라하는 것을 권장합니다. [https://www.reddit.com/r/Twitch/comments/jjepg8/fix_for_ublock_origin_on_twitch_i_updated_the/](https://www.reddit.com/r/Twitch/comments/jjepg8/fix_for_ublock_origin_on_twitch_i_updated_the/)
+- ~~(실험실) 광고 차단 테스트 기능 3차 수정~~
+- ~~새로운 방법이 생성되고 막히고를 반복하는 중입니다. 광고 차단 테스트 기능 대신 다음 링크의 방법을 따라하는 것을 권장합니다. [https://www.reddit.com/r/Twitch/comments/jjepg8/fix_for_ublock_origin_on_twitch_i_updated_the/](https://www.reddit.com/r/Twitch/comments/jjepg8/fix_for_ublock_origin_on_twitch_i_updated_the/)~~
 
 ### 1.53.7 (2020-09-12)
 - 사전에 저장된 스트리머 ID- 닉네임 리스트 수정/추가

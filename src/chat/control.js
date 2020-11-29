@@ -106,7 +106,6 @@ export var chat_basic_css = `#ADD_send_location_button {
     padding:1px 5px;
     display:inline-block;
     align-self:center;
-    color:#000;
     font-size: 12px;
     font-weight:700;
     text-align:left;
@@ -185,7 +184,6 @@ export var chat_basic_css = `#ADD_send_location_button {
     padding-left:5px;
     display:inline-block;
     align-self:center;
-    color:#000;
     font-size: 12px;
     font-weight:700;
     text-align:center;
@@ -266,6 +264,10 @@ body.tooltip_hide p.tooltip {
 }
 .chat_video_play_top_fix .ADD_br{
     display:none;
+}
+body.leftchat .wrap, body.leftchat .chat-ignore, body.leftchat .chat-container {
+    border-left:none !important;
+    border-right:1px solid #d3d3d3;
 }
 `;
 
@@ -1403,6 +1405,7 @@ async function chatElemControl($line){
 
             // const regex_twitch = /^https?:\/\/(?:www\.|)twitch\.tv\/([a-zA-Z1-9-_]+)/;
             const regex_platform = /^https?:\/\/(?:www\.|play.|)(twitch|afreeca)(?:\.tv|tv\.com)\/([a-zA-Z0-9-_]+)/i;
+            const regex_m3u8 = /^https?:\/\/.+\.m3u8/i;
             var match_platform = null;
             if(ADD_config.chat_auto_coor_twitch_afreeca){
                 match_platform = href.match(regex_platform);
@@ -1410,7 +1413,7 @@ async function chatElemControl($line){
 
             // 트위치 or 아프리카 링크인 경우
             if(ADD_config.chat_auto_coor_twitch_afreeca && match_platform !== null && match_platform[2] !== undefined){
-                $aElem.after(`<a href="https://www.dostream.com/#/stream/${match_platform[1]}/${match_platform[2]}" target="_blank" class="topClick" style="display:inline-block;margin-left:0px;color:#000;font-weight:700;vertical-align:baseline;">[${ADD_streamer_nick(match_platform[2])}]</a>`);
+                $aElem.after(`<a href="https://www.dostream.com/#/stream/${match_platform[1]}/${match_platform[2]}" target="_blank" class="topClick" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[${ADD_streamer_nick(match_platform[2])}]</a>`);
                 
                 // 스크롤 내리기
                 if( temp_isChatScrollOn ){
@@ -1434,9 +1437,17 @@ async function chatElemControl($line){
                 //if(ch_text.toLowerCase() !== ch_streamer_id.toLowerCase()){
                 //if(ch_text !== ch_streamer_id){
                 if(ch_text !== undefined || ch_text !== ""){
-                    $aElem.append(" <span class=\"keyword_pass\" style=\"color:#000;font-weight:700;vertical-align:baseline;\">["+ch_text+"]</span>");
+                    $aElem.append(" <span class=\"keyword_pass\" class=\"ch_text\" style=\"font-weight:700;vertical-align:baseline;\">["+ch_text+"]</span>");
                 }
 
+                // 스크롤 내리기
+                if( temp_isChatScrollOn ){
+                    goScrollDown();
+                }
+            }
+            // M3U8 링크인 경우
+            else if(regex_m3u8.test(href)){
+                $aElem.after(` <a href="https://www.dostream.com/#/stream/m3u8/${href}}" target="_blank" class="topClick" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[M3U8 PLAYER]</a>`);
                 // 스크롤 내리기
                 if( temp_isChatScrollOn ){
                     goScrollDown();

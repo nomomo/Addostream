@@ -19,9 +19,6 @@ export function ADD_main_event_binding(){
     // 빠른 좌표 버튼 생성 관련됨
     nomo_coord.hrm_layout();
 
-    // 왼쪽 채팅 관련됨
-    nomo_theme.ADD_leftchat_change();
-
     // 데스크탑 알림 권한 관련됨
     if(ADD_config.alarm_noti){
         ADD_DEBUG("Notification.permission = ", Notification.permission);

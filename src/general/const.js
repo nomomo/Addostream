@@ -8,7 +8,8 @@ const consts = {
     C_INSAGIRL : 11,
     C_EMBEDED_TWITCH : 12,
     C_TWITCH : 13,
-    urlCheckerText : ["MAIN--","STREAM","UCHAT-","SETTING", "SETTING-NW","","","","","","","INSAGIRL","EMBEDED_TWITCH","MAIN_TWITCH"],
+    C_M3U8PLAYER : 14,
+    urlCheckerText : ["MAIN--","STREAM","UCHAT-","SETTING", "SETTING-NW","","","","","","","INSAGIRL","EMBEDED_TWITCH","MAIN_TWITCH","M3U8PLAYER"],
     SEND_LOCATION_EVENT_MIN_TIME : 10.0,
     API_INTERVAL_MIN_TIME : 1.0
 };

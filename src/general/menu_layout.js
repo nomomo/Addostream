@@ -703,9 +703,12 @@ export function ADD_basic_layout(){
                             var stream_chat_theme = "";
                             switch (ADD_config.playing_chat_iframe_theme) {
                             case "default":
-                                if(ADD_config.theme === "dark" || ADD_config.theme === "black" || $("body").hasClass("theme-black")){
+                                if(ADD_config.theme === "black_youtube" || ADD_config.theme === "dark" || ADD_config.theme === "black" || $("body").hasClass("theme-black") || $("body").hasClass("theme-black_youtube") ){
                                     stream_chat_theme = "&darkpopout";
                                 }
+                                break;
+                            case "black_youtube":
+                                stream_chat_theme = "&darkpopout";
                                 break;
                             case "dark":
                                 stream_chat_theme = "&darkpopout";

@@ -102,9 +102,9 @@ export function hrm_layout(){
                 }
             });
         ADD_DEBUG("좌표 버튼 기능 변경");
-        $("#btnOpenHrm").before("<button class=\"btn-blue\" style=\"margin-right:-80px;background-color:#446cb3;margin-bottom:-45px;\"></button>")
-            .after($btnOpenHrm_ADD).css("transition","width 1s, height 1s, transform 1s").css("height","22.5px");
-        $("#btnOpenHrm_ADD").css("transition","width 2s, height 2s, transform 2s").css("height","22px").delay("700").fadeIn("300");
+        $("#btnOpenHrm")//.before("<button class=\"btn-blue\" style=\"margin-right:-80px;margin-bottom:-45px;\"></button>")
+            .after($btnOpenHrm_ADD).css("transition","none").css("height","22.5px");
+        $("#btnOpenHrm_ADD").css("transition","all 0s").css("height","22.5px").show();//delay("700").fadeIn("300");
         
         // hrm_layout 생성
         var $hrm_layout = $(//html
@@ -191,6 +191,7 @@ var prev_nick = "", prev_href = "", prev_count = 0;
 var coord_length = 20;
 var coord_fail = false;
 async function ADD_parse_insagirl(page){
+    ADD_config.insagirl_select = 2;
     ADD_DEBUG("RUNNING - parse_coord, page:"+page);
     if(page === 0 || page === 1){
         prev_nick = "";
@@ -281,6 +282,7 @@ async function ADD_parse_insagirl(page){
                 $temp_a.each(function(index, href_i){
                     var $href_i = $(href_i);
                     var href = $href_i.attr("href");
+                    const regex_m3u8 = /^https?:\/\/.+\.m3u8/i;
                     if(href.toLowerCase().indexOf("dostream.com/#/stream/twitch/") !== -1 || href.toLowerCase().indexOf("dostream.com/#/stream/multitwitch/") !== -1){
                         var ch_text = "";
                         var ch_streamer_id = href.split("/").pop();
@@ -296,8 +298,12 @@ async function ADD_parse_insagirl(page){
     
                         //if(ch_text.toLowerCase() !== ch_streamer_id.toLowerCase()){
                         if(ch_text !== undefined || ch_text !== ""){
-                            content = content + " <span class=\"keyword_pass\" style=\"color:#000;font-weight:700;vertical-align:top;\">["+ch_text+"]</span>";
+                            content = content + " <span class=\"keyword_pass ch_text\" style=\"font-weight:700;vertical-align:top;\">["+ch_text+"]</span>";
                         }
+                    }
+                    else if(regex_m3u8.test(href)){
+                        content = content + " " + `<a href="https://www.dostream.com/#/stream/m3u8/${href}" class="keyword_pass ch_text" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[M3U8 PLAYER]</a>`;
+                        
                     }
                 });
 
@@ -330,10 +336,10 @@ async function ADD_parse_insagirl(page){
             
         }, onerror: async function(){
             ADD_DEBUG("좌표 파싱 중 에러 발생 - onerror");
-            await replace_coord(page);
+            // await replace_coord(page);
         }, ontimeout: async function(){
             ADD_DEBUG("좌표 파싱 중 에러 발생 - ontimeout");
-            await replace_coord(page);
+            // await replace_coord(page);
         }
     });
 

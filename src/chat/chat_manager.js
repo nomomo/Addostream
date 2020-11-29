@@ -29,7 +29,7 @@ export var chat_manager = (function(){
         <div id="memo_simple_layout_container" style="z-index: 100000;background-color:rgba(51,51,51,0.8);cursor:pointer;height:100%;left:0;overflow-y:scroll;padding:0;position:absolute;
             text-align:center;top: 0;width: 100%;display:none;">
             <div id="memo_simple_layout" style="width:100%;position:absolute;top:50%;margin-top:-50%;cursor:default;">
-                <div style="width:300px;margin:0 auto;background-color:rgba(255,255,255,0.87);border:2px solid #555;border-radius:15px;color:#000;box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                <div id="memo_simple_layout_content" style="width:300px;margin:0 auto;background-color:rgba(255,255,255,0.87);border:2px solid #555;border-radius:15px;color:#000;box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
                     <div style="padding:10px 0 5px 0;font-size:13px;font-weight:700;">
                         <span id="memo_nick" style="color:red;"></span>
                         <span style="">에 메모 입력</span>

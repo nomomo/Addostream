@@ -21,6 +21,21 @@ module.exports = {
             "node_modules"
         ]
     },
+    module: {
+        rules: [
+            {
+                test: /\.css$/i,
+                use: [
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            esModule: false
+                        }
+                    }
+                ],
+            },
+        ],
+    },
     optimization: {
     //minimize: true,
     //splitChunks: {},
