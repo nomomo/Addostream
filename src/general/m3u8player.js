@@ -1,5 +1,5 @@
 export function m3u8_override(url){
-    var waiting_time = 1000;
+    var waiting_time = 2000;
     if($("#headerm3u8").length === 0){
         $("head").append(`
             <script id="headerm3u8" src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>

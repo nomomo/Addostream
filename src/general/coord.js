@@ -48,10 +48,10 @@ export function hrm_layout(){
         e.preventDefault();
         var href="";
         if(ADD_config.insagirl_select == 1){
-            href="http://coord.dostream.com";
+            href="https://coord.dostream.com";
         }
         else if(ADD_config.insagirl_select == 2){
-            href="http://insagirl-toto.appspot.com/hrm/?where=2";
+            href="https://insagirl-toto.appspot.com/hrm/?where=2";
         }
         
         window.open(href);
@@ -205,11 +205,11 @@ async function ADD_parse_insagirl(page){
 
     var coord_url = "";
     if(ADD_config.insagirl_select == 1){    // 기본 두스트림의 경우
-        coord_url = "http://coord.dostream.com/api/?offset="+String(parseInt((page-1)*coord_length));
+        coord_url = "https://coord.dostream.com/api/?offset="+String(parseInt((page-1)*coord_length));
         $("#ADD_hrmbodyexpand").html(coord_length+"개 더 보기");
     }
     else if(ADD_config.insagirl_select == 2){   // 인사걸의 경우
-        coord_url = "http://insagirl-hrm.appspot.com/json2/2/1/"+page+"/";
+        coord_url = "https://insagirl-hrm.appspot.com/json2/2/1/"+page+"/";
         $("#ADD_hrmbodyexpand").html("더 보기");
     }
     else{
@@ -301,7 +301,7 @@ async function ADD_parse_insagirl(page){
                             content = content + " <span class=\"keyword_pass ch_text\" style=\"font-weight:700;vertical-align:top;\">["+ch_text+"]</span>";
                         }
                     }
-                    else if(regex_m3u8.test(href)){
+                    else if(href.indexOf('dostream.com/#/stream/m3u8') == -1 && regex_m3u8.test(href)){
                         content = content + " " + `<a href="https://www.dostream.com/#/stream/m3u8/${href}" class="keyword_pass ch_text" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[M3U8 PLAYER]</a>`;
                         
                     }

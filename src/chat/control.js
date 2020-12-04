@@ -1446,7 +1446,7 @@ async function chatElemControl($line){
                 }
             }
             // M3U8 링크인 경우
-            else if(regex_m3u8.test(href)){
+            else if(href.indexOf('dostream.com/#/stream/m3u8') == -1 && regex_m3u8.test(href)){
                 $aElem.after(` <a href="https://www.dostream.com/#/stream/m3u8/${href}}" target="_blank" class="topClick" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[M3U8 PLAYER]</a>`);
                 // 스크롤 내리기
                 if( temp_isChatScrollOn ){

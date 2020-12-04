@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name Addostream
-// @version 1.54.0
+// @version 1.54.1
 // @author Nomo
 // @description 두스트림에 기능을 추가한다.
 // @supportURL https://github.com/nomomo/Addostream/issues
@@ -15,7 +15,7 @@
 // @updateURL https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js
 // @run-at document-start
 // @require https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
-// @require http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
+// @require https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
 // @require https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js
 // @require https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
 // @require https://embed.twitch.tv/embed/v1.js

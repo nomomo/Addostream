@@ -123,7 +123,7 @@ export async function ADD_run(data,flag){
                     }
                     temp_one.from = "twitch";
                     temp_one.url = "/twitch/"+temp_api_cookie[i].name;
-                    temp_one.image = "http://static-cdn.jtvnw.net/previews-ttv/live_user_"+temp_api_cookie[i].name+"-240x180.jpg";
+                    temp_one.image = "https://static-cdn.jtvnw.net/previews-ttv/live_user_"+temp_api_cookie[i].name+"-240x180.jpg";
                     temp_one.streamer = temp_api_cookie[i].name;
                     temp_one.viewers = temp_api_cookie[i].viewers;
                     temp_one.display_name = temp_api_cookie[i].display_name;
@@ -163,7 +163,7 @@ export async function ADD_run(data,flag){
 
                 temp_one2.from = "twitch";
                 temp_one2.url = "/twitch/"+fixed_streamer_id;
-                temp_one2.image = "http://static-cdn.jtvnw.net/previews-ttv/live_user_"+fixed_streamer_id+"-240x180.jpg";
+                temp_one2.image = "https://static-cdn.jtvnw.net/previews-ttv/live_user_"+fixed_streamer_id+"-240x180.jpg";
                 temp_one2.streamer = fixed_streamer_id;
                 temp_one2.viewers = 0;
                 temp_one2.display_name = "";

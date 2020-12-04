@@ -1043,3 +1043,8 @@ body.night_mode_transition * {
     -webkit-transition-delay: 0;
     transition-delay: 0;
 }
+
+#m3u8video {
+    outline: none !important;
+    border: none !important;
+}
