@@ -178,6 +178,7 @@ export var GM_setting = (function($, global, document){ //
         twitch_start_unmute : { disable:true, under_dev:true, category:"advanced", depth:2, type: "checkbox", value: false, title:"[실험실] 트위치 시청 시작 시 음소거 하지 않음", desc:"" },
         twitch_disable_visibilitychange : { under_dev:true, category:"twitch", depth:2, type: "checkbox", value: false, title:"[실험실] 트위치 시청 중 탭 비활성화 시 자동 화질 변경 무시", desc:"" },
         // twitch_frontPageMode : { under_dev:true, category:"twitch", depth:2, type: "checkbox", value: false, title:"[실험실] Front Page Mode", desc:"Twitch Front Page 에서 재생하는 것처럼 속여서 중간 광고를 나타나지 않게 합니다." },
+        twitch_siteMode : { under_dev:true, category:"twitch", depth:2, type: "checkbox", value: false, title:"[실험실(201219)] 두스에서만 뜨는 보라색 화면 숨기기", desc:"두스트림(외부사이트) 에서 재생할 때는 보라색 광고 차단 화면이 뜨고, Twitch 에서 직접 시청 시에는 보라색 화면이 뜨지 않는다면 본 기능을 켜는 것을 시도해보십시오." },
         twitch_error_auto_restart : { under_dev:true, category:"twitch", depth:2, type: "checkbox", value: false, title:"[실험실] 트위치 시청 중 오류 발생 시 자동 재시작", desc:"예) #2000 에러 (현재 동작 안 함)" },
         // twitch_server_view : { under_dev:true, category:"advanced", depth:2, type: "checkbox", value: false, title:"[실험실] 마지막으로 접속된 트위치 서버 표시", desc:"" },
         twitch_interacite : { disable:true, category:"advanced", depth:2, type: "checkbox", value: false, title:"반응형 트위치 사용", desc:"" },

@@ -475,6 +475,21 @@ a.autokeyword:after, a.autokeyword:after {
     background-color: var(--memo_button_container-background-color) !important;
 }
 
+/* 채팅매니저 관리창 */
+.modal-body tbody tr:hover{
+    background-color: var(--list-li-background-color-hover);
+}
+.table-bordered{
+    border-color: var(--table-border-color);
+}
+.table-striped>tbody>tr:nth-child(odd)>td, .table-striped>tbody>tr:nth-child(odd)>th {
+    background-color: var(--body-background-color);
+    border-color: var(--table-border-color);
+}
+.table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td {
+    border-color: var(--table-border-color);
+}
+
 /* 우하하 채팅 */
 body #uha_chat{
     background-color:var(--chat-background-color);
