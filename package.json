@@ -1,7 +1,7 @@
 {
   "name": "addostream",
   "author": "Nomomo",
-  "version": "1.54.2",
+  "version": "1.54.3",
   "description": "두스트림에 새로운 기능을 추가하는 브라우저 확장 UserScript",
   "update": "",
   "notice": "",
@@ -14,7 +14,7 @@
     "production": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=webpack.config.js"
   },
   "devDependencies": {
-    "compression-webpack-plugin": "^3.0.0",
+    "compression-webpack-plugin": "^6.0.5",
     "cross-env": "^5.2.0",
     "css-loader": "^5.0.1",
     "css-to-string-loader": "^0.1.3",
