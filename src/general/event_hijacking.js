@@ -56,7 +56,7 @@ export function event_hijacking(){
 
                 if(c==undefined)
                     c=false;
-                this._addEventListener(a,b,c);
+                unsafeWindow._addEventListener(a,b,c);
             };
             unsafeWindow.document._addEventListener = unsafeWindow.document.addEventListener;
             unsafeWindow.document.addEventListener = function(a,b,c){
@@ -67,7 +67,7 @@ export function event_hijacking(){
 
                 if(c==undefined)
                     c=false;
-                this._addEventListener(a,b,c);
+                unsafeWindow.document._addEventListener(a,b,c);
                 // if(!this.eventListenerList)
                 //     this.eventListenerList = {};
                 // if(!this.eventListenerList[a])
