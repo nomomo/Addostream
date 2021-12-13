@@ -28,6 +28,7 @@ import {chat_manager, get_chat_manager_from_main_frame} from "chat/chat_manager.
 import {external_insagirl} from "external_site/insagirl.js";
 import {ADD_page_change} from "general/page_change.js";
 import {ADD_popup_player} from "general/popup_player.js";
+// import * as hold from "chat/hold.js";
 // import {point_clicker} from "general/point_clicker.js";
 // import { test } from "general/import_test.js";
 // import {easy_go} from "general/go.js";
@@ -137,6 +138,11 @@ import {ADD_popup_player} from "general/popup_player.js";
     }
     // 채팅인 경우
     else if(nomo_global.PAGE == nomo_const.C_UCHAT){
+        // await hold.init();
+        // if(!nomo_global.chat_load){
+        //     $("body").empty();
+        // }
+
         $(document).ready(function(){
             ADD_DEBUG("DOCUMENT_READY");
             unsafeWindow.ADD_send_sys_msg = ADD_send_sys_msg;

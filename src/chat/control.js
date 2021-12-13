@@ -7,6 +7,7 @@ import * as nomo_version from "settings/version.js";
 import { ADD_send_location_layout } from "chat/send_coord.js";
 import { ADD_send_sys_msg } from "chat/send_message.js";
 import { uchat_connect_waiting, uchat_connect_check_clear} from "chat/server_connector.js";
+// import * as hold from "chat/hold.js";
 // import lib_nude from "libs/nude.js";
 const ADD_DEBUG = utils.ADD_DEBUG;
 
@@ -409,7 +410,8 @@ export async function ADD_chatting_arrive(){
                 }
 
                 // 자동 새로고침 layout 생성
-                ADD_chat_auto_reload.layout();
+                //await hold.chat_hold_read();
+                //hold.chat_hold_layout();
 
                 // 툴팁 숨기기 토글
                 chat_tooltip_toggle();
@@ -1346,6 +1348,7 @@ async function chatElemControl($line){
                             !$(this).parent().hasClass("keyword_pass");
                     });
 
+                var regex_temp, regex_test;
                 $textNodes.each(function(index, element) {
                     var contentText = $(element).text();
                     $.each(streamerArray, function(si, sv){
@@ -1355,7 +1358,25 @@ async function chatElemControl($line){
                             if(!ADD_config.chat_autoKeyword_1char && disp_name.length === 1){
                                 continue;
                             }
-                            if(contentText.indexOf(disp_name) !== -1){
+
+                            // 가~~~~~~~장 맨 앞 텍스트 노드 검출하는 알고리즘 개선 필요
+                            if(false){
+                                if(index == 0){
+                                    regex_temp = new RegExp("(?:^|\\s+)("+disp_name+")", "g");
+                                }
+                                else{
+                                    regex_temp = new RegExp("\\s+("+disp_name+")", "g");
+                                }
+                                // console.log("test_match", regex_temp, disp_name, contentText.match(regex_temp));
+                                if(regex_temp.test(contentText)){
+                                    contentText = contentText.replace(regex_temp, (index == 0 ? "" : " ") + "<a href='https://www.dostream.com/#/stream/twitch/"+id+"' class='topClick autokeyword'>"+disp_name+"</a>");
+                                    $(element).replaceWith(contentText);
+                                    rep = rep + 1;
+                                    br = true;
+                                    break;
+                                }
+                            }
+                            else if(contentText.indexOf(disp_name) !== -1){
                                 contentText = contentText.split(disp_name).join("<a href='https://www.dostream.com/#/stream/twitch/"+id+"' class='topClick autokeyword'>"+disp_name+"</a>");   // replaceAll
                                 $(element).replaceWith(contentText);
                                 //ADD_DEBUG("contentText", sv, contentText, $(element));
@@ -1705,90 +1726,6 @@ async function chatElemControl($line){
 
     nomo_global.chatting_arrive_check = true;
 }
-
-
-var ADD_chat_auto_reload = {
-    // 부모창에서 unique_window 값 가져올 수 있도록 수정 필요
-    layout: async function(){
-        if(!ADD_config.chat_auto_reload){
-            nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".newWindowResponse").off("input");
-            if(typeof GM.removeValueChangeListener === "function"){
-                GM.removeValueChangeListener(nomo_global.ADD_unique_window_event_ID);
-            }
-            else{
-                clearInterval(nomo_global.ADD_unique_window_event_ID);
-            }
-            $(".newWindowRseponseContainer").remove();
-            return false;
-        }
-        
-        // layout 생성
-        if($(".newWindowRseponseContainer").length === 0){
-            var temp_uw = utils.getUrlVars()["uw"];
-            var temp_uwc = utils.getUrlVars()["uwc"];
-            if(temp_uw !== undefined && temp_uwc !== undefined){
-                nomo_global.ADD_unique_window = temp_uw;
-                nomo_global.ADD_unique_window_reload_counter = temp_uwc;
-            }
-
-            var $middlebox = nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("div.middlebox");
-            var $newWindowResponse = $(`
-            <div class="newWindowRseponseContainer" style="font-size:9px;display: inline-block;float:right;vertical-align:middle;height: auto;padding: 5px;">
-            <span style="padding-right:3px;">자동 새로고침</span>
-                <input type="checkbox" class="newWindowResponse">
-            </div>
-            `);
-            $middlebox.append($newWindowResponse);
-
-            // 현재 창에서 체크박스 컨트롤
-            nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".newWindowResponse").on("input", function(){
-                var $this = $(this);
-                if($this.is(":checked")){
-                    nomo_global.ADD_is_unique_window_reload = true;
-                    GM.setValue("ADD_unique_window", nomo_global.ADD_unique_window);
-                }
-                else{
-                    nomo_global.ADD_is_unique_window_reload = false;
-                }
-            });
-
-            // 다른창에서 체크에 의한 체크박스 컨트롤
-            if(typeof GM.addValueChangeListener === "function"){
-                nomo_global.ADD_unique_window_event_ID = GM.addValueChangeListener("ADD_unique_window", async function(val_name, old_value, new_value, remote) {
-                    if(remote){
-                        ADD_DEBUG("다른 창에서 설정 변경됨. val_name, old_value, new_value:", val_name, old_value, new_value);
-                        if(nomo_global.ADD_is_unique_window_reload && new_value !== nomo_global.ADD_unique_window){
-                            nomo_global.ADD_is_unique_window_reload = false;
-                            nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".newWindowResponse").prop("checked", false);
-                        }
-                    }
-                });
-            }
-            else{
-                nomo_global.ADD_unique_window_event_ID = setTimeout(async function(){
-                    var new_value = await GM.getValue("ADD_unique_window", nomo_global.ADD_unique_window);
-                    if(nomo_global.ADD_is_unique_window_reload && new_value !== nomo_global.ADD_unique_window){
-                        nomo_global.ADD_is_unique_window_reload = false;
-                        nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".newWindowResponse").prop("checked", false);
-                    }
-                }, 1000);
-            }
-        }
-    },
-    EXE:function(){
-        if(!ADD_config.chat_auto_reload){
-            return false;
-        }
-        if(nomo_global.ADD_is_unique_window_reload && nomo_global.ADD_unique_window_reload_counter < ADD_UNIQUE_WINDOW_RELOAD_MAX){
-            nomo_global.ADD_unique_window_reload_counter += 1;
-            window.location.href = "https://www.dostream.com/uchat2.php?uw="+nomo_global.ADD_unique_window+"&uwc="+nomo_global.ADD_unique_window_reload_counter;
-
-            // setTimeout(function(){
-            //     ADD_unique_window_reload_counter -= 1;
-            // }, 10000);
-        }
-    }
-};
 
 // 금지 단어에서 채팅 차단하기
 export async function ADD_chatBlock(elem, force, nick, content, date, isNick, isContent, isShowDelMsg){

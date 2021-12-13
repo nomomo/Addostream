@@ -29,7 +29,9 @@ var nomo_global_manager = async function(global){
         isGoScrollDown: true,                     // 채팅창 스크롤 내림 여부 기억
 
         // unique window
+        chat_load: true,
         unique_window: undefined,      // Unique Window 체크용 변수 생성
+        all_tabs: undefined,
 
         // 채팅 자동 새로고침
         ADD_unique_window: Number(new Date()) + Math.floor(Math.random()*1000000) + 1,
