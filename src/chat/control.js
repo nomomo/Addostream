@@ -1,6 +1,6 @@
 import * as nomo_common from "general/common.js";
 import nomo_const from "general/const.js";
-import { ADD_streamer_nick, streamerArray } from "general/streamer-lib.js";
+import { ADD_streamer_nick, streamerArray, streamerArray_name, streamerArray_regex } from "general/streamer-lib.js";
 import * as nomo_theme from "general/theme.js";
 import * as utils from "libs/nomo-utils.js";
 import * as nomo_version from "settings/version.js";
@@ -1333,70 +1333,79 @@ async function chatElemControl($line){
     // 키워드 링크 추가하기
     if(ADD_config.chat_autoKeyword && !ADD_config.broadcaster_mode){
         setTimeout(function(){
-            var rep = 0;
-            var br = true;
-            while(rep<10 && br){
-                br = false;
-                var $textNodes = $content
-                    .find("*")
-                    .andSelf()
-                    .contents()
-                    .filter(function() {
-                        return this.nodeType === 3 &&
-                            !$(this).parent("a").length && 
-                            !$(this).hasClass("keyword_pass") &&
-                            !$(this).parent().hasClass("keyword_pass");
-                    });
+            try{
+                var rep = 0;
+                var br = true;
+                while(rep<10 && br){
+                    br = false;
+                    var $textNodes = $content
+                        .find("*")
+                        .andSelf()
+                        .contents()
+                        .filter(function() {
+                            return this.nodeType === 3 &&
+                                !$(this).parent("a").length && 
+                                !$(this).hasClass("keyword_pass") &&
+                                !$(this).parent().hasClass("keyword_pass");
+                        });
 
-                var regex_temp, regex_test;
-                $textNodes.each(function(index, element) {
-                    var contentText = $(element).text();
-                    $.each(streamerArray, function(si, sv){
-                        var id = sv[0];
-                        for(var s=1;s<sv.length; s++){
-                            var disp_name = sv[s];
-                            if(!ADD_config.chat_autoKeyword_1char && disp_name.length === 1){
-                                continue;
+                    $textNodes.each(function(index, element) {            
+                        var contentText = $(element).text();
+                        if(ADD_config.chat_autoKeyword_startwith){
+                            var tempary = contentText.split(" ");
+                            for(var i=0;i<tempary.length;i++){
+                                for(var j=0;j<streamerArray_regex.length;j++){
+                                    var v = tempary[i];
+                                    var id = streamerArray[j][0];
+                                    var match = v.match(streamerArray_regex[j]);
+                                    if(match !== null){
+                                        if(match[1] !== "던" && !ADD_config.chat_autoKeyword_1char && match[1].length === 1){
+                                            continue;
+                                        }
+                                        tempary[i] = tempary[i].replace(match[1],"<a href='https://www.dostream.com/#/stream/twitch/"+id+"' class='topClick autokeyword'>"+match[1]+"</a>");
+                                        break;
+                                    }
+                                }
                             }
+                            contentText = tempary.join(" ");
+                            $(element).replaceWith(contentText);
+                            $(element).addClass("keyword_pass");
+                            br = false;
+                        }
+                        else{
+                            $.each(streamerArray, function(si, sv){
+                                var id = sv[0];
+                                for(var s=1;s<sv.length; s++){
+                                    var disp_name = sv[s];
+                                    if(disp_name !== "던" && !ADD_config.chat_autoKeyword_1char && disp_name.length === 1){
+                                        continue;
+                                    }
+                                    if(contentText.indexOf(disp_name) !== -1){
+                                        contentText = contentText.split(disp_name).join("<a href='https://www.dostream.com/#/stream/twitch/"+id+"' class='topClick autokeyword'>"+disp_name+"</a>");   // replaceAll
+                                        $(element).replaceWith(contentText);
+                                        //ADD_DEBUG("contentText", sv, contentText, $(element));
+                                        rep = rep + 1;
+                                        br = true;
+                                        break;
+                                    }
+                                }
 
-                            // 가~~~~~~~장 맨 앞 텍스트 노드 검출하는 알고리즘 개선 필요
-                            if(false){
-                                if(index == 0){
-                                    regex_temp = new RegExp("(?:^|\\s+)("+disp_name+")", "g");
+                                if(br){
+                                    return false;
                                 }
-                                else{
-                                    regex_temp = new RegExp("\\s+("+disp_name+")", "g");
-                                }
-                                // console.log("test_match", regex_temp, disp_name, contentText.match(regex_temp));
-                                if(regex_temp.test(contentText)){
-                                    contentText = contentText.replace(regex_temp, (index == 0 ? "" : " ") + "<a href='https://www.dostream.com/#/stream/twitch/"+id+"' class='topClick autokeyword'>"+disp_name+"</a>");
-                                    $(element).replaceWith(contentText);
-                                    rep = rep + 1;
-                                    br = true;
-                                    break;
-                                }
-                            }
-                            else if(contentText.indexOf(disp_name) !== -1){
-                                contentText = contentText.split(disp_name).join("<a href='https://www.dostream.com/#/stream/twitch/"+id+"' class='topClick autokeyword'>"+disp_name+"</a>");   // replaceAll
-                                $(element).replaceWith(contentText);
-                                //ADD_DEBUG("contentText", sv, contentText, $(element));
-                                rep = rep + 1;
-                                br = true;
-                                break;
-                            }
+                            });
                         }
 
                         if(br){
                             return false;
                         }
+
+                        $(element).addClass("keyword_pass");
                     });
-
-                    if(br){
-                        return false;
-                    }
-
-                    $(element).addClass("keyword_pass");
-                });
+                }
+            }
+            catch(e){
+                ADD_DEBUG("키워드 링크 추가 중 에러", e);
             }
         },1);
     }

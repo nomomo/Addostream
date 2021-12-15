@@ -152,7 +152,8 @@ const _settings = {
     chat_dobae_block_record : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: true, title:"채팅 차단 로그에 기록", desc:"도배로 판단된 채팅을 채팅 차단 로그에 기록" },
     
     chat_autoKeyword : { category:"chat", depth:2, type: "checkbox", category_name:"채팅 - 고급", value: true, title:"스트리머 닉네임을 링크로 변환", desc:"스트리머 닉네임 감지 시 자동으로 링크로 변환함" },
-    chat_autoKeyword_1char : { disable:true, category:"chat", depth:3, type: "checkbox", value: false, title:"[실험실] 한 글자 별칭도 링크로 변환함", desc:"한 글자 별칭도 링크로 변환함" },
+    chat_autoKeyword_startwith : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: false, title:"[실험실] 단어의 시작일 때만 변환", desc:"단어의 시작이 스트리머 닉네임으로 시작하는 경우에만 닉네임을 링크로 변환함" },
+    chat_autoKeyword_1char : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: false, title:"[실험실] 한 글자 별칭도 링크로 변환", desc:"한 글자 별칭도 링크로 변환함. 단어의 시작일 때만 변환 옵션을 활성화 하는 것을 권장" },
     chat_url_decode : { category:"chat", depth:2, type: "checkbox", value: true, title:"한글 URL을 구분 가능하도록 변경", desc:"채팅 내에서 유니코드 형태의 URL 링크 감지 시,<br />내용을 알아볼 수 있도록 표시<br />예) <a href='https://namu.wiki/w/%ED%92%8D%EC%9B%94%EB%9F%89' target='_blank'>https://namu.wiki/w/%ED%92%8D%EC%9B%94%EB%9F%89</a> → <a href='https://namu.wiki/w/%ED%92%8D%EC%9B%94%EB%9F%89' target='_blank'>https://namu.wiki/w/풍월량</a>" },
     sys_meg : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: true, title:"작동 상태 알림", desc:"애드온의 작동 상태를 채팅창에 메시지로 알림" },
     chat_nick_colorize : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: false, title:"닉네임 색상화", desc:"채팅 닉네임에 임의의 색상을 적용" },
