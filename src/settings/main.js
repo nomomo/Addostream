@@ -8,7 +8,7 @@ import {ADD_send_location_layout} from "chat/send_coord.js";
 import {versionStrtoNum} from "settings/version.js";
 import {memoLoglayoutInit} from "chat/simple_memo_log.js";
 import {blocked_chat_layout} from "general/menu_layout.js";
-import {chat_tooltip_toggle} from "chat/control.js";
+import {chat_tooltip_toggle, chat_type_and_go_main} from "chat/control.js";
 import {uhaha_chat_delete_hide} from "chat/control_uhaha.js";
 
 const _settings = {
@@ -162,6 +162,7 @@ const _settings = {
     chat_auto_reload : { disable:true, category:"chat", depth:2, type: "checkbox", value: false, title:"채팅 중지 시 자동 새로고침 설정", desc:"채팅이 중지된 경우,<br />채팅창 상단의 Auto Reload가 설정된 창에서<br />채팅을 자동으로 새로고침 함 (10초 내 최대 5회)" },
     chat_auto_coor_twitch_afreeca : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: true, title:"[실험실] 가능한 경우 외부 트위치, 아프리카 링크를 두스 좌표로 변환", desc:"" },
     chat_input_click : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: false, title:"[실험실] 채팅 입력 시 입력란 클릭 개선", desc:"가끔 채팅 입력란을 두 번 클릭해야지만 입력란이 활성화 되는 것을 개선한다." },
+    chat_type_and_go : { under_dev:true, category:"chat", depth:2, type: "checkbox", value: false, title:"[실험실] 별칭 입력으로 스트림 바로 재생", desc:"채팅 입력란에 스트리머 닉네임 또는 별칭 입력 후 스트림 바로 재생<br />1. 채팅 입력란에서 TAB 키 누른 후 ENTER<br />2. 화살표 버튼 클릭<br />3. ALT + G", change:function(){chat_type_and_go_main();} },
 
     uhaha_auto_remove : { under_dev:true, category:"chat", category_name:"채팅 - 고급(우하하)", depth:2, type: "checkbox", value: false, title:"[실험실] 우하하 채팅 자동 싹쓸이", desc:"우하하 채팅창 사용 시 누적 채팅 개수가 일정 개수를 넘으면 자동으로 싹쓸이를 실행하여 채팅이 느려지는 것을 방지.<br /><br />채팅을 맨 위로 스크롤하여 이전 채팅을 불러올 시 이상 동작할 수 있으니 주의하십시오." },
     uhaha_auto_remove_count : { under_dev:true, category:"chat", depth:3, type: "text", value: 1000, valid:"number", min_value:200, max_value:100000, title:"[실험실] 자동 싹쓸이를 실행할 채팅 개수", desc:"(기본값:1000, 범위:200~100000)" },

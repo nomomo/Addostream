@@ -5,7 +5,7 @@ var ADD_DEBUG = utils.ADD_DEBUG;
 import {ADD_send_location_layout} from "chat/send_coord.js";
 import * as nomo_coord from "general/coord.js";
 import {ADD_channel_history_run} from "general/browse_history.js";
-import {ADD_chatting_arrive} from "chat/control.js";
+import {ADD_chatting_arrive, chat_type_and_go_main} from "chat/control.js";
 import * as nomo_theme from "general/theme.js";
 
 // 설정에 따라 ON-OFF 되는 이벤트 모음
@@ -32,6 +32,8 @@ export function ADD_chat_event_binding(){
     ADD_send_location_layout();
 
     ADD_chatting_arrive();
+
+    //chat_type_and_go_main();
 }
 
 // 1회 무조건 실행해야 하는 이벤트 모음

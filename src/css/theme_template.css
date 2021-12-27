@@ -543,3 +543,14 @@ body #uha_chat_info, body #uha_chat_contextmenu{
 .imgur_container .imgur_safe_screen {
     filter:brightness(0.5)
 }
+
+
+/* type_and_go button */
+div.ADD_type_and_go {
+    border-color:var(--chat-type_and_go-color) !important;
+    opacity:var(--chat-type_and_go-opacity) !important;
+}
+div.ADD_type_and_go:focus, div.ADD_type_and_go:hover {
+    border-color:var(--chat-type_and_go-focus-color) !important;
+    opacity:var(--chat-type_and_go-focus-opacity) !important;
+}

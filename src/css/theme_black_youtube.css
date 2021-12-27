@@ -253,6 +253,12 @@ body{
     --hrm-link-font-color:#428bca;
     --hrm-link-hover-font-color:#2a6496;
     --hrm-link-visited-font-color:#666;
+
+    
+    --chat-type_and_go-color: inherit;
+    --chat-type_and_go-opacity: 0.05;
+    --chat-type_and_go-focus-color: inherit;
+    --chat-type_and_go-focus-opacity: 0.3;
 }
 /*  */
 /* BLACK_YOUTUBE_ONLY */

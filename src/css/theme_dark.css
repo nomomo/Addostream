@@ -70,6 +70,11 @@ body{
 
     --scroll-bar-color:#202225;
     --scroll-bar-thumb-color:#2f3136;
+
+    --chat-type_and_go-color: inherit;
+    --chat-type_and_go-opacity: 0.1;
+    --chat-type_and_go-focus-color: inherit;
+    --chat-type_and_go-focus-opacity: 0.6;
 }
 
 body header {

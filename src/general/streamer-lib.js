@@ -46,4 +46,28 @@ var ADD_streamer_nick = function(id){
     }
 };
 
-export {streamerArray, ADD_streamer_nick, streamerArray_name, streamerArray_display_name, streamerArray_AutoComplete, streamerArray_regex};
+var getStreamerIDFromNick = function(nick){
+    var temp_nick = nick.toLowerCase().replace(/(^\s|\s$)/g,"");
+    for(var i=0; i<streamerArray.length; i++){
+        for(var j=0; j<streamerArray[i].length; ++j){
+            if(temp_nick == streamerArray[i][j]){
+                return streamerArray_name[i];
+            }
+        }
+    }
+    return null;
+};
+
+var getStreamerIdAndDisplayNameFromNick = function(nick){
+    var temp_nick = nick.toLowerCase().replace(/(^\s|\s$)/g,"");
+    for(var i=0; i<streamerArray.length; i++){
+        for(var j=0; j<streamerArray[i].length; ++j){
+            if(temp_nick == streamerArray[i][j]){
+                return { id: streamerArray_name[i], display_name: streamerArray_display_name[i]};
+            }
+        }
+    }
+    return { id: null, display_name: null};
+}
+
+export {streamerArray, ADD_streamer_nick, streamerArray_name, streamerArray_display_name, streamerArray_AutoComplete, streamerArray_regex, getStreamerIDFromNick, getStreamerIdAndDisplayNameFromNick};

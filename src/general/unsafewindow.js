@@ -8,7 +8,7 @@ var newdsStream = function(){
         ADD_parse_list_data(0);
         ADD_multitwitch_layout();
     };
-    $(".loader_container").fadeIn(200).fadeOut(200);
+    $(".loader_container").stop().fadeIn(200).fadeOut(200);
 };
 
 var newdostream = function(q){

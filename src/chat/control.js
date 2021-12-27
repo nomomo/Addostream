@@ -7,6 +7,7 @@ import * as nomo_version from "settings/version.js";
 import { ADD_send_location_layout } from "chat/send_coord.js";
 import { ADD_send_sys_msg } from "chat/send_message.js";
 import { uchat_connect_waiting, uchat_connect_check_clear} from "chat/server_connector.js";
+import { getStreamerIdAndDisplayNameFromNick } from "general/streamer-lib.js";
 // import * as hold from "chat/hold.js";
 // import lib_nude from "libs/nude.js";
 const ADD_DEBUG = utils.ADD_DEBUG;
@@ -270,7 +271,34 @@ body.leftchat .wrap, body.leftchat .chat-ignore, body.leftchat .chat-container {
     border-left:none !important;
     border-right:1px solid #d3d3d3;
 }
+
+.line span, .line img, .chatContent a.autokeyword, .chatContent a.autokeyword:link {
+    vertical-align:baseline !important;
+}
+
+div.ADD_type_and_go {
+    color: inherit;
+    font-size: 20px;
+    position: absolute;
+    width: 20px;
+    height: auto;
+    right: 35px;
+    top: 1px;
+    opacity: 0.8;
+    cursor: pointer;
+}
+div.ADD_type_and_go:focus, div.ADD_type_and_go:hover {
+    opacity: 1.0;
+    border: none;
+    outline: 0px solid transparent;
+}
+
 `;
+
+// 상위 frame 의 주소 설정
+function setParentWindowLocation(href){
+    window.parent.location.href = href;
+}
 
 // url 을 감지하여 $elem 뒤에 좌표 버튼을 덧붙인다
 function url_to_coord(url, $elem){
@@ -420,6 +448,9 @@ export async function ADD_chatting_arrive(){
                 // nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".content").on("scroll", function(e){
                 //     ADD_DEBUG("scrolled", e);
                 // });
+
+                // chat_type_and_go
+                chat_type_and_go_main();
             });
 
 
@@ -2023,3 +2054,79 @@ export function getImgurData($line, Imgur_ID, Imgur_type){
         }
     });
 }
+
+export function chat_type_and_go_main(){
+    ADD_DEBUG("chat_type_and_go_main 실행됨", ADD_config.chat_type_and_go);
+    if(nomo_global.$GLOBAL_IFRAME_DOCUMENT === undefined){
+        return;
+    }
+    if(ADD_config.chat_type_and_go){
+        if(nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".chatInput").length !== 0 && nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".ADD_type_and_go").length === 0){
+            nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".chatInput").css("padding-right","35px");
+
+            var $type_and_go = $(`<div class="ADD_type_and_go" tabindex="-1"><span class="glyphicon glyphicon-arrow-right"></span></div>`);
+            $type_and_go.on("keydown", function(e){
+                e.preventDefault();
+                if(e.shiftKey && e.keyCode == 9){    // SHIFT + TAB
+                    nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".chatInput").focus();
+                }
+                else if(e.keyCode == 13){           // ENTER
+                    type_and_go_run();
+                }
+            }).on("click", function(){
+                type_and_go_run();
+            });
+            nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".inputContent").append($type_and_go);
+            nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".chatInput").on("keydown.type_and_go", function(e) { 
+                if(e.altKey && e.keyCode == 71){    // ALT + G
+                    type_and_go_run();
+                }
+                else if(e.keyCode === 9) { // TAB
+                    nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".ADD_type_and_go").focus();
+                }
+            });
+        }
+    }
+    else{
+        nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".ADD_type_and_go").remove();
+        nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".chatInput").off("keydown.type_and_go");
+        nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".chatInput").css("padding-right","6px");
+    }
+}
+
+function type_and_go_run(){
+    var $etarget, etargetText, streamerid, streamerDisplayName;
+    $etarget = nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".chatInput").first();
+    etargetText =  $etarget.text();
+
+    if(etargetText.replace(/\s/g, "") == ""){
+        ADD_send_sys_msg(`스트리머 아이디 or 닉네임 or 별칭을 입력해주세요.`);
+        $etarget.focus();
+        return;
+    }
+
+    var res = getStreamerIdAndDisplayNameFromNick(etargetText);
+    streamerid = res.id;
+    streamerDisplayName = res.display_name;
+
+    var engToKor = "";
+    if(streamerid == null){
+        engToKor = utils.engTypeToKor(etargetText);
+        res = getStreamerIdAndDisplayNameFromNick(engToKor);
+        streamerid = res.id;
+        streamerDisplayName = res.display_name;
+    }
+
+    if(streamerid !== null){
+        setParentWindowLocation("https://www.dostream.com/#/stream/twitch/"+streamerid);
+        $etarget.blur();
+        $etarget.html("");
+        $etarget.focus();
+        ADD_send_sys_msg(`다음으로 이동합니다: ${streamerDisplayName}(${streamerid})`);
+    }
+    else{
+        ADD_send_sys_msg(`해당하는 스트리머를 찾을 수 없습니다: ${etargetText}`);
+        $etarget.focus();
+    }
+}
+
