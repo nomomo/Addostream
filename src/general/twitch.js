@@ -3,6 +3,7 @@ import * as nomo_common from "general/common.js";
 import nomo_const from "general/const.js";
 import { ADD_var_to_config_form } from "general/menu_layout.js";
 import * as utils from "libs/nomo-utils.js";
+import {escapeHtml} from "libs/nomo-utils.js";
 var ADD_DEBUG = utils.ADD_DEBUG;
 
 /**
@@ -83,7 +84,7 @@ async function twitch_api_get_user_ids(ch_ids_array) {
     }
 
     if (null_ids.length > 0) {
-        var msg = "Twitch API 호출 중 다음의 아이디를 찾지 못했습니다. " + null_ids.join(", ") + ". 메인에 스트리머 추가 리스트에서 해당 아이디가 제거되었습니다.";
+        var msg = "Twitch API 호출 중 다음의 아이디를 찾지 못했습니다. " + escapeHtml(null_ids.join(", ")) + ". 메인에 스트리머 추가 리스트에서 해당 아이디가 제거되었습니다.";
         ADD_send_sys_msg_from_main_frame(msg);
         ADD_config.top_alarm_ID = ADD_config.top_alarm_ID.filter(function (elem) {
             return $.inArray(elem, null_ids) === -1;

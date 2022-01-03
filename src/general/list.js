@@ -1,5 +1,5 @@
 import "libs/date_format.js";
-import { ADD_DEBUG, getTimeStamp } from "../libs/nomo-utils.js";
+import { ADD_DEBUG, getTimeStamp, escapeHtml } from "../libs/nomo-utils.js";
 import * as nomo_common from "./common.js";
 import { streamerArray } from "./streamer-lib.js";
 
@@ -258,12 +258,12 @@ export async function ADD_run(data,flag){
                     <div class="ADD_li_box">
                         <div class="ADD_checkbox_container"` + (ADD_config.button_set ? "" : " style='display:none'") +`>
                             <label class="btn btn-default btn-xs" aria-label="멀티트위치 체크박스" data-microtip-position="top-left" role="tooltip">
-                                <input class="ADD_checkbox" type="checkbox" name="chk" value="`+data.streamer+`" onfocus="this.blur()" autocomplete="off" />
+                                <input class="ADD_checkbox" type="checkbox" name="chk" value="`+escapeHtml(data.streamer)+`" onfocus="this.blur()" autocomplete="off" />
                                 <span class="glyphicon glyphicon-ok"></span>
                             </label>
                         </div>
                         <div class="multitwitch_button"` + (ADD_config.button_chatmode ? "" : " style='display:none'") +`>
-                            <a href="/#/stream/multitwitch/`+data.streamer+`">
+                            <a href="/#/stream/multitwitch/`+escapeHtml(data.streamer)+`">
                                 <span class="btn btn-default btn-xs" aria-label="채팅모드" data-microtip-position="top-right" role="tooltip"><span class="glyphicon glyphicon-comment"></span></span>
                             </a>
                         </div>
@@ -306,20 +306,20 @@ export async function ADD_run(data,flag){
         }
         var game = "";
         if(ADD_config.alarm_show_game_name && data.game !== undefined){
-            game = "<div class=\"game\"> - "+data.game+"</div>";
+            game = "<div class=\"game\"> - "+escapeHtml(data.game)+"</div>";
         }
         append += `
-                <li id="twitch_`+data.streamer+"\" class=\""+data.from+fixed_class+favorite_class+`">
+                <li id="twitch_`+escapeHtml(data.streamer)+"\" class=\""+data.from+fixed_class+favorite_class+`">
                 `+fixed_append+favorite_append+`
-                <a href="/#/stream`+data.url+`">
+                <a href="/#/stream`+escapeHtml(data.url)+`">
                     <img src="`+data.image+`" width="90" hieght="60">
                     <div class="stream-wrap">
-                        <div class="title">`+(data.title.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"))+`</div>
+                        <div class="title">`+(escapeHtml(data.title))+`</div>
                         <div class="info">
-                            <div class="from `+data.from+"\">"+display_name+`</div>
+                            <div class="from `+data.from+"\">"+escapeHtml(display_name)+`</div>
                             `+game+`
                             <div class="viewers">
-                                <span class="glyphicon glyphicon-user"></span> `+data.viewers+`
+                                <span class="glyphicon glyphicon-user"></span> `+escapeHtml(data.viewers)+`
                             </div>
                         </div>
                     </div>

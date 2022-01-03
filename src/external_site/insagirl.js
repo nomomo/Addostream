@@ -1,5 +1,5 @@
 import {ADD_streamer_nick} from "general/streamer-lib.js";
-import {ADD_DEBUG} from "libs/nomo-utils.js";
+import {ADD_DEBUG, escapeHtml} from "libs/nomo-utils.js";
 
 export async function external_insagirl(){
     ADD_DEBUG("인사걸에서 실행됨", document.location.href);
@@ -69,7 +69,7 @@ export async function external_insagirl(){
                         ch_text = ch_text+temp_id;
                     }
                     if(ch_text !== undefined || ch_text !== ""){
-                        $coord_a.after(" <span class='fired' style='font-weight:700;'>["+ch_text+"]</span>");
+                        $coord_a.after(" <span class='fired' style='font-weight:700;'>["+escapeHtml(ch_text)+"]</span>");
                     }
                 }
 

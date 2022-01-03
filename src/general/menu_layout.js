@@ -12,6 +12,7 @@ import {ADD_main_event_binding} from "general/event.js";
 import {ADD_parse_list_data} from "general/list.js";
 import {MD5} from "libs/MD5.js";
 import {get_chat_manager_from_main_frame} from "chat/chat_manager.js";
+import {escapeHtml} from "libs/nomo-utils.js";
 
 // 설정 클릭 시 enable 요소가 있는 설정을 아래 배열에 등록
 const ADD_config_enable_init = ["ADD_config_top_fix","ADD_config_alarm","ADD_config_thumbnail_mouse","ADD_config_streamer_hide","ADD_config_chat_ctr","ADD_config_chat_image_preview","ADD_config_imgur_preview_safe","ADD_config_remember_platform","ADD_config_chat_block","ADD_config_insagirl_button"];
@@ -1249,10 +1250,10 @@ export async function blocked_chat_layout(){
                     + "<tr><td class='blocked_chat_date' style='max-width:130px;padding-right:15px;white-space:nowrap;overflow:hidden;'>"
                     + utils.getTimeStampWithDash(new Date(temp_obj.created), "s")
                     + "</td><td class='blocked_chat_nick' style='max-width:200px;padding-right:15px;text-align:left;white-space:nowrap;overflow:hidden;'>"
-                    + temp_obj.nick
-                    + temp_display_name
+                    + escapeHtml(temp_obj.nick)
+                    + escapeHtml(temp_display_name)
                     + "</td><td class='blocked_chat_content' style='margin:0 0 0 10px;'>"
-                    + temp_obj.content
+                    + escapeHtml(temp_obj.content)
                     + "</td></tr>";
             }
             else{

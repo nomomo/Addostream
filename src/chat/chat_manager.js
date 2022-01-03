@@ -2,6 +2,7 @@ import nomo_const from "general/const.js";
 import * as nomo_common from "general/common.js";
 import {ADD_DEBUG} from "libs/nomo-utils.js";
 import {ADD_send_sys_msg} from "chat/send_message.js";
+import {escapeHtml} from "libs/nomo-utils.js";
 
 export var chat_manager = (function(){
     //var keys = ["nick","display_name","detail_content","color","modified_date","isBlock","isShowDelMsg"];
@@ -141,7 +142,7 @@ export var chat_manager = (function(){
                 var content = $(elem).find(".chatContent").first().html();
                 if(nick === obj_simple.nick){
                     if(ADD_config.chat_block_noti){
-                        $(elem).attr("data-tiptext", nick + ": " + content + " - {ago}").html("<div style=\"text-align:center;color:#aaa;\">&ltmessage deleted&gt</div>");
+                        $(elem).attr("data-tiptext", escapeHtml(nick) + ": " + escapeHtml(content) + " - {ago}").html("<div style=\"text-align:center;color:#aaa;\">&ltmessage deleted&gt</div>");
                     }
                     else{
                         $(elem).remove();
@@ -151,7 +152,7 @@ export var chat_manager = (function(){
 
             // 차단 후 메시지
             if(ADD_config.sys_meg){
-                ADD_send_sys_msg("[채팅매니저 차단] 닉네임: "+obj_simple.nick);
+                ADD_send_sys_msg("[채팅매니저 차단] 닉네임: "+escapeHtml(obj_simple.nick));
             }
         }
     };
@@ -281,17 +282,17 @@ export var chat_manager = (function(){
         isBlock = $isBlock.is(":checked");
         isShowDelMsg = $isShowDelMsg.is(":checked");
 
-        obj_simple = {"nick":nick, "display_name":display_name, "detail_content":detail_content, "color":color, "modified_date":modified_date, "isBlock":isBlock, "isShowDelMsg":isShowDelMsg};
+        obj_simple = {"nick":escapeHtml(nick), "display_name":escapeHtml(display_name), "detail_content":escapeHtml(detail_content), "color":escapeHtml(color), "modified_date":escapeHtml(modified_date), "isBlock":isBlock, "isShowDelMsg":isShowDelMsg};
     };
     // Simplelayout 에 변수 쓰기
     var writeObjFromSimplelayout = function(){
-        $nick.text(obj_simple.nick);
-        $display_name.val(obj_simple.display_name);
-        $color.val(obj_simple.color);
-        $detail_content.val(obj_simple.detail_content);
-        $modified_date.val(obj_simple.modified_date);
-        $isBlock.attr("checked",obj_simple.isBlock);
-        $isShowDelMsg.attr("checked",obj_simple.isShowDelMsg);
+        $nick.text(escapeHtml(obj_simple.nick));
+        $display_name.val(escapeHtml(obj_simple.display_name));
+        $color.val(escapeHtml(obj_simple.color));
+        $detail_content.val(escapeHtml(obj_simple.detail_content));
+        $modified_date.val(escapeHtml(obj_simple.modified_date));
+        $isBlock.attr("checked", obj_simple.isBlock);
+        $isShowDelMsg.attr("checked", obj_simple.isShowDelMsg);
     };
 
     /////////////////////////////////////////////////
@@ -393,10 +394,10 @@ export var chat_manager = (function(){
             var new_content = content;
             if(memo_index !== -1){
                 var memo_obj = chat_manager.getData(memo_index);
-                new_nick = memo_obj.display_name + "_도배";
-                new_content = memo_obj.detail_content + "_도배_" + content;
+                new_nick = escapeHtml(memo_obj.display_name) + "_도배";
+                new_content = escapeHtml(memo_obj.detail_content) + "_도배_" + escapeHtml(content);
             }
-            var temp_obj = objInit({nick:nick, display_name:new_nick, detail_content:new_content, modified_date:Number(new Date()), isBlock:true});
+            var temp_obj = objInit({nick:escapeHtml(nick), display_name:escapeHtml(new_nick), detail_content:escapeHtml(new_content), modified_date:Number(new Date()), isBlock:true});
             addObjtoData(temp_obj);
             await saveData();
         },

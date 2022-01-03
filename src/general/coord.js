@@ -5,6 +5,7 @@ import * as nomo_common from "general/common.js";
 import {ADD_DEBUG} from "libs/nomo-utils.js";
 import {ADD_streamer_nick} from "general/streamer-lib.js";
 import {get_chat_manager_from_main_frame} from "chat/chat_manager.js";
+import {escapeHtml} from "libs/nomo-utils.js";
 
 // 편한 좌표보기 관련 함수
 var autolinker = new Autolinker( {
@@ -243,17 +244,20 @@ async function ADD_parse_insagirl(page){
 
             var hrm_layout_HTML = "";
             var added = 0;
+            ADD_DEBUG("hrm data: ", data);
             for(var z=0; z<data.length; z++){
                 if(ADD_config.insagirl_select == 2){
                     data[z] = data[z].split("|");
                     data[z] = {created:Number(data[z][0]), user:data[z][1], message:data[z][2]};
                 }
+                
 
                 var nick = data[z].user;
                 if(ADD_config.insagirl_block_by_nick && chat_manager !== undefined && chat_manager.getIsBlock(nick)){
                     continue;
                 }
-                var content = autolinker.link(data[z].message.replace("http://dostream.com/", "https://dostream.com/").replace("http://www.dostream.com/", "https://www.dostream.com/"));//.replace(expUrl, "<a href=\"$&\" target=\"_blank\">$&</a>");
+                var escapedMsg = escapeHtml(data[z].message);
+                var content = autolinker.link(escapedMsg.replace("http://dostream.com/", "https://dostream.com/").replace("http://www.dostream.com/", "https://www.dostream.com/"));//.replace(expUrl, "<a href=\"$&\" target=\"_blank\">$&</a>");
                 var $temp_a = $("<span>"+content+"</span>").find("a");
                 
                 // 연속된 좌표 숨기기
@@ -298,7 +302,7 @@ async function ADD_parse_insagirl(page){
     
                         //if(ch_text.toLowerCase() !== ch_streamer_id.toLowerCase()){
                         if(ch_text !== undefined || ch_text !== ""){
-                            content = content + " <span class=\"keyword_pass ch_text\" style=\"font-weight:700;vertical-align:top;\">["+ch_text+"]</span>";
+                            content = content + " <span class=\"keyword_pass ch_text\" style=\"font-weight:700;vertical-align:top;\">["+escapeHtml(ch_text)+"]</span>";
                         }
                     }
                     else if(href.indexOf('dostream.com/#/stream/m3u8') == -1 && regex_m3u8.test(href)){

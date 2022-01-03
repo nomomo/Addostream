@@ -492,3 +492,13 @@ export function engTypeToKor(src) {
 
     return res;
 }
+
+var entityMap3 = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;' };
+export function escapeHtml3 (string) { return String(string).replace(/[&<>"'`=/]/g, function (s) { return entityMap3[s]; }); }
+var entityMap = { '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '`': '&#x60;' };
+export function escapeHtml2 (string) { return String(string).replace(/[<>"'`]/g, function (s) { return entityMap[s]; }); }
+export function escapeHtml(t) {
+    return String(t).replace(/[x26x0A<>'"]/g, function(t) {
+        return "&#" + t.charCodeAt(0) + ";";
+    });
+}

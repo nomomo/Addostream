@@ -8,6 +8,7 @@ import { ADD_send_location_layout } from "chat/send_coord.js";
 import { ADD_send_sys_msg } from "chat/send_message.js";
 import { uchat_connect_waiting, uchat_connect_check_clear} from "chat/server_connector.js";
 import { getStreamerIdAndDisplayNameFromNick } from "general/streamer-lib.js";
+import {escapeHtml} from "libs/nomo-utils.js";
 // import * as hold from "chat/hold.js";
 // import lib_nude from "libs/nude.js";
 const ADD_DEBUG = utils.ADD_DEBUG;
@@ -1278,12 +1279,12 @@ async function chatElemControl($line){
             if(ADD_config.chat_dobae_block_autoban && (dobae_repeat + 1 >= ADD_config.chat_dobae_block_autoban_repeat)){
                 if(ADD_config.chat_dobae_block_onlylink){   // 링크 포함시에만 차단하는 경우
                     if($content.find("a").length > 0){  // 가장 마지막 채팅에 링크 포함되어있는지 여부 확인
-                        ADD_send_sys_msg("[도배 유저 자동 차단] 닉네임: "+nick +"<br />마지막 채팅: "+content);
+                        ADD_send_sys_msg("[도배 유저 자동 차단] 닉네임: "+escapeHtml(nick) +"<br />마지막 채팅: "+escapeHtml(content));
                         chat_manager.simpleBlock(nick,content);
                     }
                 }
                 else {   // 링크 포함여부 상관 없이 차단하는 경우
-                    ADD_send_sys_msg("[도배 유저 자동 차단] 닉네임: "+nick +"<br />마지막 채팅: "+content);
+                    ADD_send_sys_msg("[도배 유저 자동 차단] 닉네임: "+escapeHtml(nick) +"<br />마지막 채팅: "+escapeHtml(content));
                     chat_manager.simpleBlock(nick,content);
                 }
             }
@@ -1451,7 +1452,7 @@ async function chatElemControl($line){
         $aElems.each(function(index){
             var $aElem = $($aElems[index]);
             var href = $aElem.attr("href");
-            hrefs[index] = href;
+            hrefs[index] = escapeHtml(href);
 
             // 두스트림 링크인 경우 현재창에서 열기
             if(ADD_config.url_self && href.toLowerCase().indexOf("dostream.com/#/stream/") !== -1){
@@ -2048,8 +2049,8 @@ export function getImgurData($line, Imgur_ID, Imgur_type){
         error:function(response){
             // request failed
             ADD_DEBUG("Imgur api request failed", response);
-            var temp_text = "<br />error:"+ response.responseJSON.data.error;
-            var temp_error_code = " (CODE:" + response.responseJSON.status + ")";
+            var temp_text = "<br />error:"+ escapeHtml(response.responseJSON.data.error);
+            var temp_error_code = " (CODE:" + escapeHtml(response.responseJSON.status) + ")";
             ADD_send_sys_msg("Imgur 이미지 로드 중 오류가 발생했습니다."+temp_error_code+temp_text);
         }
     });
@@ -2125,7 +2126,7 @@ function type_and_go_run(){
         ADD_send_sys_msg(`다음으로 이동합니다: ${streamerDisplayName}(${streamerid})`);
     }
     else{
-        ADD_send_sys_msg(`해당하는 스트리머를 찾을 수 없습니다: ${etargetText}`);
+        ADD_send_sys_msg(`해당하는 스트리머를 찾을 수 없습니다: ${escapeHtml(etargetText)}`);
         $etarget.focus();
     }
 }

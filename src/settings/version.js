@@ -1,6 +1,7 @@
 import {ADD_DEBUG} from "libs/nomo-utils.js";
 import * as nomo_common from "general/common.js";
 import {ADD_send_sys_msg} from "chat/send_message.js";
+import {escapeHtml} from "libs/nomo-utils.js";
 
 // 버전 체크
 export async function checkNewVersion(force){
@@ -100,9 +101,9 @@ export async function checkNewVersion(force){
 
     // 현재 버전(ver_cur) > 이전 버전(ver_pre)
     if(ver_cur > ver_pre && ver_fut > ver_pre){
-        msg_text = msg_text + "<br />애드온이 최근 업데이트 됨. ("+nomo_global.version_str+")";
+        msg_text = msg_text + "<br />애드온이 최근 업데이트 됨. ("+escapeHtml(nomo_global.version_str)+")";
         if(update_log !== undefined && update_log !== null && update_log !== ""){
-            msg_text = msg_text +"<br />업데이트 내역: "+update_log;
+            msg_text = msg_text +"<br />업데이트 내역: "+escapeHtml(update_log);
         }
         // 이전 버전(ver_pre) 업데이트
         ADD_config.last_version = nomo_global.version;
@@ -110,7 +111,7 @@ export async function checkNewVersion(force){
     }
     // 업데이트 가능한 버전(ver_fut) > 현재 버전(ver_cur)
     else if(ver_fut > ver_cur){
-        msg_text = msg_text + "<br />새로운 버전(<a href=\"https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js\" target=\"_blank\">v"+ver_fut_text+"</a>) 으로 업데이트 가능";
+        msg_text = msg_text + "<br />새로운 버전(<a href=\"https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js\" target=\"_blank\">v"+escapeHtml(ver_fut_text)+"</a>) 으로 업데이트 가능";
     }
     else if(ver_cur === ver_pre){
         msg_text = msg_text + "<br />현재 최신 버전 입니다.";
@@ -121,11 +122,11 @@ export async function checkNewVersion(force){
     }
 
     if(force && ADD_config.sys_meg && ver_fut > ver_cur){
-        ADD_send_sys_msg("새로운 버전(<a href=\"https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js\" target=\"_blank\">v"+ver_fut_text+"</a>) 으로 업데이트 가능");
+        ADD_send_sys_msg("새로운 버전(<a href=\"https://raw.githubusercontent.com/nomomo/Addostream/master/Addostream.user.js\" target=\"_blank\">v"+escapeHtml(ver_fut_text)+"</a>) 으로 업데이트 가능");
     }
 
     if(!force && ADD_version_cur_pre_fut_old.notice !== ADD_version_cur_pre_fut.notice && ADD_version_cur_pre_fut.notice !== undefined && ADD_version_cur_pre_fut.notice !== "" && ADD_version_cur_pre_fut.notice !== null){
-        ADD_send_sys_msg("두드온 공지: "+ADD_version_cur_pre_fut.notice);
+        ADD_send_sys_msg("두드온 공지: "+escapeHtml(ADD_version_cur_pre_fut.notice));
     }
 
     /*
