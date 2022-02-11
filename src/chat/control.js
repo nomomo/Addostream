@@ -996,8 +996,13 @@ export function chatImagelayoutfromLinks($line, arr){
         newimg = $("<video type=\"video/mp4\" loop controls muted "+autoplay+" src=\""+arr[0].link+"\" class=\"imgur_image_in_chat open-lightbox\" style=\"max-width:"+ADD_config.chat_image_max_width+"px !important;max-height:"+ADD_config.chat_image_max_height+"px !important;\"></video>");
     }
     else{
+        var max_height_temp = ADD_config.chat_image_max_height + "px !important;";
+        if(arr[0].type === "youtube"){
+            max_height_temp = `calc(${ADD_config.chat_image_max_width}px / 16 * 9) !important; object-fit: cover;`;
+        }
+        
         newimg = $(`
-            <img src=`+arr[0].link+" class=\"imgur_image_in_chat open-lightbox\" style=\"cursor:pointer;max-width:"+ADD_config.chat_image_max_width+"px !important;max-height:"+ADD_config.chat_image_max_height+`px !important;" />
+            <img src=`+arr[0].link+" class=\"imgur_image_in_chat open-lightbox\" style=\"cursor:pointer;max-width:"+ADD_config.chat_image_max_width+"px !important;max-height:"+max_height_temp+`" />
         `);
     }
 
@@ -1023,6 +1028,7 @@ export function chatImagelayoutfromLinks($line, arr){
         var videoTypeText = "";
         if(arr[0].type === "youtube"){
             videoTypeText = "[Youtube]";
+            $ADD_image_container.find("div.simple_image").height(ADD_config.chat_image_max_width / 16 * 9);
         }
         else if(arr[0].type === "twitch_clip"){
             videoTypeText = "[Twitch]";
@@ -1394,7 +1400,7 @@ async function chatElemControl($line){
                                         if(match[1] !== "던" && !ADD_config.chat_autoKeyword_1char && match[1].length === 1){
                                             continue;
                                         }
-                                        tempary[i] = tempary[i].replace(match[1],"<a href='https://www.dostream.com/#/stream/twitch/"+id+"' class='topClick autokeyword'>"+match[1]+"</a>");
+                                        tempary[i] = tempary[i].replace(match[1],`<a href='https://www.dostream.com/#/stream/twitch/${id}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " autokeyword" : ""}'>${match[1]}</a>`);
                                         break;
                                     }
                                 }
@@ -1413,7 +1419,7 @@ async function chatElemControl($line){
                                         continue;
                                     }
                                     if(contentText.indexOf(disp_name) !== -1){
-                                        contentText = contentText.split(disp_name).join("<a href='https://www.dostream.com/#/stream/twitch/"+id+"' class='topClick autokeyword'>"+disp_name+"</a>");   // replaceAll
+                                        contentText = contentText.split(disp_name).join(`<a href='https://www.dostream.com/#/stream/twitch/${id}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " autokeyword" : ""}'>${disp_name}</a>`);   // replaceAll
                                         $(element).replaceWith(contentText);
                                         //ADD_DEBUG("contentText", sv, contentText, $(element));
                                         rep = rep + 1;

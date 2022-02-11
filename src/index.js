@@ -8,7 +8,7 @@ import nomo_global_manager from "general/global.js";
 import {ADD_DEBUG} from "libs/nomo-utils.js";
 
 import ADD_migration from "./settings/migration.js";
-import {GM_setting} from "settings/main.js";
+import {GM_setting, GM_setting_param} from "settings/main.js";
 
 import nomo_const from "general/const.js";
 import * as nomo_common from "general/common.js";
@@ -48,7 +48,8 @@ import {ADD_popup_player} from "general/popup_player.js";
 
     // 설정 불러오기
     window.GM_setting = GM_setting;
-    await GM_setting.init("ADD_config");
+    GM_setting_param.DEBUG = nomo_global.DEBUG;
+    await GM_setting.init("ADD_config", GM_setting_param);
     await GM_setting.load();
 
     // 이벤트 탈취

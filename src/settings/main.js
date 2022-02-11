@@ -12,7 +12,7 @@ import {chat_tooltip_toggle, chat_type_and_go_main} from "chat/control.js";
 import {uhaha_chat_delete_hide} from "chat/control_uhaha.js";
 
 const _settings = {
-    last_version : { disable:true, category:"dev", depth:1, type: "set", value: Number(versionStrtoNum(GM.info.script.version)), title:"마지막 버전", desc:"" },
+    last_version : { disable:true, category:"dev", depth:1, type: "set", value: Number(versionStrtoNum(GM.info.script.version)), title:{ko:"마지막 버전", en:"Latest Version"}, desc:"" },
     version_check : { category:"general", category_name:"일반", depth:1, type: "checkbox", value:true, title:"새 버전 체크", desc:"새로운 애드온 버전이 있는지 자체적으로 체크함"},
     version_check_interval : { under_dev:true, category:"general", depth:2, type: "text", value:12, valid:"number", min_value:1, title:"새 버전 체크 주기", desc:"새 버전을 체크할 시간 간격<br />시간 단위로 입력, 최소 1시간(기본값: 12)"},
     history : { category:"general", depth:1, type: "checkbox", value: false, title:"나의 시청 기록 보기", desc:"두스트림 상단에 나의 시청 기록을 표시함", change:function(){ADD_channel_history_run();} },
@@ -152,6 +152,7 @@ const _settings = {
     chat_dobae_block_record : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: true, title:"채팅 차단 로그에 기록", desc:"도배로 판단된 채팅을 채팅 차단 로그에 기록" },
     
     chat_autoKeyword : { category:"chat", depth:2, type: "checkbox", category_name:"채팅 - 고급", value: true, title:"스트리머 닉네임을 링크로 변환", desc:"스트리머 닉네임 감지 시 자동으로 링크로 변환함" },
+    chat_autoKeyword_emstyle : { category:"chat", depth:3, type: "checkbox", value: true, title:"스트리머 닉네임 링크를 강조하여 표시", desc:"" },
     chat_autoKeyword_startwith : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: false, title:"[실험실] 단어의 시작일 때만 변환", desc:"단어의 시작이 스트리머 닉네임으로 시작하는 경우에만 닉네임을 링크로 변환함" },
     chat_autoKeyword_1char : { under_dev:true, category:"chat", depth:3, type: "checkbox", value: false, title:"[실험실] 한 글자 별칭도 링크로 변환", desc:"한 글자 별칭도 링크로 변환함. 단어의 시작일 때만 변환 옵션을 활성화 하는 것을 권장" },
     chat_url_decode : { category:"chat", depth:2, type: "checkbox", value: true, title:"한글 URL을 구분 가능하도록 변경", desc:"채팅 내에서 유니코드 형태의 URL 링크 감지 시,<br />내용을 알아볼 수 있도록 표시<br />예) <a href='https://namu.wiki/w/%ED%92%8D%EC%9B%94%EB%9F%89' target='_blank'>https://namu.wiki/w/%ED%92%8D%EC%9B%94%EB%9F%89</a> → <a href='https://namu.wiki/w/%ED%92%8D%EC%9B%94%EB%9F%89' target='_blank'>https://namu.wiki/w/풍월량</a>" },
@@ -194,74 +195,213 @@ const _settings = {
     popup_player : { under_dev:true, category:"advanced", depth:1, type: "checkbox", value: false, title:"[실험실] 시청 중 이동 시 팝업 플레이어 사용", desc:"" },
     chat_sword : { disable:true, category:"advanced", depth:1, type: "checkbox", value: false, title:"관리자 진은검 아이콘 달기", desc:"" }
 };
-
-export var GM_setting = (function($, global, document, _settings){ // 
-    ADD_DEBUG("GM_setting 시작");
+export var GM_setting_param = {"DEBUG":false, "SETTINGS":_settings, "CONSOLE_MSG":ADD_DEBUG, "MULTILANG":false};
+export var GM_setting = (function ($, global, document) { //
     // local vars
     var $g_elem;
+    var latestCreatedLayout = undefined;
     var name_ = "";
     var changed_key = [];
     var settings_init = {};
+    var _settings = {};
     var settings = {};
     var $inputs = {};
+    var DEBUG = false;
+    
+
+    var CONSOLE_MSG = function(/**/){
+        if(!DEBUG) return;
+        var args = arguments, args_length = args.length, args_copy = args;
+        for (var i=args_length;i>0;i--) args[i] = args_copy[i-1];
+        args[0] = "+[GM_SETTINGS]  ";
+        args.length = args_length + 1;
+        console.log.apply(console, args);
+    };
+
+    /////////////////////////////////////////////////
+    // multi language
+    var userLang = (navigator.language || navigator.userLanguage).toLowerCase().substring(0, 2); // ko, en, cn, tw, zh
+    var userSelectedLang = userLang;
+    var defaultLang = "ko";
+    var useMultiLang = false;
+    const multilang = {
+        "en":{
+            "title_settings":"Settings",
+            "title_reset":"Reset",
+            "button_reset_settings":"Reset Settings",
+            "confirm_reset_settings":"Are you sure you want to reset the settings?",
+            "complete_reset_settings":"Settings reset complete!",
+            "button_reset_settings_all":"Script reset (refresh is required)",
+            "confirm_reset_settings_all":"Do you really want to reset script?",
+            "complete_reset_settings_all":"Script initialization complete!",
+            "auto_saved":"Autosaved: ",
+            "err_val_req":"A value must be entered.",
+            "err_num_req":"Only numbers can be entered.",
+            "err_num_over":"The input value must be a number greater than or equal to : ",
+            "err_num_not_more_than":"The input value must be a number less than or equal to: ",
+            "err_valid_array_string":"Only English letters, numbers, commas (,) and underscores (_) can be entered.",
+            "err_value_empty":"Something for which no value exists, such as an empty value.",
+            "err_value_dup":"Duplicate value exists: ",
+            "err_value_blank":"There is an item of a space in the string: "
+        },
+        "ko":{
+            "title_settings":"Settings",
+            "title_reset":"Reset",
+            "button_reset_settings":"Reset Settings",
+            "confirm_reset_settings":"진짜 설정을 초기화 할까요?",
+            "complete_reset_settings":"설정 초기화 완료!",
+            "button_reset_settings_all":"전체 초기화(새로고침 필요)",
+            "confirm_reset_settings_all":"진짜 스크립트를 모두 초기화 할까요?",
+            "complete_reset_settings_all":"스크립트 초기화 완료!",
+            "auto_saved":"자동 저장 됨: ",
+            "err_val_req":"반드시 값이 입력되어야 합니다.",
+            "err_num_req":"숫자만 입력 가능합니다.",
+            "err_num_over":"입력 값은 다음 값 이상의 숫자이어야 합니다. : ",
+            "err_num_not_more_than":"입력 값은 다음 값 이하의 숫자이어야 합니다. : ",
+            "err_valid_array_string":"영문, 숫자, 콤마(,), 언더바(_) 만 입력 가능합니다.",
+            "err_value_empty":"공백 값 등 값이 존재하지 않는 항목이 존재합니다.",
+            "err_value_dup":"중복된 값이 존재합니다: ",
+            "err_value_blank":"문자열 내 공백이 존재하는 항목이 있습니다: "
+        }
+    };
+    var getTextFromObjectbyLang = function(obj){
+        var resText = "";
+        if(typeof obj === "object"){
+            var objkeys = Object.keys(obj);
+            if(objkeys.length === 0){
+                return resText;
+            }
+            if(obj[userSelectedLang] !== undefined){
+                resText = obj[userSelectedLang];
+            }
+            else if(obj[defaultLang] !== undefined){
+                resText = obj[userSelectedLang];
+            }
+            else{
+                resText = obj[objkeys[0]];
+            }
+        }
+        else{
+            resText = obj;
+        }
+        return resText;
+    };
+    var getSystemTextbyLang = function(msg){
+        if(multilang[userSelectedLang] !== undefined){
+            return multilang[userSelectedLang][msg];
+        }
+        else if(multilang[defaultLang] !== undefined){
+            return multilang[defaultLang][msg];
+        }
+        else{
+            return "";
+        }
+    };
+    var changeLang = function(){
+        if(latestCreatedLayout == undefined){
+            CONSOLE_MSG("NO CREATED LAYOUT");
+            return;
+        }
+        var $latestCreatedLayout = $(latestCreatedLayout);
+        $latestCreatedLayout.empty();
+        createlayout_(latestCreatedLayout);
+    };
 
     /////////////////////////////////////////////////
     // private functions
-    var init_ = async function(){
-        //ADD_DEBUG("init_");
-        for(var key in _settings){
+    var init_ = async function (user_settings) {
+        CONSOLE_MSG("init_", _settings);
+        if(user_settings){
+            if(user_settings.DEBUG){
+                DEBUG = true;
+                CONSOLE_MSG("GM_setting - DEBUG", DEBUG);
+            }
+            if(user_settings.CONSOLE_MSG){
+                CONSOLE_MSG = user_settings.CONSOLE_MSG;
+            }
+            if(user_settings.SETTINGS){
+                _settings = user_settings.SETTINGS;
+            }
+            if(user_settings.MULTILANG){
+                useMultiLang = true;
+                if(user_settings.LANG_DEFAULT){
+                    defaultLang = user_settings.LANG_DEFAULT;
+                }
+            }
+        }
+        else{
+            // error
+        }
+        for (var key in _settings) {
             settings_init[key] = _settings[key].value;
         }
+        settings_init["Lang"] = "";
 
         await load_();
-        if(!hasSameKey_(settings_init, settings)){
+        if (!hasSameKey_(settings_init, settings)) {
             // 추가
-            for(key in settings_init){
-                if(settings[key] === undefined){
+            for (key in settings_init) {
+                if (settings[key] === undefined) {
                     settings[key] = settings_init[key];
                 }
             }
             // 삭제
-            for(key in settings){
-                if(settings_init[key] === undefined){
+            for (key in settings) {
+                if (settings_init[key] === undefined) {
                     delete settings[key];
                 }
             }
             await save_();
         }
     };
-    var save_ = async function(){
-        //ADD_DEBUG("save_");
-        if(name_ !== ""){
+    var save_ = async function () {
+        //CONSOLE_MSG("save_");
+        if (name_ !== "") {
             await GM.setValue(name_, settings);
         }
         global[name_] = settings;
-        
+
         // changed_key: 배열,       인덱스번호, 값(키)
-        $.each(changed_key, function(eindex, evalue){
-            if(_settings[evalue].change !== undefined){
+        $.each(changed_key, function (eindex, evalue) {
+            if (_settings[evalue].change !== undefined) {
                 _settings[evalue].change(settings[evalue]);
             }
         });
         changed_key = [];
     };
-    var load_ = async function(){
-        ADD_DEBUG("load_");
-        if(name_ !== ""){
+    var load_ = async function () {
+        CONSOLE_MSG("load_");
+        if (name_ !== "") {
             settings = await GM.getValue(name_, settings);
         }
+        settings["Lang"] = await loadLang_();
         global[name_] = settings;
     };
-    var event_ = async function(){
-        if(typeof GM.addValueChangeListener === "function"){
-            ADD_DEBUG("설정에 대한 addValueChangeListener 바인드");
-            GM.addValueChangeListener(name_, async function(val_name, old_value, new_value, remote) {
-                if(remote){
-                    ADD_DEBUG("다른 창에서 설정 변경됨. val_name, old_value, new_value:", val_name, old_value, new_value);
+    var loadLang_ = async function() {
+        userSelectedLang = await GM.getValue("GM_SETTING_LANG", userLang);
+        CONSOLE_MSG("loadLang_", userSelectedLang);
+        return userSelectedLang;
+    };
+    var saveLang_ = async function(lang) {
+        if(lang == undefined){
+            await GM.setValue("GM_SETTING_LANG", userSelectedLang);
+            CONSOLE_MSG("saveLang_", userSelectedLang);
+        }
+        else{
+            await GM.setValue("GM_SETTING_LANG", lang);
+            CONSOLE_MSG("saveLang_", lang);
+        }
+    };
+    var event_ = async function () {
+        if (typeof GM.addValueChangeListener === "function") {
+            CONSOLE_MSG("설정에 대한 addValueChangeListener 바인드");
+            GM.addValueChangeListener(name_, async function (val_name, old_value, new_value, remote) {
+                if (remote) {
+                    CONSOLE_MSG("다른 창에서 설정 변경됨. val_name, old_value, new_value:", val_name, old_value, new_value);
                     await load_();
                     // old_value: obj,       ekey:키, evalue:값(old 설정값)
-                    $.each(old_value, function(ekey, _evalue){
-                        if(_settings[ekey].change !== undefined && old_value[ekey] !== new_value[ekey]){
+                    $.each(old_value, function (ekey, _evalue) {
+                        if (_settings[ekey].change !== undefined && old_value[ekey] !== new_value[ekey]) {
                             _settings[ekey].change(settings[ekey]);
                         }
                     });
@@ -271,50 +411,55 @@ export var GM_setting = (function($, global, document, _settings){ //
             });
         }
 
-        $(document).on("input", "input[gm_setting_key='under_dev']", function(){
-            ADD_DEBUG("실험실 기능 온오프 이벤트");
+        $(document).on("input", "input[gm_setting_key='under_dev']", function () {
+            CONSOLE_MSG("실험실 기능 온오프 이벤트");
             var $this = $(this);
-            if($this.is(":checked")){
-                $(".GM_setting_under_dev").css("opacity", 0).slideDown("fast").animate(
-                    { opacity: 1 },
-                    { queue: false, duration: "fast" }
-                );
-            }
-            else{
-                $(".GM_setting_under_dev").css("opacity", 1).slideUp("fast").animate(
-                    { opacity: 0.0 },
-                    { queue: false, duration: "fast" }
-                );
+            if ($this.is(":checked")) {
+                $(".GM_setting_under_dev").css("opacity", 0).slideDown("fast").animate({
+                    opacity: 1
+                }, {
+                    queue: false,
+                    duration: "fast"
+                });
+            } else {
+                $(".GM_setting_under_dev").css("opacity", 1).slideUp("fast").animate({
+                    opacity: 0.0
+                }, {
+                    queue: false,
+                    duration: "fast"
+                });
             }
         });
     };
-    var addStyle_ = function(){
-        GM.addStyle(`
-/*
-@media (min-width: 768px){
-#GM_setting {
-    width: 420px;
+    var addStyle_ = function () {
+        GM.addStyle( /*css*/ `
+#GM_setting .btn {font-size:12px;}
+.GM_setting_autosaved.btn {
+    max-width:100%;
+    font-size:12px;
+    white-space:pre-wrap;
+    user-select:text;
 }
+#GM_setting .btn-xxs {
+    cursor: pointer;
+    padding: 4px 4px;
 }
-@media (min-width: 992px){
-#GM_setting {
-    width: 640px;
+#GM_setting label.btn-xxs {
+    box-sizing: content-box;
+    width:11px;
+    height:11px;
 }
+#GM_setting a{
+    color: #428bca;
+    text-decoration: none;
 }
-@media (min-width: 1200px){
-#GM_setting {
-    width: 800px;
+#GM_setting a:hover, #GM_setting a:focus {
+    color: #2a6496;
+    text-decoration: underline;
 }
-}
-@media (min-width: 1550px){
-#GM_setting {
-    width: 1170px;
-}
-}
-*/
-#GM_setting {margin-left:auto; margin-right:auto; padding:0;font-size:13px;max-width:1400px; min-width:750px; box-sizing:content-box;}
+#GM_setting {clear:both;margin-left:auto; margin-right:auto; padding:0;font-size:13px;max-width:1400px; min-width:750px; box-sizing:content-box;}
 #GM_setting_head{margin-left:auto; margin-right:auto; padding:20px 0px 10px 10px;font-size:18px;font-weight:800;max-width:1400px; min-width:750px; box-sizing:content-box;}
-#GM_setting li {word-break:break-all;list-style:none;margin:0px;padding:8px;border-top:1px solid #eee;}
+#GM_setting li {list-style:none;margin:0px;padding:8px;border-top:1px solid #eee;}
 
 #GM_setting .GM_setting_depth1.GM_setting_category {border-top: 2px solid #999;margin-top:20px;padding-top:10px;}
 #GM_setting li[GM_setting_key='version_check'] {margin-top:0px !important}
@@ -336,35 +481,13 @@ export var GM_setting = (function($, global, document, _settings){ //
 #GM_setting .GM_setting_input_container span{vertical-align:top;}
 #GM_setting .GM_setting_input_container span.btn{margin:0 0 0 10px;}
 #GM_setting input{display:inline}
-#GM_setting input[type="text"]{
-width: 100px;
-height: 30px;
-padding: 5px 5px;
-font-size:12px;
-}
-#GM_setting textarea{
-width: 250px;
-height: 30px;
-padding: 5px 5px;
-font-size:12px;
-}
-#GM_setting input[type="checkbox"] {
-display:none;
-width: 20px;height:20px;
-padding: 0; margin:0;
-}
-#GM_setting input[type="radio"] {
-width: 20px;height:20px;
-padding: 0; margin:0;
-}
+#GM_setting input[type="text"]{ width: 100px; height: 30px; padding: 5px 5px; font-size:12px; }
+#GM_setting textarea{ width: 250px; height: 30px; padding: 5px 5px; font-size:12px; }
+#GM_setting input[type="checkbox"] { display:none; width: 20px;height:20px; padding: 0; margin:0; }
+#GM_setting input[type="radio"] {width: 20px;height:20px; padding: 0; margin:0; }
 
-#GM_setting .radio-inline{
-padding-left:0;
-padding-right:10px;
-}
-#GM_setting .radio-inline input{
-margin:0 5px 0 0;
-}
+#GM_setting .radio-inline{ padding-left:0; padding-right:10px; }
+#GM_setting .radio-inline input{ margin:0 5px 0 0; }
 
 #GM_setting .GM_setting_item_disable, #GM_setting .GM_setting_item_disable .GM_setting_title, #GM_setting .GM_setting_item_disable .GM_setting_desc{color:#ccc !important}
 #GM_setting .invalid input, #GM_setting .invalid textarea{border-color:#dc3545;transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out;color:#dc3545;}
@@ -381,160 +504,198 @@ margin:0 5px 0 0;
 #GM_setting .btn-xxs.disable {opacity: 0.3;cursor:not-allowed;}
 `);
     };
-    var createlayout_ = function(elem){
-        //ADD_DEBUG("createlayout_");
+    var createlayout_ = function (elem) {
+        //CONSOLE_MSG("createlayout_");
         $inputs = {};
 
         var $elem = $(elem);
         $g_elem = $elem;
-        if($elem.find("#GM_setting_container").length !== 0){
+        if ($elem.find("#GM_setting_container").length !== 0) {
             $elem.empty();
         }
         var $container = $("<div id='GM_setting_container'></div>");
-        var $setting_head = $(`
+        var $setting_head = $( /*html*/ `
 <div id='GM_setting_head'>
-<div style='height:25px;display:inline-block;width:200px;'>상세 설정</div>
+<div style='height:25px;display:inline-block;white-space:nowrap'>Settings</div>
 <div style='display:flex;height:25px;float:right;'>
-    <a href='https://nomomo.github.io/Addostream/' target='_blank' style='font-size:12px;font-weight:normal;align-self:flex-end;'>ADDostram v`+nomo_global.version_str+` (https://nomomo.github.io/Addostream/)</a>
+    <div id='GM_homepage_link' style='align-self: flex-end;'>
+        <a href='${(GM.info.script.homepage)}' target='_blank' style='font-size:12px;font-weight:normal;align-self:flex-end;'>${(GM.info.script.name)} v${(GM.info.script.version)} (${(GM.info.script.homepage)})</a>
+    </div>
+    <div id='GM_multilang' style='margin-left:15px;'>
+        <select id='GM_multilang_select' class="form-control input-sm">
+            <option value="ko">한국어</option>
+            <option value="en">English</option>
+        </select>
+    </div>
 </div>
 </div>`);
+
+        // show homepage link
+        if(GM.info !== undefined && GM.info !== null && GM.info.script !== undefined && GM.info.script !== null && GM.info.script.homepage !== undefined && GM.info.script.homepage !== null && GM.info.script.homepage !== ""){
+            $setting_head.find("#GM_homepage_link").show();
+        }
+        else{
+            $setting_head.find("#GM_homepage_link").hide();
+        }
+
+        // show multilang option combobox
+        var $GM_multilang = $setting_head.find("#GM_multilang");
+        if(useMultiLang){
+            $GM_multilang.show();
+            var $GM_multilang_select = $GM_multilang.find("#GM_multilang_select");
+            $GM_multilang_select.val(userSelectedLang);
+            $GM_multilang_select.on('change', async function (e) {
+                var prevUserSelectedLang = userSelectedLang;
+                var optionSelected = $("option:selected", this);
+                var valueSelected = this.value;
+                userSelectedLang = this.value;
+                CONSOLE_MSG(`LANG VALUE CHANGED FROM ${prevUserSelectedLang} TO ${userSelectedLang}`);
+                await saveLang_();
+                changeLang();
+            });
+        }
+        else{
+            $GM_multilang.hide();
+        }
+
         var $ul = $("<ul id='GM_setting'></ul>");
         var $prev = undefined;
         $elem.append($container);
         $container.append($setting_head).append($ul);
-        for(var key in _settings){
+        for (var key in _settings) {
             var category = _settings[key].category;
             var depth = _settings[key].depth;
             var type = _settings[key].type;
-            var title = _settings[key].title;
-            var desc = _settings[key].desc;
-            var category_name = _settings[key].category_name;
+            var title = getTextFromObjectbyLang(_settings[key].title);
+            var desc = getTextFromObjectbyLang(_settings[key].desc);
+            var category_name = getTextFromObjectbyLang(_settings[key].category_name);
+            var radio_enable_value = _settings[key].radio_enable_value;
 
             var $inputContainer = $("<div class='GM_setting_input_container form-group'></div>");
             var isTextarea = (type === "tag" || type === "textarea");
             var $input;
 
-            if(type === "radio"){
+            if (type === "radio") {
                 var radioObj = _settings[key].radio;
                 $input = $("<div GM_setting_type='radio'></div>");
-                for(var radiokey in radioObj){
-                    var $label = $("<label class='radio-inline'>"+radioObj[radiokey].title+"</label>");
-                    var $temp_input = $("<input name='GM_setting_"+key+"' class='form-control' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' onfocus='this.blur()' />").attr({
+                for (var radiokey in radioObj) {
+                    var $label = $("<label class='radio-inline'>" + getTextFromObjectbyLang(radioObj[radiokey].title) + "</label>");
+                    var $temp_input = $("<input name='GM_setting_" + key + "' class='form-control' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' onfocus='this.blur()' />").attr({
                         "value": radioObj[radiokey].value,
-                        "type": (type === "set" ? type === "text" : ( type === "tag" ? "textarea" : type )),
+                        "type": (type === "set" ? type === "text" : (type === "tag" ? "textarea" : type)),
                         "GM_setting_type": type,
                         "GM_setting_key": key,
                         "GM_setting_category": (category === undefined ? "default" : category),
+                        "GM_setting_radio_enable_value": (radio_enable_value === undefined ? "none" : radio_enable_value)
                     });
                     $temp_input.prependTo($label);
                     $input.append($label);
                 }
-            }
-            else{
-                $input = $("<"+(isTextarea ? "textarea " : "input ")+"class='form-control' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' "+(type === "checkbox"? "onfocus='this.blur()'" : "")+(isTextarea ?"></textarea>":" />")).attr({
-                    "type": (type === "set" ? type === "text" : ( type === "tag" ? "textarea" : type )),
-                    "GM_setting_type": type,
-                    "GM_setting_key": key,
-                    "GM_setting_category": (category === undefined ? "default" : category),
-                });
+            } else {
+                $input = $(`<${(isTextarea ? "textarea " : "input ")} class='form-control' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' ${(type === "checkbox" ? "onfocus='this.blur()'" : "")}${(isTextarea ? "></textarea>" : " />")}`)
+                    .attr({
+                        "type": (type === "set" ? type === "text" : (type === "tag" ? "textarea" : type)),
+                        "GM_setting_type": type,
+                        "GM_setting_key": key,
+                        "GM_setting_category": (category === undefined ? "default" : category),
+                        "GM_setting_radio_enable_value": (radio_enable_value === undefined ? "none" : radio_enable_value)
+                    });
             }
 
             var $category;
-            if(category_name !== undefined){
-                $category = $("<div class='GM_setting_category_name'>"+category_name+"</div>");
-            }
-            else{
+            if (category_name !== undefined) {
+                $category = $(`<div class='GM_setting_category_name'>${category_name}</div>`);
+            } else {
                 $category = $("<div class='GM_setting_category_blank'></div>");
             }
 
             var $head = $("<div class='GM_setting_list_head'></div>");
-            var $title = $("<span class='GM_setting_title'>"+title+"</span>");
-            var $desc = $("<span class='GM_setting_desc'>"+desc+"</span>");
-            var $li = $("<li GM_setting_key='"+key+"' GM_setting_depth='"+depth+"' class='"+(_settings[key].under_dev ? "GM_setting_under_dev " : "")+(category_name !== undefined && category !== $prev.category ? "GM_setting_category " : "")+"GM_setting_depth"+depth+"'></li>");
+            var $title = $(`<span class='GM_setting_title'>${title}</span>`);
+            var $desc = $(`<span class='GM_setting_desc'>${desc}</span>`);
+            var $li = $(`<li ${(_settings[key].radio_enable_value !== undefined ? " GM_setting_radio_enable_value='"+_settings[key].radio_enable_value+"'" : "")} GM_setting_key='${key}' GM_setting_depth='${depth}' class='${(_settings[key].under_dev ? "GM_setting_under_dev " : "")} ${(category_name !== undefined && $prev !== undefined && category !== $prev.category ? "GM_setting_category " : "")} GM_setting_depth${depth}'></li>`);
             $ul.append($li);
             $head.append($title).append($desc);
 
-            if(type === "checkbox"){
-                var $label_container = $(`
-                <label class="btn btn-default btn-xxs"><span class="glyphicon glyphicon-ok"></span></label>
-                `);
+            if (type === "checkbox") {
+                var $label_container = $(`<label class="btn btn-default btn-xxs"><span class="glyphicon glyphicon-ok"></span></label>`);
                 $label_container.prepend($input).appendTo($inputContainer);
 
-                $input.on("change",function(){
-                    if($(this).is(":checked")){
+                $input.on("change", function () {
+                    if ($(this).is(":checked")) {
                         $(this).closest("label").addClass("active");
-                    }
-                    else{
+                    } else {
                         $(this).closest("label").removeClass("active");
                     }
 
-                    if($(this).is(":disabled")){
+                    if ($(this).is(":disabled")) {
                         $(this).closest("label").addClass("disable").prop("disabled", true);
-                    }
-                    else{
+                    } else {
                         $(this).closest("label").removeClass("disable").prop("disabled", false);
                     }
                 });
-            }
-            else{
+            } else {
                 $inputContainer.append($input);
             }
 
             $li.append($category).append($head).append($inputContainer);
             $inputs[key] = $input;
-            
-            if(_settings[key].append !== undefined){
+
+            if (_settings[key].append !== undefined) {
                 $inputContainer.append(_settings[key].append);
             }
 
-            if( (!nomo_global.DEBUG && _settings[key].disable) || (!ADD_config.under_dev && _settings[key].under_dev) ){
-                ADD_DEBUG("숨김", key);
-                $li.css("display","none");
-            }
+            // 디버그 설정 숨기기
+            // if( (!nomo_global.DEBUG && _settings[key].disable) || (_settings[key].under_dev) ){    // if( (!nomo_global.DEBUG && _settings[key].disable) || (!ADD_config.under_dev && _settings[key].under_dev) ){
+            //     CONSOLE_MSG("숨김", key);
+            //     $li.css("display","none");
+            // }
 
             $prev = _settings[key];
         }
 
         // 설정 on-off 이벤트
-        $elem.find("input[type='checkbox']").on("click", function(){
+        $elem.find("input[type='checkbox']").on("click", function () {
+            usageCheck_($elem);
+        });
+
+        $elem.find("input[type='radio']").on("click", function () {
             usageCheck_($elem);
         });
 
         // 자동 저장 이벤트
         var timeoutId;
-        $elem.find("input, textarea").on("input", function() {  // "input[type='text']"  input propertychange
-            ADD_DEBUG("GM_setting - text change");
+        $elem.find("input, textarea").on("input", function () { // "input[type='text']"  input propertychange
+            CONSOLE_MSG("GM_setting - text change");
 
             var $this = $(this);
             var val = getInputValue_($this);
             var this_key = $this.attr("GM_setting_key");
             var validation = validation_(this_key, val);
             $this.closest("div").find(".invalid_text").remove();
-            if(validation.valid){
+            if (validation.valid) {
                 $this.closest("div").removeClass("invalid");
-            }
-            else{
-                ADD_DEBUG("validation", validation);
+            } else {
+                CONSOLE_MSG("validation", validation);
                 $this.closest("div").addClass("invalid");
-                $this.after("<div class='invalid_text'>"+validation.message+"</div>");
+                $this.after("<div class='invalid_text'>" + validation.message + "</div>");
             }
 
             clearTimeout(timeoutId);
-            timeoutId = setTimeout(function() {
+            timeoutId = setTimeout(function () {
                 // 저장 시도
                 // 정상적으로 값이 체크 된 경우
                 var g_validation = true;
-                $.each( $inputs, function( ekey, evalue ) {
+                $.each($inputs, function (ekey, evalue) {
                     var temp = validation_(ekey, getInputValue_(evalue));
-                    if(!temp.valid){
+                    if (!temp.valid) {
                         g_validation = false;
                         return false;
                     }
                 });
-                if(g_validation){
+                if (g_validation) {
                     read_();
                     save_();
-                    message_("자동 저장 완료! "+(new Date()).toLocaleTimeString(), $elem);
+                    message_(getSystemTextbyLang("auto_saved") + (new Date()).toLocaleTimeString(), $elem);
                 }
             }, 1000);
         });
@@ -543,88 +704,100 @@ margin:0 5px 0 0;
         usageCheck_($elem);
 
         // 리셋 버튼 추가
-        $ul.append(`<li class="GM_setting_category GM_setting_depth1">
-            <div class="GM_setting_category_name">초기화</div>
+        $ul.append( /*html*/ `<li class="GM_setting_category GM_setting_depth1">
+            <div class="GM_setting_category_name">${getSystemTextbyLang("title_reset")}</div>
             <div class="GM_setting_list_head">
                 <span class="GM_setting_title">
-                    <span class="GM_setting_reset btn btn-primary" style="margin-left:0;">설정 초기화</span>
-                    <span class="GM_setting_reset_all btn btn-primary">전체 초기화(새로고침 필요)</span>
+                    <span class="GM_setting_reset btn btn-primary" style="margin-left:0;">${getSystemTextbyLang("button_reset_settings")}</span>
+                    <!--<span class="GM_setting_reset_all btn btn-primary">${"button_reset_settings_all"}</span>-->
                 </span>
                 <span class="GM_setting_desc"></span>
             </div>
             <div class="GM_setting_input_container form-group">
             </div>
         </li>`);
-        $ul.find(".GM_setting_reset").on("click", async function(){
-            var conf = confirm("설정을 초기화 하시겠습니까?");
-            if(conf){
+        $ul.find(".GM_setting_reset").on("click", async function () {
+            var conf = confirm(getSystemTextbyLang("confirm_reset_settings"));
+            if (conf) {
                 await GM_setting.reset();
                 GM_setting.createlayout($g_elem);
-                message_("설정 초기화 완료! "+(new Date()).toLocaleTimeString(), $g_elem);
+                message_(getSystemTextbyLang("complete_reset_settings") + (new Date()).toLocaleTimeString(), $g_elem);
             }
         });
-        $ul.find(".GM_setting_reset_all").on("click", async function(){
-            var conf = confirm("전체 초기화를 진행하시겠습니까?");
-            if(conf){
+        $ul.find(".GM_setting_reset_all").on("click", async function () {
+            var conf = confirm(getSystemTextbyLang("confirm_reset_settings_all"));
+            if (conf) {
                 var listValues = await GM.listValues();
-                for(var key=0; key<listValues.length; key++){
+                for (var key = 0; key < listValues.length; key++) {
                     var key_str = listValues[key];
                     await GM.deleteValue(key_str);
                 }
                 await GM_setting.reset();
                 GM_setting.createlayout($g_elem);
-                message_("전체 초기화 완료! "+(new Date()).toLocaleTimeString(), $g_elem);
+                message_(getSystemTextbyLang("complete_reset_settings_all") + (new Date()).toLocaleTimeString(), $g_elem);
             }
         });
     };
-    var message_ = function(msg, $elem){
-        if($elem === undefined){
+    var message_ = function (msg, $elem) {
+        if ($elem === undefined) {
             return;
         }
         var prefix = "GM_setting_autosaved";
-        $elem.find("."+prefix).animate({bottom:"+=40px"}, {duration:300, queue: false}); // cleqrQueue().dequeue().finish().stop("true","true")
+        $elem.find("." + prefix).animate({
+            bottom: "+=40px"
+        }, {
+            duration: 300,
+            queue: false
+        }); // cleqrQueue().dequeue().finish().stop("true","true")
         // @keyframes glow {to {text-shadow: 0 0 10px white;box-shadow: 0 0 10px #5cb85c;}}
-        $("<div style='animation: glow .5s 10 alternate; position:fixed; left:10px; bottom:20px; z-index:10000000;' class='"+prefix+" btn btn-success'>"+msg+"</div>")
+        $("<div style='animation: glow .5s 10 alternate; position:fixed; left:10px; bottom:20px; z-index:10000000;' class='" + prefix + " btn btn-success'>" + msg + "</div>")
             .appendTo($elem)
             .fadeIn("fast")
-            .animate({opacity:1}, 6000, function(){
+            .animate({
+                opacity: 1
+            }, 6000, function () {
                 $(this).fadeOut("fast").delay(600).remove();
             })
-            .animate({left:"+=30px"}, {duration:300, queue: false});
+            .animate({
+                left: "+=30px"
+            }, {
+                duration: 300,
+                queue: false
+            });
     };
-    var read_ = async function(){
-        ADD_DEBUG("read_");
-        for(var key in $inputs){
+    var read_ = async function () {
+        CONSOLE_MSG("read_");
+        for (var key in $inputs) {
             var $input = $inputs[key];
             var val = getInputValue_($input);
 
-            if(_settings[key].type === "tag"){
+            if (_settings[key].type === "tag") {
                 val = val.split(","); // val = val.replace(/\s/g,"").split(",");
-                if(val.length === 1 && val[0] === ""){
+                if (val.length === 1 && val[0] === "") {
                     val = [];
                 }
-                $.each(val, function(index, value){
+                $.each(val, function (index, value) {
                     val[index] = value.replace(/^\s*|\s*$/g, "");
                 });
             }
 
             // 이전 설정과 변경된 값 키 체크
-            if(settings[key] !== val && changed_key.indexOf(key) === -1){
+            if (settings[key] !== val && changed_key.indexOf(key) === -1) {
                 changed_key.push(key);
             }
             settings[key] = val;
         }
     };
-    var write_ = async function(){
-        ADD_DEBUG("write_");
-        for(var key in $inputs){
+    var write_ = async function () {
+        CONSOLE_MSG("write_");
+        for (var key in $inputs) {
             var $input = $inputs[key];
             writeInputValue_($input, settings[key]);
         }
     };
-    var getInputValue_ = function($input){
+    var getInputValue_ = function ($input) {
         var val;
-        switch($input.attr("GM_setting_type")){
+        switch ($input.attr("GM_setting_type")) {
         case "checkbox":
             val = $input.prop("checked");
             break;
@@ -634,7 +807,7 @@ margin:0 5px 0 0;
         case "text":
             val = $input.val();
             break;
-        case "tag":  // 현재 textarea 와 동일
+        case "tag": // 현재 textarea 와 동일
             val = $input.val();
             break;
         case "textarea":
@@ -644,16 +817,16 @@ margin:0 5px 0 0;
             val = $input.find("input:checked").val();
             break;
         default:
-            //ADD_DEBUG($input);
+            //CONSOLE_MSG($input);
             val = undefined;
             break;
         }
         return val;
     };
-    var writeInputValue_ = function($input, val){
-        switch($input.attr("GM_setting_type")){
+    var writeInputValue_ = function ($input, val) {
+        switch ($input.attr("GM_setting_type")) {
         case "checkbox":
-            $input.prop("checked",val).trigger("change");
+            $input.prop("checked", val).trigger("change");
             break;
         case "set": // 현재 text 와 동일
             $input.val(val);
@@ -661,46 +834,75 @@ margin:0 5px 0 0;
         case "text":
             $input.val(val);
             break;
-        case "tag":  // 현재 textarea 와 동일
+        case "tag": // 현재 textarea 와 동일
             $input.val(val);
             $input.height("auto");
-            $input.height($input.prop("scrollHeight")+"px");
+            $input.height($input.prop("scrollHeight") + "px");
             break;
         case "textarea":
             $input.val(val);
             $input.height("auto");
-            $input.height($input.prop("scrollHeight")+"px");
+            $input.height($input.prop("scrollHeight") + "px");
             break;
         case "radio":
-            $input.find("input[value="+val+"]").prop("checked",true);
+            $input.find("input[value=" + val + "]").prop("checked", true);
             break;
         default:
             break;
         }
     };
-    var usageCheck_ = async function($elem){
+    var usageCheck_ = async function ($elem) {
         // 일단 다 켠다.
         var $lis = $elem.find("li");
         $lis.removeClass("GM_setting_item_disable");
         $lis.find("input, textarea").prop("disabled", false);
         $lis.find("input[type='checkbox']").trigger("change");
 
-        var enable = [true];
-        for(var i=0; i<$lis.length; i++){
+        var enable = [true, true];
+        var $prev, prevTopRadioVal;
+        for (var i = 0; i < $lis.length; i++) {
             var $curr = $($lis[i]);
             var curr_depth = $curr.attr("GM_setting_depth");
             var curr_key = $curr.attr("GM_setting_key");
+            var curr_radio_enable_value = $curr.attr("GM_setting_radio_enable_value");
 
-            if(i !== 0){
-                var $prev = $($lis[i-1]);
+            if (i == 0){
+                //
+            }
+            else {
+                $prev = $($lis[i - 1]);
                 var prev_depth = $prev.attr("GM_setting_depth");
-                if(prev_depth < curr_depth){
+
+                if (prev_depth == curr_depth && prev_depth > 0){
+                    if(prevTopRadioVal !== undefined){
+                        if(prevTopRadioVal == curr_radio_enable_value){
+                            enable[prev_depth-1] = true;
+                        }
+                        else{
+                            enable[prev_depth-1] = false;
+                        }
+                    }
+                }
+                else if (prev_depth < curr_depth) {
+                    prevTopRadioVal = undefined;
                     var $prev_checkbox = $prev.find("input[type='checkbox']");
+                    var $prev_radio = $prev.find("input[type='radio']");
                     // 이전 요소가 체크박스이고, 켜져있으면 현재 요소도 켠다.
-                    if($prev_checkbox.length !== 0 && $prev_checkbox.is(":checked")){
+                    if ($prev_checkbox.length !== 0 && $prev_checkbox.is(":checked")) {
                         enable[prev_depth] = true;
                     }
-                    else{
+                    // 이전 요소가 라디오
+                    else if($prev_radio.length !== 0){
+                        prevTopRadioVal = $prev.find("input[type='radio']:checked").val();
+                        //curr_radio_enable_value ||
+                        if($prev.find("input[type='radio']:checked").val() == curr_radio_enable_value){
+                            enable[prev_depth] = true;
+                        }
+                        else{
+                            enable[prev_depth] = false;
+                        }
+                    }
+                    else {
                         enable[prev_depth] = false;
                     }
 
@@ -711,8 +913,8 @@ margin:0 5px 0 0;
                 }
             }
 
-            for(var e=0; e<curr_depth; e++){
-                if(_settings[curr_key].disable || !enable[e]){
+            for (var e = 0; e < curr_depth; e++) {
+                if (_settings[curr_key].disable || !enable[e]) {
                     $curr.addClass("GM_setting_item_disable");
                     $curr.find("input, textarea").prop("disabled", true);
                     $curr.find("input[type='checkbox']").trigger("change");
@@ -721,7 +923,7 @@ margin:0 5px 0 0;
             }
         }
     };
-    var validation_ = function(key, val){
+    var validation_ = function (key, val) {
         var val_array;
         var duplicate;
         var sorted_array;
@@ -731,40 +933,41 @@ margin:0 5px 0 0;
         var message = "";
 
         // 숫자의 경우
-        if(_settings[key].valid === "number"){
+        if (_settings[key].valid === "number") {
             valid = $.isNumeric(val);
-            if(val === ""){
-                message += "반드시 값이 입력되어야 합니다.";
-            }
-            else if(!valid){
-                message += "숫자만 입력 가능합니다.";
-            }
-            else{
-                if(_settings[key].min_value !== undefined && _settings[key].min_value > val){
+            if (val === "") {
+                // "반드시 값이 입력되어야 합니다."
+                message += getSystemTextbyLang("err_val_req");
+            } else if (!valid) {
+                // "숫자만 입력 가능합니다."
+                message += getSystemTextbyLang("err_num_req");
+            } else {
+                if (_settings[key].min_value !== undefined && _settings[key].min_value > val) {
                     valid = false;
-                    message += "입력 값은 "+ _settings[key].min_value +"이상의 숫자이어야 합니다.";
-                }
-                else if(_settings[key].max_value !== undefined && _settings[key].max_value < val){
+                    // "입력 값은 다음 값 이상의 숫자이어야 합니다. : "
+                    message += getSystemTextbyLang("err_num_over") + _settings[key].min_value;
+                } else if (_settings[key].max_value !== undefined && _settings[key].max_value < val) {
                     valid = false;
-                    message += "입력 값은 "+ _settings[key].max_value +"이하의 숫자이어야 합니다.";
+                    // "입력 값은 다음 값 이하의 숫자이어야 합니다. : "
+                    message += getSystemTextbyLang("err_num_not_more_than") + _settings[key].max_value;
                 }
             }
         }
         // array_string - ID 태그
-        else if(val !== "" && _settings[key].valid === "array_string"){
+        else if (val !== "" && _settings[key].valid === "array_string") {
             val_array = $.map(val.split(","), $.trim);
             var match = val.match(regex_array_string);
-            //ADD_DEBUG(match);
-            if(match === null || match.length === 0){
+            //CONSOLE_MSG(match);
+            if (match === null || match.length === 0) {
                 valid = false;
-                message += "영문, 숫자, 콤마(,), 언더바(_) 만 입력 가능합니다.";
-            }
-            else if($.inArray("", val_array) !== -1){
+                // "영문, 숫자, 콤마(,), 언더바(_) 만 입력 가능합니다."
+                message += getSystemTextbyLang("err_valid_array_string");
+            } else if ($.inArray("", val_array) !== -1) {
                 valid = false;
-                message += "공백 값 등 값이 존재하지 않는 항목이 존재합니다.";
-                ADD_DEBUG(val_array, $.inArray("", val_array));
-            }
-            else if((new Set(val_array)).size !== val_array.length ){
+                // "공백 값 등 값이 존재하지 않는 항목이 존재합니다."
+                message += getSystemTextbyLang("err_value_empty");
+                CONSOLE_MSG(val_array, $.inArray("", val_array));
+            } else if ((new Set(val_array)).size !== val_array.length) {
                 valid = false;
                 duplicate = [];
                 sorted_array = val_array.sort();
@@ -773,28 +976,29 @@ margin:0 5px 0 0;
                         duplicate.push(sorted_array[i]);
                     }
                 }
-                message += "중복된 값이 존재합니다: " + duplicate.join(",");
-            }
-            else{
+                // "중복된 값이 존재합니다: "
+                message += getSystemTextbyLang("err_value_dup") + duplicate.join(",");
+            } else {
                 for (var j = 0; j < val_array.length; j++) {
-                    //ADD_DEBUG(val_array, val_array[j].indexOf(" "));
-                    if(val_array[j].indexOf(" ") !== -1){
+                    //CONSOLE_MSG(val_array, val_array[j].indexOf(" "));
+                    if (val_array[j].indexOf(" ") !== -1) {
                         valid = false;
-                        message += "문자열 내 공백이 존재하는 항목이 있습니다: " + val_array[j];
+                        // "문자열 내 공백이 존재하는 항목이 있습니다: "
+                        message += getSystemTextbyLang("err_value_blank") + val_array[j];
                         break;
                     }
                 }
             }
         }
         // array_word - 금지단어
-        else if(val !== "" && _settings[key].valid === "array_word"){
+        else if (val !== "" && _settings[key].valid === "array_word") {
             val_array = $.map(val.split(","), $.trim);
-            if($.inArray("", val_array) !== -1){
+            if ($.inArray("", val_array) !== -1) {
                 valid = false;
-                message += "공백 값 등 값이 존재하지 않는 항목이 존재합니다.";
-                ADD_DEBUG(val_array, $.inArray("", val_array));
-            }
-            else if((new Set(val_array)).size !== val_array.length ){
+                // "공백 값 등 값이 존재하지 않는 항목이 존재합니다."
+                message += getSystemTextbyLang("err_value_empty");
+                CONSOLE_MSG(val_array, $.inArray("", val_array));
+            } else if ((new Set(val_array)).size !== val_array.length) {
                 valid = false;
                 duplicate = [];
                 sorted_array = val_array.sort();
@@ -803,14 +1007,18 @@ margin:0 5px 0 0;
                         duplicate.push(sorted_array[k]);
                     }
                 }
-                message += "중복된 값이 존재합니다: " + duplicate.join(",");
+                // "중복된 값이 존재합니다: "
+                message += getSystemTextbyLang("err_value_dup") + duplicate.join(",");
             }
         }
 
-        var return_obj = {valid:valid, message:message};
+        var return_obj = {
+            valid: valid,
+            message: message
+        };
         return return_obj;
     };
-    var hasSameKey_ = function(a,b) {
+    var hasSameKey_ = function (a, b) {
         var aKeys = Object.keys(a).sort();
         var bKeys = Object.keys(b).sort();
         return JSON.stringify(aKeys) === JSON.stringify(bKeys);
@@ -819,52 +1027,51 @@ margin:0 5px 0 0;
     /////////////////////////////////////////////////
     // public interface
     return {
-        init: async function(name){
+        init: async function (name, user_settings) {
             name_ = name;
-            ADD_DEBUG("GM_setting - init");
-            await init_();
+            await init_(user_settings);
             await event_();
             addStyle_();
         },
-        load: async function(){
-            ADD_DEBUG("GM_setting - load");
+        load: async function () {
+            CONSOLE_MSG("GM_setting - load");
             await load_();
             //return settings;
         },
-        save: async function(){
-            ADD_DEBUG("GM_setting - save");
+        save: async function () {
+            CONSOLE_MSG("GM_setting - save");
             await save_();
         },
-        save_overwrite: async function(){
+        save_overwrite: async function () {
             // old_value: obj,       ekey:키, evalue:값(old 설정값)
             var old_value = settings;
             var new_value = global[name_];
-            $.each(old_value, function(ekey, _evalue){
-                if(_settings[ekey].change !== undefined && old_value[ekey] !== new_value[ekey]){
+            $.each(old_value, function (ekey, _evalue) {
+                if (_settings[ekey].change !== undefined && old_value[ekey] !== new_value[ekey]) {
                     _settings[ekey].change(new_value[ekey]);
                 }
             });
             settings = global[name_];
-            ADD_DEBUG("GM_setting - save_overwrite");
+            CONSOLE_MSG("GM_setting - save_overwrite");
             await save_();
         },
-        reset: async function(){
+        reset: async function () {
             await GM.setValue(name_, settings_init);
             await load_();
         },
-        createlayout: function(elem){
+        createlayout: function (elem) {
+            latestCreatedLayout = elem;
             createlayout_(elem);
         },
-        getType: function(key){
-            if(_settings[key] !== undefined){
+        getType: function (key) {
+            if (_settings[key] !== undefined) {
                 return _settings[key].type;
-            }
-            else{
+            } else {
                 return undefined;
             }
         },
-        message: function(msg, $elem){
+        message: function (msg, $elem) {
             message_(msg, $elem);
         }
     };
-})(jQuery, window, document, _settings);
+})(jQuery, window, document);
