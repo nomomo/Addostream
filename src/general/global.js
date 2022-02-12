@@ -1,6 +1,7 @@
 import * as nomo_common from "./common.js";
 import { ADD_DEBUG } from "../libs/nomo-utils.js";
 import {versionStrtoNum} from "settings/version.js";
+import {loadTwitchOAuth} from "../api/twitchapi";
 
 // nomo_global 이라는 이름의 전역 변수 관리
 var nomo_global_manager = async function(global){
@@ -23,6 +24,7 @@ var nomo_global_manager = async function(global){
         twitch_api_cookie: [],
         first_api_call: true,                    // 첫번째 api 호출인지 체크함
         unique_window_check: true,               // Unique window 감지용
+        TwitchOAuthToken: await loadTwitchOAuth(),// TwitchOAuthToken
 
         // 채팅
         chatting_arrive_check: null,             // 채팅창 arrive 체크용

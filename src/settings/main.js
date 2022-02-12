@@ -49,7 +49,14 @@ const _settings = {
     top_fix_ID : { category:"list", depth:3, type: "tag", value: ["hanryang1125"], valid:"array_string", title:"등록할 스트리머 ID", desc:"스트리머 ID를 콤마(,)로 구분하여 입력<br />영문, 숫자, 언더바(_) 만 입력 가능"},
     top_off_fix : { category:"list", depth:3, type: "checkbox", value: false, title:"오프라인 시에도 고정", desc:""},
             
-    alarm : { category:"list", category_name:"리스트 - 추가", depth:2, type: "checkbox", value: false, title:"메인에 스트리머 추가", desc:"기본 두스 메인 리스트에 없는 Twitch 스트리머를<br />메인 리스트에 추가 (Twitch API 사용)" },
+    alarm : { category:"list", category_name:"리스트 - 추가", depth:2, type: "checkbox", value: false, title:"메인에 스트리머 추가", desc:"기본 두스 메인 리스트에 없는 Twitch 스트리머를<br />메인 리스트에 추가 (본 기능을 사용하기 위해서는 Twitch 계정과의 연동이 필요함)", append:$("<span class='btn btn-primary'>Twitch 계정 연동</span>").on("click", function(){
+        ADD_DEBUG("Twitch 계정 연동 버튼 클릭됨");
+        var ww = $(window).width(),
+            wh = $(window).height();
+        var wn = (ww > 850 ? 850 : ww/5*4);
+        window.open("https://www.dostream.com/addostream/twitch/auth/","winname",
+            "directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+wn+",height="+wh/5*4);
+    }) },
     top_alarm_ID : { category:"list", depth:3, type: "tag", value: ["hanryang1125"], valid:"array_string", title:"등록할 스트리머 ID", desc:"스트리머 ID를 콤마(,)로 구분하여 입력<br />영문, 숫자, 언더바(_) 만 입력 가능", change:async function(){await nomo_common.nomo.setVal("ADD_twitch_api_refresh_force", true);} },
     alarm_gap : { category:"list", depth:3, type: "text", value: 5, valid:"number", min_value:1, title:"조회 간격", desc:"분 단위로 입력, 최소 1분(기본값: 5)" },
     alarm_noti : { category:"list", depth:3, type: "checkbox", value: false, title:"온라인 시 알림(수정 중)", desc:"위 목록에 등록된 스트리머가 온라인이 될 때<br />데스크톱 메시지로 알림" },
@@ -401,7 +408,7 @@ export var GM_setting = (function ($, global, document) { //
                     await load_();
                     // old_value: obj,       ekey:키, evalue:값(old 설정값)
                     $.each(old_value, function (ekey, _evalue) {
-                        if (_settings[ekey].change !== undefined && old_value[ekey] !== new_value[ekey]) {
+                        if (_settings[ekey] !== undefined && _settings[ekey].change !== undefined && old_value[ekey] !== new_value[ekey]) {
                             _settings[ekey].change(settings[ekey]);
                         }
                     });
@@ -1046,8 +1053,9 @@ export var GM_setting = (function ($, global, document) { //
             // old_value: obj,       ekey:키, evalue:값(old 설정값)
             var old_value = settings;
             var new_value = global[name_];
+            ADD_DEBUG("_settings", _settings);
             $.each(old_value, function (ekey, _evalue) {
-                if (_settings[ekey].change !== undefined && old_value[ekey] !== new_value[ekey]) {
+                if (_settings[ekey] !== undefined && _settings[ekey].change !== undefined && old_value[ekey] !== new_value[ekey]) {
                     _settings[ekey].change(new_value[ekey]);
                 }
             });

@@ -95,14 +95,18 @@ export function ADD_basic_layout(){
                         </tr>
                         <tr>
                             <td class="td_strong">
-                                <span aria-label="기본 두스트림에 메인에 없는\nTwitch 스트리머를 메인에 추가\n(Twitch API 사용)" data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">
+                                <span aria-label="기본 두스트림에 메인에 없는\nTwitch 스트리머를 메인에 추가\n(본 기능을 활성화하려면 Twitch 계정과의 연동이 필요)" data-microtip-position="top-left" data-microtip-size="custom" role="tooltip">
                                     <label class="btn btn-default btn-xxs">
                                         <input type="checkbox" id="ADD_config_alarm" onfocus="this.blur()"  />
                                         <span class="glyphicon glyphicon-ok"></span>
-                                    </label> 메인에 스트리머 추가
+                                    </label> 메인에 스트리머 추가<br />
+                                    <div style="padding:3px;">
+                                        <a class="OpenTwitchAuth" href="https://www.dostream.com/addostream/twitch/auth/">[Twitch 계정 연동 페이지]</a>
+                                    </div>
                                 </span>
                             </td>
-                            <td><input type="text" id="ADD_config_top_alarm_ID" style="width:100%;" class="input_text_by_tag ADD_config_alarm_form form_enabled" /><ul id="ADD_config_top_alarm_ID_Tags"></ul></td>
+                            <td>
+                            <input type="text" id="ADD_config_top_alarm_ID" style="width:100%;" class="input_text_by_tag ADD_config_alarm_form form_enabled" /><ul id="ADD_config_top_alarm_ID_Tags"></ul></td>
                         </tr>
                         <tr>
                             <td class="no_border"></td>
@@ -811,6 +815,15 @@ export function ADD_basic_layout(){
             else{
                 ADD_DEBUG("ADD_now_playing 이 없다.", nomo_global.ADD_now_playing);
             }
+        })
+        .on("click",".OpenTwitchAuth",function(e){
+            e.preventDefault();
+            var ww = $(window).width(),
+                wh = $(window).height();
+            var wn = (ww > 850 ? 850 : ww/5*4);
+            window.open("https://www.dostream.com/addostream/twitch/auth/","winname",
+                "directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+wn+",height="+wh/5*4);
+
         });
 
         

@@ -232,6 +232,7 @@ export async function ADD_run(data,flag){
         });
     }
 
+    ADD_DEBUG("list - 정렬된 data", data);
     $(data).each(function(k, data){
         var twitch_append = "";
         var fixed_class = "";
@@ -331,10 +332,14 @@ export async function ADD_run(data,flag){
     // 퀵리스트
     if(flag === 0){
         $ul = $("#stream .main-streams ul");
+        
         if($ul === undefined){
+            ADD_DEBUG("$ul 을 찾을 수 없다.");
             $("#stream .main-streams").append("<ul></ul>");
         }
         $("#stream .main-streams ul").empty().hide().append(append).fadeIn(300);
+        $("#stream .main-streams ul").addClass("main_ul_addostream");
+
         if(ADD_config.main_list_two_column){
             $("#stream .main-streams ul").addClass("main_list_two_column");
         }
@@ -472,9 +477,9 @@ export async function ADD_parse_list_data(flag){
         // });
     }
     else{
-        ADD_DEBUG("기본 리스트 캐시된 것 읽어옴");
         // 데이터 읽어오기
         var data = await GM.getValue("ADD_stream_list", []);
+        ADD_DEBUG("기본 리스트 캐시된 것 읽어옴", data);
         // 메인 리스트 갱신
         ADD_run(data,flag);
     }

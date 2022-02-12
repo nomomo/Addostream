@@ -1,7 +1,7 @@
 {
   "name": "addostream",
   "author": "Nomomo",
-  "version": "1.54.10",
+  "version": "1.55.0",
   "description": "두스트림에 새로운 기능을 추가하는 브라우저 확장 UserScript",
   "update": "",
   "notice": "",
@@ -27,6 +27,8 @@
   },
   "dependencies": {
     "glob-parent": "^6.0.1",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
     "set-value": "^4.1.0"
   }
 }

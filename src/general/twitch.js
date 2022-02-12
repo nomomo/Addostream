@@ -4,6 +4,7 @@ import nomo_const from "general/const.js";
 import { ADD_var_to_config_form } from "general/menu_layout.js";
 import * as utils from "libs/nomo-utils.js";
 import {escapeHtml} from "libs/nomo-utils.js";
+import { TwitchHelixAPI } from "api/twitchapi.js";
 var ADD_DEBUG = utils.ADD_DEBUG;
 
 /**
@@ -100,6 +101,7 @@ async function twitch_api_get_user_ids(ch_ids_array) {
     return return_arr;
 }
 
+var isHelix401 = false;
 export async function twitch_api(option) {
     if (!ADD_config.alarm) {
         return false;
@@ -127,139 +129,158 @@ export async function twitch_api(option) {
         nomo_global.api_push_forced = false;
         var ch_ids_array = ADD_config.top_alarm_ID;
         if (ch_ids_array.length > 0) {
-            var new_ch_ids_array = await twitch_api_get_user_ids(ch_ids_array);
-            var new_ch_ids_string = new_ch_ids_array.join(",").replace(/\s/g, "").toLowerCase();
-            //ADD_DEBUG("new_ch_ids_array", new_ch_ids_array);
-
-            $.ajax({
-                url: "https://api.twitch.tv/kraken/streams/?offset=0&limit=100&channel=" + new_ch_ids_string,
-                type: "GET",
-                dataType: "json",
-                headers: {
-                    "Accept": "application/vnd.twitchtv.v5+json",
-                    "Client-ID": nomo_const.ADD_CLIENT_ID_TWITCH
-                },
-            })
-                .done(function (channel) {
-                    var streams = channel.streams;
-                    ADD_DEBUG("Twitch API - request succeeded", channel);
-
-                    // 온라인 스트리머가 있는 경우
-                    if (streams.length !== 0) {
-                        for (var i = 0; i < streams.length; i++) {
-                            if (i === 0) {
-                                // API 변수 초기화
-                                nomo_global.twitch_api_cookie = [];
-                            }
-
-                            var stream = streams[i];
-                            if (stream !== null) {
-                                nomo_global.twitch_api_cookie[i] = {
-                                    "name": stream.channel.name,
-                                    "display_name": stream.channel.display_name,
-                                    "status": stream.channel.status,
-                                    "viewers": stream.viewers,
-                                    "game": stream.channel.game
-                                };
-                            }
-
-                            // var noti_detail;
-                            // 데스크톱 알림 허용인 경우
-                            // if( ADD_config.alarm_noti ){
-                            //     // 첫번째 call 이고 기존 쿠키 존재 안 하는 경우 (완전히 첫 접속인 경우)
-                            //     if(first_api_call && (!$.cookie("twitch_api_cookie"))){
-                            //         if(i !== 0){
-                            //             temp_body += ", ";
-                            //         }
-                            //         temp_body += stream.channel.name;
-
-                            //         if(i === streams.length -1){
-                            //             noti_detail = {
-                            //                 title: "Dostream+",
-                            //                 text: temp_body,
-                            //                 image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADIBAMAAABfdrOtAAAAD1BMVEU0SV5reommr7jj5ej////e05EyAAADM0lEQVR42u1ZwbGrMAwE7AJycAEcKIADBUDi/mt6h+SR2JbEGpz3Z/7s3pI4rC2tZEl0HUEQBEEQBEEQBEEQxNfh40oSkpCEJI0QP/GPSWKJ+1+QxBjjrbG5+ks0qOMVlrWtuqZk70MtC0bic5vWsZwk6cLzm7E5SaLcUBFfNSTpygU32HmSHj9KDcl8zHyFJIjRBx+lJk4QI14gWUSSp1ceTRP2XeG+tSTZutP2QjAoDxta2ktUcJW+YJJRU10bewVtw15x1hksNsmjnbgeqiLiNxW8J8nxiwre5dXC8+4vSLxuk6W22KtX8F7GNCCZ9AeFZiRGMPi2JJtFclPOuLZQ8C/JqHyPn9Edk8x6LX9dwQrJa1NDhbyDccl6KRr35QPuF0PBIsnyPpqHDWalc4EkfEoRPoqVOUoSl2x+Ar3SWzmwJEk/ovZyAMmsPXWAa0ylVJFI+jw5gDWAt8rEPOJDHlJgQFoKzru6vlgLkpjZIW2LnwcrggaoAcy7L7u0ygS0GA4FFfy6fmPioXIX6yUFd2mqnZT2db2k4C6dGglLa0hu5tBlU631JNkuKXhIssokSASryE0Fu4RE8l4Fyb0DAt5pl+QhSW+uSioiySUdVMbaCk5icREutx4iQRS86ZYZKkhGk2TVn+cgEkTBs74d2xCQghO/i7W/hzoxs/MMn7+K3WtABiO2gstQvKN9M+y4PrngxZVQC+6BUsUQaw8FvOm4xCViUmmg4MQlFxRsOa5Piggxc03Q1O242H50R+kxXsnB6fRZikXM71Z+y4bPEomrSI8r8lsQDOshl1gKzprrIAQ8FO+WOlxmb4EEu7GsreQR5EsSLEoMBReS8KWQAmQtQ4JFKhBIMGvpCi7FWZI4bHSoK7i8PAb5hdTxpFVVsHThFY8EJ4daDvZqQVpY63Qn58SbNmRrsfZHezXmja/H9M/A7Fsekk/asE6YRQBTaWmK+WoWpDhO5yjo6CYWs7996jdrsaN5yLbWe214z/z0vLxJs6JDt0uwirR5/+9YcY6Kd/2/qvVQ9jU4VsCL6OsOX2OnkqXZG04jcXcEQRAEQRAEQRAEQRAEQRAE8R/iB+f58fTfPvCwAAAAAElFTkSuQmCC",
-                            //                 //highlight: true,
-                            //                 timeout: 6000
-                            //                 //ondone: function(){},
-                            //                 //onclick: function(){},
-                            //             };
-                            //             GM.notification(noti_detail);
-                            //         }
-                            //     }
-
-                            //     // 기존 쿠키 존재 하는 경우
-                            //     else if( ($.cookie("twitch_api_cookie")) ){
-                            //         // 이전 api call 한 내역에 이번에 api call 한 이름이 있는지 체크
-                            //         var first_call_check = temp_twitch_api_cookie.filter(function (obj){
-                            //             return obj.name === stream.channel.name;
-                            //         })[0];
-
-                            //         // 이전에 call 하지 않은 스트리머인 경우 개별 데스크톱 알림
-                            //         if(first_call_check === undefined || first_call_check === null){
-                            //             noti_detail = {
-                            //                 title: stream.channel.display_name,
-                            //                 text: stream.channel.game+" - "+stream.viewers+" viewers\n"+stream.channel.status,
-                            //                 image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADIBAMAAABfdrOtAAAAD1BMVEU0SV5reommr7jj5ej////e05EyAAADM0lEQVR42u1ZwbGrMAwE7AJycAEcKIADBUDi/mt6h+SR2JbEGpz3Z/7s3pI4rC2tZEl0HUEQBEEQBEEQBEEQxNfh40oSkpCEJI0QP/GPSWKJ+1+QxBjjrbG5+ks0qOMVlrWtuqZk70MtC0bic5vWsZwk6cLzm7E5SaLcUBFfNSTpygU32HmSHj9KDcl8zHyFJIjRBx+lJk4QI14gWUSSp1ceTRP2XeG+tSTZutP2QjAoDxta2ktUcJW+YJJRU10bewVtw15x1hksNsmjnbgeqiLiNxW8J8nxiwre5dXC8+4vSLxuk6W22KtX8F7GNCCZ9AeFZiRGMPi2JJtFclPOuLZQ8C/JqHyPn9Edk8x6LX9dwQrJa1NDhbyDccl6KRr35QPuF0PBIsnyPpqHDWalc4EkfEoRPoqVOUoSl2x+Ar3SWzmwJEk/ovZyAMmsPXWAa0ylVJFI+jw5gDWAt8rEPOJDHlJgQFoKzru6vlgLkpjZIW2LnwcrggaoAcy7L7u0ygS0GA4FFfy6fmPioXIX6yUFd2mqnZT2db2k4C6dGglLa0hu5tBlU631JNkuKXhIssokSASryE0Fu4RE8l4Fyb0DAt5pl+QhSW+uSioiySUdVMbaCk5icREutx4iQRS86ZYZKkhGk2TVn+cgEkTBs74d2xCQghO/i7W/hzoxs/MMn7+K3WtABiO2gstQvKN9M+y4PrngxZVQC+6BUsUQaw8FvOm4xCViUmmg4MQlFxRsOa5Piggxc03Q1O242H50R+kxXsnB6fRZikXM71Z+y4bPEomrSI8r8lsQDOshl1gKzprrIAQ8FO+WOlxmb4EEu7GsreQR5EsSLEoMBReS8KWQAmQtQ4JFKhBIMGvpCi7FWZI4bHSoK7i8PAb5hdTxpFVVsHThFY8EJ4daDvZqQVpY63Qn58SbNmRrsfZHezXmja/H9M/A7Fsekk/asE6YRQBTaWmK+WoWpDhO5yjo6CYWs7996jdrsaN5yLbWe214z/z0vLxJs6JDt0uwirR5/+9YcY6Kd/2/qvVQ9jU4VsCL6OsOX2OnkqXZG04jcXcEQRAEQRAEQRAEQRAEQRAE8R/iB+f58fTfPvCwAAAAAElFTkSuQmCC",
-                            //                 //highlight: true,
-                            //                 timeout: 6000
-                            //                 //ondone: function(){},
-                            //                 //onclick: function(){},
-                            //             };
-                            //             GM.notification(noti_detail);
-
-                            //             // GC
-                            //             first_call_check = null;
-                            //         }
-                            //         else{
-                            //             ADD_DEBUG(stream.channel.name + " : 이전에 이미 api call 하였으므로 알림하지 않음");
-                            //         }
-                            //     }
-                            // }
-
-                            // GC
-                            stream = null;
-                        } // streams 에 대한 for문 끝
-                        $.cookie("twitch_api_cookie", JSON.stringify(nomo_global.twitch_api_cookie), {
-                            expires: (new Date()).getMinutes() + 10,
-                            path: "/"
-                        });
+            var new_ch_ids_string = ch_ids_array.join("&user_login=").replace(/\s/g, "").toLowerCase();
+            var response = await TwitchHelixAPI("streams?first=100&user_login="+new_ch_ids_string);
+            if(!response.ok){
+                ADD_DEBUG("Twitch API to call list - Request failed", response);
+                if(response.status == 401){
+                    if(!isHelix401){
+                        isHelix401 = true;
+                        ADD_send_sys_msg_from_main_frame(`[Dostream+] Twitch API 사용을 위한 토큰이 유효하지 않습니다. 메인에 스트리머 추가 설정을 끄거나, <a class="OpenTwitchAuth" style="text-decoration:underline !important" href="https://www.dostream.com/addostream/twitch/auth/" target="_blank">이 링크를 클릭하여 Dostream+ 와 Twitch 계정 연결을 완료하십시오.</a>`);
                     }
-                    // 온라인 스트리머가 없는 경우
-                    else {
-                        ADD_DEBUG("Twitch API - NO ONLINE STREAMER, API cookie is REMOVED");
-                        $.removeCookie("twitch_api_cookie");
-                    }
+                }
+                else{
+                    ADD_send_sys_msg_from_main_frame(`[Dostream+] Twitch API 오류가 발생했습니다. Error: ${JSON.stringify(response)}`);
+                }
+            }
+            else{
+                ADD_DEBUG("Twitch API to call list - request succeeded", response);
+                var streams = response.data.data;
 
-                    // 처음 api 호출 끝나면 false 로 바꾼다.
-                    if (nomo_global.first_api_call) {
-                        nomo_global.first_api_call = false;
-                    }
+                // 온라인 스트리머가 있는 경우
+                if (streams.length !== 0) {
+                    for (var i = 0; i < streams.length; i++) {
+                        if (i === 0) {
+                            // API 변수 초기화
+                            nomo_global.twitch_api_cookie = [];
+                        }
 
-                    // 메인일 경우 리로드
-                    ADD_DEBUG("Twitch API - API 호출에 의하여 메인 리로드 됨");
-                    if (ADD_config.alarm_main_reload && nomo_global.PAGE === nomo_const.C_MAIN) {
-                        nomo_common.reloadMain();
-                    }
+                        var stream = streams[i];
+                        if (stream !== null) {
+                            nomo_global.twitch_api_cookie[i] = {
+                                "name": stream.user_login,
+                                "display_name": stream.user_name,
+                                "status": stream.title,
+                                "viewers": stream.viewer_count,
+                                "game": stream.game_name
+                            };
+                        }
 
-                    // 채팅에 메시지 띄움
-                    /*
-                    if(ADD_config.sys_meg !== undefined && ADD_config.sys_meg){
-                        var temp_date = new Date();
-                        temp_date = leadingZeros(temp_date.getFullYear(), 4) + "-" + leadingZeros(temp_date.getMonth() + 1, 2) + "-" +  leadingZeros(temp_date.getDate(), 2) + " " + leadingZeros(temp_date.getHours(), 2) + ":" + leadingZeros(temp_date.getMinutes(), 2) + ":" + leadingZeros(temp_date.getSeconds(), 2);
-                        ADD_send_sys_msg_from_main_frame("Twitch API 호출 완료 ("+temp_date+")",0);
-                    }
-                    */
+                        // GC
+                        stream = null;
+                    } // streams 에 대한 for문 끝
+                    $.cookie("twitch_api_cookie", JSON.stringify(nomo_global.twitch_api_cookie), {
+                        expires: (new Date()).getMinutes() + 10,
+                        path: "/"
+                    });
+                }
+                // 온라인 스트리머가 없는 경우
+                else {
+                    ADD_DEBUG("Twitch API - NO ONLINE STREAMER, API cookie is REMOVED");
+                    $.removeCookie("twitch_api_cookie");
+                }
 
-                    nomo_common.GM_cache_write("GM_cache_twitch_api");
-                    nomo_global.list_update_time = new Date();
-                    ADD_DEBUG("리스트 업데이트 시간 갱신 - 트위치 api:", nomo_global.list_update_time);
-                })
-                .fail(function (error) {
-                    ADD_DEBUG("Twitch API - Request failed", error);
-                })
-                .always(function () {
-                    ADD_DEBUG("Twitch API - Complete");
-                });
+                // 처음 api 호출 끝나면 false 로 바꾼다.
+                if (nomo_global.first_api_call) {
+                    nomo_global.first_api_call = false;
+                }
+
+                // 메인일 경우 리로드
+                ADD_DEBUG("Twitch API - API 호출에 의하여 메인 리로드 됨");
+                if (ADD_config.alarm_main_reload && nomo_global.PAGE === nomo_const.C_MAIN) {
+                    nomo_common.reloadMain();
+                }
+
+                // 채팅에 메시지 띄움
+                /*
+                if(ADD_config.sys_meg !== undefined && ADD_config.sys_meg){
+                    var temp_date = new Date();
+                    temp_date = leadingZeros(temp_date.getFullYear(), 4) + "-" + leadingZeros(temp_date.getMonth() + 1, 2) + "-" +  leadingZeros(temp_date.getDate(), 2) + " " + leadingZeros(temp_date.getHours(), 2) + ":" + leadingZeros(temp_date.getMinutes(), 2) + ":" + leadingZeros(temp_date.getSeconds(), 2);
+                    ADD_send_sys_msg_from_main_frame("Twitch API 호출 완료 ("+temp_date+")",0);
+                }
+                */
+
+                nomo_common.GM_cache_write("GM_cache_twitch_api");
+                nomo_global.list_update_time = new Date();
+                ADD_DEBUG("리스트 업데이트 시간 갱신 - 트위치 api:", nomo_global.list_update_time);
+            }
+
+            // $.ajax({
+            //     url: "https://api.twitch.tv/kraken/streams/?offset=0&limit=100&channel=" + new_ch_ids_string,
+            //     type: "GET",
+            //     dataType: "json",
+            //     headers: {
+            //         "Accept": "application/vnd.twitchtv.v5+json",
+            //         "Client-ID": nomo_const.ADD_CLIENT_ID_TWITCH
+            //     },
+            // })
+            //     .done(function (channel) {
+            //         var streams = channel.streams;
+            //         ADD_DEBUG("Twitch API - request succeeded", channel);
+
+            //         // 온라인 스트리머가 있는 경우
+            //         if (streams.length !== 0) {
+            //             for (var i = 0; i < streams.length; i++) {
+            //                 if (i === 0) {
+            //                     // API 변수 초기화
+            //                     nomo_global.twitch_api_cookie = [];
+            //                 }
+
+            //                 var stream = streams[i];
+            //                 if (stream !== null) {
+            //                     nomo_global.twitch_api_cookie[i] = {
+            //                         "name": stream.channel.name,
+            //                         "display_name": stream.channel.display_name,
+            //                         "status": stream.channel.status,
+            //                         "viewers": stream.viewers,
+            //                         "game": stream.channel.game
+            //                     };
+            //                 }
+
+            //                 // GC
+            //                 stream = null;
+            //             } // streams 에 대한 for문 끝
+            //             $.cookie("twitch_api_cookie", JSON.stringify(nomo_global.twitch_api_cookie), {
+            //                 expires: (new Date()).getMinutes() + 10,
+            //                 path: "/"
+            //             });
+            //         }
+            //         // 온라인 스트리머가 없는 경우
+            //         else {
+            //             ADD_DEBUG("Twitch API - NO ONLINE STREAMER, API cookie is REMOVED");
+            //             $.removeCookie("twitch_api_cookie");
+            //         }
+
+            //         // 처음 api 호출 끝나면 false 로 바꾼다.
+            //         if (nomo_global.first_api_call) {
+            //             nomo_global.first_api_call = false;
+            //         }
+
+            //         // 메인일 경우 리로드
+            //         ADD_DEBUG("Twitch API - API 호출에 의하여 메인 리로드 됨");
+            //         if (ADD_config.alarm_main_reload && nomo_global.PAGE === nomo_const.C_MAIN) {
+            //             nomo_common.reloadMain();
+            //         }
+
+            //         // 채팅에 메시지 띄움
+            //         /*
+            //         if(ADD_config.sys_meg !== undefined && ADD_config.sys_meg){
+            //             var temp_date = new Date();
+            //             temp_date = leadingZeros(temp_date.getFullYear(), 4) + "-" + leadingZeros(temp_date.getMonth() + 1, 2) + "-" +  leadingZeros(temp_date.getDate(), 2) + " " + leadingZeros(temp_date.getHours(), 2) + ":" + leadingZeros(temp_date.getMinutes(), 2) + ":" + leadingZeros(temp_date.getSeconds(), 2);
+            //             ADD_send_sys_msg_from_main_frame("Twitch API 호출 완료 ("+temp_date+")",0);
+            //         }
+            //         */
+
+            //         nomo_common.GM_cache_write("GM_cache_twitch_api");
+            //         nomo_global.list_update_time = new Date();
+            //         ADD_DEBUG("리스트 업데이트 시간 갱신 - 트위치 api:", nomo_global.list_update_time);
+            //     })
+            //     .fail(function (error) {
+            //         ADD_DEBUG("Twitch API - Request failed", error);
+            //     })
+            //     .always(function () {
+            //         ADD_DEBUG("Twitch API - Complete");
+            //     });
         }
     } else {
         // not update

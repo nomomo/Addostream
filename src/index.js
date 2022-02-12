@@ -28,6 +28,8 @@ import {chat_manager, get_chat_manager_from_main_frame} from "chat/chat_manager.
 import {external_insagirl} from "external_site/insagirl.js";
 import {ADD_page_change} from "general/page_change.js";
 import {ADD_popup_player} from "general/popup_player.js";
+import {createTwitchOAuthLayout} from "api/twitchapi.js";
+import {ADD_parse_list_data} from "general/list.js";
 // import * as hold from "chat/hold.js";
 // import {point_clicker} from "general/point_clicker.js";
 // import { test } from "general/import_test.js";
@@ -62,6 +64,26 @@ import {ADD_popup_player} from "general/popup_player.js";
         await twitch_api();
         await twitch_api_call_interval();
 
+        // Hijacking
+        // Firefox 의 경우
+        if((web_browser === "firefox") && (typeof exportFunction === "function")){
+            unsafeWindow.dostream = exportFunction(newdostream, unsafeWindow);
+            unsafeWindow.dsStream = exportFunction(newdsStream, unsafeWindow);
+        }
+        // 그 이외(Chrome 등)의 경우
+        else{   // if(web_browser === 'chrome')
+            unsafeWindow.dsStream = newdsStream;
+            unsafeWindow.dostream = newdostream;
+            nomo_common.reloadMain();
+        }
+
+        // 기본 css 적용
+        nomo_theme.ADD_basic_style();
+
+        // 테마 적용
+        nomo_theme.ADD_theme();
+        nomo_theme.ADD_night_mode({message:false});
+
         $(document).ready(function(){
             window.chat_manager_main = chat_manager;
             // Hijacking
@@ -76,13 +98,6 @@ import {ADD_popup_player} from "general/popup_player.js";
                 unsafeWindow.dostream = newdostream;
                 nomo_common.reloadMain();
             }
-
-            // 기본 css 적용
-            nomo_theme.ADD_basic_style();
-
-            // 테마 적용
-            nomo_theme.ADD_theme();
-            nomo_theme.ADD_night_mode({message:false});
 
             // 기본 레이아웃 생성
             ADD_basic_layout();
@@ -126,7 +141,6 @@ import {ADD_popup_player} from "general/popup_player.js";
 
             // History layout
             ADD_channel_history_run();
-
 
             ADD_page_change(jQuery, window, document);
 
@@ -263,6 +277,24 @@ import {ADD_popup_player} from "general/popup_player.js";
         }
         external_insagirl();
         return;
+    }
+    else if(nomo_global.PAGE == nomo_const.C_TWITCH_AUTH){
+        $(document).ready(function(){
+            $("body").empty().css("padding","0px 30px 30px 30px");
+            $("head").append(`
+                <link href="/js/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+                <link href="/css/dostream.css?20180429" media="screen" rel="stylesheet" type="text/css">
+            `);
+            document.title = "두스트림 - Twitch Auth 페이지";
+            
+            // 기본 css 적용
+            nomo_theme.ADD_basic_style();
+
+            // 테마 적용
+            nomo_theme.ADD_theme();
+
+            createTwitchOAuthLayout($("body"));
+        });
     }
 
     //////////////////////////////////////////////////////////////////////////////////

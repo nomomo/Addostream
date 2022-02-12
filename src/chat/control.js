@@ -9,6 +9,7 @@ import { ADD_send_sys_msg } from "chat/send_message.js";
 import { uchat_connect_waiting, uchat_connect_check_clear} from "chat/server_connector.js";
 import { getStreamerIdAndDisplayNameFromNick } from "general/streamer-lib.js";
 import {escapeHtml} from "libs/nomo-utils.js";
+import { saveTwitchOAuth, TwitchHelixAPI } from "api/twitchapi.js";
 // import * as hold from "chat/hold.js";
 // import lib_nude from "libs/nude.js";
 const ADD_DEBUG = utils.ADD_DEBUG;
@@ -518,6 +519,17 @@ export async function ADD_chatting_arrive(){
                 e.preventDefault();
                 ADD_DEBUG("PARENT WINDOW LOCATION HREF", parent.window.location.href);
                 window.parent.location.href = this.href;
+            });
+
+            // 채팅창에 있는 OpenTwitchAuth 링크 클릭 시 이벤트
+            nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click",".OpenTwitchAuth",function(e){
+                e.preventDefault();
+                var ww = $(parent.window).width(),
+                    wh = $(parent.window).height();
+                var wn = (ww > 850 ? 850 : ww/5*4);
+                parent.window.open("https://www.dostream.com/addostream/twitch/auth/","winname",
+                    "directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+wn+",height="+wh/5*4);
+
             });
 
             // 채팅창 닉네임 클릭 시 "메모하기" 버튼 생성하기
@@ -1685,29 +1697,61 @@ async function chatElemControl($line){
                 image_found = true;
                 var twitch_thumb_id = twitch_thumb_match.pop();
                 ADD_DEBUG("Twitch Clip API 호출 - id:", twitch_thumb_id);
-                $.ajax({
-                    url:"https://api.twitch.tv/kraken/clips/"+twitch_thumb_id,
-                    type: "GET",
-                    headers: {"Client-ID": nomo_const.ADD_CLIENT_ID_TWITCH, "Accept":"application/vnd.twitchtv.v5+json"},
-
-                    // API CALL SUCCESS
-                    success:function(response){
-                        ADD_DEBUG("Twitch Clip API 호출 완료", response);
-                        var image_url = response.thumbnails.medium;
-                        var title = (response.title !== undefined ? response.title : "") + (response.broadcaster.display_name !== undefined ? " - " + response.broadcaster.display_name : "");
-
+                
+                var response = await TwitchHelixAPI("clips?id="+twitch_thumb_id);
+                var parsedData = response.data;
+                if(response.status === 200){
+                    ADD_DEBUG("Twitch Clip API 호출 완료 by Twitch Helix API", response);
+                    try{
+                        var responsedata = parsedData.data[0];
+                        var timage_url = responsedata.thumbnail_url;
+                        var title = (responsedata.title !== undefined ? responsedata.title : "") + (responsedata.broadcaster_name !== undefined ? " - " + responsedata.broadcaster_name : "");
                         var temp_arr = [];
-                        var temp_img_obj = {type:"twitch_clip", id:twitch_thumb_id, link: image_url, title: ""+title, width:480, height:272, views:response.views};
-                        temp_arr.push(temp_img_obj);
+                        var ttemp_img_obj = {type:"twitch_clip", id:twitch_thumb_id, link: timage_url, title: ""+title, width:480, height:272, views:responsedata.view_count};
+                        temp_arr.push(ttemp_img_obj);
                         chatImagelayoutfromLinks($line, temp_arr);
 
                         // GC
                         response = null;
-                    },
-                    error:function(error){
-                        ADD_DEBUG("Twitch Clip API - Request failed", error);
                     }
-                });
+                    catch(e){
+                        ADD_DEBUG("Twitch Clip API 호출 후 처리 중 error", e);
+                    }
+                }
+                else if(response.status === 401){
+                    //saveTwitchOAuth(undefined);
+                    //ADD_send_sys_msg("Twitch Clip 섬네일 이미지를 가져오던 중 오류가 발생했습니다. Twitch API 권한 인증에 실패했습니다.");
+                    chatImagelayoutfromLinks($line, [{type:"twitch_clip", id:twitch_thumb_id, link: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAeAAAAEQCAQAAADCT28HAAACT0lEQVR42u3TgQkAAAjDsO3/o/ULQUhOKLSZAE/VwGBgwMCAgcHAgIEBAwMGBgMDBgYMDAYGDAwYGDAwGBgwMGBgwMBgYMDAgIHBwICBAQMDBgYDAwYGDAwYGAwMGBgwMBgYMDBgYMDAYGDAwICBwcAigIEBAwMGBgMDBgYMDBgYDAwYGDAwGBgwMGBgwMBgYMDAgIEBA4OBAQMDBgYDAwYGDAwYGAwMGBgwMGBgMDBgYMDAYGDAwICBAQODgQEDAwYGAwMGBgwMGBgMDBgYMDBgYDAwYGDAwGBgwMCAgQEDg4EBAwMGBgwMBgYMDBgYDAwYGDAwYGAwMGBgwMCAgcHAgIEBA4OBAQMDBgYMDAYGDAwYGAwMGBgwMGBgMDBgYMDAgIHBwICBAQODgQEDAwYGDAwGBgwMGBgwMBgYMDBgYDAwYGDAwICBwcCAgQEDg4ENDAYGDAwYGAwMGBgwMGBgMDBgYMDAYGDAwICBAQODgQEDAwYGDAwGBgwMGBgMDBgYMDBgYDAwYGDAwICBwcCAgQEDg4EBAwMGBgwMBgYMDBgYDAwYGDAwYGAwMGBgwMCAgcHAgIEBA4OBAQMDBgYMDAYGDAwYGDAwGBgwMGBgMDBgYMDAgIHBwICBAQMDBgYDAwYGDAwGBgwMGBgwMBgYMDBgYDAwYGDAwICBwcCAgQEDAwYGAwMGBgwMBgYMDBgYMDAYGDAwYGDAwGBgwMCAgcHAgIEBAwMGBgMDBgYMDAY2MBgYMDBgYDAwYGDAwICBwcCAgQEDg4EBAwOXFs+gEBBFPvVfAAAAAElFTkSuQmCC", title: "제목을 알 수 없는 Twitch 클립", width:480, height:272, views:0}]);
+                }
+                else if(response.status === 429){
+                    ADD_send_sys_msg("Twitch Clip 섬네일 이미지를 가져오던 중 오류가 발생했습니다. Twitch API 과부하로 추정됩니다. Error:" + JSON.stringify(parsedData));
+                }
+                else{
+                    ADD_DEBUG("Twitch Clip API 호출 후 알 수 없는 response.status", response);
+                }
+                // $.ajax({
+                //     url:"https://api.twitch.tv/kraken/clips/"+twitch_thumb_id,
+                //     type: "GET",
+                //     headers: {"Client-ID": nomo_const.ADD_CLIENT_ID_TWITCH, "Accept":"application/vnd.twitchtv.v5+json"},
+
+                //     // API CALL SUCCESS
+                //     success:function(response){
+                //         ADD_DEBUG("Twitch Clip API 호출 완료", response);
+                //         var image_url = response.thumbnails.medium;
+                //         var title = (response.title !== undefined ? response.title : "") + (response.broadcaster.display_name !== undefined ? " - " + response.broadcaster.display_name : "");
+
+                //         var temp_arr = [];
+                //         var temp_img_obj = {type:"twitch_clip", id:twitch_thumb_id, link: image_url, title: ""+title, width:480, height:272, views:response.views};
+                //         temp_arr.push(temp_img_obj);
+                //         chatImagelayoutfromLinks($line, temp_arr);
+
+                //         // GC
+                //         response = null;
+                //     },
+                //     error:function(error){
+                //         ADD_DEBUG("Twitch Clip API - Request failed", error);
+                //     }
+                // });
             }
 
         }

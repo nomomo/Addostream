@@ -4,7 +4,7 @@ import {newdsStream} from "general/unsafewindow.js";
 import {ADD_multitwitch_layout} from "general/multitwitch.js";
 
 export const ADD_get_page_type = function (url){
-    var document_url = document.location.href;
+    var document_url = document.location.href.toLowerCase();
     if(url !== undefined){
         document_url = url;
     }
@@ -13,7 +13,8 @@ export const ADD_get_page_type = function (url){
     var keyword_m3u8 = document_url.indexOf("#/m3u8/");
     var keyword_uchat = document_url.indexOf("uchat2.php");
     var keyword_setting = document_url.indexOf("#/addostream");
-    var keyword_setting_nw = document_url.indexOf("dostream.com/addostream");
+    var keyword_setting_nw = document_url.indexOf("dostream.com/addostream/settings");
+    var keyword_twitch_auth = document_url.indexOf("dostream.com/addostream/twitch/auth");
     var insagirl = document_url.indexOf("insagirl-toto.appspot.com/hrm/");
     var twitch_player = document_url.indexOf("player.twitch.tv");
     var twitch_main = document_url.indexOf("www.twitch.tv");
@@ -22,6 +23,9 @@ export const ADD_get_page_type = function (url){
     }
     else if(keyword_stream !== -1){
         return nomo_const.C_STREAM;
+    }
+    else if(keyword_twitch_auth !== -1){
+        return nomo_const.C_TWITCH_AUTH;
     }
     else if(keyword_setting !== -1){
         return nomo_const.C_SETTING;

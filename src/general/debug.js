@@ -155,54 +155,6 @@ export function ADD_test(){
             }
         },
         {
-            title: "트위치 컨트롤 패널에서 투네이션 링크 가져오기",
-            func:function(){
-                //[{"data":{"user":{"id":"152596920","self":{"subscriptionBenefit":null,"__typename":"UserSelfConnection"},"__typename":"User"}},"extensions":{"durationMilliseconds":24,"operationName":"ExtensionsForChannelCurrentUser"}},{"data":{"currentUser":{"id":"72346108","login":"pingpink","roles":{"isStaff":null,"isSiteAdmin":null,"__typename":"UserRoles"},"__typename":"User"},"user":{"id":"152596920","login":"lol_ambition","panels":[{"id":"38542165","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-8528b7fe-32ac-46f5-b9cd-19bb5f6f7122","linkURL":"http://invite.blitz.gg/ambitiontwitch","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"37456010","type":"EXTENSION","slotID":"extension-panel-2","__typename":"ExtensionPanel","__typename":"ExtensionPanel","__typename":"ExtensionPanel"},{"id":"32810632","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-c112083a-9ab6-48f0-b058-e12b95670557","linkURL":"http://twip.kr/lol_ambition","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"32810639","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-4e277b54-0647-46d1-9459-43f5648922fa","linkURL":"https://www.twitch.tv/products/lol_ambition/ticket","description":"- 오프라인 이벤트 우선 초청!\n","__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"35947432","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-60afc2cd-c7b7-495e-aede-80ac8ab1fc11","linkURL":"https://www.twitch.tv/lol_ambition/videos?filter=highlights\u0026sort=time","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"40600374","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-7a7e7da1-a808-4b49-85b9-e7ad6db91f4f","linkURL":"https://toon.at/donate/636948107406151844","description":"- 써보는중 화면에 안나올 수도 있음!","__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"38497443","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-4b270383-6977-4c66-bed8-85a8baf133d1","linkURL":"https://tgd.kr/20959561","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"32810647","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-94096cae-602b-4729-b584-d4287d970209","linkURL":"https://tgd.kr/lol_ambition","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"32819922","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-32f56782-3914-4e1e-9ba6-032ce05f5467","linkURL":"https://www.youtube.com/channel/UCHYMpkGhNIr8A0m2H3lIjUA","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"36769376","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-47f7805c-4a4e-45e3-a85c-77c290284583","linkURL":"https://sixshop.co.kr/ambitionrise","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"35918517","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-06e7d54b-cc18-4023-860f-3e4abc7d0b2d","linkURL":"https://www.twitch.tv/lol_ambition/clips?filter=clips\u0026range=7d","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"33402538","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-a8f6b645-8e31-4027-9fa2-01cdff0fd2a8","linkURL":"https://twitter.com/lol_ambition","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"34043014","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-caf969a7-8f69-4828-b461-05a6f7b874c0","linkURL":"https://www.facebook.com/lolambition/?modal=admin_todo_tour","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"34283790","type":"EXTENSION","slotID":"extension-panel-1","__typename":"ExtensionPanel","__typename":"ExtensionPanel","__typename":"ExtensionPanel"},{"id":"32810652","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-bc81e2bb-7a50-413d-91fb-de9dbf88616c","linkURL":"https://www.instagram.com/ambition921027/","description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"34519520","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-044a9f8b-d0be-40b7-8d67-e04fc5c24c76","linkURL":"https://tgd.kr/lol_ambition","description":"*텀블러 5월 1일 이후 발송분부터는 디자인변경이 있을 예정입니다! 이미지 나오면 공유드릴게요!\n*에코백도 디자인변경 및 수량제작 일정때문에 잠시 중단되어 있습니다!! :)","__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"32957547","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-6479c235-d0c7-4a2e-b297-e6d55be8b467","linkURL":null,"description":"스폰서십/광고/협찬 등 방송과 관련된 문의는 아래의 메일로 보내주세요! 빠르게 검토하여 회신드릴 수 있도록 하겠습니다. 감사합니다!\n\ncksdyd1037@gmail.com\n\nPlease send inquiries related with broadcasting such as sponsorships, advertisements, collaborations to the email address below. We'll review and respond as soon as possible :) Thank you always!\n\ncksdyd1037@gmail.com","__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"},{"id":"32819932","type":"DEFAULT","title":null,"imageURL":"https://static-cdn.jtvnw.net/jtv_user_pictures/panel-152596920-image-68708b21-953b-4c5a-97c5-2592fae8ad2c","linkURL":null,"description":null,"__typename":"DefaultPanel","__typename":"DefaultPanel","__typename":"DefaultPanel"}],"__typename":"User"}},"extensions":{"durationMilliseconds":40,"operationName":"ChannelPanels"}},{"data":{"currentUser":{"id":"72346108","login":"pingpink","whisperThreads":{"edges":[],"__typename":"WhisperThreadConnection"},"__typename":"User"}},"extensions":{"durationMilliseconds":32,"operationName":"Whispers_Whispers_UserWhisperThreads"}}]
-                // GM_xmlhttpRequest({
-                //     url:"https://gql.twitch.tv/gql",
-                //     method: "POST",
-                //     headers: {
-                //         //"Content-Type": "application/javascript",
-                //         "Client-ID": "kimne78kx3ncx6brgo4mv6wki5h1ko",//ADD_CLIENT_ID_TWITCH,
-                //         "Accept-Language": "ko-KR",
-                //         "Content-Type": "text/plain;charset=UTF-8",
-                //         "DNT": "1",
-                //         "type": "POST",
-                //         "Origin": "https://www.twitch.tv",
-                //         "Referer": "https://www.twitch.tv/lol_ambition",
-                //     },
-                //     onload:function(channel){
-                //         ADD_DEBUG("Twitch API(Control panel) - Request succeed", channel);
-                //     },
-                //     onerror:function(error){
-                //         ADD_DEBUG("Twitch API(Control panel) - Request failed", error);
-                //     }
-                // });
-                GM_xmlhttpRequest({
-                    url: "https://api.twitch.tv/api/channels/rhdgurwns/panels?client_id="+nomo_const.ADD_CLIENT_ID_TWITCH,
-                    method: "GET",
-                    dataType:"json",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    onload: function (data) {
-                        var temp_response = utils.IsJsonStringReturn(data.responseText);
-                        ADD_DEBUG("Succeed", temp_response);
-                        $.each(temp_response, function(index, value){
-                            if(value.data !== undefined && value.data.link !== undefined && value.data.link.indexOf("https://toon.at/donate/") !== -1){
-                                var toonat_link = value.data.link;
-                                ADD_DEBUG("찾았다", toonat_link);
-                                return false;
-                            }
-                        });
-                    },
-                    onerror: function (err) {
-                        ADD_DEBUG("error", err);
-                    }
-                });
-            }
-        },
-        {
             title: "chatlog_local 보기",
             func:function(){
                 console.log($(".chat-container > iframe")[0].contentWindow.chatlog_local);
@@ -257,30 +209,6 @@ export function ADD_test(){
                 `<li class="is_notme"><span class="name" data-date="${String(Number(new Date())).substr(0,10)}" data-sid="2fc48b61c2d7fdca" data-name="몽고뽕나무${Math.random()}">몽고뽕나무${Math.random()}</span>
                 <span class="text"><a href="${inputString}" target="_uha_kr">${inputString}</a></span><time>17:42</time><span class="delete">👁</span></li>`;
                 $(elem).append(appendText);
-            }
-        },
-        {
-            title: "트위치 컨트롤 패널 테스트2",
-            func:function(){
-                var temp_id = "144200210";
-                GM_xmlhttpRequest({
-                    // url: "https://api.twitch.tv/kraken/streams/?offset=0&limit=100&channel="+temp_id+"&api_version=5",
-                    url: "https://api.twitch.tv/kraken/panels?channel="+temp_id,
-                    //url: "https://api.twitch.tv/helix/panels?channel="+temp_id,
-                    method: "GET",
-                    dataType:"json",
-                    headers: {
-                        'Accept': 'application/vnd.twitchtv.v5+json',
-                        'Client-ID': nomo_const.ADD_CLIENT_ID_TWITCH
-                    },
-                    onload: function (data) {
-                        var temp_response = utils.IsJsonStringReturn(data.responseText);
-                        ADD_DEBUG("Succeed", temp_response);
-                    },
-                    onerror: function (err) {
-                        ADD_DEBUG("error", err);
-                    }
-                });
             }
         },
         {

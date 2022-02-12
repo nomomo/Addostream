@@ -105,6 +105,12 @@ export async function checkNewVersion(force){
         if(update_log !== undefined && update_log !== null && update_log !== ""){
             msg_text = msg_text +"<br />업데이트 내역: "+escapeHtml(update_log);
         }
+
+        // 버전에 따른 안내 메시지
+        if(ver_cur === 15500){
+            msg_text = msg_text + "<br /><br />Twitch 정책 변경으로 인하여, Dostream+ 의 메인에 스트리머 추가 기능과 트위치 클립 섬네일 미리보기 기능을 사용하려면 Twitch 계정과 Dostream+ 을 연동해야 합니다. 더욱 자세한 내용 및 연동 설정은 <a class='OpenTwitchAuth' href='https://www.dostream.com/addostream/twitch/auth/' target='_blank' style='text-decoration:underline'>[Twitch 계정 연동 페이지]</a> 를 확인하세요.";
+        }
+
         // 이전 버전(ver_pre) 업데이트
         ADD_config.last_version = nomo_global.version;
         await GM_setting.save();
