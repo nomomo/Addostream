@@ -616,7 +616,16 @@
             "t1zeus": {"dn": "제우스으", "nn": ["제우스", "최우제", "우제"]},
             "t1_oner": {"dn": "T1_Oner", "nn": ["오너", "문현준", "현준"]},
             "winter940422": {"dn": "겨우디", "nn": ["겨울"]},
-            "maoruya": {"dn": "마왕루야", "nn": ["마오루야", "루야"]}
+            "maoruya": {"dn": "마왕루야", "nn": ["마오루야", "루야"]},
+            "jjonaklove": {"dn": "쪼물락낙지", "nn": []},
+            "ohsunny0731": {"dn": "오맑음", "nn": []},
+            "vovldj": {"dn": "DuDu", "nn": ["두두"]},
+            "kimjk2008": {"dn": "OnFleek", "nn": ["온플릭", "김장겸", "장겸"]},
+            "willer9876": {"dn": "Willer", "nn": ["윌러"]},
+            "karis03159": {"dn": "Karis", "nn": ["카리스"]},
+            "samdsamdsamd": {"dn": "SamD", "nn": []},
+            "dhgytjd123": {"dn": "Vsta", "nn": []},
+            "ao_o5": {"dn": "임나은", "nn": []}
         },
         "_twitch": {
             "_name": {"dn": "", "nn": []}

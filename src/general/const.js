@@ -1,4 +1,5 @@
 const consts = {
+    ADD_assets_url : "https://raw.githubusercontent.com/nomomo/Addostream/master/assets/",
     ADD_CLIENT_ID_TWITCH : "phcxzq5994awjrevkt45p6711bt77s",
     C_MAIN : 0,
     C_STREAM : 1,

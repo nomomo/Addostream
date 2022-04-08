@@ -48,6 +48,9 @@
 
 ## Change log
 
+### 1.55.1 (2022-04-09)
+- Tampermonkey 를 4.17 버전으로 업데이트 시 발생하는 문제에 대응하여 임시 수정 (Tampermonkey 버그임)
+
 ### 1.55.0 (2022-02-13)
 - Twitch API 를 Kraken v5 에서 Helix 로 변경
 <br />- Twitch 정책 변경으로 인하여, 2022년 3월부터 Dostream+ 의 메인에 스트리머 추가 기능과 채팅에서 트위치 클립 섬네일 미리보기 기능을 사용하려면 Twitch 계정과 Dostream+ 을 연동해야 합니다. 해당 기능을 사용하려면 [https://www.dostream.com/addostream/twitch/auth/](https://www.dostream.com/addostream/twitch/auth/) 를 참고하여 Twitch 계정과 Dostream+ 을 연동하세요.

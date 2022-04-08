@@ -688,7 +688,7 @@ async function uhaha_arrive(elems){
                 else if(response.status === 401){
                     //saveTwitchOAuth(undefined);
                     //ADD_send_sys_msg("Twitch Clip 섬네일 이미지를 가져오던 중 오류가 발생했습니다. Twitch API 권한 인증에 실패했습니다.");
-                    chatImagelayoutfromLinks($line, [{type:"twitch_clip", id:twitch_thumb_id, link: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAeAAAAEQCAQAAADCT28HAAACT0lEQVR42u3TgQkAAAjDsO3/o/ULQUhOKLSZAE/VwGBgwMCAgcHAgIEBAwMGBgMDBgYMDAYGDAwYGDAwGBgwMGBgwMBgYMDAgIHBwICBAQMDBgYDAwYGDAwYGAwMGBgwMBgYMDBgYMDAYGDAwICBwcAigIEBAwMGBgMDBgYMDBgYDAwYGDAwGBgwMGBgwMBgYMDAgIEBA4OBAQMDBgYDAwYGDAwYGAwMGBgwMGBgMDBgYMDAYGDAwICBAQODgQEDAwYGAwMGBgwMGBgMDBgYMDBgYDAwYGDAwGBgwMCAgQEDg4EBAwMGBgwMBgYMDBgYDAwYGDAwYGAwMGBgwMCAgcHAgIEBA4OBAQMDBgYMDAYGDAwYGAwMGBgwMGBgMDBgYMDAgIHBwICBAQODgQEDAwYGDAwGBgwMGBgwMBgYMDBgYDAwYGDAwICBwcCAgQEDg4ENDAYGDAwYGAwMGBgwMGBgMDBgYMDAYGDAwICBAQODgQEDAwYGDAwGBgwMGBgMDBgYMDBgYDAwYGDAwICBwcCAgQEDg4EBAwMGBgwMBgYMDBgYDAwYGDAwYGAwMGBgwMCAgcHAgIEBA4OBAQMDBgYMDAYGDAwYGDAwGBgwMGBgMDBgYMDAgIHBwICBAQMDBgYDAwYGDAwGBgwMGBgwMBgYMDBgYDAwYGDAwICBwcCAgQEDAwYGAwMGBgwMBgYMDBgYMDAYGDAwYGDAwGBgwMCAgcHAgIEBAwMGBgMDBgYMDAY2MBgYMDBgYDAwYGDAwICBwcCAgQEDg4EBAwOXFs+gEBBFPvVfAAAAAElFTkSuQmCC", title: "제목을 알 수 없는 Twitch 클립", width:480, height:272, views:0}]);
+                    chatImagelayoutfromLinks($line, [{type:"twitch_clip", id:twitch_thumb_id, link: nomo_const.ADD_assets_url+"bg_nothumb_black.png", title: "제목을 알 수 없는 Twitch 클립", width:480, height:272, views:0}]);
                 }
                 else if(response.status === 429){
                     //ADD_send_sys_msg("Twitch Clip 섬네일 이미지를 가져오던 중 오류가 발생했습니다. Twitch API 과부하로 추정됩니다. Error:" + JSON.stringify(parsedData));
