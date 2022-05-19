@@ -224,6 +224,11 @@ table>thead>tr>th {
     background-color: var(--modal-body-input-background-color) !important;
     border-color:var(--modal-body-input-border-color) !important;
 }
+#GM_setting select {
+    color:var(--modal-body-input-font-color) !important;
+    background-color: var(--modal-body-input-background-color) !important;
+    border-color:var(--modal-body-input-border-color) !important;
+}
 #GM_setting textarea {
     color:var(--modal-body-textarea-font-color) !important;
     background-color: var(--modal-body-textarea-background-color) !important;

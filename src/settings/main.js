@@ -18,7 +18,7 @@ const _settings = {
     history : { category:"general", depth:1, type: "checkbox", value: false, title:"나의 시청 기록 보기", desc:"두스트림 상단에 나의 시청 기록을 표시함", change:function(){ADD_channel_history_run();} },
     history_hide_icon : { category:"general", depth:2, type: "checkbox", value: false, title:"플랫폼 아이콘 숨기기", desc:"시청 기록에서 플랫폼 아이콘을 숨김", change:function(){ADD_channel_history_run();} },
     max_history : { under_dev:true, category:"general", depth:2, type: "text", value: 20, valid:"number", min_value:1, title:"시청 기록 최대 개수", desc:"(기본값: 20)" },
-    
+
     theme_leftchat : { category:"theme", category_name:"테마", depth:1, type: "checkbox", value: false, title:"채팅창 위치를 왼쪽으로 변경", desc:"", change:function(){nomo_theme.ADD_theme();} },
     theme_on : { category:"theme", depth:1, type: "checkbox", value: false, title:"테마 기능 사용", desc:"", change:function(){nomo_theme.ADD_theme();}},
     theme : { category:"theme", depth:2, type: "radio", value: "default", title:"테마 선택", desc:"", radio: {default: {title: "기본", value:"default"}, black: {title: "블랙", value:"black"}, black_youtube: {title: "다크(Youtube Style)", value:"black_youtube"}/*, dark: {title: "다크(테스트)", value:"dark"} */}, change:function(){nomo_theme.ADD_theme();}},
@@ -204,6 +204,7 @@ const _settings = {
 };
 export var GM_setting_param = {"DEBUG":false, "SETTINGS":_settings, "CONSOLE_MSG":ADD_DEBUG, "MULTILANG":false};
 export var GM_setting = (function ($, global, document) { //
+    var version = "22.5.19";
     // local vars
     var $g_elem;
     var latestCreatedLayout = undefined;
@@ -235,6 +236,10 @@ export var GM_setting = (function ($, global, document) { //
         "en":{
             "title_settings":"Settings",
             "title_reset":"Reset",
+            "donate":"Donate",
+            "buymeacoffee":"Buy me a coffee",
+            "buymeacoffeeDesc":"Support my projects by buying me a coffee! ☕",
+            "toonation":"Toonation",
             "button_reset_settings":"Reset Settings",
             "confirm_reset_settings":"Are you sure you want to reset the settings?",
             "complete_reset_settings":"Settings reset complete!",
@@ -254,6 +259,10 @@ export var GM_setting = (function ($, global, document) { //
         "ko":{
             "title_settings":"Settings",
             "title_reset":"Reset",
+            "donate":"후원하기",
+            "buymeacoffee":"Buy me a coffee 로 커피 한 잔 사주기",
+            "buymeacoffeeDesc":"커피 한 잔☕ 으로 프로젝트를 지원해주세요~",
+            "toonation":"Toonation 으로 후원하기",
             "button_reset_settings":"Reset Settings",
             "confirm_reset_settings":"진짜 설정을 초기화 할까요?",
             "complete_reset_settings":"설정 초기화 완료!",
@@ -370,7 +379,7 @@ export var GM_setting = (function ($, global, document) { //
 
         // changed_key: 배열,       인덱스번호, 값(키)
         $.each(changed_key, function (eindex, evalue) {
-            if (_settings[evalue].change !== undefined) {
+            if (_settings[evalue] !== undefined && _settings[evalue].change !== undefined) {
                 _settings[evalue].change(settings[evalue]);
             }
         });
@@ -468,7 +477,7 @@ export var GM_setting = (function ($, global, document) { //
 #GM_setting_head{margin-left:auto; margin-right:auto; padding:20px 0px 10px 10px;font-size:18px;font-weight:800;max-width:1400px; min-width:750px; box-sizing:content-box;}
 #GM_setting li {list-style:none;margin:0px;padding:8px;border-top:1px solid #eee;}
 
-#GM_setting .GM_setting_depth1.GM_setting_category {border-top: 2px solid #999;margin-top:20px;padding-top:10px;}
+#GM_setting .GM_setting_depth1.GM_setting_category {border-top: 2px solid #999;margin-top:30px;padding-top:10px;}
 #GM_setting li[GM_setting_key='version_check'] {margin-top:0px !important}
 
 #GM_setting .GM_setting_category_name{display:table-cell;width:110px;padding:0 0 0 0px;font-weight:700;vertical-align:top;}
@@ -509,6 +518,9 @@ export var GM_setting = (function ($, global, document) { //
 #GM_setting .btn-xxs span.glyphicon {font-size:11px; opacity: 0.1;}
 #GM_setting .btn-xxs.active span.glyphicon {opacity: 0.9;}
 #GM_setting .btn-xxs.disable {opacity: 0.3;cursor:not-allowed;}
+
+#GM_setting_footer { padding: 30px 0 30px 0; margin: 30px 0 0 0; border-top: 1px solid #ccc; text-align: center; font-size:13px; letter-spacing:0.2px; }
+#GM_setting_footer .footer_divider { margin: 0 5px; display: inline-block; width: 1px; height: 13px; background-color: #ebebeb; }
 `);
     };
     var createlayout_ = function (elem) {
@@ -598,7 +610,21 @@ export var GM_setting = (function ($, global, document) { //
                     $temp_input.prependTo($label);
                     $input.append($label);
                 }
-            } else {
+            }
+            else if (type === "combobox"){
+                var comboboxObj = _settings[key].options;
+                $input = $(`<select name="GM_setting_${key}" class='form-control input-sm select-inline'></select>`).attr({
+                    "GM_setting_type": type,
+                    "GM_setting_key": key,
+                    "GM_setting_category": (category === undefined ? "default" : category),
+                    "GM_setting_radio_enable_value": (radio_enable_value === undefined ? "none" : radio_enable_value)
+                });
+                for (var comboboxKey in comboboxObj) {
+                    var $temp_option = $(`<option spellcheck='false' value="${comboboxKey}" onfocus='this.blur()'>${getTextFromObjectbyLang(comboboxObj[comboboxKey].title)}</option>`);
+                    $input.append($temp_option);
+                }
+            }
+            else {
                 $input = $(`<${(isTextarea ? "textarea " : "input ")} class='form-control' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' ${(type === "checkbox" ? "onfocus='this.blur()'" : "")}${(isTextarea ? "></textarea>" : " />")}`)
                     .attr({
                         "type": (type === "set" ? type === "text" : (type === "tag" ? "textarea" : type)),
@@ -619,7 +645,11 @@ export var GM_setting = (function ($, global, document) { //
             var $head = $("<div class='GM_setting_list_head'></div>");
             var $title = $(`<span class='GM_setting_title'>${title}</span>`);
             var $desc = $(`<span class='GM_setting_desc'>${desc}</span>`);
-            var $li = $(`<li ${(_settings[key].radio_enable_value !== undefined ? " GM_setting_radio_enable_value='"+_settings[key].radio_enable_value+"'" : "")} GM_setting_key='${key}' GM_setting_depth='${depth}' class='${(_settings[key].under_dev ? "GM_setting_under_dev " : "")} ${(category_name !== undefined && $prev !== undefined && category !== $prev.category ? "GM_setting_category " : "")} GM_setting_depth${depth}'></li>`);
+            var $li = $(`<li ${(_settings[key].radio_enable_value !== undefined ? " GM_setting_radio_enable_value='"+_settings[key].radio_enable_value+"'" : "")}
+                GM_setting_key='${key}'
+                GM_setting_depth='${depth}'
+                class='${(_settings[key].under_dev ? "GM_setting_under_dev " : "")} ${(category_name !== undefined && $prev !== undefined && category !== $prev.category ? "GM_setting_category " : "")} GM_setting_depth${depth}'
+                style='${(_settings[key].under_dev && !settings.under_dev ? "display:none;opacity:0" : "")}'></li>`);
             $ul.append($li);
             $head.append($title).append($desc);
 
@@ -660,6 +690,9 @@ export var GM_setting = (function ($, global, document) { //
             $prev = _settings[key];
         }
 
+        write_();
+        usageCheck_($elem);
+
         // 설정 on-off 이벤트
         $elem.find("input[type='checkbox']").on("click", function () {
             usageCheck_($elem);
@@ -670,45 +703,14 @@ export var GM_setting = (function ($, global, document) { //
         });
 
         // 자동 저장 이벤트
-        var timeoutId;
+        $elem.find("select").on("change", function(){
+            CONSOLE_MSG("GM_setting - select change");
+            validateAndSave_($(this), $elem, $inputs);
+        });
         $elem.find("input, textarea").on("input", function () { // "input[type='text']"  input propertychange
             CONSOLE_MSG("GM_setting - text change");
-
-            var $this = $(this);
-            var val = getInputValue_($this);
-            var this_key = $this.attr("GM_setting_key");
-            var validation = validation_(this_key, val);
-            $this.closest("div").find(".invalid_text").remove();
-            if (validation.valid) {
-                $this.closest("div").removeClass("invalid");
-            } else {
-                CONSOLE_MSG("validation", validation);
-                $this.closest("div").addClass("invalid");
-                $this.after("<div class='invalid_text'>" + validation.message + "</div>");
-            }
-
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(function () {
-                // 저장 시도
-                // 정상적으로 값이 체크 된 경우
-                var g_validation = true;
-                $.each($inputs, function (ekey, evalue) {
-                    var temp = validation_(ekey, getInputValue_(evalue));
-                    if (!temp.valid) {
-                        g_validation = false;
-                        return false;
-                    }
-                });
-                if (g_validation) {
-                    read_();
-                    save_();
-                    message_(getSystemTextbyLang("auto_saved") + (new Date()).toLocaleTimeString(), $elem);
-                }
-            }, 1000);
+            validateAndSave_($(this), $elem, $inputs);
         });
-
-        write_();
-        usageCheck_($elem);
 
         // 리셋 버튼 추가
         $ul.append( /*html*/ `<li class="GM_setting_category GM_setting_depth1">
@@ -744,7 +746,44 @@ export var GM_setting = (function ($, global, document) { //
                 message_(getSystemTextbyLang("complete_reset_settings_all") + (new Date()).toLocaleTimeString(), $g_elem);
             }
         });
+
+        // 후원 버튼 추가
+        $ul.append( /*html*/ `<li class="GM_setting_category GM_setting_depth1">
+        <div class="GM_setting_category_name">${getSystemTextbyLang("donate")}</div>
+        <div class="GM_setting_list_head">
+            <span class="GM_setting_title">
+                ${getSystemTextbyLang("buymeacoffee")}
+            </span>
+            <span class="GM_setting_desc">
+                ${getSystemTextbyLang("buymeacoffeeDesc")}
+            </span>
+        </div>
+        <div class="GM_setting_input_container form-group">
+        <a href="https://www.buymeacoffee.com/nomomo" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+        </div>
+        </li>
+        <li class="GM_setting_depth1">
+        <div class="GM_setting_category_blank"></div>
+            <div class="GM_setting_list_head">
+                <span class="GM_setting_title">
+                    ${getSystemTextbyLang("toonation")}
+                </span>
+                <span class="GM_setting_desc"></span>
+            </div>
+            <div class="GM_setting_input_container form-group">
+            <a href="https://toon.at/donate/636947867320352181" target="_blank"><img src="https://raw.githubusercontent.com/nomomo/Addostream/master/assets/toonation_b11.gif" height="41" alt="Donate with Toonation" /></a>
+            </div>
+        </li>
+    `);
+    // footer 추가
+    $ul.after(/*html*/`
+        <div id="GM_setting_footer">
+            <a href="${(GM.info.script.homepage)}" target="_blank">${(GM.info.script.name)}</a> v${(GM.info.script.version)}
+            <div class="footer_divider"></div> GM Setting v${version}
+            <div class="footer_divider"></div> ©2017-${(new Date()).getFullYear()} <a href="https://nomo.asia/" target="_blank">NOMO</a></div>
+    `);
     };
+    var timeoutId_ = undefined;
     var message_ = function (msg, $elem) {
         if ($elem === undefined) {
             return;
@@ -823,6 +862,9 @@ export var GM_setting = (function ($, global, document) { //
         case "radio":
             val = $input.find("input:checked").val();
             break;
+        case "combobox":
+            val = $input.find('option:selected').val();
+            break;
         default:
             //CONSOLE_MSG($input);
             val = undefined;
@@ -854,6 +896,9 @@ export var GM_setting = (function ($, global, document) { //
         case "radio":
             $input.find("input[value=" + val + "]").prop("checked", true);
             break;
+        case "combobox":
+            $input.find("option[value=" + val + "]").prop("selected", true);
+            break;
         default:
             break;
         }
@@ -862,16 +907,17 @@ export var GM_setting = (function ($, global, document) { //
         // 일단 다 켠다.
         var $lis = $elem.find("li");
         $lis.removeClass("GM_setting_item_disable");
-        $lis.find("input, textarea").prop("disabled", false);
+        $lis.find("input, textarea, select").prop("disabled", false);
         $lis.find("input[type='checkbox']").trigger("change");
 
         var enable = [true, true];
-        var $prev, prevTopRadioVal;
+        var $prev, prevTopRadioVal, prevTopRadioDepth = 1000;
         for (var i = 0; i < $lis.length; i++) {
             var $curr = $($lis[i]);
             var curr_depth = $curr.attr("GM_setting_depth");
             var curr_key = $curr.attr("GM_setting_key");
             var curr_radio_enable_value = $curr.attr("GM_setting_radio_enable_value");
+            var curr_type = $curr.find("[gm_setting_type]").attr("gm_setting_type");
 
             if (i == 0){
                 //
@@ -879,6 +925,10 @@ export var GM_setting = (function ($, global, document) { //
             else {
                 $prev = $($lis[i - 1]);
                 var prev_depth = $prev.attr("GM_setting_depth");
+                if(prevTopRadioDepth >= curr_depth){
+                    prevTopRadioVal = undefined;
+                    prevTopRadioDepth = 1000;
+                }
 
                 if (prev_depth == curr_depth && prev_depth > 0){
                     if(prevTopRadioVal !== undefined){
@@ -894,6 +944,7 @@ export var GM_setting = (function ($, global, document) { //
                     prevTopRadioVal = undefined;
                     var $prev_checkbox = $prev.find("input[type='checkbox']");
                     var $prev_radio = $prev.find("input[type='radio']");
+                    var $prev_combobox = $prev.find("select");
                     // 이전 요소가 체크박스이고, 켜져있으면 현재 요소도 켠다.
                     if ($prev_checkbox.length !== 0 && $prev_checkbox.is(":checked")) {
                         enable[prev_depth] = true;
@@ -901,6 +952,7 @@ export var GM_setting = (function ($, global, document) { //
                     // 이전 요소가 라디오
                     else if($prev_radio.length !== 0){
                         prevTopRadioVal = $prev.find("input[type='radio']:checked").val();
+                        prevTopRadioDepth = prev_depth;
                         //curr_radio_enable_value ||
                         if($prev.find("input[type='radio']:checked").val() == curr_radio_enable_value){
                             enable[prev_depth] = true;
@@ -908,6 +960,10 @@ export var GM_setting = (function ($, global, document) { //
                         else{
                             enable[prev_depth] = false;
                         }
+                    }
+                    // 이전 요소가 combobox 이면 일단 전부 켠다.
+                    else if($prev_combobox.length !== 0){
+                        enable[prev_depth] = true;
                     }
                     else {
                         enable[prev_depth] = false;
@@ -923,7 +979,7 @@ export var GM_setting = (function ($, global, document) { //
             for (var e = 0; e < curr_depth; e++) {
                 if (_settings[curr_key].disable || !enable[e]) {
                     $curr.addClass("GM_setting_item_disable");
-                    $curr.find("input, textarea").prop("disabled", true);
+                    $curr.find("input, textarea, select").prop("disabled", true);
                     $curr.find("input[type='checkbox']").trigger("change");
                     break;
                 }
@@ -1024,6 +1080,38 @@ export var GM_setting = (function ($, global, document) { //
             message: message
         };
         return return_obj;
+    };
+    var validateAndSave_ = function($this, $elem, $inputs){
+        var val = getInputValue_($this);
+        var this_key = $this.attr("GM_setting_key");
+        var validation = validation_(this_key, val);
+        $this.closest("div").find(".invalid_text").remove();
+        if (validation.valid) {
+            $this.closest("div").removeClass("invalid");
+        } else {
+            CONSOLE_MSG("validation", validation);
+            $this.closest("div").addClass("invalid");
+            $this.after("<div class='invalid_text'>" + validation.message + "</div>");
+        }
+
+        clearTimeout(timeoutId_);
+        timeoutId_ = setTimeout(function () {
+            // 저장 시도
+            // 정상적으로 값이 체크 된 경우
+            var g_validation = true;
+            $.each($inputs, function (ekey, evalue) {
+                var temp = validation_(ekey, getInputValue_(evalue));
+                if (!temp.valid) {
+                    g_validation = false;
+                    return false;
+                }
+            });
+            if (g_validation) {
+                read_();
+                save_();
+                message_(getSystemTextbyLang("auto_saved") + (new Date()).toLocaleTimeString(), $elem);
+            }
+        }, 1000);
     };
     var hasSameKey_ = function (a, b) {
         var aKeys = Object.keys(a).sort();
