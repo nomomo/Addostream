@@ -513,7 +513,7 @@ async function uhaha_arrive(elems){
                 }
             }// M3U8 링크인 경우
             else if(href.indexOf('dostream.com/#/stream/m3u8') == -1 && regex_m3u8.test(href)){
-                $aElem.after(` <a href="https://www.dostream.com/#/stream/m3u8/${href}}" target="_top" class="topClick" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[M3U8 PLAYER]</a>`);
+                $aElem.after(` <a href="https://www.dostream.com/#/stream/m3u8/${href}" target="_top" class="topClick" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[M3U8 PLAYER]</a>`);
                 // 스크롤 내리기
                 if( temp_isChatScrollOn ){
                     goScrollDown();
