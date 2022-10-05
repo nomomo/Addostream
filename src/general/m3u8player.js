@@ -2,7 +2,12 @@ import {ADD_DEBUG} from "libs/nomo-utils.js";
 import {loadhls} from "libs/hls_custom.js";
 import {ADD_send_sys_msg_from_main_frame} from "chat/send_message.js";
 
+var m3u8_player = /*js*/`
+<video controls="true" width="100%" height="100%" id="m3u8video"></video>
+`;
+
 async function loadHlsVideo(url, iter){
+    ADD_DEBUG("loadHlsVideo", url, iter);
     if(iter > 20){
         ADD_DEBUG("loadHlsVideo, MAX ITER");
         return;
@@ -14,14 +19,24 @@ async function loadHlsVideo(url, iter){
         return;
     }
 
-    var video = document.getElementById('m3u8video');
+    var $video = $("#m3u8video");
+    var video;
     var m3u8Url = decodeURIComponent(url);
 
+    if($video.length === 0){
+        $("#stream").empty().append(m3u8_player);
+        $video = $("#m3u8video");
+    }
+
+    video = $video[0];
+
     if (newHls.isSupported()) {
+        ADD_DEBUG("newHls.isSupported = true", video);
         var newhls = new newHls();
         newhls.loadSource(m3u8Url);
         newhls.attachMedia(video);
         newhls.on(newHls.Events.MANIFEST_PARSED, function() {
+            ADD_DEBUG("newHls.Events.MANIFEST_PARSED", video);
             video.play();
         });
         newhls.on(newHls.Events.ERROR, function(event, data) {
@@ -33,6 +48,9 @@ async function loadHlsVideo(url, iter){
                 ADD_send_sys_msg_from_main_frame(`M3U8 PLAYER 재생 중 치명적인 오류가 발생했습니다. Error Type:${errorType}, Error Details:${errorDetails}${(data.response !== undefined && data.response.code !== undefined) ? ", Network Status:"+data.response.code : ""}`);
     
                 newhls.destroy();
+            }
+            else{
+                ADD_DEBUG("newHls.Events.ERROR", event, data);
             }
             // switch (data.type) {
             // case newHls.ErrorTypes.NETWORK_ERROR:
@@ -50,6 +68,9 @@ async function loadHlsVideo(url, iter){
             //     break;
             // }
         });
+    }
+    else{
+        ADD_DEBUG("newHls.isSupported = FAIL");
     }
 
     // if (Hls.isSupported()) {
@@ -76,7 +97,7 @@ async function loadHlsVideo(url, iter){
 
 export function m3u8_override(url){
     ADD_DEBUG("m3u8_override", url);
-    var waiting_time = 100;
+    var waiting_time = 1000;
 
     // if($("#headerm3u8").length === 0){
     //     // <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
@@ -92,10 +113,6 @@ export function m3u8_override(url){
         loadhls();
     }
 
-    $("#stream").empty();
-    var m3u8_player = /*js*/`
-    <video controls="true" width="100%" height="100%" id="m3u8video"></video>
-    `;
     $('header').addClass("onstream");
     $('#stream').addClass("onstream");
     $('.footer').hide();

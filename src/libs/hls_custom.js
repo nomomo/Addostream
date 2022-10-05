@@ -1,205 +1,208 @@
 import {ADD_DEBUG} from "libs/nomo-utils.js";
+
+const hlsdebug = 0;
+const hlsdebug_console = 0;
 var ADD_XMLHttpRequest;
 
-export function loadhls(){
-    const hlsdebug = 0;
-    const hlsdebug_console = 0;
-
-    function HLS_DEBUG(/**/){
-        if(hlsdebug_console){
-            var args = arguments,
-                args_length = args.length,
-                args_copy = args;
-            for (var i=args_length;i>0;i--){
-                args[i] = args_copy[i-1];
-            }
-            args[0] = "+[new_xhr]  ";
-            args.length = args_length + 1;
-            console.log.apply(console, args);
+function HLS_DEBUG(/**/){
+    if(hlsdebug_console){
+        var args = arguments,
+            args_length = args.length,
+            args_copy = args;
+        for (var i=args_length;i>0;i--){
+            args[i] = args_copy[i-1];
         }
-    }    
-
-    class new_xhr {
-        constructor(){
-            this.method;
-            this.url;
-            this.headers = {
-                // "accept": "*/*",
-                // "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
-                // "if-modified-since": "Tue, 04 Oct 2022 21:26:21 GMT",
-                // "sec-ch-ua": "\"Google Chrome\";v=\"105\", \"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"105\"",
-                // "sec-ch-ua-mobile": "?0",
-                // "sec-ch-ua-platform": "\"Windows\"",
-                // "sec-fetch-dest": "empty",
-                // "sec-fetch-mode": "cors",
-                // "sec-fetch-site": "none"
-            };
-            this.async;
-            this.user;
-            this.password;
-
-            this.details = {};
-
-            this.response;
-            this.responseText;
-            this.responseType;
-            this.responseURL;
-            this.responseXML;
-            this.responseHeaders;
-            this.status;
-            this.statusText;
-            this.timeout;
-            this.upload;
-            this.withCredentials;
-
-            // method
-            this.abort;
-            this.getAllResponseHeaders = function(){
-                HLS_DEBUG("getAllResponseHeaders", this.responseHeaders);
-                return this.responseHeaders;
-            };
-            this.getResponseHeader = function(headerName){
-                HLS_DEBUG("getResponseHeader", headerName);
-                var obj = {};
-                var responseHeadersAry = this.responseHeaders.split("\r\n");
-                for(var i=0;i<responseHeadersAry.length;i++){
-                    var temp = this.responseHeaders.split(": ");
-                    if(temp[0].toLowerCase() === headerName.toLowerCase()){
-                        return temp[1];
-                    }
-                }
-                return undefined;
-            };
-            this.open = function(method, url, async, user, password){
-                this.method = method;
-                this.url = url;
-                this.async = async;
-                this.user = user;
-                this.password = password;
-            };
-            this.overrideMimeType;
-            this.send = function(body){
-                var that = this;
-                HLS_DEBUG("send. that", that, body);
-
-                HLS_DEBUG("XMLHttpRequest by new_xhr");
-
-                this.details.method = this.method;
-                this.details.url = this.url;
-                this.details.headers = this.headers;
-
-                if(body !== undefined){
-                    this.details.data = body;
-                }
-                //this.details.cookie
-                //this.details.binary
-                //this.details.nocache
-                //this.details.revalidate
-                if(this.timeout !== undefined){
-                    this.details.timeout = this.timeout;
-                }
-                else{
-                    this.details.timeout = 2000;
-                }
-                if(this.responseType !== undefined){
-                    this.details.responseType = this.responseType;
-                }
-                if(this.responseType !== undefined){
-                    this.details.responseType = this.responseType;
-                }
-                if(this.overrideMimeType !== undefined){
-                    this.details.overrideMimeType = this.overrideMimeType;
-                }
-                if(this.anonymous !== undefined){
-                    this.details.anonymous = this.anonymous;
-                }
-                //fetch
-                if(this.user !== undefined){
-                    this.details.user = this.user;
-                }
-                if(this.password !== undefined){
-                    this.details.password = this.password;
-                }
-                if(this.onabort !== undefined){
-                    this.details.onabort = this.onabort;
-                }
-                if(this.onerror !== undefined){
-                    this.details.onerror = this.onerror;
-                }
-                if(this.onloadstart !== undefined){
-                    this.details.onloadstart = this.onloadstart;
-                }
-                if(this.onprogress !== undefined){
-                    this.details.onprogress = this.onprogress;
-                }
-                this.details.onreadystatechange = function(e){
-                    HLS_DEBUG("onreadystatechange", e);
-                    that.readyState = e.readyState;
-                    that.responseHeaders = e.responseHeaders;
-                    that.status = e.status;
-                    that.statusText = e.statusText;
-                    that.response = e.response;
-                    that.responseText = e.responseText;
-                    that.responseXML = e.responseXML;
-                    
-                    if(that.onreadystatechange !== undefined){
-                        that.onreadystatechange.apply(this, arguments);
-                    }
-                    if(that.readystatechange !== undefined){
-                        that.readystatechange.apply(this, arguments);
-                    }
-                };
-
-                if(this.ontimeout !== undefined){
-                    this.details.ontimeout = this.ontimeout;
-                }
-
-                this.details.onload = function(response){
-                    try{
-                        HLS_DEBUG("onload", response);
-                        that.status = response.status;
-                        that.statusText = response.statusText;
-                        that.response = response.response;
-                        if("arraybuffer" !== response.responseType){
-                            that.responseText = response.responseText;
-                        }
-                        that.responseXML = response.responseXML;
-
-                        if(that.onload !== undefined){
-                            that.onload.apply(this, arguments);
-                        }
-                        if(that.load !== undefined){
-                            that.load.apply(this, arguments);
-                        }
-                    }
-                    catch(e){
-                        HLS_DEBUG("error from onload", e);
-                    }
-                };
-
-                HLS_DEBUG("GM_xmlhttpRequest", this.details);
-                var returnobj = GM_xmlhttpRequest(this.details);
-                this.abort = function(){
-                    HLS_DEBUG("abort");
-                    returnobj.abort();
-                };
-            };
-            this.setRequestHeader = function(header, value){
-                HLS_DEBUG("setRequestHeader", header, value);
-                this.headers[header] = value;
-            };
-        }
+        args[0] = "+[new_xhr]  ";
+        args.length = args_length + 1;
+        console.log.apply(console, args);
     }
+}    
+
+class new_xhr {
+    constructor(){
+        this.method;
+        this.url;
+        this.headers = {
+            // "accept": "*/*",
+            // "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
+            // "if-modified-since": "Tue, 04 Oct 2022 21:26:21 GMT",
+            // "sec-ch-ua": "\"Google Chrome\";v=\"105\", \"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"105\"",
+            // "sec-ch-ua-mobile": "?0",
+            // "sec-ch-ua-platform": "\"Windows\"",
+            // "sec-fetch-dest": "empty",
+            // "sec-fetch-mode": "cors",
+            // "sec-fetch-site": "none"
+        };
+        this.async;
+        this.user;
+        this.password;
+
+        this.details = {};
+
+        this.response;
+        this.responseText;
+        this.responseType;
+        this.responseURL;
+        this.responseXML;
+        this.responseHeaders;
+        this.status;
+        this.statusText;
+        this.timeout;
+        this.upload;
+        this.withCredentials;
+
+        // method
+        this.abort;
+        this.getAllResponseHeaders = function(){
+            HLS_DEBUG("getAllResponseHeaders", this.responseHeaders);
+            return this.responseHeaders;
+        };
+        this.getResponseHeader = function(headerName){
+            HLS_DEBUG("getResponseHeader", headerName);
+            var obj = {};
+            var responseHeadersAry = this.responseHeaders.split("\r\n");
+            for(var i=0;i<responseHeadersAry.length;i++){
+                var temp = this.responseHeaders.split(": ");
+                if(temp[0].toLowerCase() === headerName.toLowerCase()){
+                    return temp[1];
+                }
+            }
+            return undefined;
+        };
+        this.open = function(method, url, async, user, password){
+            this.method = method;
+            this.url = url;
+            this.async = async;
+            this.user = user;
+            this.password = password;
+        };
+        this.overrideMimeType;
+        this.send = function(body){
+            var that = this;
+            HLS_DEBUG("send. that", that, body);
+
+            HLS_DEBUG("XMLHttpRequest by new_xhr");
+
+            this.details.method = this.method;
+            this.details.url = this.url;
+            this.details.headers = this.headers;
+
+            if(body !== undefined){
+                this.details.data = body;
+            }
+            //this.details.cookie
+            //this.details.binary
+            //this.details.nocache
+            //this.details.revalidate
+            if(this.timeout !== undefined){
+                this.details.timeout = this.timeout;
+            }
+            else{
+                this.details.timeout = 2000;
+            }
+            if(this.responseType !== undefined){
+                this.details.responseType = this.responseType;
+            }
+            if(this.responseType !== undefined){
+                this.details.responseType = this.responseType;
+            }
+            if(this.overrideMimeType !== undefined){
+                this.details.overrideMimeType = this.overrideMimeType;
+            }
+            if(this.anonymous !== undefined){
+                this.details.anonymous = this.anonymous;
+            }
+            //fetch
+            if(this.user !== undefined){
+                this.details.user = this.user;
+            }
+            if(this.password !== undefined){
+                this.details.password = this.password;
+            }
+            if(this.onabort !== undefined){
+                this.details.onabort = this.onabort;
+            }
+            if(this.onerror !== undefined){
+                this.details.onerror = this.onerror;
+            }
+            if(this.onloadstart !== undefined){
+                this.details.onloadstart = this.onloadstart;
+            }
+            if(this.onprogress !== undefined){
+                this.details.onprogress = this.onprogress;
+            }
+            this.details.onreadystatechange = function(e){
+                HLS_DEBUG("onreadystatechange", e);
+                that.readyState = e.readyState;
+                that.responseHeaders = e.responseHeaders;
+                that.status = e.status;
+                that.statusText = e.statusText;
+                that.response = e.response;
+                that.responseText = e.responseText;
+                that.responseXML = e.responseXML;
+                
+                if(that.onreadystatechange !== undefined){
+                    that.onreadystatechange.apply(this, arguments);
+                }
+                if(that.readystatechange !== undefined){
+                    that.readystatechange.apply(this, arguments);
+                }
+            };
+
+            if(this.ontimeout !== undefined){
+                this.details.ontimeout = this.ontimeout;
+            }
+
+            this.details.onload = function(response){
+                try{
+                    HLS_DEBUG("onload", response);
+                    that.status = response.status;
+                    that.statusText = response.statusText;
+                    that.response = response.response;
+                    if("arraybuffer" !== response.responseType){
+                        that.responseText = response.responseText;
+                    }
+                    that.responseXML = response.responseXML;
+
+                    if(that.onload !== undefined){
+                        that.onload.apply(this, arguments);
+                    }
+                    if(that.load !== undefined){
+                        that.load.apply(this, arguments);
+                    }
+                }
+                catch(e){
+                    HLS_DEBUG("error from onload", e);
+                }
+            };
+
+            HLS_DEBUG("GM_xmlhttpRequest", this.details);
+            var returnobj = GM_xmlhttpRequest(this.details);
+            this.abort = function(){
+                HLS_DEBUG("abort");
+                returnobj.abort();
+            };
+        };
+        this.setRequestHeader = function(header, value){
+            HLS_DEBUG("setRequestHeader", header, value);
+            this.headers[header] = value;
+        };
+    }
+}
+
+export function loadhls(){
+
     //var test = new new_xhr;
     //console.log("test.response", test.response);
     //unsafeWindow.XMLHttpRequest = new_xhr;
 
     ADD_DEBUG("ADD_config.m3u8_type = ", ADD_config.m3u8_type);
-    if(ADD_config.m3u8_type === "auto"){
-        ADD_XMLHttpRequest = new_xhr;
+    if(ADD_config.m3u8_type === "legacy"){
+        ADD_XMLHttpRequest = XMLHttpRequest;
     }
     else{
-        ADD_XMLHttpRequest = XMLHttpRequest;
+        //unsafeWindow.XMLHttpRequest = new_xhr;
+        ADD_XMLHttpRequest = new_xhr;
     }
 
     // hls.js
