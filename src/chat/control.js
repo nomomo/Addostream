@@ -705,6 +705,7 @@ export async function ADD_chatting_arrive(){
 
 function chatDoeEvntFunc(elem){
     $(elem[0]).one("DOMNodeInserted", "div.content", function() {
+    //$(document).arrive("div.content", {existing: true, onlyOnce: true}, iframeElems => {
         ADD_DEBUG("iframe 내 div.content 로드 완료!");
         //var elem = $('.chat-container > iframe').contents().first().find('u-chat > iframe').contents().first();
         //var elem = $('u-chat > iframe').contents().first();
@@ -1493,6 +1494,7 @@ async function chatElemControl($line){
                 }
             }
             // M3U8 링크인 경우
+            //!/^http:\/\//.test(href) && 
             else if(href.indexOf('dostream.com/#/stream/m3u8') == -1 && regex_m3u8.test(href)){
                 $aElem.after(` <a href="https://www.dostream.com/#/stream/m3u8/${href}" target="_blank" class="topClick" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[M3U8 PLAYER]</a>`);
                 // 스크롤 내리기

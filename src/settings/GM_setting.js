@@ -1,15 +1,28 @@
-var GM_setting = (function ($, global, document) { //
+export var GM_setting = (function ($, global, document) { //
     var version = "22.5.31";
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // local vars
-    var $g_elem;
     var latestCreatedLayout = undefined;
-    var name_ = "";
-    var changed_key = [];
-    var settings_init = {};
-    var _settings = {};
-    var settings = {};
+
+    var name_ = "";             // GM data 키. global[name_] 에 setting 값 저장 됨
+    var changed_key = [];       // 설정 창에서 설정 읽은 후, 이전 설정과 비교하여 변경된 키 저장 (저장 전 .change 호출 용)
+    
+    var userSettingsInitCopy = {};
+    var userSettings = {};
+    var userSettingsValues = {};
+    
+    var $g_elem;
+    var GUI = {
+        "$container":undefined,
+        "$GM_setting_head":undefined,
+        "$GM_homepage_link":undefined,
+        "$GM_multilang":undefined,
+        "$ul":undefined,
+        "$inputs":undefined,
+        "$lis":{}
+    };
+
     var $inputs = {};
     var DEBUG = false;
     
@@ -129,46 +142,46 @@ var GM_setting = (function ($, global, document) { //
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // private functions
     /////////////////////////////////////////////////////////////////////////////////////////////////
-    var init_ = async function (user_settings) {
-        CONSOLE_MSG("init_", _settings);
-        if(user_settings){
-            if(user_settings.DEBUG){
+    var init_ = async function (usInput) {
+        CONSOLE_MSG("init_", userSettings);
+        if(usInput){
+            if(usInput.DEBUG){
                 DEBUG = true;
                 CONSOLE_MSG("GM_setting - DEBUG", DEBUG);
             }
-            if(user_settings.CONSOLE_MSG){
-                CONSOLE_MSG = user_settings.CONSOLE_MSG;
+            if(usInput.CONSOLE_MSG){
+                CONSOLE_MSG = usInput.CONSOLE_MSG;
             }
-            if(user_settings.SETTINGS){
-                _settings = user_settings.SETTINGS;
+            if(usInput.SETTINGS){
+                userSettings = usInput.SETTINGS;
             }
-            if(user_settings.MULTILANG){
+            if(usInput.MULTILANG){
                 useMultiLang = true;
-                if(user_settings.LANG_DEFAULT){
-                    defaultLang = user_settings.LANG_DEFAULT;
+                if(usInput.LANG_DEFAULT){
+                    defaultLang = usInput.LANG_DEFAULT;
                 }
             }
         }
         else{
             // error
         }
-        for (var key in _settings) {
-            settings_init[key] = _settings[key].value;
+        for (var key in userSettings) {
+            userSettingsInitCopy[key] = userSettings[key].value;
         }
-        settings_init["Lang"] = "";
+        userSettingsInitCopy["Lang"] = "";
 
         await load_();
-        if (!hasSameKey_(settings_init, settings)) {
+        if (!hasSameKey_(userSettingsInitCopy, userSettingsValues)) {
             // 추가
-            for (key in settings_init) {
-                if (settings[key] === undefined) {
-                    settings[key] = settings_init[key];
+            for (key in userSettingsInitCopy) {
+                if (userSettingsValues[key] === undefined) {
+                    userSettingsValues[key] = userSettingsInitCopy[key];
                 }
             }
             // 삭제
-            for (key in settings) {
-                if (settings_init[key] === undefined) {
-                    delete settings[key];
+            for (key in userSettingsValues) {
+                if (userSettingsInitCopy[key] === undefined) {
+                    delete userSettingsValues[key];
                 }
             }
             await save_();
@@ -177,16 +190,16 @@ var GM_setting = (function ($, global, document) { //
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     var save_ = async function () {
-        //CONSOLE_MSG("save_");
+        CONSOLE_MSG("save_");
         if (name_ !== "") {
-            await GM.setValue(name_, settings);
+            await GM.setValue(name_, userSettingsValues);
         }
-        global[name_] = settings;
+        global[name_] = userSettingsValues;
 
         // changed_key: 배열,       인덱스번호, 값(키)
         $.each(changed_key, function (eindex, evalue) {
-            if (_settings[evalue] !== undefined && _settings[evalue].change !== undefined) {
-                _settings[evalue].change(settings[evalue]);
+            if (userSettings[evalue] !== undefined && userSettings[evalue].change !== undefined) {
+                userSettings[evalue].change(userSettingsValues[evalue]);
             }
         });
         changed_key = [];
@@ -196,10 +209,10 @@ var GM_setting = (function ($, global, document) { //
     var load_ = async function () {
         CONSOLE_MSG("load_");
         if (name_ !== "") {
-            settings = await GM.getValue(name_, settings);
+            userSettingsValues = await GM.getValue(name_, userSettingsValues);
         }
-        settings["Lang"] = await loadLang_();
-        global[name_] = settings;
+        userSettingsValues["Lang"] = await loadLang_();
+        global[name_] = userSettingsValues;
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -237,7 +250,7 @@ var GM_setting = (function ($, global, document) { //
             $tbody.append($tr);
         }
         var $tr_new = $(`<tr></tr>`);
-        for(var k=0;k<_settings[key].head.length;k++){   // index
+        for(var k=0;k<userSettings[key].head.length;k++){   // index
             if(k==0){
                 $tr_new.append(`<td></td>`);
             }
@@ -246,7 +259,7 @@ var GM_setting = (function ($, global, document) { //
         $tr_new.append(`<td class="table_btn_container"><span title="New" alt="New" class="glyphicon glyphicon-plus cp table_new" GM_setting_key="${key}"></span><span title="Save" alt="Save" style="display:none;" class="glyphicon glyphicon-floppy-disk cp table_new_save" GM_setting_key="${key}"></span></td>`);
         $tr_new.append(`<td class="table_btn_container"><span title="Cancel" alt="Cancel" style="display:none;" class="glyphicon glyphicon-remove cp table_new_cancel" GM_setting_key="${key}"></span></td>`);
         $tbody.append($tr_new);
-    }
+    };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     var event_ = async function () {
@@ -258,8 +271,8 @@ var GM_setting = (function ($, global, document) { //
                     await load_();
                     // old_value: obj,       ekey:키, evalue:값(old 설정값)
                     $.each(old_value, function (ekey, _evalue) {
-                        if (_settings[ekey] !== undefined && _settings[ekey].change !== undefined && old_value[ekey] !== new_value[ekey]) {
-                            _settings[ekey].change(settings[ekey]);
+                        if (userSettings[ekey] !== undefined && userSettings[ekey].change !== undefined && old_value[ekey] !== new_value[ekey]) {
+                            userSettings[ekey].change(userSettingsValues[ekey]);
                         }
                     });
                     changed_key = [];
@@ -323,6 +336,12 @@ var GM_setting = (function ($, global, document) { //
 }
 #GM_setting {clear:both;margin-left:auto; margin-right:auto; padding:0;max-width:1400px; min-width:750px; box-sizing:content-box;}
 #GM_setting, #GM_setting table {font-size:13px;}
+
+#GM_setting .GM_setting_logo{height:25px;display:inline-block;white-space:nowrap}
+#GM_setting .GM_setting_menu_right{display:flex;height:25px;float:right;}
+#GM_setting .GM_homepage_link{font-size:12px;font-weight:normal;align-self:flex-end;}
+#GM_setting .GM_multilang{margin-left:15px;}
+
 #GM_setting_head{margin-left:auto; margin-right:auto; padding:20px 0px 10px 10px;font-size:18px;font-weight:800;max-width:1400px; min-width:750px; box-sizing:content-box;}
 #GM_setting li {display:flex;list-style:none;margin:0px;padding:10px;border-top:1px solid #eee;}
 
@@ -333,11 +352,11 @@ var GM_setting = (function ($, global, document) { //
 #GM_setting .GM_setting_category_blank{display:block;box-sizing:border-box;padding:0 0 0 0px;vertical-align:top;flex:0 0 100px;}
 
 #GM_setting .GM_setting_list_head{display:block;box-sizing:border-box;vertical-align:top;flex:1 0 315px;}
-#GM_setting .GM_setting_depth1 .GM_setting_list_head {padding-left:10px;}
-#GM_setting .GM_setting_depth2 .GM_setting_list_head {padding-left:40px;}
-#GM_setting .GM_setting_depth3 .GM_setting_list_head {padding-left:70px;}
-#GM_setting .GM_setting_depth4 .GM_setting_list_head {padding-left:100px;}
-#GM_setting .GM_setting_depth5 .GM_setting_list_head {padding-left:130px;}
+#GM_setting .GM_setting_depth1 .GM_setting_list_head {padding-left:0px;}
+#GM_setting .GM_setting_depth2 .GM_setting_list_head {padding-left:30px;}
+#GM_setting .GM_setting_depth3 .GM_setting_list_head {padding-left:60px;}
+#GM_setting .GM_setting_depth4 .GM_setting_list_head {padding-left:90px;}
+#GM_setting .GM_setting_depth5 .GM_setting_list_head {padding-left:120px;}
 
 #GM_setting .GM_setting_title{display:block;font-weight:700;}
 #GM_setting .GM_setting_desc{display:block;font-size:11px;}
@@ -390,202 +409,206 @@ var GM_setting = (function ($, global, document) { //
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
+    var fillLayout_ = function (key){
+        var category = userSettings[key].category;
+        var depth = userSettings[key].depth;
+        var type = userSettings[key].type;
+        var category_name = getTextFromObjectbyLang(userSettings[key].category_name);
+        var under_dev = userSettings[key].under_dev;
+        var radio_enable_value = userSettings[key].radio_enable_value;
+        var title = getTextFromObjectbyLang(userSettings[key].title);
+        var desc = getTextFromObjectbyLang(userSettings[key].desc);
+
+        var $inputContainer = $("<div class='GM_setting_input_container form-group'></div>");
+        var isTextarea = $.inArray(type, ["tag","textarea","object"]) !== -1;
+        var $input;
+
+        switch (type){
+        case "radio":
+            var radioObj = userSettings[key].radio;
+            $input = $("<div GM_setting_type='radio'></div>");
+            for (var radiokey in radioObj) {
+                var $label = $("<label class='radio-inline'>" + getTextFromObjectbyLang(radioObj[radiokey].title) + "</label>");
+                var $temp_input = $("<input name='GM_setting_" + key + "' class='form-control' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' onfocus='this.blur()' />").attr({
+                    "GM_setting_key": key,
+                    "value": radioObj[radiokey].value,
+                    "type": (type === "set" ? type === "text" : (type === "tag" ? "textarea" : type))
+                });
+                $temp_input.prependTo($label);
+                $input.append($label);
+            }
+            break;
+        
+        case "combobox":
+            var comboboxObj = userSettings[key].options;
+            $input = $(`<select name="GM_setting_${key}" class='form-control input-sm select-inline'></select>`).attr({
+                "GM_setting_type": type,
+                "GM_setting_key": key,
+                "GM_setting_category": (category === undefined ? "default" : category),
+                "GM_setting_radio_enable_value": (radio_enable_value === undefined ? "none" : radio_enable_value)
+            });
+            for (var comboboxKey in comboboxObj) {
+                var $temp_option = $(`<option spellcheck='false' value="${comboboxKey}" onfocus='this.blur()'>${getTextFromObjectbyLang(comboboxObj[comboboxKey].title)}</option>`);
+                $input.append($temp_option);
+            }
+            break;
+
+        case "table":
+            $input = $(`<table name="GM_setting_${key}" class="table table-bordered table-striped table-hover"><thead><tr></tr></thead><tbody></tbody></table>`).attr({
+                "GM_setting_key": key
+            });
+            var $theadtr = $input.find("thead tr");
+            $theadtr.append(`<th>#</th>`);
+            for(var i=0;i<userSettings[key].head.length;i++){
+                $theadtr.append(`<th>${userSettings[key].head[i]}</th>`);
+            }
+            $theadtr.append(`<th class="table_btn_container"> </th>`);
+            $theadtr.append(`<th class="table_btn_container"> </th>`);
+            break;
+        
+        default:
+            $input = $(`<${(isTextarea ? "textarea " : "input ")} class='form-control' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' ${(type === "checkbox" ? "onfocus='this.blur()'" : "")}${(isTextarea ? "></textarea>" : " />")}`)
+                .attr({
+                    "type": (type === "set" ? type === "text" : (type === "tag" ? "textarea" : type)),
+                    "GM_setting_key": key
+                });
+            break;
+        }
+
+        var $category;
+        if (category_name !== undefined) {
+            $category = $(`<div class='GM_setting_category_name'>${category_name}</div>`);
+        } else {
+            $category = $("<div class='GM_setting_category_blank'></div>");
+        }
+
+        var $head = $("<div class='GM_setting_list_head'></div>");
+        var $title = $(`<span class='GM_setting_title'>${title}</span>`);
+        var $desc = $(`<span class='GM_setting_desc'>${desc}</span>`);
+        $head.append($title).append($desc);
+
+        if (type === "checkbox") {
+            var $label_container = $(`<label class="btn btn-default btn-xxs"><span class="glyphicon glyphicon-ok"></span></label>`);
+            $label_container.prepend($input).appendTo($inputContainer);
+
+            $input.on("change", function () {
+                if ($(this).is(":checked")) {
+                    $(this).closest("label").addClass("active");
+                } else {
+                    $(this).closest("label").removeClass("active");
+                }
+
+                if ($(this).is(":disabled")) {
+                    $(this).closest("label").addClass("disable").prop("disabled", true);
+                } else {
+                    $(this).closest("label").removeClass("disable").prop("disabled", false);
+                }
+            });
+        } else {
+            $inputContainer.append($input);
+        }
+
+        //$li.append($category).append($head).append($inputContainer);
+        GUI.$lis[key].empty().append($category).append($head).append($inputContainer);
+        $inputs[key] = $input;
+
+        if (userSettings[key].append !== undefined) {
+            $inputContainer.append(userSettings[key].append);
+        }
+    };
     var createlayout_ = function (elem) {
         //CONSOLE_MSG("createlayout_");
         $inputs = {};
 
-        var $elem = $(elem);
-        $g_elem = $elem;
-        if ($elem.find("#GM_setting_container").length !== 0) {
-            $elem.empty();
+        // set $g_elem
+        $g_elem = $(elem);
+        if ($g_elem.find("#GM_setting_container").length !== 0) {
+            $g_elem.empty();
         }
-        var $container = $("<div id='GM_setting_container'></div>");
-        var $setting_head = $( /*html*/ `
-<div id='GM_setting_head'>
-<div style='height:25px;display:inline-block;white-space:nowrap'>Settings</div>
-<div style='display:flex;height:25px;float:right;'>
-    <div id='GM_homepage_link' style='align-self: flex-end;'>
-        <a href='${(GM.info.script.homepage)}' target='_blank' style='font-size:12px;font-weight:normal;align-self:flex-end;'>${(GM.info.script.name)} v${(GM.info.script.version)} (${(GM.info.script.homepage)})</a>
-    </div>
-    <div id='GM_multilang' style='margin-left:15px;'>
-        <select id='GM_multilang_select' class="form-control input-sm">
-            <option value="ko">한국어</option>
-            <option value="en">English</option>
-        </select>
-    </div>
-</div>
-</div>`);
 
-        // show homepage link
+        GUI.$container = $("<div id='GM_setting'></div>");
+        GUI.$ul = $("<ul></ul>");
+        GUI.$GM_setting_head = $("<div id='GM_setting_head'></div>");
+        $g_elem.append(GUI.$container);
+        GUI.$container.append(GUI.$GM_setting_head).append(GUI.$ul);
+
+        //////////////////////////////////
+        // $setting_head
+        //////////////////////////////////
+        // $GM_homepage_link
+        GUI.$GM_homepage_link = $(`<div class='GM_homepage_link' style='display:none;><a href='${(GM.info.script.homepage)}' target='_blank'>${(GM.info.script.name)} v${(GM.info.script.version)} (${(GM.info.script.homepage)})</a></div>`);
         if(GM.info !== undefined && GM.info !== null && GM.info.script !== undefined && GM.info.script !== null && GM.info.script.homepage !== undefined && GM.info.script.homepage !== null && GM.info.script.homepage !== ""){
-            $setting_head.find("#GM_homepage_link").show();
-        }
-        else{
-            $setting_head.find("#GM_homepage_link").hide();
+            GUI.$GM_homepage_link.show();
         }
 
-        // show multilang option combobox
-        var $GM_multilang = $setting_head.find("#GM_multilang");
+        // $GM_multilang
+        GUI.$GM_multilang_select = $(`<select id='GM_multilang_select' class="form-control input-sm"><option value="ko">한국어</option><option value="en">English</option></select>`);
+        GUI.$GM_multilang = $(`<div class='GM_multilang' style='display:none'></div>`).append(GUI.$GM_multilang_select);
         if(useMultiLang){
-            $GM_multilang.show();
-            var $GM_multilang_select = $GM_multilang.find("#GM_multilang_select");
-            $GM_multilang_select.val(userSelectedLang);
-            $GM_multilang_select.on('change', async function (e) {
+            GUI.$GM_multilang.show();
+            GUI.$GM_multilang_select.val(userSelectedLang);
+            GUI.$GM_multilang_select.on('change', async (e) => {
                 var prevUserSelectedLang = userSelectedLang;
                 var optionSelected = $("option:selected", this);
-                var valueSelected = this.value;
                 userSelectedLang = this.value;
                 CONSOLE_MSG(`LANG VALUE CHANGED FROM ${prevUserSelectedLang} TO ${userSelectedLang}`);
                 await saveLang_();
                 changeLang();
             });
         }
-        else{
-            $GM_multilang.hide();
-        }
 
-        var $ul = $("<ul id='GM_setting'></ul>");
-        var $prev = undefined;
-        $elem.append($container);
-        $container.append($setting_head).append($ul);
-        for (var key in _settings) {
-            var category = _settings[key].category;
-            var depth = _settings[key].depth;
-            var type = _settings[key].type;
-            var title = getTextFromObjectbyLang(_settings[key].title);
-            var desc = getTextFromObjectbyLang(_settings[key].desc);
-            var category_name = getTextFromObjectbyLang(_settings[key].category_name);
-            var radio_enable_value = _settings[key].radio_enable_value;
+        // append to $GM_setting_head
+        GUI.$GM_setting_head
+            .append(`<div class='GM_setting_logo'>Settings</div>`)
+            .append($(`<div class='GM_setting_menu_right'></div>`)
+                .append(GUI.$GM_homepage_link)
+                .append(GUI.$GM_multilang)
+            );
+        
+        //////////////////////////////////////
+        for (var key in userSettings) {
+            var category = userSettings[key].category;
+            var depth = userSettings[key].depth;
+            var type = userSettings[key].type;
+            var category_name = getTextFromObjectbyLang(userSettings[key].category_name);
+            var under_dev = userSettings[key].under_dev;
+            var radio_enable_value = userSettings[key].radio_enable_value;
 
-            var $inputContainer = $("<div class='GM_setting_input_container form-group'></div>");
-            var isTextarea = $.inArray(type, ["tag","textarea","object"]) !== -1;
-            var $input;
+            /////////////////////////////////////////
+            // set $li
+            GUI.$lis[key] = $(`<li></li>`);
+            GUI.$ul.append(GUI.$lis[key]);
 
-            if (type === "radio") {
-                var radioObj = _settings[key].radio;
-                $input = $("<div GM_setting_type='radio'></div>");
-                for (var radiokey in radioObj) {
-                    var $label = $("<label class='radio-inline'>" + getTextFromObjectbyLang(radioObj[radiokey].title) + "</label>");
-                    var $temp_input = $("<input name='GM_setting_" + key + "' class='form-control' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' onfocus='this.blur()' />").attr({
-                        "value": radioObj[radiokey].value,
-                        "type": (type === "set" ? type === "text" : (type === "tag" ? "textarea" : type)),
-                        "GM_setting_type": type,
-                        "GM_setting_key": key,
-                        "GM_setting_category": (category === undefined ? "default" : category),
-                        "GM_setting_radio_enable_value": (radio_enable_value === undefined ? "none" : radio_enable_value)
-                    });
-                    $temp_input.prependTo($label);
-                    $input.append($label);
-                }
-            }
-            else if (type === "combobox"){
-                var comboboxObj = _settings[key].options;
-                $input = $(`<select name="GM_setting_${key}" class='form-control input-sm select-inline'></select>`).attr({
-                    "GM_setting_type": type,
-                    "GM_setting_key": key,
-                    "GM_setting_category": (category === undefined ? "default" : category),
-                    "GM_setting_radio_enable_value": (radio_enable_value === undefined ? "none" : radio_enable_value)
-                });
-                for (var comboboxKey in comboboxObj) {
-                    var $temp_option = $(`<option spellcheck='false' value="${comboboxKey}" onfocus='this.blur()'>${getTextFromObjectbyLang(comboboxObj[comboboxKey].title)}</option>`);
-                    $input.append($temp_option);
-                }
-            }
-            else if (type === "table"){
-                $input = $(`<table name="GM_setting_${key}" class="table table-bordered table-striped table-hover"><thead><tr></tr></thead><tbody></tbody></table>`).attr({
-                    "GM_setting_type": type,
-                    "GM_setting_key": key,
-                    "GM_setting_category": (category === undefined ? "default" : category),
-                    "GM_setting_radio_enable_value": (radio_enable_value === undefined ? "none" : radio_enable_value)
-                });
-                var $theadtr = $input.find("thead tr");
-                $theadtr.append(`<th>#</th>`);
-                for(var i=0;i<_settings[key].head.length;i++){
-                    $theadtr.append(`<th>${_settings[key].head[i]}</th>`);
-                }
-                $theadtr.append(`<th class="table_btn_container"> </th>`);
-                $theadtr.append(`<th class="table_btn_container"> </th>`);
-            }
-            else {
-                $input = $(`<${(isTextarea ? "textarea " : "input ")} class='form-control' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false' ${(type === "checkbox" ? "onfocus='this.blur()'" : "")}${(isTextarea ? "></textarea>" : " />")}`)
-                    .attr({
-                        "type": (type === "set" ? type === "text" : (type === "tag" ? "textarea" : type)),
-                        "GM_setting_type": type,
-                        "GM_setting_key": key,
-                        "GM_setting_category": (category === undefined ? "default" : category),
-                        "GM_setting_radio_enable_value": (radio_enable_value === undefined ? "none" : radio_enable_value)
-                    });
-            }
+            GUI.$lis[key].attr({
+                "GM_setting_type": type,
+                "GM_setting_key":key,
+                "GM_setting_depth":depth,
+                "GM_setting_category": (category === undefined ? "default" : category),
+                "GM_setting_radio_enable_value": (radio_enable_value === undefined ? "none" : radio_enable_value)
+            });
+            GUI.$lis[key].addClass(`GM_setting_depth${depth}`);
+            if(radio_enable_value !== undefined) GUI.$lis[key].attr("GM_setting_radio_enable_value",userSettings[key].radio_enable_value);
+            if(under_dev) GUI.$lis[key].addClass("GM_setting_under_dev");
+            if(category_name !== undefined) GUI.$lis[key].addClass("GM_setting_category");
+            if(under_dev && !userSettingsValues.under_dev) GUI.$lis[key].css({"display":"none","opacity":"0"});
 
-            var $category;
-            if (category_name !== undefined) {
-                $category = $(`<div class='GM_setting_category_name'>${category_name}</div>`);
-            } else {
-                $category = $("<div class='GM_setting_category_blank'></div>");
-            }
-
-            var $head = $("<div class='GM_setting_list_head'></div>");
-            var $title = $(`<span class='GM_setting_title'>${title}</span>`);
-            var $desc = $(`<span class='GM_setting_desc'>${desc}</span>`);
-            var $li = $(`<li ${(_settings[key].radio_enable_value !== undefined ? " GM_setting_radio_enable_value='"+_settings[key].radio_enable_value+"'" : "")}
-                GM_setting_key='${key}'
-                GM_setting_depth='${depth}'
-                class='${(_settings[key].under_dev ? "GM_setting_under_dev " : "")} ${(category_name !== undefined && $prev !== undefined && category !== $prev.category ? "GM_setting_category " : "")} GM_setting_depth${depth}'
-                style='${(_settings[key].under_dev && !settings.under_dev ? "display:none;opacity:0" : "")}'></li>`);
-            $ul.append($li);
-            $head.append($title).append($desc);
-
-            if (type === "checkbox") {
-                var $label_container = $(`<label class="btn btn-default btn-xxs"><span class="glyphicon glyphicon-ok"></span></label>`);
-                $label_container.prepend($input).appendTo($inputContainer);
-
-                $input.on("change", function () {
-                    if ($(this).is(":checked")) {
-                        $(this).closest("label").addClass("active");
-                    } else {
-                        $(this).closest("label").removeClass("active");
-                    }
-
-                    if ($(this).is(":disabled")) {
-                        $(this).closest("label").addClass("disable").prop("disabled", true);
-                    } else {
-                        $(this).closest("label").removeClass("disable").prop("disabled", false);
-                    }
-                });
-            } else {
-                $inputContainer.append($input);
-            }
-
-            $li.append($category).append($head).append($inputContainer);
-            $inputs[key] = $input;
-
-            if (_settings[key].append !== undefined) {
-                $inputContainer.append(_settings[key].append);
-            }
-
-            // 디버그 설정 숨기기
-            // if( (!nomo_global.DEBUG && _settings[key].disable) || (_settings[key].under_dev) ){    // if( (!nomo_global.DEBUG && _settings[key].disable) || (!ADD_config.under_dev && _settings[key].under_dev) ){
-            //     CONSOLE_MSG("숨김", key);
-            //     $li.css("display","none");
-            // }
-
-            $prev = _settings[key];
+            fillLayout_(key);
         }
 
         write_();
-        usageCheck_($elem);
+        usageCheck_();
 
         // 설정 on-off 이벤트
-        $elem.find("input[type='checkbox']").on("click", function () {
-            usageCheck_($elem);
+        $g_elem.find("input[type='checkbox']").on("click", function () {
+            usageCheck_();
         });
 
-        $elem.find("input[type='radio']").on("click", function () {
-            usageCheck_($elem);
+        $g_elem.find("input[type='radio']").on("click", function () {
+            usageCheck_();
         });
         
         // Table 관련 이벤트
-        $container.on("click", ".table_modify", function(e){
+        GUI.$container.on("click", ".table_modify", function(e){
             CONSOLE_MSG("clicked table_modify btn");
             var $e = $(e.target);
             var $tbody = $e.closest("tbody");
@@ -606,7 +629,7 @@ var GM_setting = (function ($, global, document) { //
             }
         });
 
-        $container.on("click", ".table_save", async function(e){
+        GUI.$container.on("click", ".table_save", async function(e){
             CONSOLE_MSG("clicked table_save btn");
             var $e = $(e.target);
             var $tr = $e.closest("tr");
@@ -615,29 +638,29 @@ var GM_setting = (function ($, global, document) { //
             var key = $e.attr("GM_setting_key");
             console.log($tdinputs);
             for(var i=0;i<$tdinputs.length;i++){
-                settings[key][index][i] = $($tdinputs[i]).val();
+                userSettingsValues[key][index][i] = $($tdinputs[i]).val();
             }
             await save_();
             message_(getSystemTextbyLang("auto_saved") + (new Date()).toLocaleTimeString(), $g_elem);
             
             // createlayout_($g_elem);
             var $tbody = $e.closest("tbody");
-            var val = settings[key];
+            var val = userSettingsValues[key];
             reCreateTable_($tbody, key, val);
         });
 
-        $container.on("click", ".table_cancel", function(e){
+        GUI.$container.on("click", ".table_cancel", function(e){
             CONSOLE_MSG("clicked table_cancel btn");
             var $e = $(e.target);
             //createlayout_($g_elem);
 
             var key = $e.attr("GM_setting_key");
             var $tbody = $e.closest("tbody");
-            var val = settings[key];
+            var val = userSettingsValues[key];
             reCreateTable_($tbody, key, val);
         });
 
-        $container.on("click", ".table_delete", async function(e){
+        GUI.$container.on("click", ".table_delete", async function(e){
             CONSOLE_MSG("clicked table_delete btn");
             var $e = $(e.target);
             var confirm_res = confirm("Delete?");
@@ -647,17 +670,17 @@ var GM_setting = (function ($, global, document) { //
             $tr.remove();
 
             var key = $e.attr("GM_setting_key");
-            settings[key].splice(index, 1);
+            userSettingsValues[key].splice(index, 1);
             await save_();
 
             //createlayout_($g_elem);
             var $tbody = $e.closest("tbody");
-            var val = settings[key];
+            var val = userSettingsValues[key];
             reCreateTable_($tbody, key, val);
             message_(getSystemTextbyLang("auto_saved") + (new Date()).toLocaleTimeString(), $g_elem);
         });
 
-        $container.on("click", ".table_new", function(e){
+        GUI.$container.on("click", ".table_new", function(e){
             CONSOLE_MSG("clicked table_new btn");
             var $e = $(e.target);
             var $tbody = $e.closest("tbody");
@@ -676,7 +699,7 @@ var GM_setting = (function ($, global, document) { //
             }
         });
         
-        $container.on("click", ".table_new_save", async function(e){
+        GUI.$container.on("click", ".table_new_save", async function(e){
             CONSOLE_MSG("clicked table_new_save btn");
             var $e = $(e.target);
             var $tr = $e.closest("tr");
@@ -686,39 +709,39 @@ var GM_setting = (function ($, global, document) { //
                 temp.push($($tdinputs[i]).val());
             }
             var key = $e.attr("GM_setting_key");
-            settings[key].push(temp);
+            userSettingsValues[key].push(temp);
             await save_();
             message_(getSystemTextbyLang("auto_saved") + (new Date()).toLocaleTimeString(), $g_elem);
 
             //createlayout_($g_elem);
             var $tbody = $e.closest("tbody");
-            var val = settings[key];
+            var val = userSettingsValues[key];
             reCreateTable_($tbody, key, val);
 
         });
 
         
-        $container.on("click", ".table_new_cancel", function(e){
+        GUI.$container.on("click", ".table_new_cancel", function(e){
             CONSOLE_MSG("clicked table_new_cancel btn");
             //createlayout_($g_elem);
             var key = $(e.target).attr("GM_setting_key");
             var $tbody = $(e.target).closest("tbody");
-            var val = settings[key];
+            var val = userSettingsValues[key];
             reCreateTable_($tbody, key, val);
         });
 
         // 자동 저장 이벤트
-        $container.find("select").on("change", function(){
+        GUI.$container.find("select").on("change", function(){
             CONSOLE_MSG("GM_setting - select change");
-            validateAndSave_($(this), $elem, $inputs);
+            validateAndSave_($(this), $g_elem, $inputs);
         });
-        $container.find("input, textarea").on("input", function () { // "input[type='text']"  input propertychange
+        GUI.$container.find("input, textarea").on("input", function () { // "input[type='text']"  input propertychange
             CONSOLE_MSG("GM_setting - text change");
-            validateAndSave_($(this), $elem, $inputs);
+            validateAndSave_($(this), $g_elem, $inputs);
         });
 
         // 리셋 버튼 추가
-        $ul.append( /*html*/ `<li class="GM_setting_category GM_setting_depth1">
+        GUI.$ul.append( /*html*/ `<li class="GM_setting_category GM_setting_depth1">
             <div class="GM_setting_category_name">${getSystemTextbyLang("title_reset")}</div>
             <div class="GM_setting_list_head">
                 <span class="GM_setting_title">
@@ -730,7 +753,7 @@ var GM_setting = (function ($, global, document) { //
             <div class="GM_setting_input_container form-group">
             </div>
         </li>`);
-        $ul.find(".GM_setting_reset").on("click", async function () {
+        GUI.$ul.find(".GM_setting_reset").on("click", async function () {
             var conf = confirm(getSystemTextbyLang("confirm_reset_settings"));
             if (conf) {
                 await GM_setting.reset();
@@ -738,7 +761,7 @@ var GM_setting = (function ($, global, document) { //
                 message_(getSystemTextbyLang("complete_reset_settings") + (new Date()).toLocaleTimeString(), $g_elem);
             }
         });
-        $ul.find(".GM_setting_reset_all").on("click", async function () {
+        GUI.$ul.find(".GM_setting_reset_all").on("click", async function () {
             var conf = confirm(getSystemTextbyLang("confirm_reset_settings_all"));
             if (conf) {
                 var listValues = await GM.listValues();
@@ -753,7 +776,7 @@ var GM_setting = (function ($, global, document) { //
         });
 
         // 후원 버튼 추가
-        $ul.append( /*html*/ `<li class="GM_setting_category GM_setting_depth1">
+        GUI.$ul.append( /*html*/ `<li class="GM_setting_category GM_setting_depth1">
         <div class="GM_setting_category_name">${getSystemTextbyLang("donate")}</div>
         <div class="GM_setting_list_head">
             <span class="GM_setting_title">
@@ -781,7 +804,7 @@ var GM_setting = (function ($, global, document) { //
         </li>
     `);
         // footer 추가
-        $ul.after(/*html*/`
+        GUI.$ul.after(/*html*/`
         <div id="GM_setting_footer">
             <a href="${(GM.info.script.homepage)}" target="_blank">${(GM.info.script.name)}</a> v${(GM.info.script.version)}
             <div class="footer_divider"></div> GM Setting v${version}
@@ -794,12 +817,7 @@ var GM_setting = (function ($, global, document) { //
             return;
         }
         var prefix = "GM_setting_autosaved";
-        $elem.find("." + prefix).animate({
-            bottom: "+=40px"
-        }, {
-            duration: 300,
-            queue: false
-        }); // cleqrQueue().dequeue().finish().stop("true","true")
+        $elem.find("." + prefix).animate({ bottom: "+=40px" }, { duration: 300, queue: false }); // cleqrQueue().dequeue().finish().stop("true","true")
         // @keyframes glow {to {text-shadow: 0 0 10px white;box-shadow: 0 0 10px #5cb85c;}}
         $("<div style='animation: glow .5s 10 alternate; position:fixed; left:10px; bottom:20px; z-index:10000000;' class='" + prefix + " btn btn-success'>" + msg + "</div>")
             .appendTo($elem)
@@ -809,38 +827,39 @@ var GM_setting = (function ($, global, document) { //
             }, 6000, function () {
                 $(this).fadeOut("fast").delay(600).remove();
             })
-            .animate({
-                left: "+=30px"
-            }, {
-                duration: 300,
-                queue: false
-            });
+            .animate({ left: "+=30px" }, { duration: 300, queue: false });
     };
-    var read_ = async function () {
+    var readSub_ = async function (key){
+        if(userSettings[key].autosavepass && userSettingsValues[key] !== undefined || userSettingsValues[key].type === "table"){
+            return;
+        }
+        var val = getInputValue_(key);
+
+        if (userSettings[key].type === "tag") {
+            val = val.split(","); // val = val.replace(/\s/g,"").split(",");
+            if (val.length === 1 && val[0] === "") {
+                val = [];
+            }
+            $.each(val, function (index, value) {
+                val[index] = value.replace(/^\s*|\s*$/g, "");
+            });
+        }
+
+        // 이전 설정과 변경된 값 키 체크
+        if (userSettingsValues[key] !== val && changed_key.indexOf(key) === -1) {
+            changed_key.push(key);
+        }
+        userSettingsValues[key] = val;
+    };
+    var read_ = async function (key_specific) {
         CONSOLE_MSG("read_");
-        for (var key in $inputs) {
-            if(_settings[key].autosavepass && settings[key] !== undefined || settings[key].type === "table"){
-                continue;
+        if(key_specific === undefined){
+            for (var key in $inputs) {
+                await readSub_(key);
             }
-
-            var $input = $inputs[key];
-            var val = getInputValue_($input);
-
-            if (_settings[key].type === "tag") {
-                val = val.split(","); // val = val.replace(/\s/g,"").split(",");
-                if (val.length === 1 && val[0] === "") {
-                    val = [];
-                }
-                $.each(val, function (index, value) {
-                    val[index] = value.replace(/^\s*|\s*$/g, "");
-                });
-            }
-
-            // 이전 설정과 변경된 값 키 체크
-            if (settings[key] !== val && changed_key.indexOf(key) === -1) {
-                changed_key.push(key);
-            }
-            settings[key] = val;
+        }
+        else{
+            await readSub_(key_specific);
         }
     };
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -848,18 +867,27 @@ var GM_setting = (function ($, global, document) { //
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
-    var write_ = async function () {
+    var writeSub_ = function(key){
+        writeInputValue_(key, $inputs[key], userSettingsValues[key]);
+    };
+    var write_ = function (key_specific) {
         CONSOLE_MSG("write_");
-        for (var key in $inputs) {
-            var $input = $inputs[key];
-            writeInputValue_($input, settings[key]);
+        if(key_specific === undefined){
+            for (let key in $inputs) {
+                writeSub_(key);
+            }
+        }
+        else{
+            writeSub_(key_specific);
         }
     };
     
     /////////////////////////////////////////////////////////////////////////////////////////////////
-    var getInputValue_ = function ($input) {
+    var getInputValue_ = function (key) {
         var val;
-        switch ($input.attr("GM_setting_type")) {
+        var $input = $inputs[key];
+        var type = userSettings[key].type;
+        switch (type) {
         case "checkbox":
             val = $input.prop("checked");
             break;
@@ -908,8 +936,9 @@ var GM_setting = (function ($, global, document) { //
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
-    var writeInputValue_ = function ($input, val) {
-        switch ($input.attr("GM_setting_type")) {
+    var writeInputValue_ = function (key, $input, val) {
+        var type = userSettings[key].type;
+        switch (type) {
         case "checkbox":
             $input.prop("checked", val).trigger("change");
             break;
@@ -942,7 +971,6 @@ var GM_setting = (function ($, global, document) { //
             break;
         case "table":
             var $tbody = $input.find("tbody");
-            var key = $input.attr("GM_setting_key");
             $tbody.empty();
             for(var i=0;i<val.length;i++){
                 var $tr = $(`<tr></tr>`);
@@ -957,7 +985,7 @@ var GM_setting = (function ($, global, document) { //
                 $tbody.append($tr);
             }
             var $tr_new = $(`<tr></tr>`);
-            for(var k=0;k<_settings[key].head.length;k++){   // index
+            for(var k=0;k<userSettings[key].head.length;k++){   // index
                 if(k==0){
                     $tr_new.append(`<td></td>`);
                 }
@@ -973,27 +1001,28 @@ var GM_setting = (function ($, global, document) { //
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
-    var usageCheck_ = async function ($elem) {
+    var usageCheck_ = async function () {
         // 일단 다 켠다.
-        var $lis = $elem.find("li");
-        $lis.removeClass("GM_setting_item_disable");
-        $lis.find("input, textarea, select").prop("disabled", false);
-        $lis.find("input[type='checkbox']").trigger("change");
+        var $lis = GUI.$lis;
+        for (let curr_key in $lis) {
+            let $curr = $($lis[curr_key]);
+            $curr.removeClass("GM_setting_item_disable");
+            $curr.find("input, textarea, select").prop("disabled", false);
+            $curr.find("input[type='checkbox']").trigger("change");
+        }
 
         var enable = [true, true];
-        var $prev, prevTopRadioVal, prevTopRadioDepth = 1000;
-        for (var i = 0; i < $lis.length; i++) {
-            var $curr = $($lis[i]);
-            var curr_depth = $curr.attr("GM_setting_depth");
-            var curr_key = $curr.attr("GM_setting_key");
-            var curr_radio_enable_value = $curr.attr("GM_setting_radio_enable_value");
-            var curr_type = $curr.find("[gm_setting_type]").attr("gm_setting_type");
+        var $prev = undefined, prevTopRadioVal, prevTopRadioDepth = 1000;
+        for (let curr_key in $lis) {
+            let $curr = $($lis[curr_key]);
+            var curr_depth = userSettings[curr_key].depth;
+            var curr_radio_enable_value = userSettings[curr_key].radio_enable_value;
+            var curr_type = userSettings[curr_key].type;
 
-            if (i == 0){
+            if ($prev === undefined){
                 //
             }
             else {
-                $prev = $($lis[i - 1]);
                 var prev_depth = $prev.attr("GM_setting_depth");
                 if(prevTopRadioDepth >= curr_depth){
                     prevTopRadioVal = undefined;
@@ -1046,8 +1075,10 @@ var GM_setting = (function ($, global, document) { //
                 }
             }
 
+            $prev = $curr;
+
             for (var e = 0; e < curr_depth; e++) {
-                if (_settings[curr_key].disable || !enable[e]) {
+                if (userSettings[curr_key].disable || !enable[e]) {
                     $curr.addClass("GM_setting_item_disable");
                     $curr.find("input, textarea, select").prop("disabled", true);
                     $curr.find("input[type='checkbox']").trigger("change");
@@ -1069,7 +1100,7 @@ var GM_setting = (function ($, global, document) { //
         var message = "";
 
         // 숫자의 경우
-        if (_settings[key].valid === "number") {
+        if (userSettings[key].valid === "number") {
             valid = $.isNumeric(val);
             if (val === "") {
                 // "반드시 값이 입력되어야 합니다."
@@ -1078,19 +1109,19 @@ var GM_setting = (function ($, global, document) { //
                 // "숫자만 입력 가능합니다."
                 message += getSystemTextbyLang("err_num_req");
             } else {
-                if (_settings[key].min_value !== undefined && _settings[key].min_value > val) {
+                if (userSettings[key].min_value !== undefined && userSettings[key].min_value > val) {
                     valid = false;
                     // "입력 값은 다음 값 이상의 숫자이어야 합니다. : "
-                    message += getSystemTextbyLang("err_num_over") + _settings[key].min_value;
-                } else if (_settings[key].max_value !== undefined && _settings[key].max_value < val) {
+                    message += getSystemTextbyLang("err_num_over") + userSettings[key].min_value;
+                } else if (userSettings[key].max_value !== undefined && userSettings[key].max_value < val) {
                     valid = false;
                     // "입력 값은 다음 값 이하의 숫자이어야 합니다. : "
-                    message += getSystemTextbyLang("err_num_not_more_than") + _settings[key].max_value;
+                    message += getSystemTextbyLang("err_num_not_more_than") + userSettings[key].max_value;
                 }
             }
         }
         // array_string - ID 태그
-        else if (val !== "" && _settings[key].valid === "array_string") {
+        else if (val !== "" && userSettings[key].valid === "array_string") {
             val_array = $.map(val.split(","), $.trim);
             var match = val.match(regex_array_string);
             //CONSOLE_MSG(match);
@@ -1127,7 +1158,7 @@ var GM_setting = (function ($, global, document) { //
             }
         }
         // array_word - 금지단어
-        else if (val !== "" && _settings[key].valid === "array_word") {
+        else if (val !== "" && userSettings[key].valid === "array_word") {
             val_array = $.map(val.split(","), $.trim);
             if ($.inArray("", val_array) !== -1) {
                 valid = false;
@@ -1157,9 +1188,9 @@ var GM_setting = (function ($, global, document) { //
 
     //////////////////////
     // validate and save
-    var validateAndSave_ = function($this, $elem, $inputs){
-        var val = getInputValue_($this);
+    var validateAndSave_ = async function($this, $elem, $inputs){
         var this_key = $this.attr("GM_setting_key");
+        var val = getInputValue_(this_key);
         var validation = validation_(this_key, val);
         $this.closest("div").find(".invalid_text").remove();
         if (validation.valid) {
@@ -1171,19 +1202,19 @@ var GM_setting = (function ($, global, document) { //
         }
 
         clearTimeout(timeoutId_);
-        timeoutId_ = setTimeout(function () {
+        timeoutId_ = setTimeout(async function () {
             // 저장 시도
             // 정상적으로 값이 체크 된 경우
             var g_validation = true;
             $.each($inputs, function (ekey, evalue) {
-                var temp = validation_(ekey, getInputValue_(evalue));
+                var temp = validation_(ekey, getInputValue_(ekey));
                 if (!temp.valid) {
                     g_validation = false;
                     return false;
                 }
             });
             if (g_validation) {
-                read_();
+                await read_();
                 save_();
                 message_(getSystemTextbyLang("auto_saved") + (new Date()).toLocaleTimeString(), $elem);
             }
@@ -1222,15 +1253,15 @@ var GM_setting = (function ($, global, document) { //
         },
         save_overwrite: async function () {
             // old_value: obj,       ekey:키, evalue:값(old 설정값)
-            var old_value = settings;
+            var old_value = userSettingsValues;
             var new_value = global[name_];
-            CONSOLE_MSG("_settings", _settings);
+            CONSOLE_MSG("_settings", userSettings);
             $.each(old_value, function (ekey, _evalue) {
-                if (_settings[ekey] !== undefined && _settings[ekey].change !== undefined && old_value[ekey] !== new_value[ekey]) {
-                    _settings[ekey].change(new_value[ekey]);
+                if (userSettings[ekey] !== undefined && userSettings[ekey].change !== undefined && old_value[ekey] !== new_value[ekey]) {
+                    userSettings[ekey].change(new_value[ekey]);
                 }
             });
-            settings = global[name_];
+            userSettingsValues = global[name_];
             CONSOLE_MSG("GM_setting - save_overwrite");
             await save_();
         },
@@ -1238,7 +1269,7 @@ var GM_setting = (function ($, global, document) { //
         //     settings[key] = global[name_][key]
         // },
         reset: async function () {
-            await GM.setValue(name_, settings_init);
+            await GM.setValue(name_, userSettingsInitCopy);
             await load_();
         },
         createlayout: function (elem) {
@@ -1246,8 +1277,8 @@ var GM_setting = (function ($, global, document) { //
             createlayout_(elem);
         },
         getType: function (key) {
-            if (_settings[key] !== undefined) {
-                return _settings[key].type;
+            if (userSettings[key] !== undefined) {
+                return userSettings[key].type;
             } else {
                 return undefined;
             }
@@ -1258,10 +1289,4 @@ var GM_setting = (function ($, global, document) { //
     };
 })(jQuery, window, document);
 
-
-
-
-
-
-
-export {GM_setting};
+//export {GM_setting};

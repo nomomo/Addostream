@@ -33,7 +33,7 @@ function ADD_Channel_history_cookie(rw_array){
             if(j !== 0){
                 ch_text = ch_text+"&";
             }
-            ch_text = ch_text+ADD_streamer_nick(temp_array[j]);//.toUpperCase();
+            ch_text = ch_text+ADD_streamer_nick(temp_array[j].toUpperCase());//.toUpperCase();
         }
         if(rw_array[2] === "multitwitch"){
             ch_text = ch_text+"(멀티)";
@@ -73,11 +73,11 @@ function ADD_Channel_history_cookie(rw_array){
 // 주소 체크
 function check_stream_and_chennel_from_location(){
     if(nomo_common.ADD_get_page_type() === nomo_const.C_STREAM){
-        var current_url = location.href;
-        // 유투브의 경우에만 대소문자 구분함
-        if(current_url !== null && current_url.indexOf("#/stream/youtube/") === -1){
-            current_url = current_url.toLowerCase();
-        }
+        var current_url = document.location.href;
+        // 유투브 및 M3U8의 경우에만 대소문자 구분함
+        // if(current_url !== null && current_url.indexOf("#/stream/youtube/") === -1 && current_url.indexOf("#/stream/m3u8/") === -1 ){
+        //     current_url = current_url.toLowerCase();
+        // }
 
         if(current_url !== null && current_url.indexOf("#/stream/") !== -1){
             var keyword_stream = (current_url.split("#/stream/"));

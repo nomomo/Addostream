@@ -8,7 +8,8 @@ import nomo_global_manager from "general/global.js";
 import {ADD_DEBUG} from "libs/nomo-utils.js";
 
 import ADD_migration from "./settings/migration.js";
-import {GM_setting, GM_setting_param} from "settings/main.js";
+import {GM_setting_param} from "settings/main.js";
+import {GM_setting} from "settings/GM_setting.js";
 
 import nomo_const from "general/const.js";
 import * as nomo_common from "general/common.js";

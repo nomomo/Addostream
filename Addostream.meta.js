@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name Addostream
-// @version 1.55.3
+// @version 1.56.0
 // @author Nomo
 // @description 두스트림에 기능을 추가한다.
 // @supportURL https://github.com/nomomo/Addostream/issues
@@ -42,8 +42,5 @@
 // @grant GM.removeValueChangeListener
 // @grant GM_removeValueChangeListener
 // @grant unsafeWindow
-// @connect dostream.com
-// @connect appspot.com
-// @connect coord.dostream.com
-// @connect twitch.tv
+// @connect *
 // ==/UserScript==

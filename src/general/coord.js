@@ -305,6 +305,7 @@ async function ADD_parse_insagirl(page){
                             content = content + " <span class=\"keyword_pass ch_text\" style=\"font-weight:700;vertical-align:top;\">["+escapeHtml(ch_text)+"]</span>";
                         }
                     }
+                    // !/^http:\/\//.test(href) && 
                     else if(href.indexOf('dostream.com/#/stream/m3u8') == -1 && regex_m3u8.test(href)){
                         content = content + " " + `<a href="https://www.dostream.com/#/stream/m3u8/${href}" class="keyword_pass ch_text" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[M3U8 PLAYER]</a>`;
                         

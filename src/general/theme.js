@@ -32,7 +32,7 @@ export function cssLoader(type, css, document){
 // ADD Common Style
 // 색깔 등의 정보는 아래 함수에 저장하지 말고, 모두 theme 로 돌린다.
 export function ADD_basic_style(){
-    GM_addStyle( //css
+    GM.addStyle( //css
         `
 // Dostream+ CSS
 ${CSS_microtip}
@@ -54,13 +54,28 @@ ${CSS_addostream}
 /**
  * 채팅창 위치를 왼쪽으로 변경
  */
-export function ADD_leftchat_change(){
-    if(ADD_config.theme_leftchat){
-        $("body").addClass("leftchat");
+export function set_leftchat(container){
+    var container_temp = "body";
+    if(container === undefined){
+        container_temp = "body";
     }
     else{
-        $("body").removeClass("leftchat");
+        container_temp = container;
     }
+    if(ADD_config.theme_leftchat){
+        $(container_temp).addClass("leftchat");
+    }
+    else{
+        $(container_temp).removeClass("leftchat");
+    }
+    $(document).ready(function(){
+        if(ADD_config.theme_leftchat){
+            $(container_temp).addClass("leftchat");
+        }
+        else{
+            $(container_temp).removeClass("leftchat");
+        }   
+    });
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -189,12 +204,7 @@ export function ADD_theme(theme){
     nomo_global.theme_current = theme;
 
     // leftchat
-    if(ADD_config.theme_leftchat){
-        $(container).addClass("leftchat");
-    }
-    else{
-        $(container).removeClass("leftchat");
-    }
+    set_leftchat(container);
 }
 
 export function broadcaster_theme_css(){
