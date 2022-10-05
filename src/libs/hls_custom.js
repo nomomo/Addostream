@@ -1,3 +1,6 @@
+import {ADD_DEBUG} from "libs/nomo-utils.js";
+var ADD_XMLHttpRequest;
+
 export function loadhls(){
     const hlsdebug = 0;
     const hlsdebug_console = 0;
@@ -157,7 +160,9 @@ export function loadhls(){
                         that.status = response.status;
                         that.statusText = response.statusText;
                         that.response = response.response;
-                        that.responseText = response.responseText;
+                        if("arraybuffer" !== response.responseType){
+                            that.responseText = response.responseText;
+                        }
                         that.responseXML = response.responseXML;
 
                         if(that.onload !== undefined){
@@ -187,8 +192,15 @@ export function loadhls(){
     }
     //var test = new new_xhr;
     //console.log("test.response", test.response);
-    unsafeWindow.XMLHttpRequest = new_xhr;
+    //unsafeWindow.XMLHttpRequest = new_xhr;
 
+    ADD_DEBUG("ADD_config.m3u8_type = ", ADD_config.m3u8_type);
+    if(ADD_config.m3u8_type === "auto"){
+        ADD_XMLHttpRequest = new_xhr;
+    }
+    else{
+        ADD_XMLHttpRequest = XMLHttpRequest;
+    }
 
     // hls.js
     // https://github.com/video-dev/hls.js/
@@ -10662,7 +10674,7 @@ export function loadhls(){
                     }
                 }, n._createLicenseXhr = function (t, e, i) {
                     //var r = new XMLHttpRequest;
-                    var r = new new_xhr;
+                    var r = new ADD_XMLHttpRequest;
                     r.responseType = "arraybuffer", r.onreadystatechange = this._onLicenseRequestReadyStageChange.bind(this, r, t, e, i);
                     var n = this._licenseXhrSetup;
                     if (n) try {
@@ -11066,7 +11078,7 @@ export function loadhls(){
                             e = this.context;
                         if (t) {
                             //var i = this.loader = new self.XMLHttpRequest,
-                            var i = this.loader = new new_xhr,
+                            var i = this.loader = new ADD_XMLHttpRequest,
                                 r = this.stats;
                             r.loading.first = 0, r.loaded = 0;
                             var n = this.xhrSetup;
