@@ -5,6 +5,7 @@ import {ADD_send_sys_msg_from_main_frame} from "chat/send_message.js";
 var m3u8_player = /*js*/`
 <video controls="true" width="100%" height="100%" id="m3u8video"></video>
 `;
+var newhls;
 
 async function loadHlsVideo(url, iter){
     ADD_DEBUG("loadHlsVideo", url, iter);
@@ -32,7 +33,7 @@ async function loadHlsVideo(url, iter){
 
     if (newHls.isSupported()) {
         ADD_DEBUG("newHls.isSupported = true", video);
-        var newhls = new newHls();
+        newhls = new newHls();
         newhls.loadSource(m3u8Url);
         newhls.attachMedia(video);
         newhls.on(newHls.Events.MANIFEST_PARSED, function() {
@@ -117,6 +118,18 @@ export function m3u8_override(url){
     $('#stream').addClass("onstream");
     $('.footer').hide();
     $("#stream").empty().append(m3u8_player);
+
+    $(document).leave("#m3u8video", function() {
+        ADD_DEBUG("leave m3u8video, destroy");
+        if(newhls === undefined || newhls.destroy === undefined) return;
+        
+        try{
+            newhls.destroy();
+        }
+        catch(e){
+            ADD_DEBUG("error from newhls.destroy()", e);
+        }
+    });
 
     setTimeout(function(){
         loadHlsVideo(url, 0);
