@@ -50,7 +50,10 @@ export function get_nesports_playlist(url){
                 }
                 var livePlayBack = JSON.parse(data.content.match.relay.livePlayBack);
                 ADD_DEBUG("livePlayBack", livePlayBack);
-                if(livePlayBack === undefined || livePlayBack.media === undefined || livePlayBack.media.length === undefined) return;
+                if(livePlayBack === null || livePlayBack === undefined || livePlayBack.media === null || livePlayBack.media === undefined || livePlayBack.media.length === undefined) {
+                    ADD_send_sys_msg_from_main_frame("라이브 중인 경기를 찾을 수 없거나, 알 수 없는 에러가 발생했습니다.");
+                    return;
+                }
 
                 var found = false;
                 var m3u8url = "";
