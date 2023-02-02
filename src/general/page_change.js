@@ -4,6 +4,7 @@ import nomo_const from "general/const.js";
 import * as nomo_common from "general/common.js";
 import * as utils from "libs/nomo-utils.js";
 import {m3u8_override} from "general/m3u8player.js";
+import {get_nesports_playlist} from "general/nesport.js";
 const ADD_DEBUG = utils.ADD_DEBUG;
 
 // 주소창의 주소가 변화(페이지 이동) 시 해야할 것을 아래 함수에 작성한다.
@@ -35,6 +36,10 @@ export function ADD_page_change($, global, document){
                 var m3u8_url = document.location.href.split("/#/stream/m3u8/").pop();
                 m3u8_override(m3u8_url);
                 nomo_global.ADD_now_playing.display_name = "m3u8";
+            }
+            else if(url_current.indexOf("/#/stream/nesports/") !== -1){
+                var nesports_url = document.location.href.split("/#/stream/m3u8/").pop();
+                get_nesports_playlist(nesports_url);
             }
             else{
                 nomo_global.ADD_now_playing.id = url_current.split("/").pop();

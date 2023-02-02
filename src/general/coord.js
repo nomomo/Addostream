@@ -287,6 +287,7 @@ async function ADD_parse_insagirl(page){
                     var $href_i = $(href_i);
                     var href = $href_i.attr("href");
                     const regex_m3u8 = /^https?:\/\/.+\.m3u8/i;
+                    const regex_nesports = /^https:\/\/game\.naver\.com\/esports\/([a-zA-Z0-9가-힣-_!@#$%^&*]+)\/live\/([a-zA-Z0-9가-힣-_!@#$%^&*]+)/i;
                     if(href.toLowerCase().indexOf("dostream.com/#/stream/twitch/") !== -1 || href.toLowerCase().indexOf("dostream.com/#/stream/multitwitch/") !== -1){
                         var ch_text = "";
                         var ch_streamer_id = href.split("/").pop();
@@ -308,7 +309,9 @@ async function ADD_parse_insagirl(page){
                     // !/^http:\/\//.test(href) && 
                     else if(href.indexOf('dostream.com/#/stream/m3u8') == -1 && regex_m3u8.test(href)){
                         content = content + " " + `<a href="https://www.dostream.com/#/stream/m3u8/${href}" class="keyword_pass ch_text" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[M3U8 PLAYER]</a>`;
-                        
+                    }
+                    else if(href.indexOf('dostream.com/#/stream/nesports') == -1 && regex_nesports.test(href)){
+                        content = content + " " + `<a href="https://www.dostream.com/#/stream/nesports/${href}" class="keyword_pass ch_text" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[M3U8 PLAYER]</a>`;
                     }
                 });
 

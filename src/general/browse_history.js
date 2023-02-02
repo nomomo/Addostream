@@ -90,6 +90,12 @@ function check_stream_and_chennel_from_location(){
                 return_array[2] = "m3u8";
                 return return_array;
             }
+            else if(current_url.indexOf("#/stream/nesports/") !== -1){
+                return_array[0] = current_url.split("#/stream/nesports/").pop();
+                return_array[1] = "Nesports";
+                return_array[2] = "nesports";
+                return return_array;
+            }
             else if(keyword_channel.length !== 2){
                 ADD_DEBUG("check_stream_and_chennel_from_location 에서 / 개수로 인한 에러 발생");
                 return null;
@@ -169,6 +175,11 @@ function ADD_Channel_History_layout(ADD_h_cookie, fade){
                 ch_stream_text = "m3u8";
                 platform_class = "h_m3u8";
                 ch_text = "M3U8";
+                break;
+            case "nesports":
+                ch_stream_text = ch_streamer_id.split("/").pop();
+                platform_class = "h_nesports";
+                ch_text = ch_streamer_id.split("/").pop();
                 break;
             default:
                 platform_class = "";//"h_" + ch_stream;

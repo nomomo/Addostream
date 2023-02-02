@@ -470,6 +470,7 @@ async function uhaha_arrive(elems){
     var $aElems = $line.find("a");
     var hrefs = [];
     const regex_m3u8 = /^https?:\/\/.+\.m3u8/i;
+    const regex_nesports = /^https:\/\/game\.naver\.com\/esports\/([a-zA-Z0-9가-힣-_!@#$%^&*]+)\/live\/([a-zA-Z0-9가-힣-_!@#$%^&*]+)/i;
     if($aElems.length !== 0){
         $aElems.each(function(index){
             var $aElem = $($aElems[index]);
@@ -515,6 +516,15 @@ async function uhaha_arrive(elems){
             // !/^http:\/\//.test(href) && 
             else if(href.indexOf('dostream.com/#/stream/m3u8') == -1 && regex_m3u8.test(href)){
                 $aElem.after(` <a href="https://www.dostream.com/#/stream/m3u8/${href}" target="_top" class="topClick" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[M3U8 PLAYER]</a>`);
+                // 스크롤 내리기
+                if( temp_isChatScrollOn ){
+                    goScrollDown();
+                }
+            }
+            // Naver Esports 링크인 경우
+            //!/^http:\/\//.test(href) && 
+            else if(href.indexOf('dostream.com/#/stream/nesports') == -1 && regex_nesports.test(href)){
+                $aElem.after(` <a href="https://www.dostream.com/#/stream/nesports/${href}" target="_blank" class="topClick" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[M3U8 PLAYER]</a>`);
                 // 스크롤 내리기
                 if( temp_isChatScrollOn ){
                     goScrollDown();

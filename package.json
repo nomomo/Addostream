@@ -1,9 +1,9 @@
 {
   "name": "addostream",
   "author": "Nomomo",
-  "version": "1.56.2",
+  "version": "1.57.0",
   "description": "두스트림에 새로운 기능을 추가하는 브라우저 확장 UserScript",
-  "update": "M3U8 PLAYER 개선 (M3U8 재생 시 연결 허용 관련 팝업이 뜨는 경우 '도메인 항상 허용' 또는 '모든 도메인 항상 허용' 버튼을 클릭 후 새로고침 하세요.)",
+  "update": "E스포츠 관련 외부 사이트에 대해 간편한 M3U8 재생을 지원 (M3U8 재생 시 연결 허용 관련 팝업이 뜨는 경우 '도메인 항상 허용' 또는 '모든 도메인 항상 허용' 버튼을 클릭 후 새로고침 하세요.)",
   "notice": "",
   "main": "src/index.js",
   "scripts": {

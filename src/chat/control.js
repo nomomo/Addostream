@@ -1454,6 +1454,7 @@ async function chatElemControl($line){
             // const regex_twitch = /^https?:\/\/(?:www\.|)twitch\.tv\/([a-zA-Z1-9-_]+)/;
             const regex_platform = /^https?:\/\/(?:www\.|play.|)(twitch|afreeca)(?:\.tv|tv\.com)\/([a-zA-Z0-9-_]+)/i;
             const regex_m3u8 = /^https?:\/\/.+\.m3u8/i;
+            const regex_nesports = /^https:\/\/game\.naver\.com\/esports\/([a-zA-Z0-9가-힣-_!@#$%^&*]+)\/live\/([a-zA-Z0-9가-힣-_!@#$%^&*]+)/i;
             var match_platform = null;
             if(ADD_config.chat_auto_coor_twitch_afreeca){
                 match_platform = href.match(regex_platform);
@@ -1497,6 +1498,15 @@ async function chatElemControl($line){
             //!/^http:\/\//.test(href) && 
             else if(href.indexOf('dostream.com/#/stream/m3u8') == -1 && regex_m3u8.test(href)){
                 $aElem.after(` <a href="https://www.dostream.com/#/stream/m3u8/${href}" target="_blank" class="topClick" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[M3U8 PLAYER]</a>`);
+                // 스크롤 내리기
+                if( temp_isChatScrollOn ){
+                    goScrollDown();
+                }
+            }
+            // Naver Esports 링크인 경우
+            //!/^http:\/\//.test(href) && 
+            else if(href.indexOf('dostream.com/#/stream/nesports') == -1 && regex_nesports.test(href)){
+                $aElem.after(` <a href="https://www.dostream.com/#/stream/nesports/${href}" target="_blank" class="topClick" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[M3U8 PLAYER]</a>`);
                 // 스크롤 내리기
                 if( temp_isChatScrollOn ){
                     goScrollDown();
