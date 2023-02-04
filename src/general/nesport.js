@@ -85,7 +85,7 @@ export function get_nesports_playlist(url){
                         // get home-away team name
                         try{
                             if(data.content.match.homeTeam && data.content.match.homeTeam.nameEngAcronym && data.content.match.awayTeam && data.content.match.awayTeam.nameEngAcronym){
-                                title += `| ${data.content.match.homeTeam.nameEngAcronym}-${data.content.match.awayTeam.nameEngAcronym}`;
+                                title += ` | ${data.content.match.homeTeam.nameEngAcronym}-${data.content.match.awayTeam.nameEngAcronym}`;
                             }
                         }
                         catch(e){
