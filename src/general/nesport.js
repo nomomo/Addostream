@@ -98,7 +98,7 @@ export function get_nesports_playlist(url){
                             if(data.content.predictionListPage && data.content.predictionListPage.matches && data.content.predictionListPage.matches.length && data.content.predictionListPage.matches.length > 0){
                                 let foundOne = false;
                                 let currentTimeNum = Number(new Date());
-                                for(var i=0;i<data.content.predictionListPage.matches.length;i++){
+                                for(let i=0;i<data.content.predictionListPage.matches.length;i++){
                                     let game = data.content.predictionListPage.matches[i];
                                     if(game.matchStatus !== "BEFORE") continue;
                                     if(game.startDate <= startDateNum || game.startDate <= currentTimeNum) continue;
@@ -107,8 +107,8 @@ export function get_nesports_playlist(url){
                                         foundOne = true;
                                         title += "<br /><br />■ 48시간 내 경기 일정 ■";
                                     }                                    
-                                    let gameStartDate = (new Date(game.startDate)).format("yyyy.MM.dd amp hh:mm");
-                                    title += `<br />${gameStartDate} | ${game.homeTeam.nameEngAcronym}-${game.awayTeam.nameEngAcronym}`;
+                                    let gameStartDateStr = (new Date(game.startDate)).format("yyyy.MM.dd amp hh:mm");
+                                    title += `<br />${gameStartDateStr} | ${game.homeTeam.nameEngAcronym}-${game.awayTeam.nameEngAcronym}`;
                                 }
                             }
                         }
@@ -122,6 +122,50 @@ export function get_nesports_playlist(url){
                         ADD_send_sys_msg_from_main_frame("라이브 중인 경기를 찾을 수 없거나, 파싱 중 알 수 없는 에러가 발생했습니다.");
                     }
                     return;
+                }
+                else{
+                    // get next match from predictionListPage
+                    try{
+                        let title = "";
+                        if(data.content.predictionListPage && data.content.predictionListPage.matches && data.content.predictionListPage.matches.length && data.content.predictionListPage.matches.length > 0){
+                            let foundToday = false;
+                            let foundTomorrow = false;
+                            let todayDate = new Date();
+                            let tomorrowDate = new Date(Number(todayDate) + 1000*60*60*24);
+                            for(let i=0;i<data.content.predictionListPage.matches.length;i++){
+                                let game = data.content.predictionListPage.matches[i];
+                                let gameStartDate = new Date(game.startDate);
+                                let gameStartDateString = gameStartDate.toDateString();
+                                let gameStartDateStr = "";
+                                if(gameStartDateString === todayDate.toDateString()){
+                                    if(!foundToday) {
+                                        foundToday = true;
+                                        title += "■ 오늘 경기 일정 ■";
+                                    }
+                                    gameStartDateStr = (new Date(game.startDate)).format("yyyy.MM.dd amp hh:mm");
+                                    title += `<br />${gameStartDateStr} | ${game.homeTeam.nameEngAcronym}-${game.awayTeam.nameEngAcronym}`;
+                                }
+                                else if(gameStartDateString === tomorrowDate.toDateString()){
+                                    if(!foundTomorrow) {
+                                        foundTomorrow = true;
+                                        if(foundToday){
+                                            title += "<br /><br />";
+                                        }
+                                        title += "■ 내일 경기 일정 ■";
+                                    }
+                                    gameStartDateStr = (new Date(game.startDate)).format("yyyy.MM.dd amp hh:mm");
+                                    title += `<br />${gameStartDateStr} | ${game.homeTeam.nameEngAcronym}-${game.awayTeam.nameEngAcronym}`;
+                                }                                    
+                            }
+
+                            if(foundTomorrow || foundToday){
+                                ADD_send_sys_msg_from_main_frame(`<hr /><strong>${title}</strong><hr />`);
+                            }
+                        }
+                    }
+                    catch(e){
+                        ADD_DEBUG("parsing error 4", e);
+                    }
                 }
 
 
