@@ -1,6 +1,7 @@
 import {ADD_DEBUG} from "libs/nomo-utils.js";
 import {loadhls} from "libs/hls_custom.js";
 import {ADD_send_sys_msg_from_main_frame} from "chat/send_message.js";
+import { isDebug } from "general/common.js";
 
 var m3u8_player = /*js*/`
 <video controls="true" width="100%" height="100%" id="m3u8video"></video>
@@ -20,6 +21,7 @@ async function loadHlsVideo(url, iter){
         return;
     }
 
+    var HLSDEBUG = await isDebug();
     var $video = $("#m3u8video");
     var video;
     var m3u8Url = decodeURIComponent(url);
@@ -38,6 +40,28 @@ async function loadHlsVideo(url, iter){
         newhls.attachMedia(video);
         newhls.on(newHls.Events.MANIFEST_PARSED, function() {
             ADD_DEBUG("newHls.Events.MANIFEST_PARSED", video);
+            ADD_DEBUG("newhls.levels = ", newhls.levels);
+
+            // set maximum quality
+            if(ADD_config.m3u8_maxQuality){
+                let maxBitrateValue = -1.0;
+                let maxBitrateIndex = -1;
+                if(newhls.levels.length > 0){
+                    let levels = newhls.levels;
+                    for(let i=0;i<levels.length;i++){
+                        let level = levels[i];
+                        if(level.bitrate > maxBitrateValue){
+                            maxBitrateValue = level.bitrate;
+                            maxBitrateIndex = i;
+                        }
+                    }
+
+                    if(maxBitrateIndex !== -1){
+                        newhls.currentLevel = maxBitrateIndex;
+                    }
+                }
+            }
+
             video.play();
         });
         newhls.on(newHls.Events.ERROR, function(event, data) {
@@ -69,6 +93,15 @@ async function loadHlsVideo(url, iter){
             //     break;
             // }
         });
+        newhls.on(newHls.Events.LEVEL_SWITCHED, function(event, data){
+            if(HLSDEBUG){
+                ADD_send_sys_msg_from_main_frame(`M3U8 PLAYER LEVEL SWITCHED = ` + data.level);
+            }
+            ADD_DEBUG("HLS LEVEL SWITCHED", event, data);
+        });
+        if(HLSDEBUG){
+            unsafeWindow.newhls = newhls;
+        }
     }
     else{
         ADD_DEBUG("newHls.isSupported = FAIL");
