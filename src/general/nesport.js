@@ -181,7 +181,7 @@ export function get_nesports_playlist(url){
                 if(found){
                     ADD_DEBUG("m3u8 url", m3u8url);
                     nomo_global.ADD_now_playing.display_name = "nesports";
-                    ADD_send_sys_msg_from_main_frame(`Loading <a href="${m3u8url}">M3U8</a> video...`);
+                    ADD_send_sys_msg_from_main_frame(`Loading <a style="text-decoration:underline" href="${m3u8url}">M3U8</a> video...`);
                     m3u8_override(m3u8url);
                 }
                 else{
