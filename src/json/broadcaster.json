@@ -703,7 +703,8 @@
             "95pingman": {"dn": "핑맨", "nn":[]},
             "mmange2": {"dn": "망개", "nn":[]},
             "kimdoenmo": {"dn": "김된모", "nn":["안승원", "된모"]},
-            "bunnychannel_": {"dn": "버니버니", "nn":["버니", "채준혁", "준혁"]}
+            "bunnychannel_": {"dn": "버니버니", "nn":["버니", "채준혁", "준혁"]},
+            "kimpenguin__": {"dn": "김펭귄", "nn":["김승민"]}
         },
         "_twitch": {
             "_name": {"dn": "", "nn": []}
