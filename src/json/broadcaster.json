@@ -438,7 +438,6 @@
             "tgdstation": {"dn": "트게더라이브", "nn": ["트게더"]},
             "agueppo": {"dn": "아구이뽀", "nn":["아게로"]},
             "agu_tv": {"dn": "아구", "nn": []},
-            "canna": {"dn": "canna", "nn": ["칸나", "김창동", "창동", "갓나", "황나"]},
             "dopa24": {"dn": "DOPA",  "nn": ["정상길", "상길", "도파"]},
             "kbr943": {"dn": "새빨간콜라", "nn": []},
             "dxj002": {"dn": "단장002", "nn": ["단장"]},
@@ -673,7 +672,8 @@
             "bver99": {"dn": "빕어", "nn": []},
             "bbua__": {"dn": "쁘아", "nn": []},
             "llilka": {"dn": "릴카", "nn": ["리루카"]},
-            "airikanna_stellive": {"dn": "아이리_칸나", "nn": ["칸나", "아이리칸나"]},
+            "airikanna_stellive": {"dn": "아이리_칸나", "nn": ["칸나", "아이리칸나", "황녀님"]},
+            "canna": {"dn": "canna", "nn": ["롤칸나", "김창동", "창동", "갓나", "황나"]},
             "ayatsunoyuni_stellive": {"dn": "아야츠노_유니", "nn": ["유니유니", "유니"]},
             "twitchsummer030": {"dn": "여르미", "nn": []},
             "ppomodoli": {"dn": "뽀모", "nn": []},
@@ -704,7 +704,19 @@
             "mmange2": {"dn": "망개", "nn":[]},
             "kimdoenmo": {"dn": "김된모", "nn":["안승원", "된모"]},
             "bunnychannel_": {"dn": "버니버니", "nn":["버니", "채준혁", "준혁"]},
-            "kimpenguin__": {"dn": "김펭귄", "nn":["김승민"]}
+            "kimpenguin__": {"dn": "김펭귄", "nn":["김승민"]},
+            "arahashitabi_stellive": {"dn": "아라하시_타비", "nn":["타비"]},
+            "nenekomashiro_stellive": {"dn": "네네코_마시로", "nn":["마시로","시로"]},
+            "shirayukihina_stellive": {"dn": "시라유키_히나", "nn":["히나"]},
+            "akanelize_stellive": {"dn": "아카네_리제", "nn":["리제"]},
+            "nerunerunerunes2": {"dn": "네루짱", "nn":["네루쨩"]},
+            "hchcjswo": {"dn": "하창봉", "nn":[]},
+            "hoonjeongyang": {"dn": "훈정양", "nn":[]},
+            "snow_hite": {"dn": "설백", "nn":[]},
+            "158mcm": {"dn": "일오팔", "nn":[]},
+            "leenock_": {"dn": "리녹", "nn":[]},
+            "kimdh0630":{"dn": "등호형방송", "nn":["등호형"]},
+            "eyejoker7":{"dn": "눈쟁이", "nn":[]}
         },
         "_twitch": {
             "_name": {"dn": "", "nn": []}
