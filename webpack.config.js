@@ -2,7 +2,6 @@
 const path = require("path");
 const WebpackUserscript = require('webpack-userscript');
 const TerserPlugin = require("terser-webpack-plugin");
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 var PACKAGE = require('./package.json');
 const my_project_name = "Addostream";
 
