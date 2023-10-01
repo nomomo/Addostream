@@ -33,6 +33,15 @@ async function loadHlsVideo(url, iter){
 
     video = $video[0];
 
+    if(ADD_config.m3u8_potplayer_link){
+        let atag1 = $(`<a>[M3U8 - Potplayer 에서 재생]</a>`);
+        atag1.attr("href", "potplayer://"+url);
+        ADD_send_sys_msg_from_main_frame(atag1.prop('outerHTML'));
+        // let atag2 = $(`<a>[Potplayer 에 추가]</a>`);
+        // atag2.attr("href", "potplayer://"+url+"/add");
+        // ADD_send_sys_msg_from_main_frame(atag1.prop('outerHTML') + " " + atag2.prop('outerHTML'));
+    }
+
     if (newHls.isSupported()) {
         ADD_DEBUG("newHls.isSupported = true", video);
         newhls = new newHls();
