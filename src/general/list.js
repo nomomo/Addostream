@@ -1,7 +1,7 @@
 import "libs/date_format.js";
 import { ADD_DEBUG, getTimeStamp, escapeHtml } from "../libs/nomo-utils.js";
 import * as nomo_common from "./common.js";
-import { streamerArray } from "./streamer-lib.js";
+import { streamerArray, broadcaster } from "./streamer-lib.js";
 
 //////////////////////////////////////////////////////////////////////////////////
 // 파싱 데이터 이용하여 layout 생성
@@ -23,6 +23,9 @@ export async function ADD_run(data,flag){
                 break;
             case "youtube":
                 from = "유투브";
+                break;
+            case "chzzk":
+                from = "CHZZK";
                 break;
             default:
                 from = data.from;
@@ -204,24 +207,40 @@ export async function ADD_run(data,flag){
         if(data[i].main_favorite === true)
             continue;
 
-        for(var j=0; j<streamerArray.length; j++){
-            // 트위치가 아닌 경우
-            if(data[i].from !== "twitch"){
-                data[i].display_name = "";
-                break;
+            
+        // 트위치가 아닌 경우
+        if(data[i].from == "chzzk"){
+            let found = false;
+            for(let key in broadcaster.chzzk){
+                if(broadcaster.chzzk.dn === data[i].streamer){
+                    data[i].display_name = streamerArray[j][1];
+                    found = true;
+                    break;
+                }
             }
 
-            // 기존 스트리머 이름 목록에서 찾은 경우
-            if(streamerArray[j][0] === data[i].streamer){
-                data[i].display_name = streamerArray[j][1];
-                break;
-            }
-
-            // 못 찾은 경우
-            if(j === streamerArray.length-1){
+            if(!found){
                 data[i].display_name = "";//data[i].streamer;
-                break;
             }
+        }
+        else if(data[i].from == "twitch") {
+            for(var j=0; j<streamerArray.length; j++){
+                // 기존 스트리머 이름 목록에서 찾은 경우
+                if(streamerArray[j][0] === data[i].streamer){
+                    data[i].display_name = streamerArray[j][1];
+                    break;
+                }
+
+                // 못 찾은 경우
+                if(j === streamerArray.length-1){
+                    data[i].display_name = "";//data[i].streamer;
+                    break;
+                }
+            }
+        }
+        else{
+            data[i].display_name = "";
+            break;
         }
     }
 
@@ -291,6 +310,9 @@ export async function ADD_run(data,flag){
                 break;
             case "youtube":
                 display_name = "유투브";
+                break;
+            case "chzzk":
+                display_name = data.streamer;
                 break;
             default:
                 display_name = data.from;
