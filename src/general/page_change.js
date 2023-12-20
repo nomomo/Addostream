@@ -44,7 +44,7 @@ export function ADD_page_change($, global, document){
             else if(url_current.indexOf("/#/stream/chzzk/") !== -1){
                 if(ADD_config.chzzk_onlyVideo){
                     $(document).arrive("#stream > iframe", {existing: true, onlyOnce: true}, function(elem) {
-                        if(elem.src.indexOf("?embed") === -1){
+                        if(elem.src.indexOf("chzzk.naver.com") !== -1 && elem.src.indexOf("?embed") === -1){
                             elem.src = elem.src + "?embed";
                         }
                     });
