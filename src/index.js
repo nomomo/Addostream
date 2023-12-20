@@ -55,12 +55,43 @@ import {ADD_parse_list_data} from "general/list.js";
     await GM_setting.init("ADD_config", GM_setting_param);
     await GM_setting.load();
 
-    // 이벤트 탈취
-    event_hijacking();
+
 
     //////////////////////////////////////////////////////////////////////////////////
+    // CHZZK 인 경우
+    if(nomo_global.PAGE == nomo_const.C_CHZZK){
+        ADD_DEBUG("CHZZK");
+        let isTopWindow = window.self === window.top;
+        if(isTopWindow){
+            ADD_DEBUG("CHZZK TOP WINDOW");
+            return;
+        }
+
+        if(ADD_config.chzzk_onlyVideo){
+            GM_addStyle(`
+            #live_player_layout{
+                position:fixed !important;
+                left:0px !important;
+                top:0px !important;
+                z-index:10000000000000 !important;
+                width:100% !important;
+                height:100% !important;
+            }
+            `);
+        }
+
+        return;
+    }
+    
+    
+
+    //////////////////////////////////////////////////////////////////////////////////
+    // 이벤트 탈취
+    event_hijacking();
+    
     // 메인 또는 스트림인 경우
     if(nomo_global.PAGE == nomo_const.C_MAIN || nomo_global.PAGE == nomo_const.C_STREAM || nomo_global.PAGE == nomo_const.C_M3U8PLAYER){
+
         // Call Twitch api
         await twitch_api();
         await twitch_api_call_interval();

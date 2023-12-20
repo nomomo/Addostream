@@ -189,6 +189,8 @@ const _settings = {
     twitch_interacite : { disable:true, category:"advanced", depth:2, type: "checkbox", value: false, title:"반응형 트위치 사용", desc:"" },
     twitch_point_clicker : { disable:true, category:"advanced", depth:1, type: "checkbox", value: false, title:"[실험실] 채널 포인트 자동 습득", desc:"가능한 경우 채널 포인트 자동 습득<br />참고: 포인트는 www.twitch.tv 에 직접 접속했을 때만 쌓입니다." },
 
+    chzzk_onlyVideo : { category_name:"치지직", category:"chzzk", depth:1, type: "checkbox", value: true, title:"[실험실] 치지직 플레이어만 표시", desc:"플레이어 주변 레이아웃을 숨기고 플레이어만 표시합니다. 알 수 없는 문제가 발생하면 이 기능을 끄십시오." },
+
     m3u8_maxQuality : { under_dev:true, category_name:"M3U8 플레이어", category:"m3u8", depth:1, type: "checkbox", value: true, title:"[실험실] 항상 최고 화질로 재생", desc:"인터넷 연결 상태에 따라 비디오 품질을 자동으로 조절하는 기능을 비활성화 합니다." },
     m3u8_type : { under_dev:true, category:"m3u8", depth:1, type: "radio", value: "auto", title:"[실험실] M3U8 PLAYER 타입", desc:`M3U8 PLAYER 에서 동영상을 재생하는 방식을 선택합니다.<br />- Auto: http 로 시작하거나 서버에서 차단된 m3u8 을 재생할 수 있지만 연결에 필요한 권한을 요구합니다. M3U8 재생 시 연결 허용 관련 팝업이 뜨는 경우 "도메인 항상 허용" 또는 "모든 도메인 항상 허용" 버튼을 클릭 후 새로고침 하세요.<br />- Legacy: 1.55 버전까지의 방식으로 추가 권한을 요구하지 않지만 일부 m3u8 링크의 재생이 불가능 합니다.`, radio: {auto: {title: "Auto", value:"auto"}, legacy: {title: "Legacy", value:"legacy"} }},
     m3u8_potplayer_link : { under_dev:true, category:"m3u8", depth:1, type: "checkbox", value:true, title:"Potplayer 로 재생 버튼을 추가", desc:"" },

@@ -18,6 +18,7 @@ export const ADD_get_page_type = function (url){
     var insagirl = document_url.indexOf("insagirl-toto.appspot.com/hrm/");
     var twitch_player = document_url.indexOf("player.twitch.tv");
     var twitch_main = document_url.indexOf("www.twitch.tv");
+    var chzzk = document_url.indexOf("chzzk.naver.com/live") !== -1
     if(keyword_uchat !== -1){
         return nomo_const.C_UCHAT;
     }
@@ -41,6 +42,9 @@ export const ADD_get_page_type = function (url){
     }
     else if(twitch_main !== -1){
         return nomo_const.C_TWITCH;
+    }
+    else if(chzzk){
+        return nomo_const.C_CHZZK;
     }
     else if(keyword_m3u8 !== -1){
         return nomo_const.C_M3U8PLAYER;

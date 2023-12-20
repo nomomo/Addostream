@@ -41,6 +41,15 @@ export function ADD_page_change($, global, document){
                 var nesports_url = document.location.href.split("/#/stream/m3u8/").pop();
                 get_nesports_playlist(nesports_url);
             }
+            else if(url_current.indexOf("/#/stream/chzzk/") !== -1){
+                if(ADD_config.chzzk_onlyVideo){
+                    $(document).arrive("#stream > iframe", {existing: true, onlyOnce: true}, function(elem) {
+                        if(elem.src.indexOf("?embed") === -1){
+                            elem.src = elem.src + "?embed";
+                        }
+                    });
+                }
+            }
             else{
                 nomo_global.ADD_now_playing.id = url_current.split("/").pop();
                 nomo_global.ADD_now_playing.display_name = ADD_streamer_nick(nomo_global.ADD_now_playing.id);

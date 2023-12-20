@@ -211,9 +211,9 @@ export async function ADD_run(data,flag){
         // 트위치가 아닌 경우
         if(data[i].from == "chzzk"){
             let found = false;
-            for(let key in broadcaster.chzzk){
-                if(broadcaster.chzzk.dn === data[i].streamer){
-                    data[i].display_name = streamerArray[j][1];
+            for(let key in broadcaster.data.chzzk){
+                if(key === data[i].url.split("/").pop()){
+                    data[i].display_name = broadcaster.data.chzzk[key].dn;
                     found = true;
                     break;
                 }
@@ -312,6 +312,7 @@ export async function ADD_run(data,flag){
                 display_name = "유투브";
                 break;
             case "chzzk":
+                //display_name = data.display_name;
                 display_name = data.streamer;
                 break;
             default:

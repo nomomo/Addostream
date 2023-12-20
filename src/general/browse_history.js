@@ -1,6 +1,6 @@
 import nomo_const from "general/const.js";
 import * as nomo_common from "general/common.js";
-import {ADD_streamer_nick} from "general/streamer-lib.js";
+import {ADD_streamer_nick, broadcaster} from "general/streamer-lib.js";
 import {ADD_DEBUG} from "libs/nomo-utils.js";
 
 /**
@@ -29,14 +29,34 @@ function ADD_Channel_history_cookie(rw_array){
         // 아이디에 따른 닉네임 찾기
         var ch_text = "";
         var temp_array = rw_array[0].split("&");
-        for (var j=0; j<temp_array.length; j++){
-            if(j !== 0){
-                ch_text = ch_text+"&";
+
+        console.log("rw_array", rw_array);
+        if(rw_array[2] === "chzzk"){
+            let found = false;
+            
+            for(let key in broadcaster.data.chzzk){
+                console.log(key);
+                if(key === rw_array[0]){
+                    ch_text = broadcaster.data.chzzk[key].dn + "(CHZ)";
+                    found = true;
+                    break;
+                }
             }
-            ch_text = ch_text+ADD_streamer_nick(temp_array[j].toUpperCase());//.toUpperCase();
+
+            if(!found){
+                ch_text = rw_array[0];
+            }
         }
-        if(rw_array[2] === "multitwitch"){
-            ch_text = ch_text+"(멀티)";
+        else{
+            for (let j=0; j<temp_array.length; j++){
+                if(j !== 0){
+                    ch_text = ch_text+"&";
+                }
+                ch_text = ch_text+ADD_streamer_nick(temp_array[j].toUpperCase());//.toUpperCase();
+            }
+            if(rw_array[2] === "multitwitch"){
+                ch_text = ch_text+"(멀티)";
+            }
         }
         rw_array[1] = ch_text;
 
@@ -175,6 +195,10 @@ function ADD_Channel_History_layout(ADD_h_cookie, fade){
                 ch_stream_text = "m3u8";
                 platform_class = "h_m3u8";
                 ch_text = "M3U8";
+                break;
+            case "chzzk":
+                platform_class = "chzzk";
+                ch_text = ch_streamer_nick;
                 break;
             case "nesports":
                 ch_stream_text = ch_streamer_id.split("/").pop();
