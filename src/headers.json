@@ -6,7 +6,8 @@
   "include": [
     "*.dostream.com/*",
     "*insagirl-toto.appspot.com/hrm/*",
-    "*player.twitch.tv/*"
+    "*player.twitch.tv/*",
+    "https://chzzk.naver.com/*?embed"
   ],
   "exclude": [
     "*insagirl-toto.appspot.com/hrm/notfound.html"

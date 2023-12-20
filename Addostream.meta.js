@@ -8,6 +8,7 @@
 // @include *.dostream.com/*
 // @include *insagirl-toto.appspot.com/hrm/*
 // @include *player.twitch.tv/*
+// @include https://chzzk.naver.com/*?embed
 // @exclude *insagirl-toto.appspot.com/hrm/notfound.html
 // @icon https://raw.githubusercontent.com/nomomo/Addostream/master/images/logo.png
 // @homepageURL https://nomomo.github.io/Addostream/
