@@ -10,6 +10,7 @@ import {ADD_DEBUG} from "libs/nomo-utils.js";
  * @returns
  */
 function ADD_Channel_history_cookie(rw_array){
+    ADD_DEBUG("ADD_Channel_history_cookie");
     var ADD_MAX_HISTORY = ADD_config.max_history;
 
     var ADD_h_cookie = $.cookie("ADD_h_cookie");
@@ -81,6 +82,7 @@ function ADD_Channel_history_cookie(rw_array){
     }
 
     //ADD_DEBUG('히스토리 쓰기: ',rw_array, ADD_h_cookie);
+    ADD_DEBUG("ADD_h_cookie", ADD_h_cookie);
     $.cookie("ADD_h_cookie", JSON.stringify(ADD_h_cookie), { expires : 365, path : "/" });
 
     return ADD_h_cookie;
@@ -337,12 +339,14 @@ export function ADD_channel_history_run(){
     else if(nomo_global.PAGE === nomo_const.C_STREAM){
         // 스트림 주소로 직접 접속하는 경우
         current_info = check_stream_and_chennel_from_location();
+        ADD_DEBUG("current_info 1", current_info);
         total_history = ADD_Channel_history_cookie(current_info);
     }
 
     // Case 2. 이벤트로 인해 접속하는 경우
     $(window).on("hashchange.history", function(){
         current_info = check_stream_and_chennel_from_location();
+        ADD_DEBUG("current_info 2", current_info);
         total_history = ADD_Channel_history_cookie(current_info);
 
         ADD_Channel_History_layout(total_history, false);

@@ -2211,11 +2211,17 @@ function type_and_go_run(){
     }
 
     if(streamerid !== null){
-        setParentWindowLocation("https://www.dostream.com/#/stream/twitch/"+streamerid);
+        if(broadcaster.data.twitch[streamerid].cc !== undefined){
+            setParentWindowLocation("https://www.dostream.com/#/stream/chzzk/"+broadcaster.data.twitch[streamerid].cc);
+            ADD_send_sys_msg(`다음으로 이동합니다: ${streamerDisplayName}(${streamerid}) - Chzzk`);
+        }
+        else{
+            setParentWindowLocation("https://www.dostream.com/#/stream/twitch/"+streamerid);
+            ADD_send_sys_msg(`다음으로 이동합니다: ${streamerDisplayName}(${streamerid}) - Twitch`);
+        }
         $etarget.blur();
         $etarget.html("");
         $etarget.focus();
-        ADD_send_sys_msg(`다음으로 이동합니다: ${streamerDisplayName}(${streamerid})`);
     }
     else{
         ADD_send_sys_msg(`해당하는 스트리머를 찾을 수 없습니다: ${escapeHtml(etargetText)}`);

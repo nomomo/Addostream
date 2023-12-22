@@ -32,6 +32,10 @@ export function ADD_page_change($, global, document){
 
         // 스트림인 경우
         if(nomo_global.PAGE === nomo_const.C_STREAM){
+            ADD_DEBUG("url_current", url_current);
+            nomo_global.ADD_now_playing.from = "";
+            nomo_global.ADD_now_playing.url = url_current;
+
             if(url_current.indexOf("/#/stream/m3u8/") !== -1){
                 var m3u8_url = document.location.href.split("/#/stream/m3u8/").pop();
                 m3u8_override(m3u8_url);
@@ -46,12 +50,18 @@ export function ADD_page_change($, global, document){
                     $(document).arrive("#stream > iframe", {existing: true, onlyOnce: true}, function(elem) {
                         if(elem.src.indexOf("chzzk.naver.com") !== -1 && elem.src.indexOf("?embed") === -1){
                             elem.src = elem.src + "?embed";
+                            nomo_global.ADD_now_playing.id = url_current.split("/").pop();
+                            nomo_global.ADD_now_playing.from = "chzzk";
+                            nomo_global.ADD_now_playing.display_name = "";
+                            nomo_global.ADD_now_playing.toonat_link = "";
+                            nomo_global.ADD_now_playing.twip_link = "";
                         }
                     });
                 }
             }
             else{
                 nomo_global.ADD_now_playing.id = url_current.split("/").pop();
+                nomo_global.ADD_now_playing.from = "twitch";
                 nomo_global.ADD_now_playing.display_name = ADD_streamer_nick(nomo_global.ADD_now_playing.id);
                 nomo_global.ADD_now_playing.toonat_link = "";
                 nomo_global.ADD_now_playing.twip_link = "";

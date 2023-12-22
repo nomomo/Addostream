@@ -47,7 +47,7 @@ export function ADD_popup_player(){
         </div>`);
         $(".stream_zoomout").prepend($doe);
         $doe.find(".button_expand").on("click", function(){
-            window.location.href = "https://www.dostream.com/#/stream/twitch/"+nomo_global.ADD_now_playing.id;
+            window.location.href = `${nomo_global.ADD_now_playing.url}`;
             // 나머지 동작은 newdostream 에서 처리한다.
             //$("#stream").empty();
             //$(".stream_zoomout").attr("style","").removeClass("stream_zoomout").attr("id","stream");
