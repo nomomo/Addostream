@@ -3,10 +3,6 @@ body{
     overflow-x: hidden;
 }
 
-.search a.afreeca {
-    display: none !important;
-}
-
 ul.nav {
     display: none !important;
 }

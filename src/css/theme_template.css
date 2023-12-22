@@ -115,6 +115,24 @@ table>thead>tr>th {
     background-color: var(--list-top-button-youtube-checked-background-color);      
 }
 
+#stream .search .afreeca.checkbox {
+    color:var(--list-top-button-checkbox-font-color);
+    background-color: var(--list-top-button-checkbox-background-color);      
+}
+#stream .search .afreeca.checkbox.checked {
+    color:var(--list-top-button-checkbox-checked-font-color);
+    background-color: var(--list-top-button-checkbox-checked-background-color);      
+}
+
+#stream .search .chzzk.checkbox {
+    color:var(--list-top-button-chzzk-font-color);
+    background-color: var(--list-top-button-chzzk-background-color);      
+}
+#stream .search .chzzk.checkbox.checked {
+    color:var(--list-top-button-chzzk-checked-font-color);
+    background-color: var(--list-top-button-chzzk-checked-background-color);      
+}
+
 #stream .search #multitwitch {
     color:var(--list-top-button-multitwitch-font-color);
     background-color: var(--list-top-button-multitwitch-background-color);   

@@ -70,7 +70,10 @@ export async function ADD_run(data,flag){
         var h_index_ary = [];
         var hide_streamer = ADD_config.streamer_hide_ID;
         for(var i=0; i<hide_streamer.length; i++){
-            var h_index = data.map(function(o){ return o.streamer; }).indexOf(hide_streamer[i]);
+            var h_index = data.map(function(o){return o.streamer;}).indexOf(hide_streamer[i]);
+            if(h_index === -1){
+                h_index = data.map(function(o){return o.url.split("/").pop();}).indexOf(hide_streamer[i]);
+            }
             if(h_index !== -1){
                 h_index_ary.push(h_index);
             }
@@ -275,6 +278,12 @@ export async function ADD_run(data,flag){
                 return true;
             }
             else if(data.from === "youtube" && ADD_config.remember_youtube){
+                return true;
+            }
+            else if(data.from === "afreeca" && ADD_config.remember_afreeca){
+                return true;
+            }
+            else if(data.from === "chzzk" && ADD_config.remember_chzzk){
                 return true;
             }
         }

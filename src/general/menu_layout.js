@@ -174,6 +174,18 @@ export function ADD_basic_layout(){
                                     <span class="glyphicon glyphicon-ok"></span>
                                 </label> 유투브
                                 </span>
+                                <span style="margin-left:10px;">
+                                <label class="btn btn-default btn-xxs">
+                                    <input type="checkbox" id="ADD_config_remember_afreeca" class="ADD_config_remember_platform_form form_enabled" onfocus="this.blur()"  />
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                </label> 아프리카
+                                </span>
+                                <span style="margin-left:10px;">
+                                <label class="btn btn-default btn-xxs">
+                                    <input type="checkbox" id="ADD_config_remember_chzzk" class="ADD_config_remember_platform_form form_enabled" onfocus="this.blur()"  />
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                </label> 치지직
+                                </span>
                             </td>
                         </tr>
                         <tr>

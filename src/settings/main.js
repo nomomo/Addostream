@@ -71,6 +71,8 @@ const _settings = {
     remember_twitch : { category:"list", depth:3, type: "checkbox", value: false, title:"트위치 숨기기", desc:"" },
     remember_kakao : { category:"list", depth:3, type: "checkbox", value: false, title:"카카오 숨기기", desc:"" },
     remember_youtube : { category:"list", depth:3, type: "checkbox", value: false, title:"유투브 숨기기", desc:"" },
+    remember_afreeca : { category:"list", depth:3, type: "checkbox", value: false, title:"아프리카 숨기기", desc:"" },
+    remember_chzzk : { category:"list", depth:3, type: "checkbox", value: false, title:"치지직 숨기기", desc:"" },
     
     main_list_cache : { under_dev:true, category:"list", category_name:"리스트 - 고급", depth:2, type: "checkbox", value:true, title:"메인 리스트 캐쉬", desc:"빠른 메인 로딩을 위해 메인 리스트를 캐쉬함"},
     main_list_cache_time : { under_dev:true, category:"list", depth:3, type: "text", value: 3, valid:"number", min_value:1, title:"캐쉬 간격", desc:"분 단위로 입력, 최소 1분(기본값: 3)" },

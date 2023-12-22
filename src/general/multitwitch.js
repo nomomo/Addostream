@@ -8,7 +8,7 @@ export function ADD_multitwitch_layout(){
     }
     if( $(".search").length === 0 && $(".main-streams").length !== 0){
         $(".main-streams").prepend(`<div class="search">
-        <a class="checkbox twitch checked">트위치</a><a class="checkbox kakao checked">카카오</a><a class="checkbox youtube checked">유튜브</a>
+        <a class="checkbox twitch checked">트위치</a><a class="checkbox kakao checked">카카오</a><a class="checkbox youtube checked">유튜브</a><a class="checkbox afreeca checked">아프리카</a><a class="checkbox chzzk checked">치지직</a>
     </div>`);
     }
     else{
