@@ -68,23 +68,41 @@ import {ADD_parse_list_data} from "general/list.js";
         }
 
         if(ADD_config.chzzk_onlyVideo){
-            GM_addStyle(`
-            #live_player_layout{
-                position:fixed !important;
-                left:0px !important;
-                top:0px !important;
-                z-index:10000000000000 !important;
-                width:100% !important;
-                height:100% !important;
+            // GM_addStyle(`
+            // #live_player_layout{
+            //     position:fixed !important;
+            //     left:0px !important;
+            //     top:0px !important;
+            //     z-index:10000000000000 !important;
+            //     width:100% !important;
+            //     height:100% !important;
+            // }
+            // `);
+
+            let player = undefined;
+            let $player = undefined;
+            let handleVideoReadyFired = false;
+            let handleVideoReady = function(){
+                if (handleVideoReadyFired) return;
+                handleVideoReadyFired = true;
+                document.querySelector(".pzp-pc__viewmode-button").click();
+                document.querySelector('[class^="live_chatting_header_button__"]').click();
             }
-            `);
 
             // 자동 넓은 화면
-            $(document).arrive("button.pzp-pc__viewmode-button", {onlyOnce: true, existing: true}, function(elem){
+            $(document).arrive("video.webplayer-internal-video", {onlyOnce: true, existing: true}, function(elem){
                 ADD_DEBUG("elem", elem);
-                setTimeout(function(){
-                    $(elem).click();
-                },100);
+                player = elem;
+                $player = $(player);
+
+                if (player.readyState >= 2) {
+                    handleVideoReady();
+                } else {
+                    player.addEventListener('loadedmetadata', function once() {
+                        player.removeEventListener('loadedmetadata', once);
+                        handleVideoReady();
+                    });
+                }
             });
             
             // display current quality
