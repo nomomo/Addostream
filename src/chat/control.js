@@ -1,6 +1,6 @@
 import * as nomo_common from "general/common.js";
 import nomo_const from "general/const.js";
-import { ADD_streamer_nick, streamerArray, streamerArray_name, streamerArray_regex } from "general/streamer-lib.js";
+import { broadcaster, ADD_streamer_nick, streamerArray, streamerArray_name, streamerArray_regex } from "general/streamer-lib.js";
 import * as nomo_theme from "general/theme.js";
 import * as utils from "libs/nomo-utils.js";
 import * as nomo_version from "settings/version.js";
@@ -9,6 +9,7 @@ import { ADD_send_sys_msg } from "chat/send_message.js";
 import { uchat_connect_waiting, uchat_connect_check_clear} from "chat/server_connector.js";
 import { getStreamerIdAndDisplayNameFromNick } from "general/streamer-lib.js";
 import {escapeHtml} from "libs/nomo-utils.js";
+import {ADD_parse_list_data} from "general/list.js";
 import { saveTwitchOAuth, TwitchHelixAPI } from "api/twitchapi.js";
 // import * as hold from "chat/hold.js";
 // import lib_nude from "libs/nude.js";
@@ -1037,7 +1038,7 @@ export function chatImagelayoutfromLinks($line, arr){
             }
 
             // 재생 시 상단 고정하기
-            console.log(ADD_config.chat_video_play_top_fix, is_play_iframe_inserted);
+            ADD_DEBUG(ADD_config.chat_video_play_top_fix, is_play_iframe_inserted);
             if(ADD_config.chat_video_play_top_fix && is_play_iframe_inserted){
                 var $content = $(this).closest("div.content");
                 var $line = $(this).closest("div.line");
@@ -1049,7 +1050,7 @@ export function chatImagelayoutfromLinks($line, arr){
                 }
                 $content.find(".chat_video_play_top_fix").removeClass("chat_video_play_top_fix").find("div.imgur_container").remove();
                 $line.addClass("chat_video_play_top_fix");
-                // console.log($(this).closest("div.line"));
+                // ADD_DEBUG($(this).closest("div.line"));
             }
         });
     }
@@ -1350,6 +1351,9 @@ async function chatElemControl($line){
     
     // 키워드 링크 추가하기
     if(ADD_config.chat_autoKeyword && !ADD_config.broadcaster_mode){
+        if(!nomo_global.latestList){
+            nomo_global.latestList = [];
+        }
         setTimeout(function(){
             try{
                 var rep = 0;
@@ -1380,7 +1384,29 @@ async function chatElemControl($line){
                                         if(match[1] !== "던" && !ADD_config.chat_autoKeyword_1char && match[1].length === 1){
                                             continue;
                                         }
-                                        tempary[i] = tempary[i].replace(match[1],`<a href='https://www.dostream.com/#/stream/twitch/${id}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " autokeyword" : ""}'>${match[1]}</a>`);
+                                        let foundChzzk = false;
+                                        let chzzkCode = "";
+                                        if(!ADD_config.chat_chzzk_onlyLive && broadcaster.data.twitch[id].cc !== undefined){
+                                            foundChzzk = true;
+                                            chzzkCode = broadcaster.data.twitch[id].cc;
+                                        }
+                                        if(!foundChzzk){
+                                            for(let iLT in nomo_global.latestList){
+                                                let lt = nomo_global.latestList[iLT];
+                                                let chzzkCode = lt.url.split("/").pop;
+                                            
+                                                if(lt.from === "chzzk" && chzzkCode === broadcaster.data.twitch[id].cc){
+                                                    foundChzzk = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        if(foundChzzk){
+                                            tempary[i] = tempary[i].replace(match[1],`<a href='https://www.dostream.com/#/stream/chzzk/${chzzkCode}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " autokeyword" : ""}'>${match[1]}</a>`);
+                                        }
+                                        else{
+                                            tempary[i] = tempary[i].replace(match[1],`<a href='https://www.dostream.com/#/stream/twitch/${id}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " autokeyword" : ""}'>${match[1]}</a>`);
+                                        }
                                         break;
                                     }
                                 }
@@ -1399,7 +1425,29 @@ async function chatElemControl($line){
                                         continue;
                                     }
                                     if(contentText.indexOf(disp_name) !== -1){
-                                        contentText = contentText.split(disp_name).join(`<a href='https://www.dostream.com/#/stream/twitch/${id}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " autokeyword" : ""}'>${disp_name}</a>`);   // replaceAll
+                                        let foundChzzk = false;
+                                        let chzzkCode = "";
+                                        if(!ADD_config.chat_chzzk_onlyLive && broadcaster.data.twitch[id].cc !== undefined){
+                                            foundChzzk = true;
+                                            chzzkCode = broadcaster.data.twitch[id].cc;
+                                        }
+                                        if(!foundChzzk){
+                                            for(let iLT in nomo_global.latestList){
+                                                let lt = nomo_global.latestList[iLT];
+                                                let chzzkCode = lt.url.split("/").pop;
+                                            
+                                                if(lt.from === "chzzk" && chzzkCode === broadcaster.data.twitch[id].cc){
+                                                    foundChzzk = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        if(foundChzzk){
+                                            contentText = contentText.split(disp_name).join(`<a href='https://www.dostream.com/#/stream/chzzk/${chzzkCode}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " autokeyword" : ""}'>${disp_name}</a>`);   // replaceAll
+                                        }
+                                        else{
+                                            contentText = contentText.split(disp_name).join(`<a href='https://www.dostream.com/#/stream/twitch/${id}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " autokeyword" : ""}'>${disp_name}</a>`);   // replaceAll
+                                        }
                                         $(element).replaceWith(contentText);
                                         //ADD_DEBUG("contentText", sv, contentText, $(element));
                                         rep = rep + 1;

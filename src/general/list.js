@@ -62,7 +62,9 @@ export async function ADD_run(data,flag){
     // 1. 멀티트위치 클릭된 리스트 초기화
     nomo_global.multitwitch_checked_streamer_arr = [];
 
-    ADD_DEBUG("ADD_run - 파싱된 데이터 이용하여 스트림 리스트 layout 생성");
+    if(flag !== 2){
+        ADD_DEBUG("ADD_run - 파싱된 데이터 이용하여 스트림 리스트 layout 생성");
+    }
     // 숨길 대상 스트리머 지우기
     if(ADD_config.streamer_hide){
         var h_index_ary = [];
@@ -244,6 +246,11 @@ export async function ADD_run(data,flag){
         }
     }
 
+    if(flag == 2){
+        nomo_global.latestList = data;
+        return;
+    }
+
     // 무조건 시청자 순으로 정렬하는 경우, 재정렬 한다.
     if(ADD_config.list_sort_by_viewer){
         data.sort(function(a, b) {
@@ -381,7 +388,7 @@ export async function ADD_run(data,flag){
         if(flag === 0){
             $ul_cont = $("#stream .main-streams ul");
         }
-        else{
+        else {
             $ul_cont = $("#popup_ADD_quick ul");
         }
         var $last_list_update_time = $ul_cont.closest("div").find(".last_list_update_time");
@@ -395,7 +402,6 @@ export async function ADD_run(data,flag){
             `Last Updated : ${new Date(nomo_global.list_update_time).format("yyyy-MM-dd amp hh:mm:ss")}`
         ).fadeIn(300);
     }
-
 }
 
 // 체크박스 클릭 시 이벤트
@@ -431,11 +437,14 @@ $(document).on("click", "input[name=chk]", function(){
 //////////////////////////////////////////////////////////////////////////////////
 // 파싱 후 데이터 정리
 export async function ADD_parse_list_data(flag){
-    ADD_DEBUG("RUNNING - ADD_parse_list_data");
+    ADD_DEBUG("RUNNING - ADD_parse_list_data, flag = ", flag);
     var GM_cache_stream_list = true;
-    if(ADD_config.main_list_cache){
+    if(ADD_config.main_list_cache || flag == 2){
         var main_list_cache_time = ADD_config.main_list_cache_time;
-        if(!$.isNumeric(main_list_cache_time) || main_list_cache_time < 1){
+        if (flag == 2){
+            main_list_cache_time = 5;
+        }
+        else if(!$.isNumeric(main_list_cache_time) || main_list_cache_time < 1){
             main_list_cache_time = 1;
         }
         GM_cache_stream_list = await nomo_common.GM_cache_read("GM_cache_stream_list", Number(ADD_config.main_list_cache_time)*60*1000);
@@ -473,31 +482,6 @@ export async function ADD_parse_list_data(flag){
                 ADD_run([],flag);
             }
         });
-        // $.ajax({
-        //     url: "https://www.dostream.com/dev/stream_list.php",
-        //     type: "GET",
-        //     dataType:"json",
-        //     success:function(data){
-        //         if(data === null){
-        //             ADD_DEBUG("기본 파싱 리스트 존재하지 않음");
-        //             data = [];
-        //             // return;
-        //         }
-        //         else{
-        //             ADD_DEBUG("기본 파싱 리스트 콜 성공");
-        //         }
-        //         nomo_common.GM_cache_write("GM_cache_stream_list");
-        //         GM.setValue("ADD_stream_list", data);
-        //         ADD_run(data,flag);
-        //         nomo_global.list_update_time = new Date();
-        //         ADD_DEBUG("리스트 업데이트 시간 갱신 - 리스트:", nomo_global.list_update_time);
-
-        //     },
-        //     error:function(e){
-        //         ADD_DEBUG("파싱 실패함", e);
-        //         ADD_run([],flag);
-        //     }
-        // });
     }
     else{
         // 데이터 읽어오기

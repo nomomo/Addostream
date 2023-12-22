@@ -63,7 +63,9 @@ var nomo_global_manager = async function(global){
         night_mode_direct_call: false,
 
         // theme
-        theme_current: "default"
+        theme_current: "default",
+
+        latestList: []
     };
 
     var init = async function(){

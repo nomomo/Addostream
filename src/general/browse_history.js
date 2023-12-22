@@ -35,7 +35,6 @@ function ADD_Channel_history_cookie(rw_array){
             let found = false;
             
             for(let key in broadcaster.data.chzzk){
-                console.log(key);
                 if(key === rw_array[0]){
                     ch_text = broadcaster.data.chzzk[key].dn + "(CHZ)";
                     found = true;

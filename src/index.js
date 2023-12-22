@@ -189,6 +189,11 @@ import {ADD_parse_list_data} from "general/list.js";
         // if(!nomo_global.chat_load){
         //     $("body").empty();
         // }
+        
+        ADD_parse_list_data(2);
+        setTimeout(function(){
+            ADD_parse_list_data(2);
+        }, 5 * 60 * 1000);
 
         $(document).ready(function(){
             ADD_DEBUG("DOCUMENT_READY");
