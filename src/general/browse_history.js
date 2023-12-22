@@ -31,7 +31,6 @@ function ADD_Channel_history_cookie(rw_array){
         var ch_text = "";
         var temp_array = rw_array[0].split("&");
 
-        console.log("rw_array", rw_array);
         if(rw_array[2] === "chzzk"){
             let found = false;
             
