@@ -131,6 +131,10 @@ body{
     /* 채팅 자동 좌표 */
     --chat-autokeyword-font-color:var(--chat-font-color);
     --chat-autokeyword-background-color:var(--chat-font-color);
+    --chat-autokeyword-twitch-font-color:var(--chat-font-color);
+    --chat-autokeyword-twitch-background-color:#9b59b6;
+    --chat-autokeyword-chzzk-font-color:var(--chat-font-color);
+    --chat-autokeyword-chzzk-background-color:#00ffa3b3;
 
     /* 채팅 참여자 목록 */
     --chat-userListWrap-font-color:#FFF;

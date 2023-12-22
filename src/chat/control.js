@@ -251,6 +251,15 @@ a.autokeyword:after, a.autokeyword:after{
     background-color: powderblue;
 }
 
+a.autokeyword.twitch:after, a.autokeyword.twitch:after {
+    background-color: #9B59B68f;
+}
+a.autokeyword.chzzk:after, a.autokeyword.chzzk:after {
+    background-color: #00ffa38f;
+}
+
+
+
 body.tooltip_hide p.tooltip {
     display:none !important;
 }
@@ -1402,10 +1411,10 @@ async function chatElemControl($line){
                                             }
                                         }
                                         if(foundChzzk){
-                                            tempary[i] = tempary[i].replace(match[1],`<a href='https://www.dostream.com/#/stream/chzzk/${chzzkCode}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " autokeyword" : ""}'>${match[1]}</a>`);
+                                            tempary[i] = tempary[i].replace(match[1],`<a href='https://www.dostream.com/#/stream/chzzk/${chzzkCode}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " chzzk autokeyword" : ""}'>${match[1]}</a>`);
                                         }
                                         else{
-                                            tempary[i] = tempary[i].replace(match[1],`<a href='https://www.dostream.com/#/stream/twitch/${id}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " autokeyword" : ""}'>${match[1]}</a>`);
+                                            tempary[i] = tempary[i].replace(match[1],`<a href='https://www.dostream.com/#/stream/twitch/${id}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " twitch autokeyword" : ""}'>${match[1]}</a>`);
                                         }
                                         break;
                                     }
@@ -1443,10 +1452,10 @@ async function chatElemControl($line){
                                             }
                                         }
                                         if(foundChzzk){
-                                            contentText = contentText.split(disp_name).join(`<a href='https://www.dostream.com/#/stream/chzzk/${chzzkCode}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " autokeyword" : ""}'>${disp_name}</a>`);   // replaceAll
+                                            contentText = contentText.split(disp_name).join(`<a href='https://www.dostream.com/#/stream/chzzk/${chzzkCode}' class='chzzk topClick${ADD_config.chat_autoKeyword_emstyle ? " autokeyword" : ""}'>${disp_name}</a>`);   // replaceAll
                                         }
                                         else{
-                                            contentText = contentText.split(disp_name).join(`<a href='https://www.dostream.com/#/stream/twitch/${id}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " autokeyword" : ""}'>${disp_name}</a>`);   // replaceAll
+                                            contentText = contentText.split(disp_name).join(`<a href='https://www.dostream.com/#/stream/twitch/${id}' class='twitch topClick${ADD_config.chat_autoKeyword_emstyle ? " autokeyword" : ""}'>${disp_name}</a>`);   // replaceAll
                                         }
                                         $(element).replaceWith(contentText);
                                         //ADD_DEBUG("contentText", sv, contentText, $(element));
