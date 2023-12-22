@@ -241,13 +241,13 @@ a.autokeyword, a.autokeyword:link{
 a.autokeyword:after, a.autokeyword:after{
     opacity: 0.33;
     z-index: -100;
-    height: calc(100% + 6px);
-    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    width: calc(100% + 3px);
     content: " ";
     position: absolute;
-    top: -3px;
-    right: -2px;
-    border-radius: 7px;
+    top: -2px;
+    right: -1px;
+    border-radius: 2px;
     background-color: powderblue;
 }
 
