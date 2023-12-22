@@ -78,6 +78,108 @@ import {ADD_parse_list_data} from "general/list.js";
                 height:100% !important;
             }
             `);
+
+            // 자동 넓은 화면
+            $(document).arrive("button.pzp-pc__viewmode-button", {onlyOnce: true, existing: true}, function(elem){
+                ADD_DEBUG("elem", elem);
+                setTimeout(function(){
+                    $(elem).click();
+                },100);
+            });
+            
+            // display current quality
+            GM_addStyle(`
+            .NCCL_pzp_qset { border-radius: 8px; color: #fff; padding: 4px 6px !important; opacity:0; transition-property: opacity; transition-duration: 0.2s; }
+            .pzp.pzp-pc.pzp-pc--controls .NCCL_pzp_qset { opacity:1; position:relative }
+            .pzp.pzp-pc.pzp-pc--controls .NCCL_pzp_qset:hover .NCCL_pzp_qset_tooltip { visibility: visible }
+            .pzp.pzp-pc.pzp-pc--controls .NCCL_pzp_qset .NCCL_pzp_qset_tooltip{
+            font-family: -apple-system, BlinkMacSystemFont, Helvetica, Apple SD Gothic Neo, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            color: #fff;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            height: 27px;
+            padding: 0 12px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 14px;
+            font-size: 13px;
+            line-height: 28px;
+            text-align: center;
+            color: #fff;
+            white-space: nowrap;
+            visibility: hidden;
+            transition-property: opacity;
+            transform: translateX(-50%);
+        }
+            `);
+            let that = {
+                isSetMaxQuality: false,
+                insertQsetDisplay: function() {
+                    let that = this;
+                    if($(document).find(".NCCL_pzp_qset").length == 0 && this.$NCCL_pzp_qset == undefined){
+                        this.$NCCL_pzp_qset = $(`<div class="NCCL_pzp_qset"></div>`);
+                        $(document).find(".pzp-pc__bottom-buttons-right").prepend(this.$NCCL_pzp_qset);
+                    }
+                }
+            };
+            $(document).arrive(".pzp-pc-ui-setting-quality-item", { onlyOnce: true, existing: true }, function (subElem) {
+                if(that.isSetMaxQuality) return;
+                let $subElem = $(subElem);
+                let $ul = $subElem.closest("ul");
+                let $qlis = $ul.find("li");
+                //NOMO_DEBUG("$qlis", $qlis);
+
+                if($qlis.length > 1){
+                    $(document).arrive(".pzp-pc-setting-intro-quality", { onlyOnce: true, existing: true}, function(liElem){
+                        //that.isSetMaxQuality = true;
+                        //$qlis[1].click();
+
+                        that.insertQsetDisplay();
+                        let text = $(liElem).find(".pzp-pc-ui-setting-intro-panel__value").text();
+                        that.latestVideoQuality = text;
+                        that.$NCCL_pzp_qset.html(`${text}`);    // color:#03C75A;
+
+                        // BANJJAK
+                        setTimeout(function(){
+                            that.$NCCL_pzp_qset.addClass("BANJJAK");
+                        },200);
+                        setTimeout(function(){
+                            that.$NCCL_pzp_qset.removeClass("BANJJAK");
+                            //that.$NCCL_pzp_qset.fadeOut(300);
+                        },3000);
+
+                        // new MutationObserver
+                        let observer = new MutationObserver(function(mutations) {
+                            mutations.forEach(function(mutation) {
+                                if(!that.firstPlayed){
+                                    if(that.latestVideoQuality !== mutation.target.wholeText){
+                                        that.$NCCL_pzp_qset.text(mutation.target.wholeText);
+                                        that.latestVideoQuality = mutation.target.wholeText;
+                                    }
+                                    return;
+                                }
+                                ADD_DEBUG(mutation);
+                                that.insertQsetDisplay();
+                                that.$NCCL_pzp_qset.text(mutation.target.wholeText);
+
+                                // fadeIn and fadeOut
+                                setTimeout(function(){
+                                    that.$NCCL_pzp_qset.fadeIn(300);
+                                },200);
+                                setTimeout(function(){
+                                    that.$NCCL_pzp_qset.fadeOut(300);
+                                },3000);
+                            });    
+                        });
+                        observer.observe(liElem, { attributes: false, childList: false, characterData: true, subtree: true });
+                    });
+                }
+            });
+        
         }
 
         return;
