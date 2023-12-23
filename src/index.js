@@ -86,15 +86,19 @@ import {ADD_parse_list_data} from "general/list.js";
                 if (handleVideoReadyFired) return;
                 handleVideoReadyFired = true;
                 let viewmode_buttons = document.querySelectorAll(".pzp-pc__viewmode-button");
-                for (let i = 0; i < viewmode_buttons.length; i++) {
-                    let button = viewmode_buttons[i];
+                if(viewmode_buttons.length == 1){
+                    viewmode_buttons[0].click();
+                }
+                else{
                     // 치즈나이프와의 충돌 방지
-                    if (button.getAttribute('aria-label') === '넓은 화면') {
-                        button.click();
-                        break;
+                    for (let i = 0; i < viewmode_buttons.length; i++) {
+                        let button = viewmode_buttons[i];
+                        if (button.getAttribute('aria-label') === '넓은 화면') {
+                            button.click();
+                            break;
+                        }
                     }
                 }
-                document.querySelector('[class^="live_chatting_header_button__"]').click();
             };
 
             // 자동 넓은 화면
