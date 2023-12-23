@@ -85,9 +85,17 @@ import {ADD_parse_list_data} from "general/list.js";
             let handleVideoReady = function(){
                 if (handleVideoReadyFired) return;
                 handleVideoReadyFired = true;
-                document.querySelector(".pzp-pc__viewmode-button").click();
+                let viewmode_buttons = document.querySelectorAll(".pzp-pc__viewmode-button");
+                for (let i = 0; i < viewmode_buttons.length; i++) {
+                    let button = viewmode_buttons[i];
+                    // 치즈나이프와의 충돌 방지
+                    if (button.getAttribute('aria-label') === '넓은 화면') {
+                        button.click();
+                        break;
+                    }
+                }
                 document.querySelector('[class^="live_chatting_header_button__"]').click();
-            }
+            };
 
             // 자동 넓은 화면
             $(document).arrive("video.webplayer-internal-video", {onlyOnce: true, existing: true}, function(elem){
