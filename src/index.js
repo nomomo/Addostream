@@ -99,6 +99,7 @@ import {ADD_parse_list_data} from "general/list.js";
                         }
                     }
                 }
+                document.querySelector('[class^="live_chatting_header_button__"]').click();
             };
 
             // 자동 넓은 화면
