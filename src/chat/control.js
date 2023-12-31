@@ -1402,7 +1402,7 @@ async function chatElemControl($line){
                                         if(!foundChzzk){
                                             for(let iLT in nomo_global.latestList){
                                                 let lt = nomo_global.latestList[iLT];
-                                                let chzzkCode = lt.url.split("/").pop;
+                                                let chzzkCode = lt.url.split("/").pop();
                                             
                                                 if(lt.from === "chzzk" && chzzkCode === broadcaster.data.twitch[id].cc){
                                                     foundChzzk = true;
@@ -1443,7 +1443,7 @@ async function chatElemControl($line){
                                         if(!foundChzzk){
                                             for(let iLT in nomo_global.latestList){
                                                 let lt = nomo_global.latestList[iLT];
-                                                let chzzkCode = lt.url.split("/").pop;
+                                                let chzzkCode = lt.url.split("/").pop();
                                             
                                                 if(lt.from === "chzzk" && chzzkCode === broadcaster.data.twitch[id].cc){
                                                     foundChzzk = true;
