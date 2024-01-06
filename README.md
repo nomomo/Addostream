@@ -48,6 +48,15 @@
 
 ## Change log
 
+### 1.58.0 (2024-01-06)
+- CHZZK 관련 동작 개선
+  - CHZZK 메인 페이지에서 스크롤 할 수 있습니다.
+  - <-> 버튼을 눌러 채팅을 On-Off 할 수 있습니다.
+- 상세 설정창 리뉴얼(관련 라이브러리 업데이트)
+- 버그 수정 및 안정성 개선
+- 두스트림에서 치지직 로그인을 유지하려면 다음의 링크를 참고하세요.
+  - [https://github.com/nomomo/Chzzk_Scripts/tree/main/CHZZK_sign_in_iframe](https://github.com/nomomo/Chzzk_Scripts/tree/main/CHZZK_sign_in_iframe)
+
 ### 1.57.13 (2024-01-01)
 - "치지직 스트리머가 메인 리스트에 라이브인 경우에만 치지직 링크로 변환" 기능이 제대로 동작하지 않는 버그를 고쳤어요.
 
@@ -430,6 +439,10 @@
 ### 2017-06-11
 - 설정 버튼 및 기능 추가
 - 원하는 스트리머 스트리머 최상단 고정 기능 추가
+
+## License
+
+MIT
 
 ## Happy??
 

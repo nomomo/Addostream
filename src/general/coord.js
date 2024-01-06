@@ -47,14 +47,15 @@ export function hrm_layout(){
     $("#btnOpenHrm").off("click");
     $("#btnOpenHrm").on("click", function(e){
         e.preventDefault();
-        var href="";
-        if(ADD_config.insagirl_select == 1){
-            href="https://coord.dostream.com";
-        }
-        else if(ADD_config.insagirl_select == 2){
-            href="https://insagirl-toto.appspot.com/hrm/?where=2";
-        }
-        
+        // var href="";
+        // if(ADD_config.insagirl_select == 1){
+        //     href="https://coord.dostream.com";
+        // }
+        // else if(ADD_config.insagirl_select == 2){
+        //     href="https://insagirl-toto.appspot.com/hrm/?where=2";
+        // }
+        let href="https://insagirl-toto.appspot.com/hrm/?where=2";
+       
         window.open(href);
         $(this).blur();
         return false;
@@ -178,9 +179,10 @@ export function hrm_layout(){
             await ADD_parse_insagirl(page);
             $(this).attr("page",String(parseInt(page+1)));
             
-            if(ADD_config.insagirl_select == 2){
-                $("#ADD_hrmbodyexpand").hide();
-            }
+            // if(ADD_config.insagirl_select == 2){
+            //     $("#ADD_hrmbodyexpand").hide();
+            // }
+            $("#ADD_hrmbodyexpand").hide();
         });
     }
     else{
@@ -192,7 +194,7 @@ var prev_nick = "", prev_href = "", prev_count = 0;
 var coord_length = 20;
 var coord_fail = false;
 async function ADD_parse_insagirl(page){
-    ADD_config.insagirl_select = 2;
+    // ADD_config.insagirl_select = 2;
     ADD_DEBUG("RUNNING - parse_coord, page:"+page);
     if(page === 0 || page === 1){
         prev_nick = "";
@@ -205,18 +207,20 @@ async function ADD_parse_insagirl(page){
     }
 
     var coord_url = "";
-    if(ADD_config.insagirl_select == 1){    // 기본 두스트림의 경우
-        coord_url = "https://coord.dostream.com/api/?offset="+String(parseInt((page-1)*coord_length));
-        $("#ADD_hrmbodyexpand").html(coord_length+"개 더 보기");
-    }
-    else if(ADD_config.insagirl_select == 2){   // 인사걸의 경우
-        coord_url = "https://insagirl-hrm.appspot.com/json2/2/1/"+page+"/";
-        $("#ADD_hrmbodyexpand").html("더 보기");
-    }
-    else{
-        ADD_DEBUG("예상하지 못한 설정변수", ADD_config.insagirl_select);
-        return;
-    }
+    // if(ADD_config.insagirl_select == 1){    // 기본 두스트림의 경우
+    //     coord_url = "https://coord.dostream.com/api/?offset="+String(parseInt((page-1)*coord_length));
+    //     $("#ADD_hrmbodyexpand").html(coord_length+"개 더 보기");
+    // }
+    // else if(ADD_config.insagirl_select == 2){   // 인사걸의 경우
+    //     coord_url = "https://insagirl-hrm.appspot.com/json2/2/1/"+page+"/";
+    //     $("#ADD_hrmbodyexpand").html("더 보기");
+    // }
+    // else{
+    //     ADD_DEBUG("예상하지 못한 설정변수", ADD_config.insagirl_select);
+    //     return;
+    // }
+    coord_url = "https://insagirl-hrm.appspot.com/json2/2/1/"+page+"/";
+    $("#ADD_hrmbodyexpand").html("더 보기");
     
     GM_xmlhttpRequest({
         url:coord_url,
@@ -237,19 +241,22 @@ async function ADD_parse_insagirl(page){
             }
             //var expUrl = /(\b(https?|ftp|file):\/\/([-A-Z0-9+&@#%?=~_|!:,.;]*)([-A-Z0-9+&@#%?/=~_|!:,.;]*)[-A-Z0-9+&@#/%=~_|])/ig;
             var data = JSON.parse(response.responseText);
-            if(ADD_config.insagirl_select == 2){
-                data = data.v;
-            }
+            // if(ADD_config.insagirl_select == 2){
+            //     data = data.v;
+            // }
+            data = data.v;
             coord_length = data.length;
 
             var hrm_layout_HTML = "";
             var added = 0;
             ADD_DEBUG("hrm data: ", data);
             for(var z=0; z<data.length; z++){
-                if(ADD_config.insagirl_select == 2){
-                    data[z] = data[z].split("|");
-                    data[z] = {created:Number(data[z][0]), user:data[z][1], message:data[z][2]};
-                }
+                // if(ADD_config.insagirl_select == 2){
+                //     data[z] = data[z].split("|");
+                //     data[z] = {created:Number(data[z][0]), user:data[z][1], message:data[z][2]};
+                // }
+                data[z] = data[z].split("|");
+                data[z] = {created:Number(data[z][0]), user:data[z][1], message:data[z][2]};
                 
 
                 var nick = data[z].user;
@@ -339,11 +346,13 @@ async function ADD_parse_insagirl(page){
                 prev_count = 0;
             }
 
-            if(ADD_config.insagirl_select == 1){
-                $("#hrm_layout ul:first").append(hrm_layout_HTML);
-            } else {
-                $("#hrm_layout ul:first").empty().append(hrm_layout_HTML);
-            }
+            // if(ADD_config.insagirl_select == 1){
+            //     $("#hrm_layout ul:first").append(hrm_layout_HTML);
+            // } else {
+            //     $("#hrm_layout ul:first").empty().append(hrm_layout_HTML);
+            // }
+            
+            $("#hrm_layout ul:first").empty().append(hrm_layout_HTML);
             
         }, onerror: async function(){
             ADD_DEBUG("좌표 파싱 중 에러 발생 - onerror");
@@ -354,18 +363,18 @@ async function ADD_parse_insagirl(page){
         }
     });
 
-    var replace_coord = async function(_page){
-        //await nomo_common.nomo.setVal("Cross_Origin_Hrm", false);
-        if(!coord_fail){
-            coord_fail = true;
-            var coord_ori = (ADD_config.insagirl_select == 1 ? "coord.dostream.com" : "insagirl-hrm.appspot.com");
-            var coord_new = (ADD_config.insagirl_select == 1 ? "insagirl-hrm.appspot.com" : "coord.dostream.com");
-            ADD_send_sys_msg_from_main_frame(coord_ori+" 가 응답하지 않아 좌표 사이트를 "+coord_new+" 으로 변경합니다. 설정을 영구적으로 변경하려면 <a href='https://www.dostream.com/addostream/settings/' target='_blank' style='text-decoration:underline;'>[애드온 상세 설정]</a>에서 [고급 기능 설정]을 활성화한 후, [좌표 사이트 선택] 옵션을 변경하십시오.");
+    // var replace_coord = async function(_page){
+    //     //await nomo_common.nomo.setVal("Cross_Origin_Hrm", false);
+    //     if(!coord_fail){
+    //         coord_fail = true;
+    //         var coord_ori = (ADD_config.insagirl_select == 1 ? "coord.dostream.com" : "insagirl-hrm.appspot.com");
+    //         var coord_new = (ADD_config.insagirl_select == 1 ? "insagirl-hrm.appspot.com" : "coord.dostream.com");
+    //         ADD_send_sys_msg_from_main_frame(coord_ori+" 가 응답하지 않아 좌표 사이트를 "+coord_new+" 으로 변경합니다. 설정을 영구적으로 변경하려면 <a href='https://www.dostream.com/addostream/settings/' target='_blank' style='text-decoration:underline;'>[애드온 상세 설정]</a>에서 [고급 기능 설정]을 활성화한 후, [좌표 사이트 선택] 옵션을 변경하십시오.");
 
-            ADD_config.insagirl_select = (ADD_config.insagirl_select == 1 ? 2 : 1);
-            await ADD_parse_insagirl(_page);
-        }
-    };
+    //         ADD_config.insagirl_select = (ADD_config.insagirl_select == 1 ? 2 : 1);
+    //         await ADD_parse_insagirl(_page);
+    //     }
+    // };
 }
 
 

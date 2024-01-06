@@ -4,11 +4,11 @@ body {
     background-color:var(--body-background-color);
     border-color:var(--body-border-color);
 }
-body.theme ::selection {
-    background: var(--drag-background);
-    color: var(--drag-font-color);
-    text-shadow: none;
-}
+/* ::selection {
+    background-color: var(--drag-background) !important;
+    color: var(--drag-font-color) !important;
+    text-shadow: none !important;
+} */
 a:hover, a:focus {
     color: var(--a-hover-font-color);
     /* text-decoration: var(--a-hover-text-decoration); */
@@ -221,6 +221,15 @@ table>thead>tr>th {
 }
 
 /* GM Setting */
+#GM_setting_nw {
+    color:var(--body-font-color) !important;
+    background-color:var(--body-background-color) !important;
+}
+
+#GM_setting ul,
+#GM_setting #GM_setting_content.useTabs #GM_tabs {
+    border-color:var(--GM_setting-border-color);
+}
 
 #GM_setting li {
     border-color:var(--GM_setting-border-color);
@@ -234,23 +243,43 @@ table>thead>tr>th {
 #GM_setting .GM_setting_under_dev .GM_setting_title{
     color:var(--GM_setting-underdev-title-font-color);
 }
+#GM_setting .GM_setting_desc{
+    color:var(--GM_setting-desc-font-color);
+}
 #GM_setting .GM_setting_item_disable, #GM_setting .GM_setting_item_disable .GM_setting_title, #GM_setting .GM_setting_item_disable .GM_setting_desc{
     color:var(--GM_setting-desc-font-color);
 }
 #GM_setting input {
-    color:var(--modal-body-input-font-color) !important;
-    background-color: var(--modal-body-input-background-color) !important;
-    border-color:var(--modal-body-input-border-color) !important;
+    color:var(--body-font-color) !important;
+    background-color:#333 !important;
+    border-color:var(--body-border-color) !important;
 }
 #GM_setting select {
-    color:var(--modal-body-input-font-color) !important;
-    background-color: var(--modal-body-input-background-color) !important;
-    border-color:var(--modal-body-input-border-color) !important;
+    color:var(--body-font-color) !important;
+    background-color:var(--body-background-color) !important;
+    border-color:var(--body-border-color) !important;
 }
 #GM_setting textarea {
-    color:var(--modal-body-textarea-font-color) !important;
-    background-color: var(--modal-body-textarea-background-color) !important;
-    border-color:var(--modal-body-textarea-border-color) !important;
+    color:var(--body-font-color) !important;
+    background-color:var(--body-background-color) !important;
+    border-color:var(--body-border-color) !important;
+}
+#GM_setting .GM_setting_list_sub {
+    color:var(--body-font-color) !important;
+    background-color:var(--body-background-color) !important;
+    border-color:var(--body-border-color) !important;
+}
+
+#GM_setting #GM_setting_content.useTabs #GM_tabs #GM_tabs_item_container .GM_tab_item.on{
+    color:var(--modal-body-input-font-color) !important;
+    background-color: var(--btn-primary-background-color);
+}
+#GM_setting #GM_setting_content.useTabs #GM_tabs #GM_tabs_item_container .GM_tab_item:hover{
+    color:var(--modal-body-input-font-color) !important;
+    background-color: var(--btn-primary-background-color);
+}
+
+.form-switch .form-check-input{
 }
 
 

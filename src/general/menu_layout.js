@@ -33,7 +33,7 @@ export function ADD_basic_layout(){
         <span id="ADD_toonation" style="display:none;" class="btn btn-default btn-sm" aria-label="Toonation donate" data-microtip-position="bottom" role="tooltip">
             <span>Toon</span>
         </span>
-        <span id="ADD_change_multi" class="btn btn-default" aria-label="멀티트위치↔트위치 전환" data-microtip-position="bottom" role="tooltip">
+        <span id="ADD_change_multi" class="btn btn-default" data-microtip-position="bottom" role="tooltip">
             <span class="glyphicon glyphicon-resize-horizontal"></span>
         </span>
         <span id="ADD_quick_list" class="btn btn-default" aria-label="퀵리스트" data-microtip-position="bottom" role="tooltip">
@@ -702,12 +702,13 @@ export function ADD_basic_layout(){
             var lowercase_document_url = document_url.toLowerCase();
             var stream_url = lowercase_document_url.indexOf("/stream/");
             var twitch_url = lowercase_document_url.indexOf("/twitch/");
+            var chzzk_url = lowercase_document_url.indexOf("/chzzk/");
             var multitwitch_url = lowercase_document_url.indexOf("/multitwitch/");
             var move_url = "";
             if(stream_url !== -1){
                 if(twitch_url !== -1){
                     if(ADD_config.playing_chat_iframe && lowercase_document_url.indexOf("&") === -1 && lowercase_document_url.indexOf(",") === -1){
-                        var $stream = $("#stream");
+                        let $stream = $("#stream");
                         var $stream_chat = $(".stream_chat");
                         if($stream_chat.length === 0){
                             // 채팅 넓이 변수 확인
@@ -790,6 +791,12 @@ export function ADD_basic_layout(){
                     */
                     move_url = document_url.replace("/multitwitch/","/twitch/");
                     window.location.href = move_url;
+                }
+                else if(chzzk_url !== -1){
+                    let $stream = $("#stream");
+                    let $iframe = $stream.find("iframe").first();
+                    let iframeSrc = $iframe.attr("src");
+                    $iframe.get(0).contentWindow.postMessage({ action: 'toggleChat' }, 'https://chzzk.naver.com');
                 }
             }
         })

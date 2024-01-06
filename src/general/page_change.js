@@ -1,10 +1,10 @@
-
-import {ADD_streamer_nick} from "general/streamer-lib.js";
+import {ADD_streamer_nick, broadcaster} from "general/streamer-lib.js";
 import nomo_const from "general/const.js";
 import * as nomo_common from "general/common.js";
 import * as utils from "libs/nomo-utils.js";
 import {m3u8_override} from "general/m3u8player.js";
 import {get_nesports_playlist} from "general/nesport.js";
+import {ADD_send_sys_msg_from_main_frame} from "chat/send_message.js";
 const ADD_DEBUG = utils.ADD_DEBUG;
 
 // 주소창의 주소가 변화(페이지 이동) 시 해야할 것을 아래 함수에 작성한다.
@@ -30,6 +30,11 @@ export function ADD_page_change($, global, document){
         //     nomo_global.ADD_now_playing.display_name = "m3u8";
         // }
 
+        
+        let is_twitch = url_current.indexOf("/#/stream/twitch/") !== -1;
+        let is_chzzk = url_current.indexOf("/#/stream/chzzk/") !== -1;
+        let is_multitwitch = url_current.indexOf("/#/stream/multitwitch/") !== -1;
+
         // 스트림인 경우
         if(nomo_global.PAGE === nomo_const.C_STREAM){
             ADD_DEBUG("url_current", url_current);
@@ -45,19 +50,31 @@ export function ADD_page_change($, global, document){
                 var nesports_url = document.location.href.split("/#/stream/m3u8/").pop();
                 get_nesports_playlist(nesports_url);
             }
-            else if(url_current.indexOf("/#/stream/chzzk/") !== -1){
+            else if(is_chzzk){
                 if(ADD_config.chzzk_onlyVideo){
                     $(document).arrive("#stream > iframe", {existing: true, onlyOnce: true}, function(elem) {
                         if(elem.src.indexOf("chzzk.naver.com") !== -1 && elem.src.indexOf("?embed") === -1){
                             elem.src = elem.src + "?embed";
+                            elem.scrolling = "yes";
                             nomo_global.ADD_now_playing.id = url_current.split("/").pop();
                             nomo_global.ADD_now_playing.from = "chzzk";
                             nomo_global.ADD_now_playing.display_name = "";
+                            for(let key in broadcaster.data.chzzk){
+                                if(key === nomo_global.ADD_now_playing.id){
+                                    nomo_global.ADD_now_playing.display_name  = broadcaster.data.chzzk[key].dn + "(CHZ)";
+                                    break;
+                                }
+                            }
                             nomo_global.ADD_now_playing.toonat_link = "";
                             nomo_global.ADD_now_playing.twip_link = "";
                         }
                     });
                 }
+    
+                // if(ADD_config.chzzk_sign_in_iframe && !GM.cookie && !nomo_global.GM_cookie_not_support_warn_printed){
+                //     nomo_global.GM_cookie_not_support_warn_printed = true;
+                //     ADD_send_sys_msg_from_main_frame("[Dostream+] 본 환경에서는 CHZZK 로그인 유지 기능을 지원하지 않습니다. Chrmoe 계열 브라우저에서 <a herf='https://chromewebstore.google.com/detail/tampermonkey-beta/gcalenpjmijncebpfijmoaglllgpjagf' target='_blank'>Tamkeymonkey Beta</a> 버전을 설치하고 스크립트를 설치하거나, CHZZK 로그인 유지 기능을 끄세요.");
+                // }
             }
             else{
                 nomo_global.ADD_now_playing.id = url_current.split("/").pop();
@@ -75,9 +92,7 @@ export function ADD_page_change($, global, document){
         }
 
         // 재생 중 트위치<->멀티트위치 전환 버튼 ON-OFF
-        var is_twitch = url_current.indexOf("/twitch/");
-        var is_multitwitch = url_current.indexOf("/multitwitch/");
-        if(ADD_config.playing_chat_button && is_twitch  !== -1 || is_multitwitch  !== -1){
+        if(ADD_config.playing_chat_button && (is_twitch || is_multitwitch || is_chzzk)){
             $("#ADD_change_multi").css("opacity", "1.0").fadeIn(300);
         }
         else{

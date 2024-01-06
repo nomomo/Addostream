@@ -31,6 +31,7 @@ import {ADD_page_change} from "general/page_change.js";
 import {ADD_popup_player} from "general/popup_player.js";
 import {createTwitchOAuthLayout} from "api/twitchapi.js";
 import {ADD_parse_list_data} from "general/list.js";
+import {chzzk_main} from "general/chzzk.js";
 // import * as hold from "chat/hold.js";
 // import {point_clicker} from "general/point_clicker.js";
 // import { test } from "general/import_test.js";
@@ -60,158 +61,7 @@ import {ADD_parse_list_data} from "general/list.js";
     //////////////////////////////////////////////////////////////////////////////////
     // CHZZK 인 경우
     if(nomo_global.PAGE == nomo_const.C_CHZZK){
-        ADD_DEBUG("CHZZK");
-        let isTopWindow = window.self === window.top;
-        if(isTopWindow){
-            ADD_DEBUG("CHZZK TOP WINDOW");
-            return;
-        }
-
-        if(ADD_config.chzzk_onlyVideo){
-            // GM_addStyle(`
-            // #live_player_layout{
-            //     position:fixed !important;
-            //     left:0px !important;
-            //     top:0px !important;
-            //     z-index:10000000000000 !important;
-            //     width:100% !important;
-            //     height:100% !important;
-            // }
-            // `);
-
-            let player = undefined;
-            let $player = undefined;
-            let handleVideoReadyFired = false;
-            let handleVideoReady = function(){
-                if (handleVideoReadyFired) return;
-                handleVideoReadyFired = true;
-                let viewmode_buttons = document.querySelectorAll(".pzp-pc__viewmode-button");
-                if(viewmode_buttons.length == 1){
-                    viewmode_buttons[0].click();
-                }
-                else{
-                    // 치즈나이프와의 충돌 방지
-                    for (let i = 0; i < viewmode_buttons.length; i++) {
-                        let button = viewmode_buttons[i];
-                        if (button.getAttribute('aria-label') === '넓은 화면') {
-                            button.click();
-                            break;
-                        }
-                    }
-                }
-                document.querySelector('[class^="live_chatting_header_button__"]').click();
-            };
-
-            // 자동 넓은 화면
-            $(document).arrive("video.webplayer-internal-video", {onlyOnce: true, existing: true}, function(elem){
-                ADD_DEBUG("elem", elem);
-                player = elem;
-                $player = $(player);
-
-                if (player.readyState >= 2) {
-                    handleVideoReady();
-                } else {
-                    player.addEventListener('loadedmetadata', function once() {
-                        player.removeEventListener('loadedmetadata', once);
-                        handleVideoReady();
-                    });
-                }
-            });
-            
-            // display current quality
-            GM_addStyle(`
-            .NCCL_pzp_qset { border-radius: 8px; color: #fff; padding: 4px 6px !important; opacity:0; transition-property: opacity; transition-duration: 0.2s; }
-            .pzp.pzp-pc.pzp-pc--controls .NCCL_pzp_qset { opacity:1; position:relative }
-            .pzp.pzp-pc.pzp-pc--controls .NCCL_pzp_qset:hover .NCCL_pzp_qset_tooltip { visibility: visible }
-            .pzp.pzp-pc.pzp-pc--controls .NCCL_pzp_qset .NCCL_pzp_qset_tooltip{
-            font-family: -apple-system, BlinkMacSystemFont, Helvetica, Apple SD Gothic Neo, sans-serif;
-            -webkit-font-smoothing: antialiased;
-            color: #fff;
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-            margin: 0;
-            padding: 0;
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            height: 27px;
-            padding: 0 12px;
-            background-color: rgba(0, 0, 0, 0.6);
-            border-radius: 14px;
-            font-size: 13px;
-            line-height: 28px;
-            text-align: center;
-            color: #fff;
-            white-space: nowrap;
-            visibility: hidden;
-            transition-property: opacity;
-            transform: translateX(-50%);
-        }
-            `);
-            let that = {
-                isSetMaxQuality: false,
-                insertQsetDisplay: function() {
-                    let that = this;
-                    if($(document).find(".NCCL_pzp_qset").length == 0 && this.$NCCL_pzp_qset == undefined){
-                        this.$NCCL_pzp_qset = $(`<div class="NCCL_pzp_qset"></div>`);
-                        $(document).find(".pzp-pc__bottom-buttons-right").prepend(this.$NCCL_pzp_qset);
-                    }
-                }
-            };
-            $(document).arrive(".pzp-pc-ui-setting-quality-item", { onlyOnce: true, existing: true }, function (subElem) {
-                if(that.isSetMaxQuality) return;
-                let $subElem = $(subElem);
-                let $ul = $subElem.closest("ul");
-                let $qlis = $ul.find("li");
-                //NOMO_DEBUG("$qlis", $qlis);
-
-                if($qlis.length > 1){
-                    $(document).arrive(".pzp-pc-setting-intro-quality", { onlyOnce: true, existing: true}, function(liElem){
-                        //that.isSetMaxQuality = true;
-                        //$qlis[1].click();
-
-                        that.insertQsetDisplay();
-                        let text = $(liElem).find(".pzp-pc-ui-setting-intro-panel__value").text();
-                        that.latestVideoQuality = text;
-                        that.$NCCL_pzp_qset.html(`${text}`);    // color:#03C75A;
-
-                        // BANJJAK
-                        setTimeout(function(){
-                            that.$NCCL_pzp_qset.addClass("BANJJAK");
-                        },200);
-                        setTimeout(function(){
-                            that.$NCCL_pzp_qset.removeClass("BANJJAK");
-                            //that.$NCCL_pzp_qset.fadeOut(300);
-                        },3000);
-
-                        // new MutationObserver
-                        let observer = new MutationObserver(function(mutations) {
-                            mutations.forEach(function(mutation) {
-                                if(!that.firstPlayed){
-                                    if(that.latestVideoQuality !== mutation.target.wholeText){
-                                        that.$NCCL_pzp_qset.text(mutation.target.wholeText);
-                                        that.latestVideoQuality = mutation.target.wholeText;
-                                    }
-                                    return;
-                                }
-                                ADD_DEBUG(mutation);
-                                that.insertQsetDisplay();
-                                that.$NCCL_pzp_qset.text(mutation.target.wholeText);
-
-                                // fadeIn and fadeOut
-                                setTimeout(function(){
-                                    that.$NCCL_pzp_qset.fadeIn(300);
-                                },200);
-                                setTimeout(function(){
-                                    that.$NCCL_pzp_qset.fadeOut(300);
-                                },3000);
-                            });    
-                        });
-                        observer.observe(liElem, { attributes: false, childList: false, characterData: true, subtree: true });
-                    });
-                }
-            });
-        
-        }
+        chzzk_main();
 
         return;
     }
@@ -349,11 +199,38 @@ import {ADD_parse_list_data} from "general/list.js";
     else if(nomo_global.PAGE == nomo_const.C_SETTING_NW){
         window.chat_manager = chat_manager;
         $(document).ready(function(){
-            $("body").empty().css("padding","0px 30px 30px 30px");
-            $("head").append(`
-                <link href="/js/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-                <link href="/css/dostream.css?20180429" media="screen" rel="stylesheet" type="text/css">
+            $("body").empty().css("padding","0px 30px 30px 30px").attr("id", "GM_setting_nw");
+
+            GM_addStyle(`
+                html{overflow-y:hidden;};
+                body::-webkit-scrollbar { width: 8px; height: 8px; background: #eee; }
+                body::-webkit-scrollbar-thumb { background: #ccc; }
+                body #GM_setting .GM_setting_list_head {vertical-align:bottom;}
+                body #wrap {display:none;}
+                body {background-color:#f5f5f5 !important;overflow-y: scroll;  height: 100dvh;}
             `);
+            var GM_Setting_Bootstrap = 'GM_Setting_Bootstrap';
+            if (!document.getElementById(GM_Setting_Bootstrap)) {
+                var head = document.getElementsByTagName('head')[0];
+                var link = document.createElement('link');
+                link.id = GM_Setting_Bootstrap;
+                link.rel = 'stylesheet';
+                link.type = 'text/css';
+                //link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css';
+                link.crossOrigin ="anonymous";
+                link.href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css";
+                link.integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9";
+                link.media = 'all';
+                head.appendChild(link);
+
+                
+                GM.addStyle(`
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+                #GM_setting, #GM_setting .GM_setting_title, #GM_setting .GM_setting_desc, #GM_setting .GM_setting_logo, #GM_setting .GM_homepage_link
+                {font-family: 'Inter',"맑은 고딕",Malgun Gothic,"돋움",dotum,sans-serif;}
+                #GM_setting .GM_setting_input_container{flex:unset;}
+                `);
+            }
             document.title = "두스트림 - ADDostream 상세 설정 페이지";
             
             // 기본 css 적용
@@ -432,13 +309,6 @@ import {ADD_parse_list_data} from "general/list.js";
         }
         return;
     }
-    // else if(nomo_global.PAGE === nomo_const.C_TWITCH){
-    //     if(ADD_config.twitch_point_clicker){
-    //         ADD_DEBUG("[TPAC] IS RUNNiNG");
-    //         point_clicker();
-    //     }
-    //     return;
-    // }
     // 외부 사이트 - 인사걸
     else if(nomo_global.PAGE === nomo_const.C_INSAGIRL){
         window.chat_manager = chat_manager;

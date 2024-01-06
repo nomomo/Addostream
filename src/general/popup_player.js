@@ -15,6 +15,15 @@ export function ADD_popup_player(){
         }
         display_name = ch_text;
     }
+
+    let display_name_to_be_printed = "";
+    if(display_name.length > 15){
+        display_name_to_be_printed = display_name.slice(0, 15) + "...";
+    }
+    else{
+        display_name_to_be_printed = display_name;
+    }
+
     if($(".stream_zoomout").length === 0){
         ADD_DEBUG("stream_zoomout 생성");
         $("#stream").addClass("stream_zoomout").attr("id","").after("<div id='stream'></div>");
@@ -24,7 +33,7 @@ export function ADD_popup_player(){
         <div class="stream_zoomin_screen" style="display:none;background:rgba(0,0,0,.6);user-select:none;">
             <div class="stream_zoom_header" style="width:280px;height:40px;padding:5px;position:absolute;z-index:101;background:rgba(0,0,0,.6);color:#fff;font-size:20px;vertical-align:middle;">
                 <div style="display:inline-flex;margin-left:10px;margin-right:10px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;cursor:default;">
-                    <span style="font-size:14px;">`+display_name+` 시청 중</span>
+                    <span style="font-size:14px;">`+display_name_to_be_printed+` 시청 중</span>
                 </div>
                 <div class="stream_zoomin_close" style="display:inline-flex;width:30px;height:30px;justify-content:center;cursor:pointer;float:right;font-family:unset;">
                     <!--<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>-->

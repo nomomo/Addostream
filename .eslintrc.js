@@ -24,6 +24,7 @@ module.exports = {
         "GM_getTabs": true,
         "GM_saveTab": true,
         "GM_xmlhttpRequest": true, 
+        "GM_cookie": true,
         "document": true, 
         "console": true, 
         "location": true, 
@@ -35,7 +36,8 @@ module.exports = {
         "exportFunction": true, 
         "dsStream": true, 
         "chat_manager_main": true, 
-        "Autolinker": true
+        "Autolinker": true,
+        "cookieStore": true
     },
     "rules": {
         //"prefer-template": 2,

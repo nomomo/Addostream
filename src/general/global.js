@@ -62,6 +62,9 @@ var nomo_global_manager = async function(global){
         night_mode_black: false,
         night_mode_direct_call: false,
 
+        // chzzk
+        GM_cookie_not_support_warn_printed: false,  // GM_cookie 지원 안 한다는 경고가 이미 출력되었는지 여부
+
         // theme
         theme_current: "default",
 

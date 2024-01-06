@@ -1,21 +1,7 @@
 import {ADD_DEBUG, IsJsonStringReturn} from "libs/nomo-utils.js";
 
 export default async function(){    
-    var mig = await GM.getValue("mig",{"190912":true, "190225_json":true});
-    if(!mig["190912"]){
-        ADD_DEBUG("Migration 시작 - 190912", mig["190912"]);
-        var conf = await GM.getValue("ADD_config");
-        ADD_DEBUG("OLD VAR:", conf.insagirl_select);
-        if(conf !== undefined){
-            conf.insagirl_select = 2;
-            await GM.setValue("ADD_config", conf);
-        }
-        ADD_DEBUG("NEW VAR:", conf.insagirl_select);
-
-        mig["190912"] = true;
-        await GM.setValue("mig",mig);
-    }
-
+    var mig = await GM.getValue("mig",{"190225_json":true});
     // 190225 - json
     if(!mig["190225_json"]){
         ADD_DEBUG("Migration 시작 - 190225_json", mig["190225_json"]);
@@ -58,4 +44,23 @@ export default async function(){
         mig["190225_json"] = true;
         await GM.setValue("mig",mig);
     }
+    
+    // // GM.cookie 지원 여부에 따라 옵션 on-off 를 결정함
+    // if(!mig["240106_GM_cookie"]){
+    //     ADD_DEBUG("Migration 시작 - 240106_GM_cookie", mig["240106_GM_cookie"]);
+        
+    //     let conf = await GM.getValue("ADD_config");
+    //     ADD_DEBUG("OLD VAR:", conf.chzzk_sign_in_iframe);
+    //     if(GM.cookie){
+    //         conf.chzzk_sign_in_iframe = true;
+    //     }
+    //     else{
+    //         conf.chzzk_sign_in_iframe = false;
+    //     }
+    //     await GM.setValue("ADD_config", conf);
+    //     ADD_DEBUG("NEW VAR:", conf.chzzk_sign_in_iframe);
+
+    //     mig["240106_GM_cookie"] = true;
+    //     await GM.setValue("mig",mig);
+    // }
 }

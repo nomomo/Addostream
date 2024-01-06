@@ -10,6 +10,17 @@ export function ADD_multitwitch_layout(){
         $(".main-streams").prepend(`<div class="search">
         <a class="checkbox twitch checked">트위치</a><a class="checkbox kakao checked">카카오</a><a class="checkbox youtube checked">유튜브</a><a class="checkbox afreeca checked">아프리카</a><a class="checkbox chzzk checked">치지직</a>
     </div>`);
+
+        $(document).on("click", "#stream .search .chzzk.checkbox", function(e) {
+            if($(this).hasClass("checked")) {
+                $("#stream ul li.chzzk").hide();
+            }
+            else {
+                $("#stream ul li.chzzk").show();
+            }
+            return false;
+        });
+
     }
     else{
         //ADD_DEBUG('search',$('.search').length === 0);
