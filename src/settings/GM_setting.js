@@ -1716,7 +1716,9 @@ li:not([gm_setting_depth="1"]) + li[gm_setting_depth="1"]:not(.GM_setting_catego
 
             for (var e = 0; e < curr_depth; e++) {
                 if (userSettings[curr_key].disable || !enable[e]) {
-                    $curr.addClass("GM_setting_item_disable");
+                    if(userSettings[curr_key].disable){
+                        $curr.addClass("GM_setting_item_disable");
+                    }
                     $curr.find("input, textarea, select").prop("disabled", true);
                     $curr.find("input[type='checkbox']").trigger("change");
                     break;
