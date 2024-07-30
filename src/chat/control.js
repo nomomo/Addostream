@@ -510,7 +510,7 @@ function postArriveIframe(iframeElems){
 
     // 채팅 라인 생성될 때 함수적용
     // nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("DOMNodeInserted", "div.line", function (){
-    nomo_global.$GLOBAL_IFRAME_DOCUMENT[0].arrive("div.line", function() {
+    nomo_global.$GLOBAL_IFRAME_DOCUMENT[0].arrive("div.line", {existing: true}, function() {
         var $line = $(this);
         if(!($line.hasClass("fired"))){
             chatElemControl($line);
