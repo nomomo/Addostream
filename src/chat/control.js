@@ -379,343 +379,374 @@ export async function ADD_chatting_arrive(){
             nomo_global.$GLOBAL_CHAT_IFRAME = $(iframeElems);
             nomo_global.$GLOBAL_IFRAME_DOCUMENT = nomo_global.$GLOBAL_CHAT_IFRAME.contents().first();
 
-            chatDoeEvntFunc(nomo_global.$GLOBAL_IFRAME_DOCUMENT);
-
-            //////////////////////////////////////////////////////////////////////////////////////////
-            // 채팅창 생성될 때 노티하기
-            nomo_global.$GLOBAL_IFRAME_DOCUMENT.one("DOMNodeInserted", "div.content", async function (){
-                ADD_DEBUG("채팅 div.content 생성");
-                if($(this).hasClass("fired")){
-                    ADD_DEBUG("already fired");
-                    return;
-                }
-                $(this).addClass("fired");
-                // nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".userListWrap").hide();
-
-                uchat_connect_check_clear();
-                // 채팅 엘리먼트 저장
-                nomo_global.GLOBAL_CHAT_CONTENT_DIV = $(this);
-
-                // 테마 적용
-                nomo_theme.ADD_theme();
-                nomo_theme.ADD_night_mode({message:true});
-
-                // head에 CSS 추가
-                nomo_theme.broadcaster_theme_css();
-
-                var debug_css = `
-                    .userListWrap {
-                        height:300px !important;
-                        border-bottom:2px solid #666 !important;
-                    }
+            // Function to inject arrive.js into the iframe
+            function injectArriveScript() {
+                const arriveScriptContent = `
+                    var Arrive=function(e,t,n){"use strict";function r(e,t,n){l.addMethod(t,n,e.unbindEvent),l.addMethod(t,n,e.unbindEventWithSelectorOrCallback),l.addMethod(t,n,e.unbindEventWithSelectorAndCallback);}function i(e){e.arrive=f.bindEvent,r(f,e,"unbindArrive"),e.leave=d.bindEvent,r(d,e,"unbindLeave");}if(e.MutationObserver&&"undefined"!=typeof HTMLElement){var o=0,l=function(){var t=HTMLElement.prototype.matches||HTMLElement.prototype.webkitMatchesSelector||HTMLElement.prototype.mozMatchesSelector||HTMLElement.prototype.msMatchesSelector;return{matchesSelector:function(e,n){return e instanceof HTMLElement&&t.call(e,n);},addMethod:function(e,t,r){var i=e[t];e[t]=function(){return r.length==arguments.length?r.apply(this,arguments):"function"==typeof i?i.apply(this,arguments):n;};},callCallbacks:function(e,t){t&&t.options.onceOnly&&1==t.firedElems.length&&(e=[e[0]]);for(var n,r=0;n=e[r];r++)n&&n.callback&&n.callback.call(n.elem,n.elem);t&&t.options.onceOnly&&1==t.firedElems.length&&t.me.unbindEventWithSelectorAndCallback.call(t.target,t.selector,t.callback);},checkChildNodesRecursively:function(e,t,n,r){for(var i,o=0;i=e[o];o++)n(i,t,r)&&r.push({callback:t.callback,elem:i}),i.childNodes.length>0&&l.checkChildNodesRecursively(i.childNodes,t,n,r);},mergeArrays:function(e,t){var n,r={};for(n in e)e.hasOwnProperty(n)&&(r[n]=e[n]);for(n in t)t.hasOwnProperty(n)&&(r[n]=t[n]);return r;},toElementsArray:function(t){return n===t||"number"==typeof t.length&&t!==e||(t=[t]),t;}};}(),c=function(){var e=function(){this._eventsBucket=[],this._beforeAdding=null,this._beforeRemoving=null;};return e.prototype.addEvent=function(e,t,n,r){var i={target:e,selector:t,options:n,callback:r,firedElems:[]};return this._beforeAdding&&this._beforeAdding(i),this._eventsBucket.push(i),i;},e.prototype.removeEvent=function(e){for(var t,n=this._eventsBucket.length-1;t=this._eventsBucket[n];n--)if(e(t)){this._beforeRemoving&&this._beforeRemoving(t);var r=this._eventsBucket.splice(n,1);r&&r.length&&(r[0].callback=null);}},e.prototype.beforeAdding=function(e){this._beforeAdding=e;},e.prototype.beforeRemoving=function(e){this._beforeRemoving=e;},e;}(),a=function(t,r){var i=new c,o=this,a={fireOnAttributesModification:!1};return i.beforeAdding(function(n){var i,l=n.target;(l===e.document||l===e)&&(l=document.getElementsByTagName("html")[0]),i=new MutationObserver(function(e){r.call(this,e,n);});var c=t(n.options);i.observe(l,c),n.observer=i,n.me=o;}),i.beforeRemoving(function(e){e.observer.disconnect();}),this.bindEvent=function(e,t,n){t=l.mergeArrays(a,t);for(var r=l.toElementsArray(this),o=0;o<r.length;o++)i.addEvent(r[o],e,t,n);},this.unbindEvent=function(){var e=l.toElementsArray(this);i.removeEvent(function(t){for(var r=0;r<e.length;r++)if(this===n||t.target===e[r])return!0;return!1;});},this.unbindEventWithSelectorOrCallback=function(e){var t,r=l.toElementsArray(this),o=e;t="function"==typeof e?function(e){for(var t=0;t<r.length;t++)if((this===n||e.target===r[t])&&e.callback===o)return!0;return!1;}:function(t){for(var i=0;i<r.length;i++)if((this===n||t.target===r[i])&&t.selector===e)return!0;return!1;},i.removeEvent(t);},this.unbindEventWithSelectorAndCallback=function(e,t){var r=l.toElementsArray(this);i.removeEvent(function(i){for(var o=0;o<r.length;o++)if((this===n||i.target===r[o])&&i.selector===e&&i.callback===t)return!0;return!1;});},this;},s=function(){function e(e){var t={attributes:!1,childList:!0,subtree:!0};return e.fireOnAttributesModification&&(t.attributes=!0),t;}function t(e,t){e.forEach(function(e){var n=e.addedNodes,i=e.target,o=[];null!==n&&n.length>0?l.checkChildNodesRecursively(n,t,r,o):"attributes"===e.type&&r(i,t,o)&&o.push({callback:t.callback,elem:i}),l.callCallbacks(o,t);});}function r(e,t){return l.matchesSelector(e,t.selector)&&(e._id===n&&(e._id=o++),-1==t.firedElems.indexOf(e._id))?(t.firedElems.push(e._id),!0):!1;}var i={fireOnAttributesModification:!1,onceOnly:!1,existing:!1};f=new a(e,t);var c=f.bindEvent;return f.bindEvent=function(e,t,r){n===r?(r=t,t=i):t=l.mergeArrays(i,t);var o=l.toElementsArray(this);if(t.existing){for(var a=[],s=0;s<o.length;s++)for(var u=o[s].querySelectorAll(e),f=0;f<u.length;f++)a.push({callback:r,elem:u[f]});if(t.onceOnly&&a.length)return r.call(a[0].elem,a[0].elem);setTimeout(l.callCallbacks,1,a);}c.call(this,e,t,r);},f;},u=function(){function e(){var e={childList:!0,subtree:!0};return e;}function t(e,t){e.forEach(function(e){var n=e.removedNodes,i=[];null!==n&&n.length>0&&l.checkChildNodesRecursively(n,t,r,i),l.callCallbacks(i,t);});}function r(e,t){return l.matchesSelector(e,t.selector);}var i={};d=new a(e,t);var o=d.bindEvent;return d.bindEvent=function(e,t,r){n===r?(r=t,t=i):t=l.mergeArrays(i,t),o.call(this,e,t,r);},d;},f=new s,d=new u;t&&i(t.fn),i(HTMLElement.prototype),i(NodeList.prototype),i(HTMLCollection.prototype),i(HTMLDocument.prototype),i(Window.prototype);var h={};return r(f,h,"unbindAllArrive"),r(d,h,"unbindAllLeave"),h;}}(window,"undefined"==typeof jQuery?null:jQuery,void 0);
                 `;
-
-                if(nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("#ADD_chat_css").length === 0){
-                    nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("head").append(`
-                        <style id="ADD_chat_css" type="text/css">
-                        ${nomo_global.DEBUG ? debug_css : ""}
-                        ${chat_basic_css}
-                        /*!
-                        * Bootstrap v3.3.7 (http://getbootstrap.com)
-                        * Copyright 2011-2016 Twitter, Inc.
-                        * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
-                        */
-                        /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
-                        html{font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}body{margin:0}@font-face{font-family:'Glyphicons Halflings';src:url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.eot);src:url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.eot?#iefix) format("embedded-opentype"),url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.woff2) format("woff2"),url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.woff) format("woff"),url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.ttf) format("truetype"),url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular) format("svg")}.glyphicon{position:relative;top:1px;display:inline-block;font-family:'Glyphicons Halflings';font-style:normal;font-weight:400;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.glyphicon-asterisk:before{content:"\\002a"}.glyphicon-plus:before{content:"\\002b"}.glyphicon-euro:before,.glyphicon-eur:before{content:"\\20ac"}.glyphicon-minus:before{content:"\\2212"}.glyphicon-cloud:before{content:"\\2601"}.glyphicon-envelope:before{content:"\\2709"}.glyphicon-pencil:before{content:"\\270f"}.glyphicon-glass:before{content:"\\e001"}.glyphicon-music:before{content:"\\e002"}.glyphicon-search:before{content:"\\e003"}.glyphicon-heart:before{content:"\\e005"}.glyphicon-star:before{content:"\\e006"}.glyphicon-star-empty:before{content:"\\e007"}.glyphicon-user:before{content:"\\e008"}.glyphicon-film:before{content:"\\e009"}.glyphicon-th-large:before{content:"\\e010"}.glyphicon-th:before{content:"\\e011"}.glyphicon-th-list:before{content:"\\e012"}.glyphicon-ok:before{content:"\\e013"}.glyphicon-remove:before{content:"\\e014"}.glyphicon-zoom-in:before{content:"\\e015"}.glyphicon-zoom-out:before{content:"\\e016"}.glyphicon-off:before{content:"\\e017"}.glyphicon-signal:before{content:"\\e018"}.glyphicon-cog:before{content:"\\e019"}.glyphicon-trash:before{content:"\\e020"}.glyphicon-home:before{content:"\\e021"}.glyphicon-file:before{content:"\\e022"}.glyphicon-time:before{content:"\\e023"}.glyphicon-road:before{content:"\\e024"}.glyphicon-download-alt:before{content:"\\e025"}.glyphicon-download:before{content:"\\e026"}.glyphicon-upload:before{content:"\\e027"}.glyphicon-inbox:before{content:"\\e028"}.glyphicon-play-circle:before{content:"\\e029"}.glyphicon-repeat:before{content:"\\e030"}.glyphicon-refresh:before{content:"\\e031"}.glyphicon-list-alt:before{content:"\\e032"}.glyphicon-lock:before{content:"\\e033"}.glyphicon-flag:before{content:"\\e034"}.glyphicon-headphones:before{content:"\\e035"}.glyphicon-volume-off:before{content:"\\e036"}.glyphicon-volume-down:before{content:"\\e037"}.glyphicon-volume-up:before{content:"\\e038"}.glyphicon-qrcode:before{content:"\\e039"}.glyphicon-barcode:before{content:"\\e040"}.glyphicon-tag:before{content:"\\e041"}.glyphicon-tags:before{content:"\\e042"}.glyphicon-book:before{content:"\\e043"}.glyphicon-bookmark:before{content:"\\e044"}.glyphicon-print:before{content:"\\e045"}.glyphicon-camera:before{content:"\\e046"}.glyphicon-font:before{content:"\\e047"}.glyphicon-bold:before{content:"\\e048"}.glyphicon-italic:before{content:"\\e049"}.glyphicon-text-height:before{content:"\\e050"}.glyphicon-text-width:before{content:"\\e051"}.glyphicon-align-left:before{content:"\\e052"}.glyphicon-align-center:before{content:"\\e053"}.glyphicon-align-right:before{content:"\\e054"}.glyphicon-align-justify:before{content:"\\e055"}.glyphicon-list:before{content:"\\e056"}.glyphicon-indent-left:before{content:"\\e057"}.glyphicon-indent-right:before{content:"\\e058"}.glyphicon-facetime-video:before{content:"\\e059"}.glyphicon-picture:before{content:"\\e060"}.glyphicon-map-marker:before{content:"\\e062"}.glyphicon-adjust:before{content:"\\e063"}.glyphicon-tint:before{content:"\\e064"}.glyphicon-edit:before{content:"\\e065"}.glyphicon-share:before{content:"\\e066"}.glyphicon-check:before{content:"\\e067"}.glyphicon-move:before{content:"\\e068"}.glyphicon-step-backward:before{content:"\\e069"}.glyphicon-fast-backward:before{content:"\\e070"}.glyphicon-backward:before{content:"\\e071"}.glyphicon-play:before{content:"\\e072"}.glyphicon-pause:before{content:"\\e073"}.glyphicon-stop:before{content:"\\e074"}.glyphicon-forward:before{content:"\\e075"}.glyphicon-fast-forward:before{content:"\\e076"}.glyphicon-step-forward:before{content:"\\e077"}.glyphicon-eject:before{content:"\\e078"}.glyphicon-chevron-left:before{content:"\\e079"}.glyphicon-chevron-right:before{content:"\\e080"}.glyphicon-plus-sign:before{content:"\\e081"}.glyphicon-minus-sign:before{content:"\\e082"}.glyphicon-remove-sign:before{content:"\\e083"}.glyphicon-ok-sign:before{content:"\\e084"}.glyphicon-question-sign:before{content:"\\e085"}.glyphicon-info-sign:before{content:"\\e086"}.glyphicon-screenshot:before{content:"\\e087"}.glyphicon-remove-circle:before{content:"\\e088"}.glyphicon-ok-circle:before{content:"\\e089"}.glyphicon-ban-circle:before{content:"\\e090"}.glyphicon-arrow-left:before{content:"\\e091"}.glyphicon-arrow-right:before{content:"\\e092"}.glyphicon-arrow-up:before{content:"\\e093"}.glyphicon-arrow-down:before{content:"\\e094"}.glyphicon-share-alt:before{content:"\\e095"}.glyphicon-resize-full:before{content:"\\e096"}.glyphicon-resize-small:before{content:"\\e097"}.glyphicon-exclamation-sign:before{content:"\\e101"}.glyphicon-gift:before{content:"\\e102"}.glyphicon-leaf:before{content:"\\e103"}.glyphicon-fire:before{content:"\\e104"}.glyphicon-eye-open:before{content:"\\e105"}.glyphicon-eye-close:before{content:"\\e106"}.glyphicon-warning-sign:before{content:"\\e107"}.glyphicon-plane:before{content:"\\e108"}.glyphicon-calendar:before{content:"\\e109"}.glyphicon-random:before{content:"\\e110"}.glyphicon-comment:before{content:"\\e111"}.glyphicon-magnet:before{content:"\\e112"}.glyphicon-chevron-up:before{content:"\\e113"}.glyphicon-chevron-down:before{content:"\\e114"}.glyphicon-retweet:before{content:"\\e115"}.glyphicon-shopping-cart:before{content:"\\e116"}.glyphicon-folder-close:before{content:"\\e117"}.glyphicon-folder-open:before{content:"\\e118"}.glyphicon-resize-vertical:before{content:"\\e119"}.glyphicon-resize-horizontal:before{content:"\\e120"}.glyphicon-hdd:before{content:"\\e121"}.glyphicon-bullhorn:before{content:"\\e122"}.glyphicon-bell:before{content:"\\e123"}.glyphicon-certificate:before{content:"\\e124"}.glyphicon-thumbs-up:before{content:"\\e125"}.glyphicon-thumbs-down:before{content:"\\e126"}.glyphicon-hand-right:before{content:"\\e127"}.glyphicon-hand-left:before{content:"\\e128"}.glyphicon-hand-up:before{content:"\\e129"}.glyphicon-hand-down:before{content:"\\e130"}.glyphicon-circle-arrow-right:before{content:"\\e131"}.glyphicon-circle-arrow-left:before{content:"\\e132"}.glyphicon-circle-arrow-up:before{content:"\\e133"}.glyphicon-circle-arrow-down:before{content:"\\e134"}.glyphicon-globe:before{content:"\\e135"}.glyphicon-wrench:before{content:"\\e136"}.glyphicon-tasks:before{content:"\\e137"}.glyphicon-filter:before{content:"\\e138"}.glyphicon-briefcase:before{content:"\\e139"}.glyphicon-fullscreen:before{content:"\\e140"}.glyphicon-dashboard:before{content:"\\e141"}.glyphicon-paperclip:before{content:"\\e142"}.glyphicon-heart-empty:before{content:"\\e143"}.glyphicon-link:before{content:"\\e144"}.glyphicon-phone:before{content:"\\e145"}.glyphicon-pushpin:before{content:"\\e146"}.glyphicon-usd:before{content:"\\e148"}.glyphicon-gbp:before{content:"\\e149"}.glyphicon-sort:before{content:"\\e150"}.glyphicon-sort-by-alphabet:before{content:"\\e151"}.glyphicon-sort-by-alphabet-alt:before{content:"\\e152"}.glyphicon-sort-by-order:before{content:"\\e153"}.glyphicon-sort-by-order-alt:before{content:"\\e154"}.glyphicon-sort-by-attributes:before{content:"\\e155"}.glyphicon-sort-by-attributes-alt:before{content:"\\e156"}.glyphicon-unchecked:before{content:"\\e157"}.glyphicon-expand:before{content:"\\e158"}.glyphicon-collapse-down:before{content:"\\e159"}.glyphicon-collapse-up:before{content:"\\e160"}.glyphicon-log-in:before{content:"\\e161"}.glyphicon-flash:before{content:"\\e162"}.glyphicon-log-out:before{content:"\\e163"}.glyphicon-new-window:before{content:"\\e164"}.glyphicon-record:before{content:"\\e165"}.glyphicon-save:before{content:"\\e166"}.glyphicon-open:before{content:"\\e167"}.glyphicon-saved:before{content:"\\e168"}.glyphicon-import:before{content:"\\e169"}.glyphicon-export:before{content:"\\e170"}.glyphicon-send:before{content:"\\e171"}.glyphicon-floppy-disk:before{content:"\\e172"}.glyphicon-floppy-saved:before{content:"\\e173"}.glyphicon-floppy-remove:before{content:"\\e174"}.glyphicon-floppy-save:before{content:"\\e175"}.glyphicon-floppy-open:before{content:"\\e176"}.glyphicon-credit-card:before{content:"\\e177"}.glyphicon-transfer:before{content:"\\e178"}.glyphicon-cutlery:before{content:"\\e179"}.glyphicon-header:before{content:"\\e180"}.glyphicon-compressed:before{content:"\\e181"}.glyphicon-earphone:before{content:"\\e182"}.glyphicon-phone-alt:before{content:"\\e183"}.glyphicon-tower:before{content:"\\e184"}.glyphicon-stats:before{content:"\\e185"}.glyphicon-sd-video:before{content:"\\e186"}.glyphicon-hd-video:before{content:"\\e187"}.glyphicon-subtitles:before{content:"\\e188"}.glyphicon-sound-stereo:before{content:"\\e189"}.glyphicon-sound-dolby:before{content:"\\e190"}.glyphicon-sound-5-1:before{content:"\\e191"}.glyphicon-sound-6-1:before{content:"\\e192"}.glyphicon-sound-7-1:before{content:"\\e193"}.glyphicon-copyright-mark:before{content:"\\e194"}.glyphicon-registration-mark:before{content:"\\e195"}.glyphicon-cloud-download:before{content:"\\e197"}.glyphicon-cloud-upload:before{content:"\\e198"}.glyphicon-tree-conifer:before{content:"\\e199"}.glyphicon-tree-deciduous:before{content:"\\e200"}.glyphicon-cd:before{content:"\\e201"}.glyphicon-save-file:before{content:"\\e202"}.glyphicon-open-file:before{content:"\\e203"}.glyphicon-level-up:before{content:"\\e204"}.glyphicon-copy:before{content:"\\e205"}.glyphicon-paste:before{content:"\\e206"}.glyphicon-alert:before{content:"\\e209"}.glyphicon-equalizer:before{content:"\\e210"}.glyphicon-king:before{content:"\\e211"}.glyphicon-queen:before{content:"\\e212"}.glyphicon-pawn:before{content:"\\e213"}.glyphicon-bishop:before{content:"\\e214"}.glyphicon-knight:before{content:"\\e215"}.glyphicon-baby-formula:before{content:"\\e216"}.glyphicon-tent:before{content:"\\26fa"}.glyphicon-blackboard:before{content:"\\e218"}.glyphicon-bed:before{content:"\\e219"}.glyphicon-apple:before{content:"\\f8ff"}.glyphicon-erase:before{content:"\\e221"}.glyphicon-hourglass:before{content:"\\231b"}.glyphicon-lamp:before{content:"\\e223"}.glyphicon-duplicate:before{content:"\\e224"}.glyphicon-piggy-bank:before{content:"\\e225"}.glyphicon-scissors:before{content:"\\e226"}.glyphicon-bitcoin:before{content:"\\e227"}.glyphicon-btc:before{content:"\\e227"}.glyphicon-xbt:before{content:"\\e227"}.glyphicon-yen:before{content:"\\00a5"}.glyphicon-jpy:before{content:"\\00a5"}.glyphicon-ruble:before{content:"\\20bd"}.glyphicon-rub:before{content:"\\20bd"}.glyphicon-scale:before{content:"\\e230"}.glyphicon-ice-lolly:before{content:"\\e231"}.glyphicon-ice-lolly-tasted:before{content:"\\e232"}.glyphicon-education:before{content:"\\e233"}.glyphicon-option-horizontal:before{content:"\\e234"}.glyphicon-option-vertical:before{content:"\\e235"}.glyphicon-menu-hamburger:before{content:"\\e236"}.glyphicon-modal-window:before{content:"\\e237"}.glyphicon-oil:before{content:"\\e238"}.glyphicon-grain:before{content:"\\e239"}.glyphicon-sunglasses:before{content:"\\e240"}.glyphicon-text-size:before{content:"\\e241"}.glyphicon-text-color:before{content:"\\e242"}.glyphicon-text-background:before{content:"\\e243"}.glyphicon-object-align-top:before{content:"\\e244"}.glyphicon-object-align-bottom:before{content:"\\e245"}.glyphicon-object-align-horizontal:before{content:"\\e246"}.glyphicon-object-align-left:before{content:"\\e247"}.glyphicon-object-align-vertical:before{content:"\\e248"}.glyphicon-object-align-right:before{content:"\\e249"}.glyphicon-triangle-right:before{content:"\\e250"}.glyphicon-triangle-left:before{content:"\\e251"}.glyphicon-triangle-bottom:before{content:"\\e252"}.glyphicon-triangle-top:before{content:"\\e253"}.glyphicon-console:before{content:"\\e254"}.glyphicon-superscript:before{content:"\\e255"}.glyphicon-subscript:before{content:"\\e256"}.glyphicon-menu-left:before{content:"\\e257"}.glyphicon-menu-right:before{content:"\\e258"}.glyphicon-menu-down:before{content:"\\e259"}.glyphicon-menu-up:before{content:"\\e260"}*{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}:before,:after{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
-                        </style>
-                        `);
-                }
                 
-                // 버전 체크
-                if(!version_message_once){
-                    await nomo_version.checkNewVersion();
-                }
-                else{
-                    version_message_once = true;
-                }
-
-                var temp_func = function(){nomo_version.checkNewVersion(true);};
-                utils.resetAtMidnight(temp_func);
-
-                // 채팅 매니저 초기화
-                chat_manager.init(nomo_global.$GLOBAL_IFRAME_DOCUMENT);
-
-                // 좌표 보내기 버튼 생성
-                ADD_send_location_layout();
-
-                // 향상된 자동스크롤 위해서 최신 채팅 엘리먼트 숨기기
-                if(ADD_config.chat_scroll){
-                    var $latest_chat = nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("div.latest_chat");
-                    $latest_chat.css("margin",0).css("padding",0).css("height","0").css("border","0").css("overflow","hidden");
-                }
-
-                // 자동 새로고침 layout 생성
-                //await hold.chat_hold_read();
-                //hold.chat_hold_layout();
-
-                // 툴팁 숨기기 토글
-                chat_tooltip_toggle();
-
-                // 스크롤 시 이벤트
-                // nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".content").on("scroll", function(e){
-                //     ADD_DEBUG("scrolled", e);
-                // });
-
-                // chat_type_and_go
-                chat_type_and_go_main();
-            });
-
-
-            // 마우스 오버 시 이미지 뜨는 것 막기
-            nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("DOMNodeInserted", "div#popupWrap", function (){
-                if(ADD_config.chat_image_preview && ADD_config.chat_image_mouseover_prevent){
-                    var $imgElems = $(this).find("img");
-                    if($imgElems.length == 1 && $imgElems.parent().css("width") == "200px"){
-                        $imgElems.parent().remove();
-                    }
-                }
-            });
-
-            // 채팅 라인 생성될 때 함수적용
-            nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("DOMNodeInserted", "div.line", function (){
-                var $line = $(this);
-                if(!($line.hasClass("fired"))){
-                    chatElemControl($line);
-                }
-            });
-
-            // 유저목록 생성될 때 함수적용
-            nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("DOMNodeInserted", "div.userFloor", function (){
-                var $userFloor = $(this);
-                setTimeout(function(){
-                    if(!($userFloor.hasClass("fired"))){
-                        $userFloor.addClass("fired");
-                        var list_nick = $userFloor.attr("nick");
-                        if(chat_manager !== undefined && ADD_config.chat_memo){
-                            var memo_index = chat_manager.indexFromData(list_nick);
-                
-                            if(memo_index !== -1){
-                                var temp_obj = chat_manager.getData(memo_index);
-                                var temp_display_name = temp_obj.display_name;
-                
-                                // 메모 달기
-                                var temp_text;
-                                if(temp_display_name !== undefined){
-                                    if(temp_display_name === ""){
-                                        temp_text = "*";
-                                    }
-                                    else{
-                                        temp_text = "["+[temp_display_name]+"]";
-                                    }
-                                    if(chat_manager.getIsBlock(list_nick)){
-                                        temp_text = temp_text + " - 차단됨";
-                                    }
-                                    $userFloor.append("<span class=\"conversation_memo\" style=\"color:red;font-weight:700;vertical-align:inherit;display:-webkit-inline-box\">&nbsp"+ temp_text +"</span>");
-                                    
-                                    if(ADD_config.chat_userlist_memo_top){
-                                        $userFloor.prependTo($userFloor.closest("div.member-list"));
-                                        ADD_DEBUG("temp_display_name", temp_display_name);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },1);
-            });
-
-            // 채팅창에 있는 두스 링크 클릭 시 이벤트
-            nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click",".topClick",function(e){
-                ADD_DEBUG("TOP CLICKED");
-                e.preventDefault();
-                ADD_DEBUG("PARENT WINDOW LOCATION HREF", parent.window.location.href);
-                window.parent.location.href = this.href;
-            });
-
-            // 채팅창에 있는 OpenTwitchAuth 링크 클릭 시 이벤트
-            nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click",".OpenTwitchAuth",function(e){
-                e.preventDefault();
-                var ww = $(parent.window).width(),
-                    wh = $(parent.window).height();
-                var wn = (ww > 850 ? 850 : ww/5*4);
-                parent.window.open("https://www.dostream.com/addostream/twitch/auth/","winname",
-                    "directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+wn+",height="+wh/5*4);
-
-            });
-
-            // 채팅창 닉네임 클릭 시 "메모하기" 버튼 생성하기
-            nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click", "span.nick, div.nick", function (){
-                if(!ADD_config.chat_memo){
-                    nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("#do_memo").remove();
-                    nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("#memo_isSavedMemo").hide();
-                    return;
-                }
-                var $this = $(this);
-
-                // 창 위치 재설정하기
-                var $content = nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("div.content").first();
-                var offsetHeight = $content[0].offsetHeight;
-                var $popupWrap = nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("#popupWrap");
-                var popupTop = Number($popupWrap.css("top").replace("px",""));
-                var popupHeight = Number($popupWrap.css("height").replace("px","")) + 33;
-                var dif = popupTop + popupHeight - offsetHeight - 56 ;
-                if(dif>0){
-                    $popupWrap.css("top",(popupTop-dif)+"px");
-                }
-
-                // 필수 내용 찾기
-                var nick = $this.attr("nick");
-                var detail_content;
-
-                // 유저 목록에서 선택한 경우
-                if($this.hasClass("userFloor")){
-                    detail_content = "";
-                }
-                // 채팅에서 선택한 경우
-                else{
-                    detail_content = $this.closest("div.line").find("span.chatContent").text().substr(0, 40);
-                }
-                var temp_obj = {"nick":nick,"detail_content":detail_content};
-                var $memo_button = $("<div id=\"do_memo\" class=\"floor\" style=\"color:red;font-weight:700;\">메모하기</div>");
-                nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".usermenu_popup").first().append($memo_button);
-                $memo_button.on("click",async function(){
-                    await chat_manager.openSimplelayout(temp_obj);
-                });
-            });
-
-            //////////////////////////////////////////////////////////////////////////////////
-            // imgur click event
-            nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click", ".imgur_safe_button", function(){
-                $(this).closest(".imgur_container").removeClass("blurred");
-                $(this).parent(".imgur_safe_screen").addClass("clicked").fadeOut(300);
-            });
-            nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click", ".imgur_control_hide", function(){
-                ADD_DEBUG("Chatting 내 호출된 imgur 이미지 에서 - 버튼 클릭됨");
-                $(this).closest(".imgur_container").addClass("blurred");
-                var $safe_screen = $(this).closest(".imgur_container").find(".imgur_safe_screen");
-                if($safe_screen.hasClass("clicked")){
-                    var safe_screen_opacity = Number(ADD_config.imgur_preview_opacity);
-                    if(!($.isNumeric(ADD_config.imgur_preview_opacity))){
-                        safe_screen_opacity = 0.93;
-                    }
-                    else if(safe_screen_opacity < 0 || safe_screen_opacity > 1){
-                        safe_screen_opacity = 0.93;
-                    }
-                    $safe_screen.removeClass("clicked").fadeTo(300, safe_screen_opacity);
-                }
-                else{
-                    $safe_screen.addClass("clicked").fadeOut(300);
-                }
-            });
-            nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click", ".imgur_control_remove", function(){
-                ADD_DEBUG("Chatting 내 호출된 imgur 이미지 에서 x 버튼 클릭됨");
-                $(this).closest(".imgur_container").remove();
-            });
-
-            // .chatInput 클릭 관련 이벤트
-            if(ADD_config.chat_input_click){
-                nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click", ".chatInput", function(e){
-                    $(e.target).blur();
-                    $(e.target).focus();
-                });
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.textContent = arriveScriptContent;
+                nomo_global.$GLOBAL_IFRAME_DOCUMENT[0].head.appendChild(script);
+                postArriveIframe(iframeElems);
             }
 
-            // 스크롤바 관련 이벤트 - 향상된 자동 스크롤
-            if(ADD_config.chat_scroll){
-                ADD_DEBUG("CHAT - Scroll 이벤트 ON");
-                nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("wheel.chatScrollFunc mousewheel.chatScrollFunc", "div.content", function(event) {//div.wrap div.contentWrap
-                    //마우스휠 위로 돌릴때 이벤트
-                    //ADD_DEBUG(event);
-                    var scroll_val = -1;
-                    if (event.type == "mousewheel"){
-                        scroll_val = event.originalEvent.wheelDelta;
-                    }
-                    else if (event.type == "wheel" || event.type == "scroll"){
-                        scroll_val = event.originalEvent.deltaY * (-1);
-                    }
-                    // ADD_DEBUG("scroll_val", scroll_val);
-                    if (scroll_val >= 0) {
-                        // 세로 스크롤바가 있을 경우 처리
-                        if( $(this).get(0).scrollHeight > $(this).innerHeight() ){  //find("div.content").first(). find("div.content").
-                            // UCHAT의 설정을 직접 변경한다.
-                            var roomid = "";
-                            if(iframeElems.contentWindow !== undefined &&
-                                iframeElems.contentWindow.rooms !== undefined){
-                                if(iframeElems.contentWindow.rooms["dostest"] !== undefined){
-                                    roomid = "dostest";
-                                }
-                                else if(iframeElems.contentWindow.rooms["dostream"] !== undefined){
-                                    roomid = "dostream";
-                                }
-                                else{
-                                    roomid = Object.keys(iframeElems.contentWindow.rooms)[0];
-                                }
-                            }
-
-                            if(roomid !== undefined && roomid !== "" && roomid !== null){
-                                iframeElems.contentWindow.rooms[roomid].room.setting.data["option.autoScroll"] = 0;
-                                iframeElems.contentWindow.rooms[roomid].room.log.temp_scroll_stop = 0;
-
-                                // 대체 latest_chat 생성
-                                if(nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".latest_chat_new_container").length === 0){
-                                    var $latest_chat_new = $(`
-                                    <div class="latest_chat_new_container" style="display:none;">
-                                        <div class="latest_chat_new" style="background:rgba(0,0,0,.75);bottom:30px;color:#faf9fa;padding:5px;height:28px;font-size:12px;position:fixed;justify-content:center;align-items:center;text-align:center;width:100%;box-sizing:border-box;z-index:1000;cursor:pointer;border-radius:4px;">
-                                            <span>아래에서 더 많은 메시지를 확인하세요.</span>
-                                        </div>
-                                    </div>
-                                    `);
-                                    nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("div.wrap").first().append($latest_chat_new);
-                                    $latest_chat_new.on("click", function(){
-                                        nomo_global.isGoScrollDown = true;
-                                        goScrollDown();
-                                        $(this).hide();
-                                    });
-                                }
-
-                                nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".latest_chat_new_container").stop("true","true").show();
-                                nomo_global.isGoScrollDown = false;
-                                nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".latest_chat").stop("true","true").show();
-                                // 대체 latest_chat 생성 끝
-                            }
-                            else{
-                                ADD_DEBUG("에러!! iframeElems.contentWindow.rooms", iframeElems.contentWindow.rooms);
-                            }
-                        }
-                        else {
-                            // 스크롤바가 없는 경우
-                        }
-
-                    }
-
-                    else {
-                        //마우스휠 아래로 돌릴때 이벤트
-                        if(isChatScrollOn()){
-                            nomo_global.isGoScrollDown = true;
-                            nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".latest_chat_new_container").stop("true","true").hide();
-                        }
-
-                        var scrollHeight = $(this)[0].scrollHeight;
-                        var scrollTop = $(this)[0].scrollTop;
-                        var height = $(this).height();
-
-                        // ADD_DEBUG(scrollHeight - scrollTop - height, ADD_config.chat_scroll_down_min);
-                        if(scrollHeight - scrollTop - height <= ADD_config.chat_scroll_down_min){
-                            nomo_global.isGoScrollDown = true;
-                            goScrollDown();
-                            nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".latest_chat_new_container").stop("true","true").hide();
-                        }
-                    }
-                });
+            // Check if jQuery is defined in the iframe, if not load it
+            if (typeof nomo_global.$GLOBAL_IFRAME_DOCUMENT[0].jQuery === 'undefined') {
+                const jQueryScript = document.createElement('script');
+                jQueryScript.type = 'text/javascript';
+                jQueryScript.src = 'https://code.jquery.com/jquery-3.6.0.min.js';
+                jQueryScript.onload = injectArriveScript;
+                nomo_global.$GLOBAL_IFRAME_DOCUMENT[0].head.appendChild(jQueryScript);
+            } else {
+                injectArriveScript();
             }
 
+            chatDoeEvntFunc(nomo_global.$GLOBAL_IFRAME_DOCUMENT);
 
         });
     } // else 끝
 } // ADD_chatting_arrive 함수 끝
 
+function postArriveIframe(iframeElems){
+    console.log("postArriveIframe");
+    //////////////////////////////////////////////////////////////////////////////////////////
+    // 채팅창 생성될 때 노티하기
+    // nomo_global.$GLOBAL_IFRAME_DOCUMENT.one("DOMNodeInserted", "div.content", async function (){
+    nomo_global.$GLOBAL_IFRAME_DOCUMENT[0].arrive("div.content", {onlyOnce: true, existing: true}, async function() {
+        ADD_DEBUG("채팅 div.content 생성");
+        if($(this).hasClass("fired")){
+            ADD_DEBUG("already fired");
+            return;
+        }
+        $(this).addClass("fired");
+        // nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".userListWrap").hide();
+
+        uchat_connect_check_clear();
+        // 채팅 엘리먼트 저장
+        nomo_global.GLOBAL_CHAT_CONTENT_DIV = $(this);
+
+        // 테마 적용
+        nomo_theme.ADD_theme();
+        nomo_theme.ADD_night_mode({message:true});
+
+        // head에 CSS 추가
+        nomo_theme.broadcaster_theme_css();
+
+        var debug_css = `
+            .userListWrap {
+                height:300px !important;
+                border-bottom:2px solid #666 !important;
+            }
+        `;
+
+        if(nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("#ADD_chat_css").length === 0){
+            nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("head").append(`
+                <style id="ADD_chat_css" type="text/css">
+                ${nomo_global.DEBUG ? debug_css : ""}
+                ${chat_basic_css}
+                /*!
+                * Bootstrap v3.3.7 (http://getbootstrap.com)
+                * Copyright 2011-2016 Twitter, Inc.
+                * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+                */
+                /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+                html{font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}body{margin:0}@font-face{font-family:'Glyphicons Halflings';src:url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.eot);src:url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.eot?#iefix) format("embedded-opentype"),url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.woff2) format("woff2"),url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.woff) format("woff"),url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.ttf) format("truetype"),url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular) format("svg")}.glyphicon{position:relative;top:1px;display:inline-block;font-family:'Glyphicons Halflings';font-style:normal;font-weight:400;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.glyphicon-asterisk:before{content:"\\002a"}.glyphicon-plus:before{content:"\\002b"}.glyphicon-euro:before,.glyphicon-eur:before{content:"\\20ac"}.glyphicon-minus:before{content:"\\2212"}.glyphicon-cloud:before{content:"\\2601"}.glyphicon-envelope:before{content:"\\2709"}.glyphicon-pencil:before{content:"\\270f"}.glyphicon-glass:before{content:"\\e001"}.glyphicon-music:before{content:"\\e002"}.glyphicon-search:before{content:"\\e003"}.glyphicon-heart:before{content:"\\e005"}.glyphicon-star:before{content:"\\e006"}.glyphicon-star-empty:before{content:"\\e007"}.glyphicon-user:before{content:"\\e008"}.glyphicon-film:before{content:"\\e009"}.glyphicon-th-large:before{content:"\\e010"}.glyphicon-th:before{content:"\\e011"}.glyphicon-th-list:before{content:"\\e012"}.glyphicon-ok:before{content:"\\e013"}.glyphicon-remove:before{content:"\\e014"}.glyphicon-zoom-in:before{content:"\\e015"}.glyphicon-zoom-out:before{content:"\\e016"}.glyphicon-off:before{content:"\\e017"}.glyphicon-signal:before{content:"\\e018"}.glyphicon-cog:before{content:"\\e019"}.glyphicon-trash:before{content:"\\e020"}.glyphicon-home:before{content:"\\e021"}.glyphicon-file:before{content:"\\e022"}.glyphicon-time:before{content:"\\e023"}.glyphicon-road:before{content:"\\e024"}.glyphicon-download-alt:before{content:"\\e025"}.glyphicon-download:before{content:"\\e026"}.glyphicon-upload:before{content:"\\e027"}.glyphicon-inbox:before{content:"\\e028"}.glyphicon-play-circle:before{content:"\\e029"}.glyphicon-repeat:before{content:"\\e030"}.glyphicon-refresh:before{content:"\\e031"}.glyphicon-list-alt:before{content:"\\e032"}.glyphicon-lock:before{content:"\\e033"}.glyphicon-flag:before{content:"\\e034"}.glyphicon-headphones:before{content:"\\e035"}.glyphicon-volume-off:before{content:"\\e036"}.glyphicon-volume-down:before{content:"\\e037"}.glyphicon-volume-up:before{content:"\\e038"}.glyphicon-qrcode:before{content:"\\e039"}.glyphicon-barcode:before{content:"\\e040"}.glyphicon-tag:before{content:"\\e041"}.glyphicon-tags:before{content:"\\e042"}.glyphicon-book:before{content:"\\e043"}.glyphicon-bookmark:before{content:"\\e044"}.glyphicon-print:before{content:"\\e045"}.glyphicon-camera:before{content:"\\e046"}.glyphicon-font:before{content:"\\e047"}.glyphicon-bold:before{content:"\\e048"}.glyphicon-italic:before{content:"\\e049"}.glyphicon-text-height:before{content:"\\e050"}.glyphicon-text-width:before{content:"\\e051"}.glyphicon-align-left:before{content:"\\e052"}.glyphicon-align-center:before{content:"\\e053"}.glyphicon-align-right:before{content:"\\e054"}.glyphicon-align-justify:before{content:"\\e055"}.glyphicon-list:before{content:"\\e056"}.glyphicon-indent-left:before{content:"\\e057"}.glyphicon-indent-right:before{content:"\\e058"}.glyphicon-facetime-video:before{content:"\\e059"}.glyphicon-picture:before{content:"\\e060"}.glyphicon-map-marker:before{content:"\\e062"}.glyphicon-adjust:before{content:"\\e063"}.glyphicon-tint:before{content:"\\e064"}.glyphicon-edit:before{content:"\\e065"}.glyphicon-share:before{content:"\\e066"}.glyphicon-check:before{content:"\\e067"}.glyphicon-move:before{content:"\\e068"}.glyphicon-step-backward:before{content:"\\e069"}.glyphicon-fast-backward:before{content:"\\e070"}.glyphicon-backward:before{content:"\\e071"}.glyphicon-play:before{content:"\\e072"}.glyphicon-pause:before{content:"\\e073"}.glyphicon-stop:before{content:"\\e074"}.glyphicon-forward:before{content:"\\e075"}.glyphicon-fast-forward:before{content:"\\e076"}.glyphicon-step-forward:before{content:"\\e077"}.glyphicon-eject:before{content:"\\e078"}.glyphicon-chevron-left:before{content:"\\e079"}.glyphicon-chevron-right:before{content:"\\e080"}.glyphicon-plus-sign:before{content:"\\e081"}.glyphicon-minus-sign:before{content:"\\e082"}.glyphicon-remove-sign:before{content:"\\e083"}.glyphicon-ok-sign:before{content:"\\e084"}.glyphicon-question-sign:before{content:"\\e085"}.glyphicon-info-sign:before{content:"\\e086"}.glyphicon-screenshot:before{content:"\\e087"}.glyphicon-remove-circle:before{content:"\\e088"}.glyphicon-ok-circle:before{content:"\\e089"}.glyphicon-ban-circle:before{content:"\\e090"}.glyphicon-arrow-left:before{content:"\\e091"}.glyphicon-arrow-right:before{content:"\\e092"}.glyphicon-arrow-up:before{content:"\\e093"}.glyphicon-arrow-down:before{content:"\\e094"}.glyphicon-share-alt:before{content:"\\e095"}.glyphicon-resize-full:before{content:"\\e096"}.glyphicon-resize-small:before{content:"\\e097"}.glyphicon-exclamation-sign:before{content:"\\e101"}.glyphicon-gift:before{content:"\\e102"}.glyphicon-leaf:before{content:"\\e103"}.glyphicon-fire:before{content:"\\e104"}.glyphicon-eye-open:before{content:"\\e105"}.glyphicon-eye-close:before{content:"\\e106"}.glyphicon-warning-sign:before{content:"\\e107"}.glyphicon-plane:before{content:"\\e108"}.glyphicon-calendar:before{content:"\\e109"}.glyphicon-random:before{content:"\\e110"}.glyphicon-comment:before{content:"\\e111"}.glyphicon-magnet:before{content:"\\e112"}.glyphicon-chevron-up:before{content:"\\e113"}.glyphicon-chevron-down:before{content:"\\e114"}.glyphicon-retweet:before{content:"\\e115"}.glyphicon-shopping-cart:before{content:"\\e116"}.glyphicon-folder-close:before{content:"\\e117"}.glyphicon-folder-open:before{content:"\\e118"}.glyphicon-resize-vertical:before{content:"\\e119"}.glyphicon-resize-horizontal:before{content:"\\e120"}.glyphicon-hdd:before{content:"\\e121"}.glyphicon-bullhorn:before{content:"\\e122"}.glyphicon-bell:before{content:"\\e123"}.glyphicon-certificate:before{content:"\\e124"}.glyphicon-thumbs-up:before{content:"\\e125"}.glyphicon-thumbs-down:before{content:"\\e126"}.glyphicon-hand-right:before{content:"\\e127"}.glyphicon-hand-left:before{content:"\\e128"}.glyphicon-hand-up:before{content:"\\e129"}.glyphicon-hand-down:before{content:"\\e130"}.glyphicon-circle-arrow-right:before{content:"\\e131"}.glyphicon-circle-arrow-left:before{content:"\\e132"}.glyphicon-circle-arrow-up:before{content:"\\e133"}.glyphicon-circle-arrow-down:before{content:"\\e134"}.glyphicon-globe:before{content:"\\e135"}.glyphicon-wrench:before{content:"\\e136"}.glyphicon-tasks:before{content:"\\e137"}.glyphicon-filter:before{content:"\\e138"}.glyphicon-briefcase:before{content:"\\e139"}.glyphicon-fullscreen:before{content:"\\e140"}.glyphicon-dashboard:before{content:"\\e141"}.glyphicon-paperclip:before{content:"\\e142"}.glyphicon-heart-empty:before{content:"\\e143"}.glyphicon-link:before{content:"\\e144"}.glyphicon-phone:before{content:"\\e145"}.glyphicon-pushpin:before{content:"\\e146"}.glyphicon-usd:before{content:"\\e148"}.glyphicon-gbp:before{content:"\\e149"}.glyphicon-sort:before{content:"\\e150"}.glyphicon-sort-by-alphabet:before{content:"\\e151"}.glyphicon-sort-by-alphabet-alt:before{content:"\\e152"}.glyphicon-sort-by-order:before{content:"\\e153"}.glyphicon-sort-by-order-alt:before{content:"\\e154"}.glyphicon-sort-by-attributes:before{content:"\\e155"}.glyphicon-sort-by-attributes-alt:before{content:"\\e156"}.glyphicon-unchecked:before{content:"\\e157"}.glyphicon-expand:before{content:"\\e158"}.glyphicon-collapse-down:before{content:"\\e159"}.glyphicon-collapse-up:before{content:"\\e160"}.glyphicon-log-in:before{content:"\\e161"}.glyphicon-flash:before{content:"\\e162"}.glyphicon-log-out:before{content:"\\e163"}.glyphicon-new-window:before{content:"\\e164"}.glyphicon-record:before{content:"\\e165"}.glyphicon-save:before{content:"\\e166"}.glyphicon-open:before{content:"\\e167"}.glyphicon-saved:before{content:"\\e168"}.glyphicon-import:before{content:"\\e169"}.glyphicon-export:before{content:"\\e170"}.glyphicon-send:before{content:"\\e171"}.glyphicon-floppy-disk:before{content:"\\e172"}.glyphicon-floppy-saved:before{content:"\\e173"}.glyphicon-floppy-remove:before{content:"\\e174"}.glyphicon-floppy-save:before{content:"\\e175"}.glyphicon-floppy-open:before{content:"\\e176"}.glyphicon-credit-card:before{content:"\\e177"}.glyphicon-transfer:before{content:"\\e178"}.glyphicon-cutlery:before{content:"\\e179"}.glyphicon-header:before{content:"\\e180"}.glyphicon-compressed:before{content:"\\e181"}.glyphicon-earphone:before{content:"\\e182"}.glyphicon-phone-alt:before{content:"\\e183"}.glyphicon-tower:before{content:"\\e184"}.glyphicon-stats:before{content:"\\e185"}.glyphicon-sd-video:before{content:"\\e186"}.glyphicon-hd-video:before{content:"\\e187"}.glyphicon-subtitles:before{content:"\\e188"}.glyphicon-sound-stereo:before{content:"\\e189"}.glyphicon-sound-dolby:before{content:"\\e190"}.glyphicon-sound-5-1:before{content:"\\e191"}.glyphicon-sound-6-1:before{content:"\\e192"}.glyphicon-sound-7-1:before{content:"\\e193"}.glyphicon-copyright-mark:before{content:"\\e194"}.glyphicon-registration-mark:before{content:"\\e195"}.glyphicon-cloud-download:before{content:"\\e197"}.glyphicon-cloud-upload:before{content:"\\e198"}.glyphicon-tree-conifer:before{content:"\\e199"}.glyphicon-tree-deciduous:before{content:"\\e200"}.glyphicon-cd:before{content:"\\e201"}.glyphicon-save-file:before{content:"\\e202"}.glyphicon-open-file:before{content:"\\e203"}.glyphicon-level-up:before{content:"\\e204"}.glyphicon-copy:before{content:"\\e205"}.glyphicon-paste:before{content:"\\e206"}.glyphicon-alert:before{content:"\\e209"}.glyphicon-equalizer:before{content:"\\e210"}.glyphicon-king:before{content:"\\e211"}.glyphicon-queen:before{content:"\\e212"}.glyphicon-pawn:before{content:"\\e213"}.glyphicon-bishop:before{content:"\\e214"}.glyphicon-knight:before{content:"\\e215"}.glyphicon-baby-formula:before{content:"\\e216"}.glyphicon-tent:before{content:"\\26fa"}.glyphicon-blackboard:before{content:"\\e218"}.glyphicon-bed:before{content:"\\e219"}.glyphicon-apple:before{content:"\\f8ff"}.glyphicon-erase:before{content:"\\e221"}.glyphicon-hourglass:before{content:"\\231b"}.glyphicon-lamp:before{content:"\\e223"}.glyphicon-duplicate:before{content:"\\e224"}.glyphicon-piggy-bank:before{content:"\\e225"}.glyphicon-scissors:before{content:"\\e226"}.glyphicon-bitcoin:before{content:"\\e227"}.glyphicon-btc:before{content:"\\e227"}.glyphicon-xbt:before{content:"\\e227"}.glyphicon-yen:before{content:"\\00a5"}.glyphicon-jpy:before{content:"\\00a5"}.glyphicon-ruble:before{content:"\\20bd"}.glyphicon-rub:before{content:"\\20bd"}.glyphicon-scale:before{content:"\\e230"}.glyphicon-ice-lolly:before{content:"\\e231"}.glyphicon-ice-lolly-tasted:before{content:"\\e232"}.glyphicon-education:before{content:"\\e233"}.glyphicon-option-horizontal:before{content:"\\e234"}.glyphicon-option-vertical:before{content:"\\e235"}.glyphicon-menu-hamburger:before{content:"\\e236"}.glyphicon-modal-window:before{content:"\\e237"}.glyphicon-oil:before{content:"\\e238"}.glyphicon-grain:before{content:"\\e239"}.glyphicon-sunglasses:before{content:"\\e240"}.glyphicon-text-size:before{content:"\\e241"}.glyphicon-text-color:before{content:"\\e242"}.glyphicon-text-background:before{content:"\\e243"}.glyphicon-object-align-top:before{content:"\\e244"}.glyphicon-object-align-bottom:before{content:"\\e245"}.glyphicon-object-align-horizontal:before{content:"\\e246"}.glyphicon-object-align-left:before{content:"\\e247"}.glyphicon-object-align-vertical:before{content:"\\e248"}.glyphicon-object-align-right:before{content:"\\e249"}.glyphicon-triangle-right:before{content:"\\e250"}.glyphicon-triangle-left:before{content:"\\e251"}.glyphicon-triangle-bottom:before{content:"\\e252"}.glyphicon-triangle-top:before{content:"\\e253"}.glyphicon-console:before{content:"\\e254"}.glyphicon-superscript:before{content:"\\e255"}.glyphicon-subscript:before{content:"\\e256"}.glyphicon-menu-left:before{content:"\\e257"}.glyphicon-menu-right:before{content:"\\e258"}.glyphicon-menu-down:before{content:"\\e259"}.glyphicon-menu-up:before{content:"\\e260"}*{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}:before,:after{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+                </style>
+                `);
+        }
+        
+        // 버전 체크
+        if(!version_message_once){
+            await nomo_version.checkNewVersion();
+        }
+        else{
+            version_message_once = true;
+        }
+
+        var temp_func = function(){nomo_version.checkNewVersion(true);};
+        utils.resetAtMidnight(temp_func);
+
+        // 채팅 매니저 초기화
+        chat_manager.init(nomo_global.$GLOBAL_IFRAME_DOCUMENT);
+
+        // 좌표 보내기 버튼 생성
+        ADD_send_location_layout();
+
+        // 향상된 자동스크롤 위해서 최신 채팅 엘리먼트 숨기기
+        if(ADD_config.chat_scroll){
+            var $latest_chat = nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("div.latest_chat");
+            $latest_chat.css("margin",0).css("padding",0).css("height","0").css("border","0").css("overflow","hidden");
+        }
+
+        // 자동 새로고침 layout 생성
+        //await hold.chat_hold_read();
+        //hold.chat_hold_layout();
+
+        // 툴팁 숨기기 토글
+        chat_tooltip_toggle();
+
+        // 스크롤 시 이벤트
+        // nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".content").on("scroll", function(e){
+        //     ADD_DEBUG("scrolled", e);
+        // });
+
+        // chat_type_and_go
+        chat_type_and_go_main();
+    });
+
+
+    // 마우스 오버 시 이미지 뜨는 것 막기
+    // nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("DOMNodeInserted", "div#popupWrap", function (){
+    nomo_global.$GLOBAL_IFRAME_DOCUMENT[0].arrive("div#popupWrap", function() {
+        if(ADD_config.chat_image_preview && ADD_config.chat_image_mouseover_prevent){
+            var $imgElems = $(this).find("img");
+            if($imgElems.length == 1 && $imgElems.parent().css("width") == "200px"){
+                $imgElems.parent().remove();
+            }
+        }
+    });
+
+    // 채팅 라인 생성될 때 함수적용
+    // nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("DOMNodeInserted", "div.line", function (){
+    nomo_global.$GLOBAL_IFRAME_DOCUMENT[0].arrive("div.line", function() {
+        var $line = $(this);
+        if(!($line.hasClass("fired"))){
+            chatElemControl($line);
+        }
+    });
+
+    // 유저목록 생성될 때 함수적용
+    // nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("DOMNodeInserted", "div.userFloor", function (){
+    nomo_global.$GLOBAL_IFRAME_DOCUMENT[0].arrive("div.userFloor", function() {
+        var $userFloor = $(this);
+        setTimeout(function(){
+            if(!($userFloor.hasClass("fired"))){
+                $userFloor.addClass("fired");
+                var list_nick = $userFloor.attr("nick");
+                if(chat_manager !== undefined && ADD_config.chat_memo){
+                    var memo_index = chat_manager.indexFromData(list_nick);
+        
+                    if(memo_index !== -1){
+                        var temp_obj = chat_manager.getData(memo_index);
+                        var temp_display_name = temp_obj.display_name;
+        
+                        // 메모 달기
+                        var temp_text;
+                        if(temp_display_name !== undefined){
+                            if(temp_display_name === ""){
+                                temp_text = "*";
+                            }
+                            else{
+                                temp_text = "["+[temp_display_name]+"]";
+                            }
+                            if(chat_manager.getIsBlock(list_nick)){
+                                temp_text = temp_text + " - 차단됨";
+                            }
+                            $userFloor.append("<span class=\"conversation_memo\" style=\"color:red;font-weight:700;vertical-align:inherit;display:-webkit-inline-box\">&nbsp"+ temp_text +"</span>");
+                            
+                            if(ADD_config.chat_userlist_memo_top){
+                                $userFloor.prependTo($userFloor.closest("div.member-list"));
+                                ADD_DEBUG("temp_display_name", temp_display_name);
+                            }
+                        }
+                    }
+                }
+            }
+        },1);
+    });
+
+    // 채팅창에 있는 두스 링크 클릭 시 이벤트
+    nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click",".topClick",function(e){
+        ADD_DEBUG("TOP CLICKED");
+        e.preventDefault();
+        ADD_DEBUG("PARENT WINDOW LOCATION HREF", parent.window.location.href);
+        window.parent.location.href = this.href;
+    });
+
+    // 채팅창에 있는 OpenTwitchAuth 링크 클릭 시 이벤트
+    nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click",".OpenTwitchAuth",function(e){
+        e.preventDefault();
+        var ww = $(parent.window).width(),
+            wh = $(parent.window).height();
+        var wn = (ww > 850 ? 850 : ww/5*4);
+        parent.window.open("https://www.dostream.com/addostream/twitch/auth/","winname",
+            "directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+wn+",height="+wh/5*4);
+
+    });
+
+    // 채팅창 닉네임 클릭 시 "메모하기" 버튼 생성하기
+    nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click", "span.nick, div.nick", function (){
+        if(!ADD_config.chat_memo){
+            nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("#do_memo").remove();
+            nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("#memo_isSavedMemo").hide();
+            return;
+        }
+        var $this = $(this);
+
+        // 창 위치 재설정하기
+        var $content = nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("div.content").first();
+        var offsetHeight = $content[0].offsetHeight;
+        var $popupWrap = nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("#popupWrap");
+        var popupTop = Number($popupWrap.css("top").replace("px",""));
+        var popupHeight = Number($popupWrap.css("height").replace("px","")) + 33;
+        var dif = popupTop + popupHeight - offsetHeight - 56 ;
+        if(dif>0){
+            $popupWrap.css("top",(popupTop-dif)+"px");
+        }
+
+        // 필수 내용 찾기
+        var nick = $this.attr("nick");
+        var detail_content;
+
+        // 유저 목록에서 선택한 경우
+        if($this.hasClass("userFloor")){
+            detail_content = "";
+        }
+        // 채팅에서 선택한 경우
+        else{
+            detail_content = $this.closest("div.line").find("span.chatContent").text().substr(0, 40);
+        }
+        var temp_obj = {"nick":nick,"detail_content":detail_content};
+        var $memo_button = $("<div id=\"do_memo\" class=\"floor\" style=\"color:red;font-weight:700;\">메모하기</div>");
+        nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".usermenu_popup").first().append($memo_button);
+        $memo_button.on("click",async function(){
+            await chat_manager.openSimplelayout(temp_obj);
+        });
+    });
+
+    //////////////////////////////////////////////////////////////////////////////////
+    // imgur click event
+    nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click", ".imgur_safe_button", function(){
+        $(this).closest(".imgur_container").removeClass("blurred");
+        $(this).parent(".imgur_safe_screen").addClass("clicked").fadeOut(300);
+    });
+    nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click", ".imgur_control_hide", function(){
+        ADD_DEBUG("Chatting 내 호출된 imgur 이미지 에서 - 버튼 클릭됨");
+        $(this).closest(".imgur_container").addClass("blurred");
+        var $safe_screen = $(this).closest(".imgur_container").find(".imgur_safe_screen");
+        if($safe_screen.hasClass("clicked")){
+            var safe_screen_opacity = Number(ADD_config.imgur_preview_opacity);
+            if(!($.isNumeric(ADD_config.imgur_preview_opacity))){
+                safe_screen_opacity = 0.93;
+            }
+            else if(safe_screen_opacity < 0 || safe_screen_opacity > 1){
+                safe_screen_opacity = 0.93;
+            }
+            $safe_screen.removeClass("clicked").fadeTo(300, safe_screen_opacity);
+        }
+        else{
+            $safe_screen.addClass("clicked").fadeOut(300);
+        }
+    });
+    nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click", ".imgur_control_remove", function(){
+        ADD_DEBUG("Chatting 내 호출된 imgur 이미지 에서 x 버튼 클릭됨");
+        $(this).closest(".imgur_container").remove();
+    });
+
+    // .chatInput 클릭 관련 이벤트
+    if(ADD_config.chat_input_click){
+        nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click", ".chatInput", function(e){
+            $(e.target).blur();
+            $(e.target).focus();
+        });
+    }
+
+    // 스크롤바 관련 이벤트 - 향상된 자동 스크롤
+    if(ADD_config.chat_scroll){
+        ADD_DEBUG("CHAT - Scroll 이벤트 ON");
+        nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("wheel.chatScrollFunc mousewheel.chatScrollFunc", "div.content", function(event) {//div.wrap div.contentWrap
+            //마우스휠 위로 돌릴때 이벤트
+            //ADD_DEBUG(event);
+            var scroll_val = -1;
+            if (event.type == "mousewheel"){
+                scroll_val = event.originalEvent.wheelDelta;
+            }
+            else if (event.type == "wheel" || event.type == "scroll"){
+                scroll_val = event.originalEvent.deltaY * (-1);
+            }
+            // ADD_DEBUG("scroll_val", scroll_val);
+            if (scroll_val >= 0) {
+                // 세로 스크롤바가 있을 경우 처리
+                if( $(this).get(0).scrollHeight > $(this).innerHeight() ){  //find("div.content").first(). find("div.content").
+                    // UCHAT의 설정을 직접 변경한다.
+                    var roomid = "";
+                    if(iframeElems.contentWindow !== undefined &&
+                        iframeElems.contentWindow.rooms !== undefined){
+                        if(iframeElems.contentWindow.rooms["dostest"] !== undefined){
+                            roomid = "dostest";
+                        }
+                        else if(iframeElems.contentWindow.rooms["dostream"] !== undefined){
+                            roomid = "dostream";
+                        }
+                        else{
+                            roomid = Object.keys(iframeElems.contentWindow.rooms)[0];
+                        }
+                    }
+
+                    if(roomid !== undefined && roomid !== "" && roomid !== null){
+                        iframeElems.contentWindow.rooms[roomid].room.setting.data["option.autoScroll"] = 0;
+                        iframeElems.contentWindow.rooms[roomid].room.log.temp_scroll_stop = 0;
+
+                        // 대체 latest_chat 생성
+                        if(nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".latest_chat_new_container").length === 0){
+                            var $latest_chat_new = $(`
+                            <div class="latest_chat_new_container" style="display:none;">
+                                <div class="latest_chat_new" style="background:rgba(0,0,0,.75);bottom:30px;color:#faf9fa;padding:5px;height:28px;font-size:12px;position:fixed;justify-content:center;align-items:center;text-align:center;width:100%;box-sizing:border-box;z-index:1000;cursor:pointer;border-radius:4px;">
+                                    <span>아래에서 더 많은 메시지를 확인하세요.</span>
+                                </div>
+                            </div>
+                            `);
+                            nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("div.wrap").first().append($latest_chat_new);
+                            $latest_chat_new.on("click", function(){
+                                nomo_global.isGoScrollDown = true;
+                                goScrollDown();
+                                $(this).hide();
+                            });
+                        }
+
+                        nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".latest_chat_new_container").stop("true","true").show();
+                        nomo_global.isGoScrollDown = false;
+                        nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".latest_chat").stop("true","true").show();
+                        // 대체 latest_chat 생성 끝
+                    }
+                    else{
+                        ADD_DEBUG("에러!! iframeElems.contentWindow.rooms", iframeElems.contentWindow.rooms);
+                    }
+                }
+                else {
+                    // 스크롤바가 없는 경우
+                }
+
+            }
+
+            else {
+                //마우스휠 아래로 돌릴때 이벤트
+                if(isChatScrollOn()){
+                    nomo_global.isGoScrollDown = true;
+                    nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".latest_chat_new_container").stop("true","true").hide();
+                }
+
+                var scrollHeight = $(this)[0].scrollHeight;
+                var scrollTop = $(this)[0].scrollTop;
+                var height = $(this).height();
+
+                // ADD_DEBUG(scrollHeight - scrollTop - height, ADD_config.chat_scroll_down_min);
+                if(scrollHeight - scrollTop - height <= ADD_config.chat_scroll_down_min){
+                    nomo_global.isGoScrollDown = true;
+                    goScrollDown();
+                    nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".latest_chat_new_container").stop("true","true").hide();
+                }
+            }
+        });
+    }
+}
+
 function chatDoeEvntFunc(elem){
-    $(elem[0]).one("DOMNodeInserted", "div.content", function() {
-    //$(document).arrive("div.content", {existing: true, onlyOnce: true}, iframeElems => {
+    // $(elem[0]).one("DOMNodeInserted", "div.content", function() {
+    $(elem[0]).arrive("div.content", {onlyOnce: true, existing: true}, function() {
+    //elem[0].arrive("div.content", function() {
         ADD_DEBUG("iframe 내 div.content 로드 완료!");
         //var elem = $('.chat-container > iframe').contents().first().find('u-chat > iframe').contents().first();
         //var elem = $('u-chat > iframe').contents().first();

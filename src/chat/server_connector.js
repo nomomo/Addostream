@@ -41,7 +41,8 @@ function uchat_force_connect(){
                     ADD_DEBUG("유챗 연결 - view.php 강제 로드");
                     $(".uchat_connect_dom").remove();
 
-                    nomo_global.$GLOBAL_IFRAME_DOCUMENT.one("DOMNodeInserted", ".userListWrap", async function (){
+                    // nomo_global.$GLOBAL_IFRAME_DOCUMENT.one("DOMNodeInserted", ".userListWrap", async function (){
+                    nomo_global.$GLOBAL_IFRAME_DOCUMENT[0].arrive(".userListWrap", {onlyOnce: true, existing: true}, function() {
                         $(this).hide();
                     });
                     // setTimeout(function(){

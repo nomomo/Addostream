@@ -6,6 +6,7 @@ import {goScrollDown, isChatScrollOn} from "./control.js";
 //////////////////////////////////////////////////////////////////////////////////
 // 채팅창 시스템 메시지
 export function ADD_send_sys_msg(msg, delay, type){
+    ADD_DEBUG("ADD_send_sys_msg", msg, delay);
     var divClass = "line fired system";
     if(type !== undefined && type !== null){
         if(type === 1){
@@ -38,14 +39,31 @@ export function ADD_send_sys_msg(msg, delay, type){
         else{
             ADD_DEBUG("채팅창이 없어서 채팅창이 생성될 때 까지 기다린다. - " + msg);
             // CASE1: 채팅창 iframe 은 있는 경우
-            if($("u-chat > iframe").length !== 0){
+            // if($("u-chat > iframe").length !== 0){
+            //     ADD_DEBUG("SYS-MSG CASE1: 채팅창 iframe 은 있는 경우", $("u-chat > iframe"));
+            //     var $iframeDocument =  $("u-chat > iframe").contents().first();
+            //     $iframeDocument.one("DOMNodeInserted", "div.contentWrap", function() {
+            //         $iframeElem = $(this).find("div.content");
+            //         nomo_global.GLOBAL_CHAT_CONTENT_DIV = $iframeElem;
+            //         $iframeElem.append(msg_text);
+            //         if( iframeElems !== undefined && iframeElems.length !== 0&& isChatScrollOn()){
+            //             goScrollDown();
+            //         }
+            //         ADD_DEBUG("시스템 메시지 출력 - ", msg);
+            //     });
+            // }
+            // test
+
+            if ($("u-chat > iframe").length !== 0) {
                 ADD_DEBUG("SYS-MSG CASE1: 채팅창 iframe 은 있는 경우", $("u-chat > iframe"));
-                var $iframeDocument =  $("u-chat > iframe").contents().first();
-                $iframeDocument.one("DOMNodeInserted", "div.contentWrap", function() {
+                var $iframeDocument = $("u-chat > iframe").contents().first();
+            
+                // Use arrive.js to handle the insertion of div.contentWrap
+                $iframeDocument[0].arrive("div.contentWrap", {onlyOnce: true, existing: true}, function() {
                     $iframeElem = $(this).find("div.content");
                     nomo_global.GLOBAL_CHAT_CONTENT_DIV = $iframeElem;
                     $iframeElem.append(msg_text);
-                    if( iframeElems !== undefined && iframeElems.length !== 0&& isChatScrollOn()){
+                    if (iframeElems !== undefined && iframeElems.length !== 0 && isChatScrollOn()) {
                         goScrollDown();
                     }
                     ADD_DEBUG("시스템 메시지 출력 - ", msg);
@@ -54,16 +72,31 @@ export function ADD_send_sys_msg(msg, delay, type){
             // CASE2: 채팅창 iframe 도 없는 경우
             else{
                 ADD_DEBUG("SYS-MSG CASE2: 채팅창 iframe 도 없는 경우");
-                $(document).one("DOMNodeInserted", "u-chat > iframe", function() {
-                    //ADD_DEBUG("DOMNodeInserted u-chat > iframe 진입");
-                    $(this).one("load", function(){
-                        //ADD_DEBUG("DOMNodeInserted u-chat > iframe 로드 완료");
-                        var $iframeDocument = $(this).contents().first();
-                        $iframeDocument.one("DOMNodeInserted", "div.line", function() {
-                            $iframeElem = $(this).parent();//find("div.content");
-                            nomo_global.GLOBAL_CHAT_CONTENT_DIV = $iframeElem;
-                            $iframeElem.append(msg_text);
-                            if(isChatScrollOn()){
+                // $(document).one("DOMNodeInserted", "u-chat > iframe", function() {
+                //     //ADD_DEBUG("DOMNodeInserted u-chat > iframe 진입");
+                //     $(this).one("load", function(){
+                //         //ADD_DEBUG("DOMNodeInserted u-chat > iframe 로드 완료");
+                //         var $iframeDocument = $(this).contents().first();
+                //         $iframeDocument.one("DOMNodeInserted", "div.line", function() {
+                //             $iframeElem = $(this).parent();//find("div.content");
+                //             nomo_global.GLOBAL_CHAT_CONTENT_DIV = $iframeElem;
+                //             $iframeElem.append(msg_text);
+                //             if(isChatScrollOn()){
+                //                 goScrollDown();
+                //             }
+                //         });
+                //     });
+                // });
+                $(document).arrive("u-chat > iframe", {onlyOnce: true, existing: true}, function() {
+                    var $iframe = $(this);
+                    $iframe.one("load", function() {
+                        var $iframeDocument = $iframe.contents().first();
+                
+                        $iframeDocument[0].arrive("div.line", {onlyOnce: true}, function() {
+                            var $lineElem = $(this).parent(); // Assuming you want the parent of div.line
+                            nomo_global.GLOBAL_CHAT_CONTENT_DIV = $lineElem;
+                            $lineElem.append(msg_text);
+                            if (isChatScrollOn()) {
                                 goScrollDown();
                             }
                         });
