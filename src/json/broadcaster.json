@@ -231,13 +231,14 @@
             "tc": "ogn_lol"
         },
         {
-            "m": "t",
+            "m": "a",
             "dn": "케인",
             "nn": [
                 "케조씨"
             ],
+            "tc": "kanetv8",
             "cc": "7b1acb37b35928ff690d011296a9e5ab",
-            "tc": "kanetv8"
+            "ac": "udkn"
         },
         {
             "m": "c",
@@ -5844,12 +5845,6 @@
             "dn": "진짜짜공룡티비",
             "nn": [],
             "cc": "b14b82c7c8ce8caf5b627c6edebf2f36"
-        },
-        {
-            "m": false,
-            "dn": "케인8",
-            "nn": [],
-            "ac": "udkn"
         },
         {
             "m": "a",
