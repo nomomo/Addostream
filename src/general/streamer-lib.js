@@ -11,7 +11,7 @@ function init_streamer_data()
     // preprocessing
     for(const idx in broadcaster.data){
         let item = broadcaster.data[idx];
-        if (!item.m){
+        if (!item.m || item.m == "y"){
             //ADD_DEBUG("m is not defined", item);
             continue;
         }
@@ -87,7 +87,7 @@ function streamer_search_keyword(keyword, start){
     for(let i=start; i<broadcaster.data.length; ++i){
         let item = broadcaster.data[i];
 
-        if(!item.m || !item.regex){
+        if(!item.m || item.m == "y" || !item.regex){
             continue;
         }
 
@@ -110,7 +110,7 @@ function streamer_replace_keyword_link(text, start){
     for(let i=start; i<broadcaster.data.length; ++i){
         let item = broadcaster.data[i];
 
-        if(!item.m || !item.regex){
+        if(!item.m || item.m == "y" || !item.regex){
             continue;
         }
 
