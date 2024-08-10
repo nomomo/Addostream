@@ -1,13 +1,13 @@
 import * as nomo_common from "general/common.js";
 import nomo_const from "general/const.js";
-import { broadcaster, ADD_streamer_nick, streamerArray, streamerArray_name, streamerArray_regex } from "general/streamer-lib.js";
+import { streamer_replace_keyword_link } from "general/streamer-lib.js";
 import * as nomo_theme from "general/theme.js";
 import * as utils from "libs/nomo-utils.js";
 import * as nomo_version from "settings/version.js";
 import { ADD_send_location_layout } from "chat/send_coord.js";
 import { ADD_send_sys_msg } from "chat/send_message.js";
 import { uchat_connect_waiting, uchat_connect_check_clear} from "chat/server_connector.js";
-import { getStreamerIdAndDisplayNameFromNick } from "general/streamer-lib.js";
+import { streamer_search_keyword } from "general/streamer-lib.js";
 import {escapeHtml} from "libs/nomo-utils.js";
 import {ADD_parse_list_data} from "general/list.js";
 import { saveTwitchOAuth, TwitchHelixAPI } from "api/twitchapi.js";
@@ -257,7 +257,12 @@ a.autokeyword.twitch:after, a.autokeyword.twitch:after {
 a.autokeyword.chzzk:after, a.autokeyword.chzzk:after {
     background-color: #00ffa38f;
 }
-
+a.autokeyword.afreeca:after, a.autokeyword.afreeca:after {
+    background-color: #e6b0bc;
+}
+a.autokeyword.youtube:after, a.autokeyword.youtube:after {
+    background-color: #e6b0bc;
+}
 
 
 body.tooltip_hide p.tooltip {
@@ -1414,95 +1419,57 @@ async function chatElemControl($line){
                     $textNodes.each(function(index, element) {            
                         var contentText = $(element).text();
                         if(ADD_config.chat_autoKeyword_startwith){
-                            var tempary = contentText.split(" ");
-                            for(var i=0;i<tempary.length;i++){
-                                for(var j=0;j<streamerArray_regex.length;j++){
-                                    var v = tempary[i];
-                                    var id = streamerArray[j][0];
-                                    var match = v.match(streamerArray_regex[j]);
-                                    if(match !== null){
-                                        if(match[1] !== "던" && !ADD_config.chat_autoKeyword_1char && match[1].length === 1){
-                                            continue;
-                                        }
-                                        let foundChzzk = false;
-                                        let chzzkCode = "";
-                                        if(!ADD_config.chat_chzzk_onlyLive && broadcaster.data.twitch[id].cc !== undefined){
-                                            foundChzzk = true;
-                                            chzzkCode = broadcaster.data.twitch[id].cc;
-                                        }
-                                        if(!foundChzzk){
-                                            for(let iLT in nomo_global.latestList){
-                                                let lt = nomo_global.latestList[iLT];
-                                                chzzkCode = lt.url.split("/").pop();
+                            // var tempary = contentText.split(" ");
+                            // for(var i=0;i<tempary.length;i++){
+                            //     for(var j=0;j<streamerArray_regex.length;j++){
+                            //         var v = tempary[i];
+                            //         var id = streamerArray[j][0];
+                            //         var match = v.match(streamerArray_regex[j]);
+                            //         if(match !== null){
+                            //             if(match[1] !== "던" && !ADD_config.chat_autoKeyword_1char && match[1].length === 1){
+                            //                 continue;
+                            //             }
+                            //             let foundChzzk = false;
+                            //             let chzzkCode = "";
+                            //             if(!ADD_config.chat_chzzk_onlyLive && broadcaster.data.twitch[id].cc !== undefined){
+                            //                 foundChzzk = true;
+                            //                 chzzkCode = broadcaster.data.twitch[id].cc;
+                            //             }
+                            //             if(!foundChzzk){
+                            //                 for(let iLT in nomo_global.latestList){
+                            //                     let lt = nomo_global.latestList[iLT];
+                            //                     chzzkCode = lt.url.split("/").pop();
                                             
-                                                if(lt.from === "chzzk" && chzzkCode === broadcaster.data.twitch[id].cc){
-                                                    foundChzzk = true;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        if(foundChzzk){
-                                            tempary[i] = tempary[i].replace(match[1],`<a href='https://www.dostream.com/#/stream/chzzk/${chzzkCode}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " chzzk autokeyword" : ""}'>${match[1]}</a>`);
-                                        }
-                                        else{
-                                            tempary[i] = tempary[i].replace(match[1],`<a href='https://www.dostream.com/#/stream/twitch/${id}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " twitch autokeyword" : ""}'>${match[1]}</a>`);
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
-                            contentText = tempary.join(" ");
-                            $(element).replaceWith(contentText);
-                            $(element).addClass("keyword_pass");
-                            br = false;
+                            //                     if(lt.from === "chzzk" && chzzkCode === broadcaster.data.twitch[id].cc){
+                            //                         foundChzzk = true;
+                            //                         break;
+                            //                     }
+                            //                 }
+                            //             }
+                            //             if(foundChzzk){
+                            //                 tempary[i] = tempary[i].replace(match[1],`<a href='https://www.dostream.com/#/stream/chzzk/${chzzkCode}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " chzzk autokeyword" : ""}'>${match[1]}</a>`);
+                            //             }
+                            //             else{
+                            //                 tempary[i] = tempary[i].replace(match[1],`<a href='https://www.dostream.com/#/stream/twitch/${id}' class='topClick${ADD_config.chat_autoKeyword_emstyle ? " twitch autokeyword" : ""}'>${match[1]}</a>`);
+                            //             }
+                            //             break;
+                            //         }
+                            //     }
+                            // }
+                            // contentText = tempary.join(" ");
+                            // $(element).replaceWith(contentText);
+                            // $(element).addClass("keyword_pass");
+                            // br = false;
+                            
+                            [br, contentText] = streamer_replace_keyword_link(contentText, 0);
                         }
                         else{
-                            $.each(streamerArray, function(si, sv){
-                                var id = sv[0];
-                                for(var s=1;s<sv.length; s++){
-                                    var disp_name = sv[s];
-                                    if(disp_name !== "던" && !ADD_config.chat_autoKeyword_1char && disp_name.length === 1){
-                                        continue;
-                                    }
-                                    if(contentText.indexOf(disp_name) !== -1){
-                                        let foundChzzk = false;
-                                        let chzzkCode = "";
-                                        if(!ADD_config.chat_chzzk_onlyLive && broadcaster.data.twitch[id].cc !== undefined){
-                                            foundChzzk = true;
-                                            chzzkCode = broadcaster.data.twitch[id].cc;
-                                        }
-                                        if(!foundChzzk){
-                                            for(let iLT in nomo_global.latestList){
-                                                let lt = nomo_global.latestList[iLT];
-                                                chzzkCode = lt.url.split("/").pop();
-                                            
-                                                if(lt.from === "chzzk" && chzzkCode === broadcaster.data.twitch[id].cc){
-                                                    foundChzzk = true;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        if(foundChzzk){
-                                            contentText = contentText.split(disp_name).join(`<a href='https://www.dostream.com/#/stream/chzzk/${chzzkCode}' class='chzzk topClick${ADD_config.chat_autoKeyword_emstyle ? " autokeyword" : ""}'>${disp_name}</a>`);   // replaceAll
-                                        }
-                                        else{
-                                            contentText = contentText.split(disp_name).join(`<a href='https://www.dostream.com/#/stream/twitch/${id}' class='twitch topClick${ADD_config.chat_autoKeyword_emstyle ? " autokeyword" : ""}'>${disp_name}</a>`);   // replaceAll
-                                        }
-                                        $(element).replaceWith(contentText);
-                                        //ADD_DEBUG("contentText", sv, contentText, $(element));
-                                        rep = rep + 1;
-                                        br = true;
-                                        break;
-                                    }
-                                }
-
-                                if(br){
-                                    return false;
-                                }
-                            });
+                            [br, contentText] = streamer_replace_keyword_link(contentText, 0);
                         }
 
                         if(br){
+                            $(element).replaceWith(contentText);
+                            rep = rep + 1;
                             return false;
                         }
 
@@ -2229,34 +2196,23 @@ function type_and_go_run(){
         return;
     }
 
-    var res = getStreamerIdAndDisplayNameFromNick(etargetText);
-    streamerid = res.id;
-    streamerDisplayName = res.display_name;
-
+    var res = streamer_search_keyword(etargetText);
     var engToKor = "";
-    if(streamerid == null){
+    if(res == null){
         engToKor = utils.engTypeToKor(etargetText);
-        res = getStreamerIdAndDisplayNameFromNick(engToKor);
-        streamerid = res.id;
-        streamerDisplayName = res.display_name;
+        res = streamer_search_dispname(engToKor);
     }
 
-    if(streamerid !== null){
-        if(broadcaster.data.twitch[streamerid].cc !== undefined){
-            setParentWindowLocation("https://www.dostream.com/#/stream/chzzk/"+broadcaster.data.twitch[streamerid].cc);
-            ADD_send_sys_msg(`다음으로 이동합니다: ${streamerDisplayName}(${streamerid}) - Chzzk`);
-        }
-        else{
-            setParentWindowLocation("https://www.dostream.com/#/stream/twitch/"+streamerid);
-            ADD_send_sys_msg(`다음으로 이동합니다: ${streamerDisplayName}(${streamerid}) - Twitch`);
-        }
-        $etarget.blur();
-        $etarget.html("");
-        $etarget.focus();
-    }
-    else{
+    if(res == null || !res.m || !res.c){
         ADD_send_sys_msg(`해당하는 스트리머를 찾을 수 없습니다: ${escapeHtml(etargetText)}`);
         $etarget.focus();
+        return;
     }
+        
+    setParentWindowLocation(`https://www.dostream.com/#/stream/${res.p}/${res.c}`);
+    ADD_send_sys_msg(`다음으로 이동합니다: ${res.dn}(${res.c}) - ${res.p}`);
+    $etarget.blur();
+    $etarget.html("");
+    $etarget.focus();
 }
 

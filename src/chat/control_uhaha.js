@@ -1,6 +1,6 @@
 import nomo_const from "general/const.js";
 import * as nomo_common from "general/common.js";
-import { ADD_streamer_nick, streamerArray } from "general/streamer-lib.js";
+//import { ADD_streamer_nick } from "general/streamer-lib.js";
 import {ADD_chatBlock, chat_basic_css, getImgurData, chatImagelayoutfromLinks, goScrollDown, isVideo} from "chat/control.js";
 import * as utils from "libs/nomo-utils.js";
 import { broadcaster_theme_css } from "general/theme.js";
@@ -488,30 +488,30 @@ async function uhaha_arrive(elems){
                 $aElem.html(decodeURIComponent($aElem.html()));
             }
 
-            // 트위치 링크인 경우 닉네임을 링크 끝에 추가하기
+            // 트위치 링크인 경우 닉네임을 링크 끝에 추가하기 - 현재 지원 안 함
             if(href.toLowerCase().indexOf("dostream.com/#/stream/twitch/") !== -1 || href.toLowerCase().indexOf("dostream.com/#/stream/multitwitch/") !== -1){
-                var ch_text = "";
-                var ch_streamer_id = href.split("/").pop();
+                // var ch_text = "";
+                // var ch_streamer_id = href.split("/").pop();
 
-                var temp_array = ch_streamer_id.split("&");
-                for (var j=0; j<temp_array.length; j++){
-                    if(j !== 0){
-                        ch_text = ch_text+"&";
-                    }
-                    var temp_id = ADD_streamer_nick(temp_array[j]);//.toUpperCase();
-                    ch_text = ch_text+temp_id;
-                }
+                // var temp_array = ch_streamer_id.split("&");
+                // for (var j=0; j<temp_array.length; j++){
+                //     if(j !== 0){
+                //         ch_text = ch_text+"&";
+                //     }
+                //     var temp_id = ADD_streamer_nick(temp_array[j]);//.toUpperCase();
+                //     ch_text = ch_text+temp_id;
+                // }
 
-                //if(ch_text.toLowerCase() !== ch_streamer_id.toLowerCase()){
-                //if(ch_text !== ch_streamer_id){
-                if(ch_text !== undefined || ch_text !== ""){
-                    $aElem.after(" <span class=\"keyword_pass\" style=\"ch_text\">["+ch_text+"]</span>");
-                }
+                // //if(ch_text.toLowerCase() !== ch_streamer_id.toLowerCase()){
+                // //if(ch_text !== ch_streamer_id){
+                // if(ch_text !== undefined || ch_text !== ""){
+                //     $aElem.after(" <span class=\"keyword_pass\" style=\"ch_text\">["+ch_text+"]</span>");
+                // }
 
-                // 스크롤 내리기
-                if( temp_isChatScrollOn ){
-                    goScrollDown();
-                }
+                // // 스크롤 내리기
+                // if( temp_isChatScrollOn ){
+                //     goScrollDown();
+                // }
             }// M3U8 링크인 경우
             // !/^http:\/\//.test(href) && 
             else if(href.indexOf('dostream.com/#/stream/m3u8') == -1 && regex_m3u8.test(href)){
@@ -852,57 +852,58 @@ async function uhaha_arrive(elems){
         }
     }
 
-    // 키워드 링크 추가하기
-    if(ADD_config.chat_autoKeyword && !ADD_config.broadcaster_mode){
-        setTimeout(function(){
-            var rep = 0;
-            var br = true;
-            while(rep<10 && br){
-                br = false;
-                var $textNodes = $content
-                    .find("*")
-                    .andSelf()
-                    .contents()
-                    .filter(function() {
-                        return this.nodeType === 3 &&
-                            !$(this).parent("a").length && 
-                            !$(this).hasClass("keyword_pass") &&
-                            !$(this).parent().hasClass("keyword_pass");
-                    });
+    // 현재 우하하에 대한 키워드 링크 지원 안 함
+    // // 키워드 링크 추가하기
+    // if(ADD_config.chat_autoKeyword && !ADD_config.broadcaster_mode){
+    //     setTimeout(function(){
+    //         var rep = 0;
+    //         var br = true;
+    //         while(rep<10 && br){
+    //             br = false;
+    //             var $textNodes = $content
+    //                 .find("*")
+    //                 .andSelf()
+    //                 .contents()
+    //                 .filter(function() {
+    //                     return this.nodeType === 3 &&
+    //                         !$(this).parent("a").length && 
+    //                         !$(this).hasClass("keyword_pass") &&
+    //                         !$(this).parent().hasClass("keyword_pass");
+    //                 });
 
-                $textNodes.each(function(index, element) {
-                    var contentText = $(element).text();
-                    $.each(streamerArray, function(si, sv){
-                        var id = sv[0];
-                        for(var s=1;s<sv.length; s++){
-                            var disp_name = sv[s];
-                            if(!ADD_config.chat_autoKeyword_1char && disp_name.length === 1){
-                                continue;
-                            }
-                            if(contentText.indexOf(disp_name) !== -1){
-                                contentText = contentText.split(disp_name).join("<a href='https://www.dostream.com/#/stream/twitch/"+id+"' class='topClick autokeyword'>"+disp_name+"</a>");   // replaceAll
-                                $(element).replaceWith(contentText);
-                                //ADD_DEBUG("contentText", sv, contentText, $(element));
-                                rep = rep + 1;
-                                br = true;
-                                break;
-                            }
-                        }
+    //             $textNodes.each(function(index, element) {
+    //                 var contentText = $(element).text();
+    //                 $.each(streamerArray, function(si, sv){
+    //                     var id = sv[0];
+    //                     for(var s=1;s<sv.length; s++){
+    //                         var disp_name = sv[s];
+    //                         if(!ADD_config.chat_autoKeyword_1char && disp_name.length === 1){
+    //                             continue;
+    //                         }
+    //                         if(contentText.indexOf(disp_name) !== -1){
+    //                             contentText = contentText.split(disp_name).join("<a href='https://www.dostream.com/#/stream/twitch/"+id+"' class='topClick autokeyword'>"+disp_name+"</a>");   // replaceAll
+    //                             $(element).replaceWith(contentText);
+    //                             //ADD_DEBUG("contentText", sv, contentText, $(element));
+    //                             rep = rep + 1;
+    //                             br = true;
+    //                             break;
+    //                         }
+    //                     }
 
-                        if(br){
-                            return false;
-                        }
-                    });
+    //                     if(br){
+    //                         return false;
+    //                     }
+    //                 });
 
-                    if(br){
-                        return false;
-                    }
+    //                 if(br){
+    //                     return false;
+    //                 }
 
-                    $(element).addClass("keyword_pass");
-                });
-            }
-        },1);
-    }
+    //                 $(element).addClass("keyword_pass");
+    //             });
+    //         }
+    //     },1);
+    // }
 
     if(nomo_global.DEBUG){
         unsafeWindow.$(document).trigger("chat_line", {"id":unique_id, "nick":nick, "content":content, "color":debug_color, "me":myLine, "date":createdDate});

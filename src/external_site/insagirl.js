@@ -65,7 +65,7 @@ export async function external_insagirl(){
                         if(j !== 0){
                             ch_text = ch_text+"&";
                         }
-                        var temp_id = ADD_streamer_nick(temp_array[j]);
+                        var temp_id = streamer_search_dispname(temp_array[j], "twitch");
                         ch_text = ch_text+temp_id;
                     }
                     if(ch_text !== undefined || ch_text !== ""){

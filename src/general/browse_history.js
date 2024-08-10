@@ -1,6 +1,6 @@
 import nomo_const from "general/const.js";
 import * as nomo_common from "general/common.js";
-import {ADD_streamer_nick, broadcaster} from "general/streamer-lib.js";
+import {streamer_search_dispname} from "general/streamer-lib.js";
 import {ADD_DEBUG} from "libs/nomo-utils.js";
 
 /**
@@ -10,7 +10,7 @@ import {ADD_DEBUG} from "libs/nomo-utils.js";
  * @returns
  */
 function ADD_Channel_history_cookie(rw_array){
-    ADD_DEBUG("ADD_Channel_history_cookie");
+    ADD_DEBUG("ADD_Channel_history_cookie", rw_array);
     var ADD_MAX_HISTORY = ADD_config.max_history;
 
     var ADD_h_cookie = $.cookie("ADD_h_cookie");
@@ -31,33 +31,36 @@ function ADD_Channel_history_cookie(rw_array){
         var ch_text = "";
         var temp_array = rw_array[0].split("&");
 
-        if(rw_array[2] === "chzzk"){
-            let found = false;
+        // if(rw_array[2] === "chzzk"){
+        //     let found = false;
             
-            for(let key in broadcaster.data.chzzk){
-                if(key === rw_array[0]){
-                    ch_text = broadcaster.data.chzzk[key].dn + "(CHZ)";
-                    found = true;
-                    break;
-                }
-            }
+        //     for(let key in broadcaster.data.chzzk){
+        //         if(key === rw_array[0]){
+        //             ch_text = broadcaster.data.chzzk[key].dn + "(CHZ)";
+        //             found = true;
+        //             break;
+        //         }
+        //     }
 
-            if(!found){
-                ch_text = rw_array[0];
-            }
+        //     if(!found){
+        //         ch_text = rw_array[0];
+        //     }
+        // }
+        // else{
+        //     for (let j=0; j<temp_array.length; j++){
+        //         if(j !== 0){
+        //             ch_text = ch_text+"&";
+        //         }
+        //         ch_text = ch_text+ADD_streamer_nick(temp_array[j].toUpperCase());//.toUpperCase();
+        //     }
+        //     if(rw_array[2] === "multitwitch"){
+        //         ch_text = ch_text+"(멀티)";
+        //     }
+        // }
+        // rw_array[1] = ch_text;
+        if(rw_array[0] === rw_array[1]){
+            rw_array[1] = streamer_search_dispname(rw_array[0], rw_array[2]);
         }
-        else{
-            for (let j=0; j<temp_array.length; j++){
-                if(j !== 0){
-                    ch_text = ch_text+"&";
-                }
-                ch_text = ch_text+ADD_streamer_nick(temp_array[j].toUpperCase());//.toUpperCase();
-            }
-            if(rw_array[2] === "multitwitch"){
-                ch_text = ch_text+"(멀티)";
-            }
-        }
-        rw_array[1] = ch_text;
 
         // 기존 쓰여진 쿠키에 중복 여부 찾기
         var found_h = false;
@@ -100,6 +103,7 @@ function check_stream_and_chennel_from_location(){
         // }
 
         if(current_url !== null && current_url.indexOf("#/stream/") !== -1){
+            ADD_DEBUG("current_url in check_stream_and_chennel_from_location", current_url);
             var keyword_stream = (current_url.split("#/stream/"));
             keyword_stream = keyword_stream[1];
             var keyword_channel = keyword_stream.split("/");

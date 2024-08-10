@@ -301,7 +301,6 @@ export default function($){
                 autocompleteOptions.source = this.options.tagSource || autocompleteOptions.source;
 
                 this.tagInput.autocomplete(autocompleteOptions).bind("autocompleteopen.tagit", function(event, ui){
-                //this.tagInput.autocomplete({source:streamerArray_AutoComplete}).bind('autocompleteopen.tagit', function(event, ui){
                     that.tagInput.data("autocomplete-open", true);
                     focused_value = "";
                 }).bind("autocompleteclose.tagit", function(event, ui){

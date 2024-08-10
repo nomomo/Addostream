@@ -1,4 +1,4 @@
-import {ADD_streamer_nick, broadcaster} from "general/streamer-lib.js";
+import {streamer_search_dispname} from "general/streamer-lib.js";
 import nomo_const from "general/const.js";
 import * as nomo_common from "general/common.js";
 import * as utils from "libs/nomo-utils.js";
@@ -58,13 +58,7 @@ export function ADD_page_change($, global, document){
                             elem.scrolling = "yes";
                             nomo_global.ADD_now_playing.id = url_current.split("/").pop();
                             nomo_global.ADD_now_playing.from = "chzzk";
-                            nomo_global.ADD_now_playing.display_name = "";
-                            for(let key in broadcaster.data.chzzk){
-                                if(key === nomo_global.ADD_now_playing.id){
-                                    nomo_global.ADD_now_playing.display_name  = broadcaster.data.chzzk[key].dn + "(CHZ)";
-                                    break;
-                                }
-                            }
+                            nomo_global.ADD_now_playing.display_name = streamer_search_dispname(nomo_global.ADD_now_playing.id, "chzzk");
                             nomo_global.ADD_now_playing.toonat_link = "";
                             nomo_global.ADD_now_playing.twip_link = "";
                         }
@@ -79,7 +73,7 @@ export function ADD_page_change($, global, document){
             else{
                 nomo_global.ADD_now_playing.id = url_current.split("/").pop();
                 nomo_global.ADD_now_playing.from = "twitch";
-                nomo_global.ADD_now_playing.display_name = ADD_streamer_nick(nomo_global.ADD_now_playing.id);
+                nomo_global.ADD_now_playing.display_name = streamer_search_dispname(nomo_global.ADD_now_playing.id);
                 nomo_global.ADD_now_playing.toonat_link = "";
                 nomo_global.ADD_now_playing.twip_link = "";
             }

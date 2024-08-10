@@ -1,7 +1,7 @@
 import "libs/date_format.js";
 import { ADD_DEBUG, getTimeStamp, escapeHtml } from "../libs/nomo-utils.js";
 import * as nomo_common from "./common.js";
-import { streamerArray, broadcaster } from "./streamer-lib.js";
+import { streamer_search_dispname } from "./streamer-lib.js";
 
 //////////////////////////////////////////////////////////////////////////////////
 // 파싱 데이터 이용하여 layout 생성
@@ -209,43 +209,27 @@ export async function ADD_run(data,flag){
             data[i].image += nomo_global.getTimeStampRes;
         }
         
-        if(data[i].main_favorite === true)
+        if(data[i].main_favorite === true){
             continue;
+        }
 
             
-        // 트위치가 아닌 경우
-        if(data[i].from == "chzzk"){
-            let found = false;
-            for(let key in broadcaster.data.chzzk){
-                if(key === data[i].url.split("/").pop()){
-                    data[i].display_name = broadcaster.data.chzzk[key].dn;
-                    found = true;
-                    break;
-                }
-            }
-
-            if(!found){
-                data[i].display_name = "";//data[i].streamer;
-            }
+        if(data[i].from === "afreeca"){
+            data[i].display_name = data[i].streamer;
+            data[i].streamer = data[i].url.split("/").pop();
         }
-        else if(data[i].from == "twitch") {
-            for(var j=0; j<streamerArray.length; j++){
-                // 기존 스트리머 이름 목록에서 찾은 경우
-                if(streamerArray[j][0] === data[i].streamer){
-                    data[i].display_name = streamerArray[j][1];
-                    break;
-                }
-
-                // 못 찾은 경우
-                if(j === streamerArray.length-1){
-                    data[i].display_name = "";//data[i].streamer;
-                    break;
-                }
-            }
+        else if(data[i].from === "chzzk"){
+            data[i].display_name = data[i].streamer;
+            data[i].streamer = data[i].url.split("/").pop();
         }
         else{
-            data[i].display_name = "";
-            break;
+            let dispname_temp = streamer_search_dispname(data[i].streamer, data[i].from);
+            if(dispname_temp !== data[i].streamer){
+                data[i].display_name = dispname_temp;
+            }
+            else{
+                data[i].display_name = "";
+            }
         }
     }
 
@@ -319,7 +303,7 @@ export async function ADD_run(data,flag){
         else{
             switch(data.from){
             case "afreeca":
-                display_name = "아프리카";
+                display_name = data.display_name+" ("+data.streamer+")";
                 break;
             case "kakao":
                 display_name = "카카오";
@@ -328,8 +312,7 @@ export async function ADD_run(data,flag){
                 display_name = "유투브";
                 break;
             case "chzzk":
-                //display_name = data.display_name;
-                display_name = data.streamer;
+                display_name = data.display_name;
                 break;
             default:
                 display_name = data.from;

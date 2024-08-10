@@ -32,8 +32,8 @@ import {ADD_popup_player} from "general/popup_player.js";
 import {createTwitchOAuthLayout} from "api/twitchapi.js";
 import {ADD_parse_list_data} from "general/list.js";
 import {chzzk_main} from "general/chzzk.js";
+import {init_streamer_data} from "general/streamer-lib.js";
 // import * as hold from "chat/hold.js";
-// import {point_clicker} from "general/point_clicker.js";
 // import { test } from "general/import_test.js";
 // import {easy_go} from "general/go.js";
 // import "general/ingyeodo.js";
@@ -46,7 +46,7 @@ import {chzzk_main} from "general/chzzk.js";
 
     // global 변수 선언
     await nomo_global_manager(window);
-    
+
     // Migration
     ADD_migration();
 
@@ -56,7 +56,7 @@ import {chzzk_main} from "general/chzzk.js";
     await GM_setting.init("ADD_config", GM_setting_param);
     await GM_setting.load();
 
-
+    init_streamer_data();
 
     //////////////////////////////////////////////////////////////////////////////////
     // CHZZK 인 경우

@@ -10,7 +10,7 @@ export function ADD_popup_player(){
             if(j !== 0){
                 ch_text = ch_text+"&";
             }
-            var temp_id = ADD_streamer_nick(temp_array[j]);//.toUpperCase();
+            var temp_id = streamer_search_dispname(temp_array[j]);//.toUpperCase();
             ch_text = ch_text+temp_id;
         }
         display_name = ch_text;

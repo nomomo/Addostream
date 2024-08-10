@@ -2,7 +2,7 @@ import lib_tagit from "libs/jqueryui-tagit.js";
 import {memoLoglayoutInit} from "chat/simple_memo_log.js";
 lib_tagit(jQuery);
 
-import {streamerArray_name, streamerArray_display_name, streamerArray_AutoComplete} from "general/streamer-lib.js";
+import {streamerArray_name, streamerArray_display_name} from "general/streamer-lib.js";
 import * as utils from "libs/nomo-utils.js";
 var ADD_DEBUG = utils.ADD_DEBUG;
 import * as nomo_common from "general/common.js";
@@ -913,26 +913,28 @@ export function ADD_basic_layout(){
     */
 
     var preprocessingTag = function(val){
-        var tag_text = val;
-        if(tag_text === null || tag_text === undefined){
-            return val;
-        }
-        if(tag_text.indexOf("(") != -1 && tag_text.indexOf(")") != -1){
-            tag_text = tag_text.split("(")[1].split(")")[0].replace(" ","");
-            if(tag_text === undefined || tag_text === null){
-                return val;
-            }
-            if($.inArray(tag_text, streamerArray_name) != -1){
-                return tag_text;
-            }
-        }
-        else {
-            var temp_index = $.inArray(tag_text, streamerArray_display_name);
-            if(temp_index != -1){
-                return streamerArray_name[temp_index];
-            }
-        }
         return val;
+
+        // var tag_text = val;
+        // if(tag_text === null || tag_text === undefined){
+        //     return val;
+        // }
+        // if(tag_text.indexOf("(") != -1 && tag_text.indexOf(")") != -1){
+        //     tag_text = tag_text.split("(")[1].split(")")[0].replace(" ","");
+        //     if(tag_text === undefined || tag_text === null){
+        //         return val;
+        //     }
+        //     if($.inArray(tag_text, streamerArray_name) != -1){
+        //         return tag_text;
+        //     }
+        // }
+        // else {
+        //     var temp_index = $.inArray(tag_text, streamerArray_display_name);
+        //     if(temp_index != -1){
+        //         return streamerArray_name[temp_index];
+        //     }
+        // }
+        // return val;
     };
 
     var TagExist = function(evt, ui){
@@ -963,15 +965,15 @@ export function ADD_basic_layout(){
             $("#"+input_id).val(input_text);
         }
     };
-    $("#ADD_config_top_fix_ID_Tags").tagit({autocomplete: {delay: 0},onTagExists:TagExist,preprocessTag:preprocessingTag,availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $("#ADD_config_top_fix_ID")});
+    $("#ADD_config_top_fix_ID_Tags").tagit({autocomplete: {delay: 0},onTagExists:TagExist,preprocessTag:preprocessingTag,/*availableTags:streamerArray_AutoComplete,*/singleField: true,singleFieldNode: $("#ADD_config_top_fix_ID")});
     $("#ADD_config_top_fix_ID_Tags").sortable(sortable_options);
     $("#ADD_config_top_fix_ID_Tags").disableSelection();
 
-    $("#ADD_config_top_alarm_ID_Tags").tagit({autocomplete: {delay: 0},onTagExists:TagExist,preprocessTag:preprocessingTag,availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $("#ADD_config_top_alarm_ID")});
+    $("#ADD_config_top_alarm_ID_Tags").tagit({autocomplete: {delay: 0},onTagExists:TagExist,preprocessTag:preprocessingTag,/*availableTags:streamerArray_AutoComplete,*/singleField: true,singleFieldNode: $("#ADD_config_top_alarm_ID")});
     $("#ADD_config_top_alarm_ID_Tags").sortable(sortable_options);
     $("#ADD_config_top_alarm_ID_Tags").disableSelection();
 
-    $("#ADD_config_streamer_hide_ID_Tags").tagit({autocomplete: {delay: 0},onTagExists:TagExist,preprocessTag:preprocessingTag,availableTags:streamerArray_AutoComplete,singleField: true,singleFieldNode: $("#ADD_config_streamer_hide_ID")});
+    $("#ADD_config_streamer_hide_ID_Tags").tagit({autocomplete: {delay: 0},onTagExists:TagExist,preprocessTag:preprocessingTag,/*availableTags:streamerArray_AutoComplete,*/singleField: true,singleFieldNode: $("#ADD_config_streamer_hide_ID")});
     $("#ADD_config_streamer_hide_ID_Tags").sortable(sortable_options);
     $("#ADD_config_streamer_hide_ID_Tags").disableSelection();
 

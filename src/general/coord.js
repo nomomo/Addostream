@@ -3,7 +3,7 @@ import {ADD_send_sys_msg_from_main_frame} from "chat/send_message.js";
 import nomo_const from "general/const.js";
 import * as nomo_common from "general/common.js";
 import {ADD_DEBUG} from "libs/nomo-utils.js";
-import {ADD_streamer_nick} from "general/streamer-lib.js";
+import {streamer_search_keyword, streamer_search_dispname} from "general/streamer-lib.js";
 import {get_chat_manager_from_main_frame} from "chat/chat_manager.js";
 import {escapeHtml} from "libs/nomo-utils.js";
 
@@ -295,26 +295,8 @@ async function ADD_parse_insagirl(page){
                     var href = $href_i.attr("href");
                     const regex_m3u8 = /^https?:\/\/.+\.m3u8/i;
                     const regex_nesports = /^https:\/\/game\.naver\.com\/esports\/([a-zA-Z0-9가-힣-_!@#$%^&*]+)\/live\/([a-zA-Z0-9가-힣-_!@#$%^&*]+)/i;
-                    if(href.toLowerCase().indexOf("dostream.com/#/stream/twitch/") !== -1 || href.toLowerCase().indexOf("dostream.com/#/stream/multitwitch/") !== -1){
-                        var ch_text = "";
-                        var ch_streamer_id = href.split("/").pop();
-    
-                        var temp_array = ch_streamer_id.split("&");
-                        for (var j=0; j<temp_array.length; j++){
-                            if(j !== 0){
-                                ch_text = ch_text+"&";
-                            }
-                            var temp_id = ADD_streamer_nick(temp_array[j]);//.toUpperCase();
-                            ch_text = ch_text+temp_id;
-                        }
-    
-                        //if(ch_text.toLowerCase() !== ch_streamer_id.toLowerCase()){
-                        if(ch_text !== undefined || ch_text !== ""){
-                            content = content + " <span class=\"keyword_pass ch_text\" style=\"font-weight:700;vertical-align:top;\">["+escapeHtml(ch_text)+"]</span>";
-                        }
-                    }
                     // !/^http:\/\//.test(href) && 
-                    else if(href.indexOf('dostream.com/#/stream/m3u8') == -1 && regex_m3u8.test(href)){
+                    if(href.indexOf('dostream.com/#/stream/m3u8') == -1 && regex_m3u8.test(href)){
                         content = content + " " + `<a href="https://www.dostream.com/#/stream/m3u8/${href}" class="keyword_pass ch_text" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[M3U8 PLAYER]</a>`;
                         if(ADD_config.m3u8_potplayer_link){
                             content += ` <a href="potplayer://${href}" class="keyword_pass ch_text" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[Potplayer]</a>`;
@@ -322,6 +304,24 @@ async function ADD_parse_insagirl(page){
                     }
                     else if(href.indexOf('dostream.com/#/stream/nesports') == -1 && regex_nesports.test(href)){
                         content = content + " " + `<a href="https://www.dostream.com/#/stream/nesports/${href}" class="keyword_pass ch_text" style="display:inline-block;margin-left:0px;font-weight:700;vertical-align:baseline;">[M3U8 PLAYER]</a>`;
+                    }
+                    else if(href.indexOf('dostream.com/#/stream/') !== -1){
+                        const regex_stream = /dostream\.com\/\#\/stream\/([a-zA-Z0-9-_]+)\/([a-zA-Z0-9-_]+)/
+                        let matchres = href.match(regex_stream);
+                        if(matchres != null && matchres.length === 3){
+                            let platform = matchres[1];
+                            let id = matchres[2];
+                            if(platform !== "chzzk" && platform !== "afreeca"){
+                                return true;
+                            }
+
+                            let searchres = streamer_search_dispname(id, platform);
+                            if(searchres == id){
+                                return true;
+                            }
+
+                            content += " <span class=\"keyword_pass ch_text\" style=\"font-weight:700;vertical-align:top;\">["+escapeHtml(searchres)+"]</span>";
+                        }
                     }
                 });
 

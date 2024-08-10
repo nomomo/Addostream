@@ -500,6 +500,12 @@ a.autokeyword.chzzk:after, a.autokeyword.chzzk:after {
     color: var(--chat-autokeyword-chzzk-font-color) !important;
     background-color: var(--chat-autokeyword-chzzk-background-color) !important;
 }
+a.autokeyword.afreeca:after, a.autokeyword.afreeca:after {
+    background-color: #e6b0bc !important;
+}
+a.autokeyword.youtube:after, a.autokeyword.youtube:after {
+    background-color: #e6b0bc !important;
+}
 /* imgur 이미지 컨테이너 */
 .imgur_container .ADD_tr, .imgur_container .ADD_br, .imgur_container .simple_image, .imgur_container .simple_image_container, .imgur_container .imgur_more_image_div, .imgur_container .imgur_more_image_div_container,
 .imgur_container .imgur_image_title:hover {
