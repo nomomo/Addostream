@@ -258,7 +258,7 @@ a.autokeyword.chzzk:after, a.autokeyword.chzzk:after {
     background-color: #00ffa38f;
 }
 a.autokeyword.afreeca:after, a.autokeyword.afreeca:after {
-    background-color: #e6b0bc;
+    background-color: #8793dc;
 }
 a.autokeyword.youtube:after, a.autokeyword.youtube:after {
     background-color: #e6b0bc;
@@ -1460,7 +1460,7 @@ async function chatElemControl($line){
                             // $(element).replaceWith(contentText);
                             // $(element).addClass("keyword_pass");
                             // br = false;
-                            
+
                             [br, contentText] = streamer_replace_keyword_link(contentText, 0);
                         }
                         else{
