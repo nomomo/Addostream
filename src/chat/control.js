@@ -395,6 +395,7 @@ export async function ADD_chatting_arrive(){
                 script.textContent = arriveScriptContent;
                 nomo_global.$GLOBAL_IFRAME_DOCUMENT[0].head.appendChild(script);
                 postArriveIframe(iframeElems);
+                chatDoeEvntFunc(nomo_global.$GLOBAL_IFRAME_DOCUMENT);
             }
 
             // Check if jQuery is defined in the iframe, if not load it
@@ -407,8 +408,6 @@ export async function ADD_chatting_arrive(){
             } else {
                 injectArriveScript();
             }
-
-            chatDoeEvntFunc(nomo_global.$GLOBAL_IFRAME_DOCUMENT);
 
         });
     } // else 끝
@@ -765,7 +764,8 @@ function chatDoeEvntFunc(elem){
         }
 
         // 채팅창 내 Lightbox 클릭 시 Lightbox 띄움
-        $(elem).on("click", ".open-lightbox", function(e){
+        ADD_DEBUG("lightbox 이벤트 등록");
+        $(elem[0]).on("click", ".open-lightbox", function(e){
             e.preventDefault();
             var $this = $(this);
             var image = $this.attr("src");
@@ -787,7 +787,7 @@ function chatDoeEvntFunc(elem){
         //});
 
         // 채팅 다시 시작
-        $(elem).on("click", ".ADD_chat_again", function(){
+        $(elem[0]).on("click", ".ADD_chat_again", function(){
             //$('.chat-container').html('<iframe src="./uchat2.php" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>');
             location.reload();
         });
