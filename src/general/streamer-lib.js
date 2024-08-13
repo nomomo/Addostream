@@ -41,7 +41,7 @@ function init_streamer_data()
         }
         item.regex = new RegExp(tempstr, "i");
         
-        if(item["tc"]) {
+        if(item["m"] === "t" && item["tc"]) {
             item.p = "twitch";
             if(!item.tc){
                 ADD_DEBUG("error tw type in streamer-lib.js", item);
@@ -50,7 +50,7 @@ function init_streamer_data()
             streamer_twitch[item.tc] = item;
         }
 
-        if(item["cc"]) {
+        else if(item["m"] === "c" && item["cc"]) {
             item.p = "chzzk";
             if(!item.cc){
                 ADD_DEBUG("error cc type in streamer-lib.js", item);
@@ -59,7 +59,7 @@ function init_streamer_data()
             streamer_chzzk[item.cc] = item;
         }
 
-        if(item["ac"]) {
+        else if(item["m"] === "a" && item["ac"]) {
             item.p = "afreeca";
             if(!item.ac){
                 ADD_DEBUG("error ac type in streamer-lib.js", item);
@@ -68,7 +68,7 @@ function init_streamer_data()
             streamer_aftv[item.ac] = item;
         }
 
-        if(item["yc"]) {
+        else if(item["m"] === "y" && item["yc"]) {
             item.p = "youtube";
             if(!item.yc){
                 ADD_DEBUG("error yc type in streamer-lib.js", item);
