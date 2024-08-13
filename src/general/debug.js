@@ -33,7 +33,7 @@ export function ADD_test(){
                 var elem = $(".chat-container > iframe").contents().first().find("u-chat > iframe").contents().first();
                 var chatElem = elem.find("div.content.nano-content")[0];
                 var inputString = prompt("imgur 이미지 주소 입력","https://imgur.com/a/45ps1");
-                var appendText = `<div class="line" data-tiptext="55f2bc0c - {ago}" created="1546774913"><span class="nick" nick="55f2bc0c">55f2bc0c:</span>&nbsp;<span class="chatContent" style="color: #333333; font-size: 9pt;">
+                var appendText = `<div class="line" data-tiptext="55f2bc0c - {ago}" created="${Number(new Date())}"><span class="nick" nick="55f2bc0c">55f2bc0c:</span>&nbsp;<span class="chatContent" style="color: #333333; font-size: 9pt;">
                                 `+inputString+"</span></div>";
                 $(chatElem).append(appendText);
             }
@@ -43,7 +43,7 @@ export function ADD_test(){
                 var elem = $(".chat-container > iframe").contents().first().find("u-chat > iframe").contents().first();
                 var chatElem = elem.find("div.content.nano-content")[0];
                 var inputString = prompt("링크 주소 입력","https://imgur.com/a/45ps1");
-                var appendText = `<div class="line" data-tiptext="55f2bc0c - {ago}" created="1546774913">
+                var appendText = `<div class="line" data-tiptext="55f2bc0c - {ago}" created="${Number(new Date())}">
                                     <span class="nick" nick="55f2bc0c">55f2bc0c:</span>&nbsp;<span class="chatContent" style="color: #333333; font-size: 9pt;">`+
                                         "<a target=\"_blank\" href=\""+inputString+"\">"
                                         +inputString+`
