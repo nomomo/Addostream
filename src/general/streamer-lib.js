@@ -18,10 +18,9 @@ function init_streamer_data()
         
         // regex 생성
         let tmpary = item.nn;
-        //console.log(item);
     
         if(item.dn.length !== 1 || (item.dn.length === 1 && ADD_config.chat_autoKeyword_1char)){
-            tmpary.push(item.dn);
+            tmpary.unshift(item.dn);
         }
         if(item.sn && (ADD_config.chat_autoKeyword_1char || item.sn == "던")){
             tmpary.push(item.sn);
@@ -79,23 +78,76 @@ function init_streamer_data()
     }
 }
 
-function streamer_search_keyword(keyword, start){
+function streamer_search_keyword(keyword, exact, start){
+    let item, match;
     if(!start){
         start = 0;
     }
+    if(!exact){
+        exact = false;
+    }
+
+    ADD_DEBUG("streamer_search_keyword", keyword, exact, start);
+
     let found = null;
     for(let i=start; i<broadcaster.data.length; ++i){
-        let item = broadcaster.data[i];
+        try {
+            item = broadcaster.data[i];
 
-        if(!item.m || item.m == "y" || !item.regex){
+            if(!item.m || item.m == "y" || !item.regex){
+                continue;
+            }
+
+            if (exact){
+                let modifiedRegex = new RegExp(`^${item.regex.source.replace("^","")}$`);
+                match = keyword.match(modifiedRegex);
+            }
+            else{
+                match = keyword.match(item.regex);
+            }
+            if(match !== null && item[item.m + "c"]){
+                found = item;
+                found["c"] = found[item.m + "c"];
+                break;
+            }
+        }
+        catch(e){
+            ADD_DEBUG("error from streamer_search_keyword",  e, item);
             continue;
         }
+    }
 
-        var match = keyword.match(item.regex);
-        if(match !== null && item[item.m + "c"]){
-            found = item;
-            found["c"] = found[item.m + "c"];
-            break;
+    if(found){
+        return found;
+    }
+
+    for(let i=start; i<broadcaster.data.length; ++i){
+        try {
+            item = broadcaster.data[i];
+    
+            if(!item.m || item.m == "y" || !item.sn || item.sn.length == 0){
+                continue;
+            }
+    
+            let tempstr;
+            if(exact){
+                tempstr = `^(${item.sn.join("|")})$`;
+            }
+            else{
+                tempstr = `(${item.sn.join("|")})`;
+            }
+            let tempregex = new RegExp(tempstr, "i");
+    
+            match = keyword.match(tempregex);
+            if(match !== null && item[item.m + "c"]){
+                found = item;
+                found["c"] = found[item.m + "c"];
+                break;
+            }
+        }
+        catch(e){
+            ADD_DEBUG("error from streamer_search_keyword",  e, item);
+            continue;
         }
     }
 

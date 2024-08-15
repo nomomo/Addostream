@@ -2196,11 +2196,11 @@ function type_and_go_run(){
         return;
     }
 
-    var res = streamer_search_keyword(etargetText);
+    var res = streamer_search_keyword(etargetText, true);
     var engToKor = "";
     if(res == null){
         engToKor = utils.engTypeToKor(etargetText);
-        res = streamer_search_dispname(engToKor);
+        res = streamer_search_keyword(engToKor, true);
     }
 
     if(res == null || !res.m || !res.c){
