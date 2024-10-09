@@ -802,6 +802,8 @@ export function chatImagelayoutfromLinks($line, arr){
     var views_style = "";
     var nudity_block = ADD_config.nudity_block;
 
+    ADD_DEBUG("chatImagelayoutfromLinks", arr);
+
     if($line === undefined || arr === undefined || img_length === 0){
         ADD_DEBUG("chatImagelayoutfromLinks - 이미지 오브젝트가 존재하지 않음", arr);
         return false;
@@ -2058,13 +2060,21 @@ export function getImgurData($line, Imgur_ID, Imgur_type){
                 for(i=0;i<response_data.images.length;i++){
                     temp = response_data.images[i];
                     ADD_DEBUG("type:gallery",temp.link);
-                    if(ADD_config.imgur_preview_gif_as_mp4 && response_data.images.mp4 !== undefined && response_data.images.mp4 !== null){
+                    if(ADD_config.imgur_preview_gif_as_mp4 && response_data.images.mp4 !== undefined && response_data.images.mp4 !== null && response_data.images.mp4 !== ""){
                         link = temp.mp4;
                     }
                     else{
                         link = temp.link;
                     }
-                    img_title = temp.title;
+                    if(temp.title !== null && temp.title !== "") {
+                        img_title = temp.title;
+                    }
+                    else if(temp.name !== null && temp.name !== "") {
+                        img_title = temp.name;
+                    }
+                    else{
+                        img_title = "";
+                    }
                     temp_obj = {
                         link:link,
                         title:(img_title !== undefined && img_title !== null ? img_title : (gallery_title !== undefined && gallery_title !== null ? gallery_title : "")),
@@ -2080,13 +2090,21 @@ export function getImgurData($line, Imgur_ID, Imgur_type){
                 for(i=0;i<response_data.length;i++){
                     temp = response_data[i];
                     ADD_DEBUG("type:album",temp.link);
-                    if(ADD_config.imgur_preview_gif_as_mp4 && temp.mp4 !== undefined && temp.mp4 !== null){
+                    if(ADD_config.imgur_preview_gif_as_mp4 && temp.mp4 !== undefined && temp.mp4 !== null && temp.mp4 !== ""){
                         link = temp.mp4;
                     }
                     else{
                         link = temp.link;
                     }
-                    img_title = temp.title;
+                    if(temp.title !== null && temp.title !== "") {
+                        img_title = temp.title;
+                    }
+                    else if(temp.name !== null && temp.name !== "") {
+                        img_title = temp.name;
+                    }
+                    else{
+                        img_title = "";
+                    }
                     temp_obj = {
                         link:link,
                         title:(img_title !== undefined && img_title !== null ? img_title : ""),
@@ -2102,13 +2120,21 @@ export function getImgurData($line, Imgur_ID, Imgur_type){
             else {
                 ADD_DEBUG("type:image",response_data.link);
                 temp = response_data;
-                if(ADD_config.imgur_preview_gif_as_mp4 && temp.mp4 !== undefined && temp.mp4 !== null){
+                if(ADD_config.imgur_preview_gif_as_mp4 && temp.mp4 !== undefined && temp.mp4 !== null && temp.mp4 !== ""){
                     link = temp.mp4;
                 }
                 else{
                     link = temp.link;
                 }
-                img_title = temp.title;
+                if(temp.title !== null && temp.title !== "") {
+                    img_title = temp.title;
+                }
+                else if(temp.name !== null && temp.name !== "") {
+                    img_title = temp.name;
+                }
+                else{
+                    img_title = "";
+                }
                 temp_obj = {
                     link:link,
                     title:(img_title !== undefined && img_title !== null ? img_title : ""),
