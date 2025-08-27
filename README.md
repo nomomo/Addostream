@@ -36,6 +36,9 @@
 - 가능한 경우 설정 창 캡쳐 이미지 or 설정 창에서 Backup & Restore 누른 후 나오는 텍스트(필수는 아님)
 
 ## Change log
+### 1.59.5 (2025-08-27)
+- 스트리머 ID-닉네임 리스트 갱신 (Thanks to [@skatmdgn](https://github.com/skatmdgn))
+
 ### 1.59.4 (2024-10-09)
 - 채팅창에서 imgur 이미지 미리보기 기능이 제대로 동작하지 않는 문제 수정
 
