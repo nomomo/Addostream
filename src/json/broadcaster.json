@@ -222,7 +222,7 @@
             "tc": "kimdoe"
         },
         {
-            "m": "t",
+            "m": false,
             "dn": "토곰",
             "nn": [
                 "토마토곰"
@@ -234,12 +234,6 @@
             "dn": "흐트크",
             "nn": [],
             "tc": "htk_"
-        },
-        {
-            "m": "t",
-            "dn": "OGN 롤챔스",
-            "nn": [],
-            "tc": "ogn_lol"
         },
         {
             "m": "c",
@@ -733,12 +727,6 @@
                 "갓구"
             ],
             "tc": "lol_blank"
-        },
-        {
-            "m": "t",
-            "dn": "OGN 오버워치",
-            "nn": [],
-            "tc": "ogn_ow"
         },
         {
             "dn": "주안코리아",
@@ -1592,7 +1580,7 @@
             "tc": "lol_khan"
         },
         {
-            "m": "y",
+            "m": "c",
             "dn": "대도서관",
             "nn": [
                 "머도서관",
@@ -1601,7 +1589,8 @@
                 "나동현"
             ],
             "yc": "UCSHVH_AWVUc-C8-D8mh8W6A",
-            "tc": "buzzbean11"
+            "tc": "buzzbean11",
+            "cc": "b171ba23d17440cc50b9e19a247f7749"
         },
         {
             "m": "a",
@@ -1635,10 +1624,12 @@
             "dn": "LCK Korea",
             "nn": [
                 "롤챔스",
-                "롤챔"
+                "롤챔",
+                "LCK"
             ],
             "tc": "lck_korea",
-            "cc": "9381e7d6816e6d915a44a13c0195b202"
+            "cc": "9381e7d6816e6d915a44a13c0195b202",
+            "yc": UCw1DsweY9b2AKGjV4kGJP1A
         },
         {
             "m": "c",
@@ -2221,13 +2212,6 @@
             "nn": [],
             "cc": "93fe884808459fb4e4a3c7d64f0eef03",
             "tc": "kumikomii"
-        },
-        {
-            "m": "c",
-            "dn": "우주하마",
-            "nn": [],
-            "cc": "c6e1c8cf1b128bd321cc2684c92b5a00",
-            "tc": "uzuhama"
         },
         {
             "m": "c",
@@ -4171,8 +4155,7 @@
             "nn": [
                 "샤넬좌",
                 "샤넬",
-                "강성호",
-                "성호"
+                "강성호"
             ],
             "ac": "vmffldrmftm",
             "tc": "chanel87"
@@ -4384,13 +4367,6 @@
                 "세현"
             ],
             "tc": "ksh0162"
-        },
-        {
-            "m": "a",
-            "dn": "세글자",
-            "nn": [],
-            "ac": "skswhdkgo",
-            "tc": "skswhdkgo1"
         },
         {
             "m": "a",
@@ -5330,12 +5306,6 @@
             "ac": "horidda"
         },
         {
-            "m": "y",
-            "dn": "LCK",
-            "nn": [],
-            "yc": "UCw1DsweY9b2AKGjV4kGJP1A"
-        },
-        {
             "m": "a",
             "dn": "감스트",
             "nn": [],
@@ -5346,12 +5316,6 @@
             "dn": "이상호",
             "nn": [],
             "ac": "lshooooo"
-        },
-        {
-            "m": "a",
-            "dn": "파리올림픽",
-            "nn": [],
-            "ac": "isauria"
         },
         {
             "m": "a",
@@ -5390,22 +5354,23 @@
             "ac": "zpdl1313"
         },
         {
-            "m": "y",
+            "m": "c",
             "dn": "LCK CL",
-            "nn": [],
-            "yc": "UCJTnmAUYJ78wClQ8rTRYqDw"
-        },
-        {
-            "m": "y",
-            "dn": "인피쉰",
-            "nn": [],
-            "yc": "UC-okJdotaXPlzivRzHFqzuA"
+            "nn": [
+                "롤챌스",
+                "챌스",
+                "롤챌",
+                "챌코"
+            ],
+            "yc": "UCJTnmAUYJ78wClQ8rTRYqDw",
+            "cc": "ab067e483dcf6d16d4c07ea964e3b886"
         },
         {
             "m": "a",
-            "dn": "올림픽_MBC",
+            "dn": "인피쉰",
             "nn": [],
-            "ac": "soopoly04"
+            "yc": "UC-okJdotaXPlzivRzHFqzuA",
+            "ac": "jackhan8888"
         },
         {
             "m": "a",
@@ -5444,10 +5409,11 @@
             "cc": "4d812b586ff63f8a2946e64fa860bbf5"
         },
         {
-            "m": "y",
+            "m": "a",
             "dn": "김성현",
             "nn": [],
-            "yc": "UCOTJtP0Z9DjpPU43B5m1V6A"
+            "yc": "UCOTJtP0Z9DjpPU43B5m1V6A",
+            "ac": "rlatjdgus228"
         },
         {
             "m": "a",
@@ -5474,10 +5440,12 @@
             "ac": "tjrdbs999"
         },
         {
-            "m": "y",
+            "m": "c",
             "dn": "이다",
             "nn": [],
-            "yc": "UC46X_E7jxvJ1O_3gnaeCxeg"
+            "yc": "UC46X_E7jxvJ1O_3gnaeCxeg",
+            "cc": "0076a519f147ee9fd0959bf02f9571ca",
+            "ac": "airshowerse"
         },
         {
             "m": "a",
@@ -5522,16 +5490,11 @@
             "ac": "arinbbidol"
         },
         {
-            "m": "a",
-            "dn": "올림픽_SBS",
-            "nn": [],
-            "ac": "soopoly05"
-        },
-        {
-            "m": "y",
+            "m": "c",
             "dn": "이스타TV",
             "nn": ["이스타"],
-            "yc": "UCn9mJ4htO64-1osMWYu9k5Q"
+            "yc": "UCn9mJ4htO64-1osMWYu9k5Q",
+            "cc": "86d5fa411f796b3a6e9ce79b38e496c4"
         },
         {
             "m": "a",
@@ -5550,12 +5513,6 @@
             "dn": "이브",
             "nn": [],
             "cc": "cfaee70de33bc9ee2c0a486dcfcff0f4"
-        },
-        {
-            "m": "a",
-            "dn": "글자네",
-            "nn": [],
-            "yc": "UCb5NLtXAsTBrmaZVhyFa-Wg"
         },
         {
             "m": "a",
@@ -5648,10 +5605,12 @@
             "cc": "3916f19ac6f2a472038ff8d83494f7ed"
         },
         {
-            "m": "y",
+            "m": "c",
             "dn": "우주하마",
             "nn": [],
-            "yc": "UC2NFRq9s2neD_Ml0tPhNC2Q"
+            "yc": "UC2NFRq9s2neD_Ml0tPhNC2Q",
+            "cc": "c6e1c8cf1b128bd321cc2684c92b5a00",
+            "tc": "uzuhama"
         },
         {
             "m": "a",
@@ -5666,22 +5625,11 @@
             "ac": "sjm3000"
         },
         {
-            "m": "y",
-            "dn": "오버워치 이스포츠",
-            "nn": [],
-            "yc": "UCLGDwdJU3TQF34JgVAlvwBw"
-        },
-        {
-            "m": "y",
-            "dn": "죠니니",
-            "nn": [],
-            "yc": "UCzjp53OM5d3QOB8_D6-teBw"
-        },
-        {
             "m": "a",
-            "dn": "VALORANT_KR",
-            "nn": [],
-            "ac": "valorant"
+            "dn": "오버워치 이스포츠",
+            "nn": ["오버워치 챔피언스 시리즈"],
+            "yc": "UCLGDwdJU3TQF34JgVAlvwBw",
+            "ac": "owesports"
         },
         {
             "m": "a",
@@ -5741,12 +5689,6 @@
         },
         {
             "m": "a",
-            "dn": "올림픽_KBS1",
-            "nn": [],
-            "ac": "soopoly02"
-        },
-        {
-            "m": "a",
             "dn": "윤시원",
             "nn": [],
             "ac": "nampil"
@@ -5798,12 +5740,6 @@
             "dn": "박재혁",
             "nn": [],
             "ac": "rlekfu6"
-        },
-        {
-            "m": "a",
-            "dn": "올림픽_KBS2",
-            "nn": [],
-            "ac": "soopoly03"
         },
         {
             "m": "a",
@@ -5926,10 +5862,12 @@
             "ac": "dpfgc3"
         },
         {
-            "m": "y",
+            "m": "c",
             "dn": "깝도이",
             "nn": [],
-            "yc": "UCqVkQsNin4MdGFrWvzFVOKw"
+            "yc": "UCqVkQsNin4MdGFrWvzFVOKw",
+            "cc": "26e0a451d56eab9e8ec9c4642cc65ae1",
+            "ac": "starno1728"
         },
         {
             "m": false,
@@ -5988,8 +5926,9 @@
         {
             "m": "c",
             "dn": "죠니월드",
-            "nn": ["죠니"],
-            "cc": "29710a53f37c2f31b0862ed8ce678e44"
+            "nn": ["죠니","죠니니"],
+            "cc": "29710a53f37c2f31b0862ed8ce678e44",
+            "yc": "UCzjp53OM5d3QOB8_D6-teBw"
         },
         {
             "m": false,
@@ -6215,12 +6154,6 @@
         },
         {
             "m": "a",
-            "dn": "#파리올림픽",
-            "nn": [],
-            "ac": "zymosan12"
-        },
-        {
-            "m": "a",
             "dn": "마다옴",
             "nn": [],
             "ac": "madaomm"
@@ -6268,7 +6201,7 @@
             "ac": "zkwks4413"
         },
         {
-            "m": "y",
+            "m": false,
             "dn": "존잘벅이",
             "nn": [],
             "yc": "UCSdzYITFKZQRCWKoDZcd5Dw"
@@ -6340,10 +6273,14 @@
             "ac": "wannabe33"
         },
         {
-            "m": "y",
+            "m": "a",
             "dn": "해물파전",
-            "nn": [],
-            "yc": "UCqIwPYLfMd3EoWYwvyTjPnA"
+            "nn": [
+                "빠셍",
+                "해파리"
+            ],
+            "yc": "UCqIwPYLfMd3EoWYwvyTjPnA",
+            "ac": "dlgksquf159"
         },
         {
             "m": "a",
@@ -6370,10 +6307,11 @@
             "cc": "f56625a5ad032fe7ff2a80225e41904f"
         },
         {
-            "m": "y",
+            "m": "a",
             "dn": "뚜까랜덤",
             "nn": [],
-            "yc": "UC2untV6RHYn-FMJe1JZyi-g"
+            "yc": "UC2untV6RHYn-FMJe1JZyi-g",
+            "ac": "kji6198"
         },
         {
             "m": "a",
@@ -6703,8 +6641,11 @@
         {
             "m": "c",
             "dn": "세글자",
-            "nn": [],
-            "cc": "aca13f309223eac9b79fcc5215b6fec8"
+            "nn": ["글자네"],
+            "cc": "aca13f309223eac9b79fcc5215b6fec8",
+            "yc": "UCb5NLtXAsTBrmaZVhyFa-Wg",
+            "ac": "skswhdkgo",
+            "tc": "skswhdkgo1"
         },
         {
             "m": "c",
@@ -6715,8 +6656,9 @@
         {
             "m": "c",
             "dn": "발로란트 코리아",
-            "nn": [],
-            "cc": "4e10683fd32d6fb6d38924cb9bf483a3"
+            "nn": ["VALORANT_KR"],
+            "cc": "4e10683fd32d6fb6d38924cb9bf483a3",
+            "ac": "valorant"
         },
         {
             "m": "c",
