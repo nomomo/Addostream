@@ -36,6 +36,9 @@
 - 가능한 경우 설정 창 캡쳐 이미지 or 설정 창에서 Backup & Restore 누른 후 나오는 텍스트(필수는 아님)
 
 ## Change log
+### 1.59.7 (2025-09-28)
+- 스트리머 ID-닉네임 리스트 갱신 (Thanks to [@skatmdgn](https://github.com/skatmdgn))
+
 ### 1.59.6 (2025-09-20)
 - 스트리머 ID-닉네임 리스트 갱신 (Thanks to [@skatmdgn](https://github.com/skatmdgn))
 
