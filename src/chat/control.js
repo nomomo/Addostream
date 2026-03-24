@@ -581,7 +581,7 @@ function postArriveIframe(iframeElems){
     });
 
     // 채팅창 닉네임 클릭 시 "메모하기" 버튼 생성하기
-    nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("click", "span.nick, div.nick", function (){
+    nomo_global.$GLOBAL_IFRAME_DOCUMENT.on("mouseup", "span.nick, div.nick", function (){
         if(!ADD_config.chat_memo){
             nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("#do_memo").remove();
             nomo_global.$GLOBAL_IFRAME_DOCUMENT.find("#memo_isSavedMemo").hide();
@@ -614,10 +614,12 @@ function postArriveIframe(iframeElems){
         }
         var temp_obj = {"nick":nick,"detail_content":detail_content};
         var $memo_button = $("<div id=\"do_memo\" class=\"floor\" style=\"color:red;font-weight:700;\">메모하기</div>");
-        nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".usermenu_popup").first().append($memo_button);
-        $memo_button.on("click",async function(){
-            await chat_manager.openSimplelayout(temp_obj);
-        });
+        setTimeout(function(){
+            nomo_global.$GLOBAL_IFRAME_DOCUMENT.find(".usermenu_popup").first().append($memo_button);
+            $memo_button.on("click",async function(){
+                await chat_manager.openSimplelayout(temp_obj);
+            });
+        },10);
     });
 
     //////////////////////////////////////////////////////////////////////////////////
